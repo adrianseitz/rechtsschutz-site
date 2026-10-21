@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root { color-scheme: light; }
+  html { -webkit-text-size-adjust: 100%; overflow-x: clip; }
+  body { overflow-x: clip; }
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+  body { @apply bg-white text-ink font-sans antialiased; text-rendering: optimizeLegibility; font-feature-settings: "ss01", "cv11"; }
+  h1, h2, h3, h4 { @apply font-display text-navy; letter-spacing: -0.03em; }
+  ::selection { background: #FFD60A; color: #0B0B0A; }
+  :focus-visible { outline: 2px solid #0B0B0A; outline-offset: 3px; border-radius: 6px; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+}
+
+@layer components {
+  .eyebrow { @apply inline-flex items-center gap-2.5 font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-ink-muted; }
+  .eyebrow::before { content: "§"; @apply font-serif text-[17px] normal-case italic leading-none tracking-normal text-navy; }
+  .card { @apply rounded-2xl border border-line bg-white; }
+  .input { @apply block w-full rounded-xl border border-line bg-white px-4 py-3.5 text-base text-ink placeholder:text-ink-muted transition focus:border-navy focus:outline-none focus:ring-4 focus:ring-sun/40; }
+  .label { @apply mb-1.5 block text-sm font-medium text-navy; }
+  .field-error { @apply mt-1.5 text-sm text-red-700; }
+  .prose-legal h2 { @apply mt-10 mb-3 text-xl font-semibold; }
+  .prose-legal h3 { @apply mt-6 mb-2 text-base font-semibold; }
+  .prose-legal p, .prose-legal li { @apply text-[15px] leading-7 text-ink-soft; }
+  .prose-legal ul { @apply my-3 list-disc pl-5 space-y-1; }
+  .prose-legal a { @apply text-navy underline decoration-sun decoration-2 underline-offset-4; }
+  .ph { @apply rounded bg-amber-100 px-1.5 py-0.5 font-mono text-[13px] text-amber-900; }
+  .serif-em { @apply font-serif font-normal italic tracking-normal; }
+  .hairline { @apply border-line; }
+  .marker { background-image: linear-gradient(transparent 58%, #FFD60A 58%, #FFD60A 92%, transparent 92%); background-repeat: no-repeat; background-size: 100% 100%; }
+}
+
+.bg-grid {
+  background-image: linear-gradient(rgba(11,11,10,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(11,11,10,0.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
+/* Schieberegler */
+input[type="range"].range { -webkit-appearance: none; appearance: none; height: 6px; border-radius: 999px; background: linear-gradient(90deg, var(--fill-color, #0B0B0A) var(--fill, 50%), var(--track, #E6E5DF) var(--fill, 50%)); outline-offset: 6px; }
+input[type="range"].range::-webkit-slider-thumb { -webkit-appearance: none; width: 26px; height: 26px; border-radius: 999px; background: #FFD60A; border: 3px solid #0B0B0A; box-shadow: 0 6px 16px rgba(11,11,10,.25); cursor: grab; }
+input[type="range"].range::-moz-range-thumb { width: 20px; height: 20px; border-radius: 999px; background: #FFD60A; border: 3px solid #0B0B0A; cursor: grab; }
+.bg-dots { background-image: radial-gradient(rgba(11,11,10,0.12) 1px, transparent 1px); background-size: 22px 22px; }
+.noise::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .05; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+/* Feine Papier-Körnung über der ganzen Seite – nimmt den „digitalen“ Glanz */
+.grain { position: fixed; inset: -50%; z-index: 70; pointer-events: none; opacity: .045; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+@media (pointer: fine) { .cursor-none-fine { cursor: none; } }
+
+/* Abdeckung bis zum Start des Intros (siehe Inline-Script im Layout) */
+html.intro-pending body::before { content: ""; position: fixed; inset: 0; z-index: 99; background: #F4F3EE; }
+html.intro-pending { overflow: hidden; }
