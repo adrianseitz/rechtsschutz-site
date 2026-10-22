@@ -17,8 +17,8 @@ export const site = {
   url: env("NEXT_PUBLIC_SITE_URL", "http://localhost:3000").replace(/\/$/, ""),
   owner: "Adrian Seitz",
   role: "Selbstständiger Versicherungsvermittler – Vertriebspartner der ARAG",
-  email: env("NEXT_PUBLIC_CONTACT_EMAIL", "[PLATZHALTER: E-Mail-Adresse]"),
-  phone: env("NEXT_PUBLIC_CONTACT_PHONE", "[PLATZHALTER: Telefonnummer]"),
+  email: env("NEXT_PUBLIC_CONTACT_EMAIL", "Adrian.Seitz@arag-partner.de"),
+  phone: env("NEXT_PUBLIC_CONTACT_PHONE", "0176 20017708"),
   /** Optionaler externer Buchungslink (z. B. Calendly). Ohne Wert läuft die Terminanfrage über /kontakt. */
   bookingUrl: process.env.NEXT_PUBLIC_BOOKING_URL?.trim() || "",
   locale: "de_DE",
@@ -29,8 +29,8 @@ export const site = {
 /** Angaben für Impressum & Erstinformation nach § 15 VersVermV – vor Veröffentlichung ausfüllen. */
 export const legal = {
   name: "Adrian Seitz",
-  street: "[PLATZHALTER: Straße und Hausnummer]",
-  city: "[PLATZHALTER: PLZ und Ort]",
+  street: "Kaiserheinrichstraße 50",
+  city: "56220 Urmitz",
   status:
     "[PLATZHALTER: Status laut Gewerbeerlaubnis/Registereintrag, z. B. gebundener Versicherungsvertreter nach § 34d Abs. 7 GewO oder Versicherungsvertreter mit Erlaubnis nach § 34d Abs. 1 GewO]",
   registerNumber: "[PLATZHALTER: Registrierungsnummer, Format D-XXXX-XXXXX-XX]",
