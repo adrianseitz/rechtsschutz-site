@@ -14,7 +14,7 @@ export const PLACEHOLDER_PREFIX = "[PLATZHALTER";
 export const site = {
   brand: env("NEXT_PUBLIC_BRAND_NAME", "Seitz Rechtsschutz"),
   brandShort: env("NEXT_PUBLIC_BRAND_SHORT", "Seitz"),
-  url: env("NEXT_PUBLIC_SITE_URL", "http://localhost:3000").replace(/\/$/, ""),
+  url: env("NEXT_PUBLIC_SITE_URL", "https://www.seitz-rechtsschutz.de").replace(/\/$/, ""),
   owner: "Adrian Seitz",
   role: "Selbstständiger Versicherungsvermittler – Vertriebspartner der ARAG",
   email: env("NEXT_PUBLIC_CONTACT_EMAIL", "Adrian.Seitz@arag-partner.de"),
