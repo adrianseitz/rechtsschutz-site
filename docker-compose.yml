@@ -1,0 +1,44 @@
+# Website + CRM mit automatischem HTTPS (Caddy / Let's Encrypt)
+services:
+  app:
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL}
+        NEXT_PUBLIC_CONTACT_EMAIL: ${NEXT_PUBLIC_CONTACT_EMAIL:-}
+        NEXT_PUBLIC_CONTACT_PHONE: ${NEXT_PUBLIC_CONTACT_PHONE:-}
+        NEXT_PUBLIC_BOOKING_URL: ${NEXT_PUBLIC_BOOKING_URL:-}
+        NEXT_PUBLIC_GTM_ID: ${NEXT_PUBLIC_GTM_ID:-}
+        NEXT_PUBLIC_GA4_ID: ${NEXT_PUBLIC_GA4_ID:-}
+        NEXT_PUBLIC_GOOGLE_ADS_ID: ${NEXT_PUBLIC_GOOGLE_ADS_ID:-}
+        NEXT_PUBLIC_GOOGLE_ADS_LEAD_LABEL: ${NEXT_PUBLIC_GOOGLE_ADS_LEAD_LABEL:-}
+        NEXT_PUBLIC_GOOGLE_ADS_APPOINTMENT_LABEL: ${NEXT_PUBLIC_GOOGLE_ADS_APPOINTMENT_LABEL:-}
+        NEXT_PUBLIC_GOOGLE_ADS_CONTACT_LABEL: ${NEXT_PUBLIC_GOOGLE_ADS_CONTACT_LABEL:-}
+        NEXT_PUBLIC_META_PIXEL_ID: ${NEXT_PUBLIC_META_PIXEL_ID:-}
+    env_file: .env
+    environment:
+      LEAD_STORAGE: file
+      LEAD_STORAGE_DIR: /app/data
+    volumes:
+      - leads:/app/data
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN: ${DOMAIN}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+    restart: unless-stopped
+
+volumes:
+  leads:
+  caddy_data:
+  caddy_config:

@@ -5,6 +5,9 @@ import { readRecords } from "@/lib/server/storage";
 import { rateLimit } from "@/lib/server/rateLimit";
 import { clientIp } from "@/lib/server/request";
 import type { SubmissionRecord } from "@/lib/server/records";
+import { isAdmin } from "@/lib/server/adminAuth";
+import { readStatuses } from "@/lib/server/crmStatus";
+import { STATUSES } from "@/lib/crm";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -14,28 +17,37 @@ export const dynamic = "force-dynamic";
  * Header: Authorization: Bearer <ADMIN_TOKEN>. Ohne ADMIN_TOKEN ist der Endpunkt deaktiviert.
  */
 export async function GET(req: Request) {
-  if (!serverConfig.adminToken || serverConfig.adminToken.length < 24) return new NextResponse("Not found", { status: 404 });
   const rl = rateLimit(`admin:${hashIdentifier(clientIp(req))}`, 30, 60_000);
   if (!rl.ok) return new NextResponse("Too many requests", { status: 429 });
 
-  const auth = req.headers.get("authorization") || "";
-  const token = auth.startsWith("Bearer ") ? auth.slice(7) : "";
-  if (!token || !safeEqual(token, serverConfig.adminToken)) return new NextResponse("Unauthorized", { status: 401, headers: { "WWW-Authenticate": "Bearer" } });
+  // Zugriff entweder mit CRM-Login (Cookie) oder per Bearer-Token für Automationen.
+  const session = await isAdmin();
+  if (!session) {
+    if (!serverConfig.adminToken || serverConfig.adminToken.length < 24) return new NextResponse("Not found", { status: 404 });
+    const auth = req.headers.get("authorization") || "";
+    const token = auth.startsWith("Bearer ") ? auth.slice(7) : "";
+    if (!token || !safeEqual(token, serverConfig.adminToken)) return new NextResponse("Unauthorized", { status: 401, headers: { "WWW-Authenticate": "Bearer" } });
+  }
 
   const url = new URL(req.url);
-  const type = url.searchParams.get("type") === "contact" ? "contact" : "lead";
-  const records = await readRecords(type);
+  const t = url.searchParams.get("type");
+  const type = t === "contact" ? "contact" : t === "lead" ? "lead" : session ? "alle" : "lead";
+  const records = type === "alle"
+    ? [...(await readRecords("lead")), ...(await readRecords("contact"))].sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+    : await readRecords(type);
 
   if (url.searchParams.get("format") === "csv") {
-    return new NextResponse(toCsv(records), {
+    const st = await readStatuses();
+    return new NextResponse(toCsv(records, st), {
       headers: { "Content-Type": "text/csv; charset=utf-8", "Content-Disposition": `attachment; filename="${type}s-${new Date().toISOString().slice(0, 10)}.csv"`, "Cache-Control": "no-store" },
     });
   }
   return NextResponse.json({ count: records.length, records }, { headers: { "Cache-Control": "no-store" } });
 }
 
-function toCsv(rows: SubmissionRecord[]) {
+function toCsv(rows: SubmissionRecord[], st: Awaited<ReturnType<typeof readStatuses>>) {
   const cols: [string, (r: SubmissionRecord) => unknown][] = [
+    ["Status", (r) => STATUSES.find((x) => x.value === (st[r.id]?.status ?? "neu"))?.label],
     ["Datum", (r) => new Date(r.createdAt).toLocaleString("de-DE", { timeZone: "Europe/Berlin" })],
     ["Typ", (r) => r.type],
     ["Bereich", (r) => r.productLabel],

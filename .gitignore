@@ -1,4 +1,8 @@
 node_modules
 .next
-.env*.local
+.env
+.env.local
 data/*.ndjson
+data/*.json
+!data/.gitkeep
+deploy/backups

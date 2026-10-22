@@ -2,6 +2,7 @@
 
 import Script from "next/script";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Cookie, X } from "lucide-react";
@@ -19,6 +20,7 @@ const ConsentContext = createContext<Ctx>({ consent: null, openSettings: () => {
 export const useConsent = () => useContext(ConsentContext);
 
 export function ConsentManager({ children }: { children: React.ReactNode }) {
+  const isAdmin = usePathname()?.startsWith("/admin") ?? false;
   const [consent, setConsent] = useState<ConsentState | null>(null);
   const [ready, setReady] = useState(false);
   const [bannerOpen, setBannerOpen] = useState(false);
@@ -76,6 +78,9 @@ export function ConsentManager({ children }: { children: React.ReactNode }) {
     ad_personalization: '${marketing ? "granted" : "denied"}',
     analytics_storage: '${statistics ? "granted" : "denied"}'
   }`;
+
+  // Im CRM: kein Banner, kein Tracking.
+  if (isAdmin) return <ConsentContext.Provider value={{ consent, openSettings }}>{children}</ConsentContext.Provider>;
 
   return (
     <ConsentContext.Provider value={{ consent, openSettings }}>

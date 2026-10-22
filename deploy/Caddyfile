@@ -1,0 +1,9 @@
+# Hauptadresse: www.<DOMAIN>, die Adresse ohne www leitet dorthin weiter.
+{$DOMAIN} {
+	redir https://www.{$DOMAIN}{uri} permanent
+}
+
+www.{$DOMAIN} {
+	encode zstd gzip
+	reverse_proxy app:3000
+}
