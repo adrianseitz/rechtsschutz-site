@@ -4,6 +4,24 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
+echo "→ System aktualisieren …"
+export DEBIAN_FRONTEND=noninteractive
+apt-get update -qq
+apt-get install -y -qq git curl openssl ufw unattended-upgrades >/dev/null
+
+# Automatische Sicherheitsupdates
+dpkg-reconfigure -f noninteractive unattended-upgrades >/dev/null 2>&1 || true
+
+# Auslagerungsspeicher, damit der Build auch bei wenig RAM nicht abbricht
+if [ "$(swapon --show | wc -l)" -eq 0 ]; then
+  echo "→ Lege 2 GB Swap an …"
+  fallocate -l 2G /swapfile && chmod 600 /swapfile && mkswap /swapfile >/dev/null && swapon /swapfile
+  grep -q '/swapfile' /etc/fstab || echo '/swapfile none swap sw 0 0' >> /etc/fstab
+fi
+
+# Firewall: nur SSH, HTTP, HTTPS
+ufw allow OpenSSH >/dev/null && ufw allow 80/tcp >/dev/null && ufw allow 443/tcp >/dev/null && ufw --force enable >/dev/null
+
 if ! command -v docker >/dev/null 2>&1; then
   echo "→ Installiere Docker …"
   curl -fsSL https://get.docker.com | sh
@@ -42,5 +60,9 @@ fi
 
 echo "→ Baue und starte die Seite (dauert beim ersten Mal ein paar Minuten) …"
 docker compose up -d --build
+
+# Tägliche Datensicherung um 03:15 Uhr
+DIR="$(pwd)"
+( crontab -l 2>/dev/null | grep -v 'deploy/backup.sh'; echo "15 3 * * * bash $DIR/deploy/backup.sh >/dev/null 2>&1" ) | crontab -
 echo
 echo "Fertig. Website: https://www.$(grep ^DOMAIN= .env | cut -d= -f2)   CRM: …/admin"

@@ -37,7 +37,7 @@ cd rechtsschutz-site
 bash deploy/setup.sh
 ```
 
-Das Skript installiert Docker, fragt **Domain**, **Benachrichtigungs-E-Mail** und ein **CRM-Passwort** ab,
+Das Skript richtet Firewall, automatische Sicherheitsupdates, Swap und eine tägliche Datensicherung ein, installiert Docker, fragt **Domain**, **Benachrichtigungs-E-Mail** und ein **CRM-Passwort** ab,
 erzeugt alle Schlüssel und startet die Seite. Danach:
 
 - Website: `https://www.seitz-rechtsschutz.de`
@@ -56,13 +56,13 @@ dann `docker compose up -d`.
 | Aufgabe | Befehl (im Ordner `rechtsschutz-site`) |
 |---|---|
 | Neuen Stand von GitHub übernehmen | `bash deploy/update.sh` |
-| Datensicherung | `bash deploy/backup.sh` (täglich per `crontab -e`, siehe Skript) |
+| Datensicherung | läuft täglich automatisch; manuell: `bash deploy/backup.sh` → `deploy/backups/` |
 | Logs ansehen | `docker compose logs -f app` |
 | Neustart | `docker compose restart` |
 | CRM-Passwort ändern | `.env` → `ADMIN_PASSWORD` ändern, dann `docker compose up -d` |
 
-Sicherheits-Updates für Ubuntu: `apt update && apt upgrade -y` (am besten monatlich) oder
-`apt install unattended-upgrades` für automatische Updates.
+Sicherheitsupdates für Ubuntu laufen automatisch. Backups liegen auf demselben Server – für echte Sicherheit
+regelmäßig eine Kopie herunterladen (z. B. `scp root@<IP>:rechtsschutz-site/deploy/backups/*.tar.gz .`).
 
 ## Datenschutz
 

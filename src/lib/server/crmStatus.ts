@@ -21,19 +21,35 @@ export async function readStatuses(): Promise<Record<string, StatusEntry>> {
 
 let queue: Promise<unknown> = Promise.resolve();
 
-export function setStatus(id: string, status: LeadStatus): Promise<StatusEntry> {
-  const run = queue.then(async () => {
-    const all = await readStatuses();
-    const at = new Date().toISOString();
-    const prev = all[id];
-    const entry: StatusEntry = { status, updatedAt: at, history: [...(prev?.history ?? []), { status, at }].slice(-50) };
-    all[id] = entry;
-    await mkdir(serverConfig.storageDir, { recursive: true, mode: 0o700 });
-    const tmp = `${file()}.${process.pid}.tmp`;
-    await writeFile(tmp, JSON.stringify(all), { encoding: "utf8", mode: 0o600 });
-    await rename(tmp, file());
-    return entry;
-  });
+async function save(all: Record<string, StatusEntry>) {
+  await mkdir(serverConfig.storageDir, { recursive: true, mode: 0o700 });
+  const tmp = `${file()}.${process.pid}.tmp`;
+  await writeFile(tmp, JSON.stringify(all), { encoding: "utf8", mode: 0o600 });
+  await rename(tmp, file());
+}
+
+function serial<T>(fn: () => Promise<T>): Promise<T> {
+  const run = queue.then(fn);
   queue = run.catch(() => undefined);
   return run;
+}
+
+export function setStatus(id: string, status: LeadStatus): Promise<StatusEntry> {
+  return serial(async () => {
+    const all = await readStatuses();
+    const at = new Date().toISOString();
+    const entry: StatusEntry = { status, updatedAt: at, history: [...(all[id]?.history ?? []), { status, at }].slice(-50) };
+    all[id] = entry;
+    await save(all);
+    return entry;
+  });
+}
+
+export function removeStatus(id: string): Promise<void> {
+  return serial(async () => {
+    const all = await readStatuses();
+    if (!(id in all)) return;
+    delete all[id];
+    await save(all);
+  });
 }

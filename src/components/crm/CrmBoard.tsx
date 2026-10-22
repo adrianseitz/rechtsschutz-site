@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronDown, Download, LogOut, Mail, Phone, RefreshCw, Search } from "lucide-react";
+import { ChevronDown, Download, LogOut, Mail, Phone, RefreshCw, Search, Trash2 } from "lucide-react";
 import { STATUSES, type CrmLead, type LeadStatus } from "@/lib/crm";
 
 const fmt = (iso: string) => new Date(iso).toLocaleString("de-DE", { timeZone: "Europe/Berlin", day: "2-digit", month: "2-digit", year: "2-digit", hour: "2-digit", minute: "2-digit" });
@@ -24,6 +24,7 @@ export function CrmBoard({ initial, storage, error }: { initial: CrmLead[]; stor
   const [q, setQ] = useState("");
   const [open, setOpen] = useState<string | null>(null);
   const [saveError, setSaveError] = useState("");
+  const [confirmDel, setConfirmDel] = useState<string | null>(null);
 
   const counts = useMemo(() => {
     const c: Record<string, number> = {};
@@ -52,6 +53,20 @@ export function CrmBoard({ initial, storage, error }: { initial: CrmLead[]; stor
       setLeads(before);
       setSaveError("Status konnte nicht gespeichert werden. Bitte erneut versuchen.");
     }
+  }
+
+  async function remove(id: string) {
+    setSaveError("");
+    try {
+      const res = await fetch("/api/admin/delete", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) });
+      if (res.status === 401) return router.replace("/admin/login");
+      if (!res.ok) throw new Error();
+      setLeads((ls) => ls.filter((l) => l.id !== id));
+      setOpen(null);
+    } catch {
+      setSaveError("Anfrage konnte nicht gelöscht werden. Bitte erneut versuchen.");
+    }
+    setConfirmDel(null);
   }
 
   async function logout() {
@@ -164,6 +179,19 @@ export function CrmBoard({ initial, storage, error }: { initial: CrmLead[]; stor
                       </dd>
                     </div>
                   )}
+                  <div className="flex flex-wrap items-center gap-3 border-t border-line pt-3 sm:col-span-2">
+                    {confirmDel === l.id ? (
+                      <>
+                        <span className="text-sm text-red-800">Endgültig löschen? Das lässt sich nicht rückgängig machen.</span>
+                        <button onClick={() => remove(l.id)} className="rounded-full bg-red-700 px-4 py-2 text-sm font-medium text-white hover:bg-red-800">Ja, löschen</button>
+                        <button onClick={() => setConfirmDel(null)} className="rounded-full border border-line bg-white px-4 py-2 text-sm font-medium text-navy">Abbrechen</button>
+                      </>
+                    ) : (
+                      <button onClick={() => setConfirmDel(l.id)} className="inline-flex items-center gap-2 rounded-full px-1 py-1 text-sm font-medium text-red-700 hover:underline">
+                        <Trash2 className="h-4 w-4" aria-hidden /> Anfrage löschen
+                      </button>
+                    )}
+                  </div>
                 </dl>
               )}
             </li>
