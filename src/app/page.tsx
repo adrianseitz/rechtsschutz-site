@@ -6,7 +6,6 @@ import { AboutAdvisor } from "@/components/sections/AboutAdvisor";
 import { Faq } from "@/components/sections/Faq";
 import { CtaBanner } from "@/components/sections/CtaBanner";
 import { Footnotes } from "@/components/sections/Footnotes";
-import { Reviews } from "@/components/sections/Reviews";
 import { Marquee } from "@/components/ui/Marquee";
 import { CostCalculatorSection } from "@/components/tools/CostCalculator";
 import { CoverageBuilder } from "@/components/tools/CoverageBuilder";
@@ -44,7 +43,6 @@ export default function HomePage() {
       <AboutAdvisor />
       <CoverageBuilder />
       <WaitingTimeline />
-      <Reviews />
       <Faq items={generalFaq} />
       <CtaBanner />
       <Footnotes />

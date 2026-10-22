@@ -5,7 +5,6 @@ import { generalFaq } from "@/lib/faq";
 import { site } from "@/lib/site";
 import { Hero, type FloatCard } from "./Hero";
 import { AboutAdvisor } from "./AboutAdvisor";
-import { Reviews } from "./Reviews";
 import { HowItWorks } from "./HowItWorks";
 import { Faq } from "./Faq";
 import { CtaBanner } from "./CtaBanner";
@@ -120,7 +119,6 @@ export function ProductLanding({ product }: { product: Product }) {
       <WaitingTimeline area={WAIT_AREA[product.key]} />
       <HowItWorks ctaHref={checkHref} ctaLabel={product.hero.cta} />
       <AboutAdvisor />
-      <Reviews />
       <Faq items={faq} title={`Fragen zum ${product.name}`} />
       <CtaBanner title={`${product.name}: Finde heraus, was zu dir passt.`} emphasis="passt." href={checkHref} label={product.hero.cta} />
       <Footnotes />
