@@ -1,11 +1,11 @@
 /** Lead-Status im CRM – gemeinsam für Server und Oberfläche. */
 export const STATUSES = [
-  { value: "neu", label: "Neu", cls: "bg-sun text-navy" },
-  { value: "kontaktiert", label: "Kontaktiert", cls: "bg-sky-100 text-sky-900" },
-  { value: "termin", label: "Termin", cls: "bg-violet-100 text-violet-900" },
-  { value: "angebot", label: "Angebot", cls: "bg-orange-100 text-orange-900" },
-  { value: "abschluss", label: "Abschluss", cls: "bg-emerald-100 text-emerald-900" },
-  { value: "verloren", label: "Verloren", cls: "bg-neutral-200 text-neutral-600" },
+  { value: "neu", label: "Neu", cls: "bg-sun text-navy", dot: "#FFD60A", stage: true },
+  { value: "kontaktiert", label: "Kontaktiert", cls: "bg-sky-100 text-sky-900", dot: "#38BDF8", stage: true },
+  { value: "termin", label: "Termin", cls: "bg-violet-100 text-violet-900", dot: "#A78BFA", stage: true },
+  { value: "angebot", label: "Angebot", cls: "bg-orange-100 text-orange-900", dot: "#FB923C", stage: true },
+  { value: "abschluss", label: "Gewonnen", cls: "bg-emerald-100 text-emerald-900", dot: "#10B981", stage: false },
+  { value: "verloren", label: "Verloren", cls: "bg-rose-100 text-rose-900", dot: "#F43F5E", stage: false },
 ] as const;
 
 export type LeadStatus = (typeof STATUSES)[number]["value"];

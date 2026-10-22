@@ -67,7 +67,7 @@ Die CSV-Datei hat Semikolon-Trennung und UTF-8-BOM und lässt sich so direkt in 
 
 - Login mit `ADMIN_PASSWORD` (mind. 12 Zeichen), Sitzung 12 Stunden als HttpOnly-Cookie, max. 5 Login-Versuche pro 15 Minuten.
 - Alle Anfragen aus Rechtsschutz-Check und Kontaktformular, neueste zuerst; Suche, Filter nach Status, Anruf-/Mail-Knopf, Details mit Quelle und Einwilligungen.
-- Status: Neu → Kontaktiert → Termin → Angebot → Abschluss / Verloren, mit Verlauf. Gespeichert in `data/crm-status.json` (nur IDs + Status).
+- Status: Pipeline mit Spalten Neu → Kontaktiert → Termin → Angebot → Gewonnen / Verloren (Karten per Drag & Drop verschieben), Detailansicht mit Phasenleiste, Listenansicht, Kennzahlen, Hinweis auf unbearbeitete Anfragen, Verlauf. Gespeichert in `data/crm-status.json` (nur IDs + Status).
 - CSV-Export inkl. Status über den Download-Knopf.
 - Braucht `LEAD_STORAGE=file` auf einem Server mit dauerhaftem Speicher → siehe **DEPLOY.md** (IONOS VPS mit Docker + Caddy).
 - Kein Header, kein Intro, kein Tracking und kein Cookie-Banner im CRM; `/admin` ist für Suchmaschinen gesperrt.
