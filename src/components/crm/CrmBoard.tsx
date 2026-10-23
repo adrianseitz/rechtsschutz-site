@@ -26,6 +26,10 @@ const initials = (name: string) =>
   name.split(/\s+/).filter(Boolean).slice(0, 2).map((p) => p[0]?.toUpperCase()).join("") || "?";
 
 /** Neue Anfrage, die länger als 24 Stunden unbearbeitet ist. */
+/** Keine Abschluss-Anfrage, seit über 12 Monaten ohne Aktivität → laut Datenschutzerklärung zu löschen. */
+const retentionDue = (l: CrmLead) =>
+  l.status !== "abschluss" && Date.now() - new Date(l.statusUpdatedAt ?? l.createdAt).getTime() > 365 * 24 * 3600 * 1000;
+
 const overdue = (l: CrmLead) => l.status === "neu" && Date.now() - new Date(l.createdAt).getTime() > 24 * 3600 * 1000;
 
 const channelShort = (c: string) =>
@@ -205,6 +209,7 @@ export function CrmBoard({ initial, storage, error }: { initial: CrmLead[]; stor
                                 <p className="mt-0.5 truncate text-xs text-ink-soft">{l.productLabel}</p>
                               </div>
                               {overdue(l) && <AlertCircle className="h-4 w-4 shrink-0 text-rose-500" aria-label="Seit über 24 Stunden unbearbeitet" />}
+                              {retentionDue(l) && <Trash2 className="h-4 w-4 shrink-0 text-neutral-500" aria-label="Löschfrist erreicht" />}
                             </div>
                             {(l.situation || l.requestType) && <p className="mt-2 line-clamp-2 text-xs leading-snug text-ink-muted">{l.situation ?? l.requestType}</p>}
                             <div className="mt-2.5 flex items-center gap-2 text-[11px] text-ink-muted">
@@ -351,6 +356,9 @@ function Drawer({ lead: l, onClose, onStatus, onDelete }: { lead: CrmLead; onClo
             <a href={`mailto:${l.email}?subject=${encodeURIComponent("Ihre Anfrage zum " + l.productLabel)}`} className="flex items-center justify-center gap-2 rounded-lg border border-line py-3 text-sm font-semibold hover:border-navy"><Mail className="h-4 w-4" aria-hidden />E-Mail</a>
           </div>
 
+          {retentionDue(l) && (
+            <p className="mx-5 mt-4 flex items-center gap-2 rounded-lg bg-neutral-100 px-3 py-2.5 text-sm text-neutral-800"><Trash2 className="h-4 w-4 shrink-0" aria-hidden />Seit über 12 Monaten ohne Aktivität – laut Datenschutzerklärung jetzt löschen.</p>
+          )}
           {overdue(l) && (
             <p className="mx-5 mt-4 flex items-center gap-2 rounded-lg bg-rose-50 px-3 py-2.5 text-sm text-rose-800"><AlertCircle className="h-4 w-4 shrink-0" aria-hidden />Seit {ago(l.createdAt)} unbearbeitet – am besten heute melden.</p>
           )}

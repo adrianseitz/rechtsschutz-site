@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: "Datenschutzerklärung", alternates: 
 export default function DatenschutzPage() {
   return (
     <LegalShell title="Datenschutzerklärung">
-      <p>Stand: <span className="ph">[PLATZHALTER: Datum]</span></p>
+      <p>Stand: Oktober 2026</p>
 
       <h2>1. Verantwortlicher</h2>
       <p>{legal.name}<br /><V v={legal.street} /><br /><V v={legal.city} /><br />E-Mail: <V v={site.email} /> · Telefon: <V v={site.phone} /></p>
@@ -21,11 +21,11 @@ export default function DatenschutzPage() {
       <p>Zusätzlich speichere ich zur Nachweisbarkeit den Zeitpunkt und Wortlaut deiner Einwilligungen sowie Angaben zur Herkunft der Anfrage (Kampagnenparameter wie „utm_source“, Einstiegsseite, verweisende Domain). Werbe-Klick-IDs (z. B. gclid, fbclid) werden nur mit deiner Marketing-Einwilligung erfasst. Zum Schutz vor Missbrauch wird deine IP-Adresse ausschließlich in gehashter (pseudonymisierter) Form verarbeitet (Art. 6 Abs. 1 lit. f DSGVO).</p>
       <p>Die Felder werden verschlüsselt übertragen (TLS) und personenbezogene Inhalte verschlüsselt gespeichert. Deine Anfrage wird auf dem oben genannten Server in Deutschland gespeichert und in meinem eigenen, passwortgeschützten Kundenverwaltungssystem (CRM) auf diesem Server bearbeitet; eine Übermittlung an externe CRM-Anbieter findet nicht statt. Über neue Anfragen werde ich per E-Mail benachrichtigt. <span className="ph">[PLATZHALTER: E-Mail-Anbieter für die Benachrichtigung inkl. Sitz, z. B. Google Ireland Limited bei Gmail – ggf. Drittlandübermittlung]</span></p>
       <h3>Weitergabe an Versicherer</h3>
-      <p>Für die Erstellung eines Angebots oder einen Antrag übermittle ich die hierfür erforderlichen Daten an den Versicherer (ARAG) – erst wenn du ein konkretes Angebot wünschst. <span className="ph">[PLATZHALTER: genaue Empfänger laut Agenturvertrag]</span></p>
+      <p>Für die Erstellung eines Angebots oder einen Antrag übermittle ich die hierfür erforderlichen Daten an den Versicherer (ARAG) – erst wenn du ein konkretes Angebot wünschst. Empfänger ist die ARAG SE, ARAG Platz 1, 40472 Düsseldorf, bzw. die für das jeweilige Produkt zuständige Gesellschaft des ARAG Konzerns.</p>
       <h3>Optionale Marketing-Einwilligung</h3>
       <p>Wenn du dies gesondert erlaubst, informiere ich dich gelegentlich über weitere passende Versicherungslösungen (Art. 6 Abs. 1 lit. a DSGVO). Du kannst diese Einwilligung jederzeit mit Wirkung für die Zukunft widerrufen, z. B. per E-Mail.</p>
       <h3>Speicherdauer</h3>
-      <p><span className="ph">[PLATZHALTER: Löschfristen, z. B. Löschung nicht weiterverfolgter Anfragen nach X Monaten; bei Vertragsschluss gesetzliche Aufbewahrungsfristen]</span></p>
+      <p>Anfragen, aus denen kein Versicherungsvertrag entsteht, lösche ich spätestens 12 Monate nach dem letzten Kontakt. Kommt ein Vertrag zustande, speichere ich die Daten für die Dauer der Betreuung und darüber hinaus nur, soweit gesetzliche Aufbewahrungspflichten bestehen (z. B. nach Handels- und Steuerrecht). Daten, die ich aufgrund deiner Einwilligung verarbeite, lösche ich nach deren Widerruf, sofern keine andere Rechtsgrundlage besteht. Auf Wunsch lösche ich deine Anfrage jederzeit früher.</p>
 
       <h2>4. Einwilligungsverwaltung und Cookies</h2>
       <p>Für den Betrieb notwendige Informationen (z. B. deine Datenschutz-Auswahl) werden im Speicher deines Browsers abgelegt (§ 25 Abs. 2 TDDDG). Nicht notwendige Dienste werden erst nach deiner Einwilligung geladen (§ 25 Abs. 1 TDDDG, Art. 6 Abs. 1 lit. a DSGVO). Deine Auswahl kannst du jederzeit über „Cookie-Einstellungen“ im Footer ändern oder widerrufen.</p>
