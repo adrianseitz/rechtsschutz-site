@@ -14,8 +14,12 @@ export default function ImpressumPage() {
       <h2>Kontakt</h2>
       <p>Telefon: <V v={site.phone} /><br />E-Mail: <V v={site.email} /></p>
 
-      <h2>Umsatzsteuer</h2>
-      <p>Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG: <V v={legal.vatId} /></p>
+      {legal.vatId && (
+        <>
+          <h2>Umsatzsteuer</h2>
+          <p>Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG: <V v={legal.vatId} /></p>
+        </>
+      )}
 
       <h2>Angaben zur Versicherungsvermittlung (§ 15 VersVermV)</h2>
       <h3>Status</h3>
@@ -38,12 +42,8 @@ export default function ImpressumPage() {
       <h3>Beteiligungen</h3>
       <p><V v={legal.participations} /></p>
       <h3>Schlichtungsstellen</h3>
-      <p>Bei Streitigkeiten zwischen Versicherungsvermittlern und Versicherungsnehmern können folgende Schlichtungsstellen angerufen werden:</p>
-      <ul>
-        <li>Versicherungsombudsmann e.V., Postfach 08 06 32, 10006 Berlin, <a href="https://www.versicherungsombudsmann.de" target="_blank" rel="noopener noreferrer">www.versicherungsombudsmann.de</a></li>
-        <li>Ombudsmann Private Kranken- und Pflegeversicherung, Postfach 06 02 22, 10052 Berlin, <a href="https://www.pkv-ombudsmann.de" target="_blank" rel="noopener noreferrer">www.pkv-ombudsmann.de</a></li>
-      </ul>
-      <p><span className="ph">[PLATZHALTER: Anschriften vor Veröffentlichung auf Aktualität prüfen]</span></p>
+      <p>Bei Streitigkeiten zwischen Versicherungsvermittlern und Versicherungsnehmern kann folgende Schlichtungsstelle angerufen werden:</p>
+      <p>Versicherungsombudsmann e.V., Postfach 08 06 32, 10006 Berlin, <a href="https://www.versicherungsombudsmann.de" target="_blank" rel="noopener noreferrer">www.versicherungsombudsmann.de</a></p>
       <h3>Berufsrechtliche Regelungen</h3>
       <ul>
         <li>§ 34d Gewerbeordnung (GewO)</li>

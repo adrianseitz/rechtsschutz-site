@@ -32,15 +32,15 @@ export const legal = {
   street: "Kaiserheinrichstraße 50",
   city: "56220 Urmitz",
   status:
-    "[PLATZHALTER: Status laut Gewerbeerlaubnis/Registereintrag, z. B. gebundener Versicherungsvertreter nach § 34d Abs. 7 GewO oder Versicherungsvertreter mit Erlaubnis nach § 34d Abs. 1 GewO]",
+    "Gebundener Versicherungsvertreter nach § 34d Abs. 7 GewO, ausschließlich tätig für die ARAG SE",
   registerNumber: "D-NJIQ-LK7E6-45",
-  chamber: "[PLATZHALTER: Zuständige IHK inkl. Anschrift]",
-  vatId: "[PLATZHALTER: USt-IdNr., falls vorhanden – sonst Zeile entfernen]",
+  chamber: "Industrie- und Handelskammer Koblenz, Schlossstraße 2, 56068 Koblenz",
+  vatId: "",
   insurers: "ARAG SE, ARAG Platz 1, 40472 Düsseldorf",
   participations:
-    "[PLATZHALTER: Erklärung zu direkten/indirekten Beteiligungen über 10 % an bzw. von Versicherungsunternehmen]",
+    "Ich halte keine direkte oder indirekte Beteiligung von über 10 % der Stimmrechte oder des Kapitals an einem Versicherungsunternehmen. Kein Versicherungsunternehmen und kein Mutterunternehmen eines Versicherungsunternehmens hält eine solche Beteiligung an mir.",
   remuneration:
-    "[PLATZHALTER: Art der Vergütung laut § 15 Abs. 1 Nr. 8 VersVermV, z. B. Provision, die in der Versicherungsprämie enthalten ist]",
+    "Für die Vermittlung erhalte ich eine Provision vom Versicherer, die in der Versicherungsprämie enthalten ist. Für dich entstehen keine zusätzlichen Kosten.",
 };
 
 export const nav = [
