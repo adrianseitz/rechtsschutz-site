@@ -33,10 +33,10 @@ export const legal = {
   city: "56220 Urmitz",
   status:
     "[PLATZHALTER: Status laut Gewerbeerlaubnis/Registereintrag, z. B. gebundener Versicherungsvertreter nach § 34d Abs. 7 GewO oder Versicherungsvertreter mit Erlaubnis nach § 34d Abs. 1 GewO]",
-  registerNumber: "[PLATZHALTER: Registrierungsnummer, Format D-XXXX-XXXXX-XX]",
+  registerNumber: "D-NJIQ-LK7E6-45",
   chamber: "[PLATZHALTER: Zuständige IHK inkl. Anschrift]",
   vatId: "[PLATZHALTER: USt-IdNr., falls vorhanden – sonst Zeile entfernen]",
-  insurers: "[PLATZHALTER: Versicherer, für die Sie tätig sind, z. B. ARAG SE / ARAG Allgemeine Versicherungs-AG – bitte exakt laut Agenturvertrag]",
+  insurers: "ARAG SE, ARAG Platz 1, 40472 Düsseldorf",
   participations:
     "[PLATZHALTER: Erklärung zu direkten/indirekten Beteiligungen über 10 % an bzw. von Versicherungsunternehmen]",
   remuneration:
