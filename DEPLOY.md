@@ -66,6 +66,6 @@ regelmäßig eine Kopie herunterladen (z. B. `scp root@<IP>:rechtsschutz-site/de
 
 ## Datenschutz
 
-- Hosting bei IONOS in Deutschland → **Auftragsverarbeitungsvertrag (AVV)** im IONOS-Kundenkonto abschließen.
+- Hosting bei IONOS (Rechenzentrum in der EU) → **Auftragsverarbeitungsvertrag (AVV)** im IONOS-Kundenkonto abschließen.
 - In der Datenschutzerklärung IONOS als Hoster nennen und die Speicherdauer der Anfragen festlegen.
 - Anfragen, die nicht mehr benötigt werden, regelmäßig löschen (Löschkonzept).
