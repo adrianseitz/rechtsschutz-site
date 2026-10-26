@@ -71,6 +71,7 @@ Die CSV-Datei hat Semikolon-Trennung und UTF-8-BOM und lässt sich so direkt in 
 - CSV-Export inkl. Status über den Download-Knopf.
 - Braucht `LEAD_STORAGE=file` auf einem Server mit dauerhaftem Speicher → siehe **DEPLOY.md** (IONOS VPS mit Docker + Caddy).
 - Kein Header, kein Intro, kein Tracking und kein Cookie-Banner im CRM; `/admin` ist für Suchmaschinen gesperrt.
+- **Statistik** (eigener Reiter): Besucher, Seitenaufrufe, Anfragequote, Verlauf, Top-Seiten, Herkunft, Gerät. Zählung ohne Cookies über `/api/collect`; IP wird nicht gespeichert (Tages-Hash nur im Arbeitsspeicher), auf Platte nur Tagessummen in `data/stats.json` (24 Monate).
 
 ## Tracking & Consent
 

@@ -16,6 +16,7 @@ import { Cursor } from "@/components/ui/Cursor";
 import { ClickBurst } from "@/components/ui/ClickBurst";
 import { Intro } from "@/components/ui/Intro";
 import { PublicOnly } from "@/components/layout/PublicOnly";
+import { PageView } from "@/components/analytics/PageView";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -58,6 +59,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[70] focus:rounded-lg focus:bg-white focus:px-4 focus:py-2">Zum Inhalt springen</a>
         <ConsentManager>
           <PublicOnly>
+            <PageView />
             <SmoothScroll />
             <Intro />
             <Cursor />
