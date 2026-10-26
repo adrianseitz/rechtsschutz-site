@@ -17,7 +17,7 @@ export const site = {
   url: env("NEXT_PUBLIC_SITE_URL", "https://www.seitz-rechtsschutz.de").replace(/\/$/, ""),
   owner: "Adrian Seitz",
   role: "Selbstständiger Versicherungsvermittler – Vertriebspartner der ARAG",
-  email: env("NEXT_PUBLIC_CONTACT_EMAIL", "Adrian.Seitz@arag-partner.de"),
+  email: env("NEXT_PUBLIC_CONTACT_EMAIL", "adrian.seitz@arag-partner.de"),
   phone: env("NEXT_PUBLIC_CONTACT_PHONE", "0176 20017708"),
   /** Optionaler externer Buchungslink (z. B. Calendly). Ohne Wert läuft die Terminanfrage über /kontakt. */
   bookingUrl: process.env.NEXT_PUBLIC_BOOKING_URL?.trim() || "",
