@@ -53,7 +53,7 @@ export default function ImpressumPage() {
       <p>Die Regelungen können unter <a href="https://www.gesetze-im-internet.de" target="_blank" rel="noopener noreferrer">www.gesetze-im-internet.de</a> eingesehen werden.</p>
 
       <h2>Verbraucherstreitbeilegung (§ 36 VSBG)</h2>
-      <p><span className="ph">[PLATZHALTER: Erklärung, ob Sie zur Teilnahme an einem Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle bereit oder verpflichtet sind – mit Prüfung, ob die Pflicht für Sie gilt]</span></p>
+      <p>Ich bin bereit, an Streitbeilegungsverfahren vor der oben genannten Schlichtungsstelle (Versicherungsombudsmann e.V.) teilzunehmen.</p>
 
       <h2>Hinweis zur Website</h2>
       <p>Diese Website wird von {legal.name} als selbstständigem Versicherungsvermittler betrieben. Sie ist keine offizielle Website der ARAG und kein unabhängiges Vergleichsportal. Inhalte zu Versicherungsleistungen sind allgemeine Informationen; maßgeblich sind ausschließlich die jeweiligen Versicherungsbedingungen.</p>
