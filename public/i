@@ -1,0 +1,13 @@
+#!/bin/bash
+# Kurz-Installer: holt das Projekt von GitHub und startet die Einrichtung.
+set -e
+export DEBIAN_FRONTEND=noninteractive
+apt-get update -qq
+apt-get install -y -qq git curl >/dev/null
+if [ -d /root/rechtsschutz-site/.git ]; then
+  git -C /root/rechtsschutz-site pull -q --ff-only || true
+else
+  git clone -q https://github.com/adrianseitz/rechtsschutz-site /root/rechtsschutz-site
+fi
+cd /root/rechtsschutz-site
+exec bash deploy/setup.sh </dev/tty
