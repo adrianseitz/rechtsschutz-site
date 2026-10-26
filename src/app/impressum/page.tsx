@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { LegalShell, V } from "@/components/legal/LegalShell";
 import { legal, site } from "@/lib/site";
-import { PHOTOS } from "@/lib/photos";
 
 export const metadata: Metadata = { title: "Impressum & Vermittlerangaben", robots: { index: true, follow: true }, alternates: { canonical: "/impressum" } };
 
@@ -59,12 +58,7 @@ export default function ImpressumPage() {
       <p>Diese Website wird von {legal.name} als selbstständigem Versicherungsvermittler betrieben. Sie ist keine offizielle Website der ARAG und kein unabhängiges Vergleichsportal. Inhalte zu Versicherungsleistungen sind allgemeine Informationen; maßgeblich sind ausschließlich die jeweiligen Versicherungsbedingungen.</p>
 
       <h2>Bildnachweise</h2>
-      <p>Fotos von <a href="https://unsplash.com" target="_blank" rel="noopener noreferrer">Unsplash</a> (Unsplash-Lizenz). Es handelt sich um Symbolbilder; die abgebildeten Personen stehen in keinem Zusammenhang mit den beschriebenen Fällen.</p>
-      <ul>
-        {Object.values(PHOTOS).map((p) => (
-          <li key={p.src}>{p.alt} – Foto: <a href={p.url} target="_blank" rel="noopener noreferrer">{p.author}</a></li>
-        ))}
-      </ul>
+      <p>Bei den Fotos handelt es sich um lizenzierte Symbolbilder mit Models; die abgebildeten Personen stehen in keinem Zusammenhang mit den beschriebenen Fällen.</p>
       <p>3D-Icons: Microsoft Fluent Emoji (MIT-Lizenz). Studio-Beleuchtung der 3D-Szene: Poly Haven (CC0).</p>
 
       <h2>Verantwortlich für den Inhalt</h2>

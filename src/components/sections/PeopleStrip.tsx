@@ -134,7 +134,7 @@ export function PeopleStrip() {
           {MOMENTS.map((m, i) => <FlipCard key={m.photo} m={m} i={i} dragging={dragging} hint={!touched && i === 0} />)}
         </motion.div>
       </div>
-      <p className="container mt-2 text-xs text-ink-muted">Symbolbilder von Unsplash mit Models – keine Kundinnen und Kunden. Ob ein Fall versichert ist, regelt der jeweilige Tarif.</p>
+      <p className="container mt-2 text-xs text-ink-muted">Symbolbilder – keine Kundinnen und Kunden. Ob ein Fall versichert ist, regelt der jeweilige Tarif.</p>
     </section>
   );
 }

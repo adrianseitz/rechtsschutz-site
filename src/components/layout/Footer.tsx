@@ -41,7 +41,7 @@ export function Footer() {
             </div>
           </div>
           <p className="mt-14 border-t border-white/10 pt-6 text-xs leading-5 text-white/40">
-            Hinweis zur Vermittlerrolle: {site.owner} ist als selbstständiger Versicherungsvermittler für die ARAG tätig und wird bei erfolgreicher Vermittlung vom Versicherer vergütet. Eine Beratung erfolgt nicht als unabhängiger Makler. Alle Angaben zu Leistungen sind allgemeine Informationen; maßgeblich sind die jeweiligen Versicherungsbedingungen. Fotos: Unsplash (Symbolbilder, <Link href="/impressum" className="underline">Bildnachweise</Link>). 3D-Icons: Microsoft Fluent Emoji (MIT). © {new Date().getFullYear()} {site.owner}
+            Hinweis zur Vermittlerrolle: {site.owner} ist als selbstständiger Versicherungsvermittler für die ARAG tätig und wird bei erfolgreicher Vermittlung vom Versicherer vergütet. Eine Beratung erfolgt nicht als unabhängiger Makler. Alle Angaben zu Leistungen sind allgemeine Informationen; maßgeblich sind die jeweiligen Versicherungsbedingungen. © {new Date().getFullYear()} {site.owner}
           </p>
         </div>
         <div aria-hidden className="select-none overflow-hidden px-4 pt-6 text-center">
