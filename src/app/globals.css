@@ -9,7 +9,7 @@
   html.lenis, html.lenis body { height: auto; }
   .lenis.lenis-smooth { scroll-behavior: auto !important; }
   body { @apply bg-white text-ink font-sans antialiased; text-rendering: optimizeLegibility; font-feature-settings: "ss01", "cv11"; }
-  h1, h2, h3, h4 { @apply font-display text-navy; letter-spacing: -0.03em; }
+  h1, h2, h3, h4 { @apply font-display text-navy; letter-spacing: -0.03em; overflow-wrap: break-word; -webkit-hyphens: auto; hyphens: auto; hyphenate-limit-chars: 10 4 4; }
   ::selection { background: #FFD60A; color: #0B0B0A; }
   :focus-visible { outline: 2px solid #0B0B0A; outline-offset: 3px; border-radius: 6px; }
   @media (prefers-reduced-motion: reduce) {

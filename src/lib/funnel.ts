@@ -93,7 +93,7 @@ export const BEGINN: Question = {
 
 export const BESTAND: Question = {
   id: "bestand",
-  title: "Hast du bereits eine Rechtsschutzversicherung?",
+  title: "Hast du bereits eine Rechtsschutz\u00ADversicherung?",
   options: [
     { value: "ja", label: "Ja", icon: "CircleCheck" },
     { value: "nein", label: "Nein", icon: "Ban" },

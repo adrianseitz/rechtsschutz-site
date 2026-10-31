@@ -144,9 +144,9 @@ export function RechtsschutzCheck() {
       <AnimatePresence mode="wait" custom={dir} initial={false}>
         <motion.div key={stepId} custom={dir} variants={variants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}>
           {question ? (
-            <fieldset>
+            <fieldset className="min-w-0">
               <legend className="w-full">
-                <h1 ref={headingRef} tabIndex={-1} className="text-[2rem] font-semibold leading-[1.05] tracking-[-0.04em] outline-none sm:text-[2.75rem]">{question.title}</h1>
+                <h1 ref={headingRef} tabIndex={-1} className="text-[1.7rem] font-semibold leading-[1.08] min-[400px]:text-[2rem] tracking-[-0.04em] outline-none sm:text-[2.75rem]">{question.title}</h1>
                 {question.subtitle && <p className="mt-2 text-ink-soft">{question.subtitle}</p>}
               </legend>
               <div className={`mt-7 grid gap-3 ${question.options.length > 4 && question.id !== "bereich" ? "sm:grid-cols-2" : ""}`}>
@@ -240,7 +240,7 @@ function EinheitenStep({ initial, onNext, headingRef }: { initial?: number; onNe
 
   return (
     <form onSubmit={(e) => { e.preventDefault(); if (valid) onNext(n); }} noValidate>
-      <h1 ref={headingRef} tabIndex={-1} className="text-[2rem] font-semibold leading-[1.05] tracking-[-0.04em] outline-none sm:text-[2.75rem]">Wie viele Wohneinheiten vermietest du?</h1>
+      <h1 ref={headingRef} tabIndex={-1} className="text-[1.7rem] font-semibold leading-[1.08] min-[400px]:text-[2rem] tracking-[-0.04em] outline-none sm:text-[2.75rem]">Wie viele Wohneinheiten vermietest du?</h1>
       <p className="mt-2 text-ink-soft">Zähle alle vermieteten Wohnungen zusammen – bei einem Mehrfamilienhaus jede Wohnung einzeln.</p>
 
       <div className="card mt-7 p-5 sm:p-6">
@@ -318,7 +318,7 @@ function ContactStep({ answers, startedAt, onSuccess, headingRef }: {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate>
-      <h1 ref={headingRef} tabIndex={-1} className="text-[2rem] font-semibold leading-[1.05] tracking-[-0.04em] outline-none sm:text-[2.75rem]">Fast geschafft! Erhalte jetzt deine persönliche Beratung.</h1>
+      <h1 ref={headingRef} tabIndex={-1} className="text-[1.7rem] font-semibold leading-[1.08] min-[400px]:text-[2rem] tracking-[-0.04em] outline-none sm:text-[2.75rem]">Fast geschafft! Erhalte jetzt deine persönliche Beratung.</h1>
       <p className="mt-2 text-ink-soft">Wohin darf ich dir meine Empfehlung schicken?</p>
 
       <div className="card mt-7 space-y-4 p-5 sm:p-6">
