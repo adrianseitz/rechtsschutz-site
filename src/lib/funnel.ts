@@ -1,6 +1,6 @@
 export type Option = { value: string; label: string; hint?: string; icon?: string };
 export type Question = {
-  id: "bereich" | "situation" | "beginn" | "bestand";
+  id: "bereich" | "situation" | "einheiten" | "beginn" | "bestand";
   title: string;
   subtitle?: string;
   multi?: boolean;
@@ -75,6 +75,10 @@ export const SITUATION: Record<string, Question> = {
     options: MULTI_AREAS,
   },
 };
+
+/** Nur für Vermieter: Anzahl der vermieteten Wohneinheiten (freie Zahleneingabe). */
+export const EINHEITEN_MAX = 999;
+export const einheitenLabel = (n: number) => `${n} ${n === 1 ? "Wohneinheit" : "Wohneinheiten"}`;
 
 export const BEGINN: Question = {
   id: "beginn",

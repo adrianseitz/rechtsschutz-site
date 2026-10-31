@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { AREA_VALUES, BEGINN, BESTAND, SITUATION } from "./funnel";
+import { AREA_VALUES, BEGINN, BESTAND, EINHEITEN_MAX, SITUATION } from "./funnel";
 
 /** Version der Einwilligungstexte – bei Textänderungen hochzählen (Nachweisbarkeit). */
 export const CONSENT_VERSION = "2026-10-20";
@@ -64,6 +64,7 @@ export const leadSchema = z
     answers: z.object({
       bereich: z.enum(AREA_VALUES),
       situation: z.array(trimmed(40)).min(1).max(6),
+      einheiten: z.number().int().min(1).max(EINHEITEN_MAX).optional(),
       beginn: z.enum(BEGINN.options.map((o) => o.value) as [string, ...string[]]),
       bestand: z.enum(BESTAND.options.map((o) => o.value) as [string, ...string[]]),
     }),
@@ -77,6 +78,9 @@ export const leadSchema = z
     const allowed = new Set(q?.options.map((o) => o.value) ?? []);
     if (!q?.multi && d.answers.situation.length !== 1) {
       ctx.addIssue({ code: "custom", path: ["answers", "situation"], message: "Ungültige Auswahl." });
+    }
+    if (d.answers.bereich === "vermieter" && d.answers.einheiten === undefined) {
+      ctx.addIssue({ code: "custom", path: ["answers", "einheiten"], message: "Bitte gib die Anzahl der Wohneinheiten an." });
     }
     if (d.answers.situation.some((s) => !allowed.has(s))) {
       ctx.addIssue({ code: "custom", path: ["answers", "situation"], message: "Ungültige Auswahl." });

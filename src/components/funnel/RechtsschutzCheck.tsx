@@ -6,8 +6,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AlertCircle, ArrowLeft, ArrowRight, Check, Loader2, Lock } from "lucide-react";
-import { AREAS, BEGINN, BESTAND, CONTACT_METHODS, SITUATION, type Question } from "@/lib/funnel";
+import { AlertCircle, ArrowLeft, ArrowRight, Check, Loader2, Lock, Minus, Plus } from "lucide-react";
+import { AREAS, BEGINN, BESTAND, CONTACT_METHODS, EINHEITEN_MAX, SITUATION, type Question } from "@/lib/funnel";
 import { CONSENT_TEXTS, contactFieldsSchema, type ContactFields } from "@/lib/schemas";
 import { getAttribution } from "@/lib/attribution";
 import { currentTrackingConsent } from "@/lib/consent";
@@ -16,9 +16,10 @@ import { Icon3D } from "../ui/Icon3D";
 import { StampOverlay } from "../ui/StampOverlay";
 import { fireBurst } from "../ui/ClickBurst";
 
-type Answers = { bereich?: string; situation: string[]; beginn?: string; bestand?: string };
-type StepId = "bereich" | "situation" | "beginn" | "bestand" | "kontakt";
-const STEPS: StepId[] = ["bereich", "situation", "beginn", "bestand", "kontakt"];
+type Answers = { bereich?: string; situation: string[]; einheiten?: number; beginn?: string; bestand?: string };
+type StepId = "bereich" | "situation" | "einheiten" | "beginn" | "bestand" | "kontakt";
+const BASE_STEPS: StepId[] = ["bereich", "situation", "beginn", "bestand", "kontakt"];
+const VERMIETER_STEPS: StepId[] = ["bereich", "situation", "einheiten", "beginn", "bestand", "kontakt"];
 
 const BEREICH_Q: Question = { id: "bereich", title: "Welchen Bereich möchtest du absichern?", options: AREAS };
 
@@ -64,6 +65,7 @@ export function RechtsschutzCheck() {
     track("funnel_started", { bereich }, { dedupeKey: runId.current });
   };
 
+  const STEPS = answers.bereich === "vermieter" ? VERMIETER_STEPS : BASE_STEPS;
   const stepId = STEPS[step];
   const question: Question | null = useMemo(() => {
     if (stepId === "bereich") return BEREICH_Q;
@@ -189,6 +191,16 @@ export function RechtsschutzCheck() {
                 </button>
               )}
             </fieldset>
+          ) : stepId === "einheiten" ? (
+            <EinheitenStep
+              headingRef={headingRef}
+              initial={answers.einheiten}
+              onNext={(n) => {
+                setAnswers((a) => ({ ...a, einheiten: n }));
+                completeStep("einheiten");
+                go(step + 1);
+              }}
+            />
           ) : stepId === "kontakt" ? (
             <ContactStep
               headingRef={headingRef}
@@ -216,6 +228,53 @@ export function RechtsschutzCheck() {
         <Lock className="h-3.5 w-3.5" aria-hidden /> Verschlüsselte Übertragung · Kostenlos & unverbindlich
       </p>
     </div>
+  );
+}
+
+function EinheitenStep({ initial, onNext, headingRef }: { initial?: number; onNext: (n: number) => void; headingRef: React.RefObject<HTMLHeadingElement | null> }) {
+  const [raw, setRaw] = useState(initial ? String(initial) : "1");
+  const n = Number.parseInt(raw, 10);
+  const valid = Number.isInteger(n) && n >= 1 && n <= EINHEITEN_MAX;
+  const set = (v: number) => setRaw(String(Math.min(EINHEITEN_MAX, Math.max(1, v))));
+  const QUICK = [1, 2, 3, 4, 6, 10];
+
+  return (
+    <form onSubmit={(e) => { e.preventDefault(); if (valid) onNext(n); }} noValidate>
+      <h1 ref={headingRef} tabIndex={-1} className="text-[2rem] font-semibold leading-[1.05] tracking-[-0.04em] outline-none sm:text-[2.75rem]">Wie viele Wohneinheiten vermietest du?</h1>
+      <p className="mt-2 text-ink-soft">Zähle alle vermieteten Wohnungen zusammen – bei einem Mehrfamilienhaus jede Wohnung einzeln.</p>
+
+      <div className="card mt-7 p-5 sm:p-6">
+        <label htmlFor="einheiten" className="label">Anzahl Wohneinheiten</label>
+        <div className="flex items-stretch gap-3">
+          <button type="button" onClick={() => set((valid ? n : 1) - 1)} disabled={valid && n <= 1} aria-label="Eine weniger"
+            className="grid w-14 shrink-0 place-items-center rounded-2xl border border-line bg-white text-navy transition hover:border-navy disabled:opacity-40">
+            <Minus className="h-5 w-5" aria-hidden />
+          </button>
+          <input id="einheiten" type="number" inputMode="numeric" min={1} max={EINHEITEN_MAX} value={raw}
+            onChange={(e) => setRaw(e.target.value.replace(/[^0-9]/g, "").slice(0, 3))}
+            aria-invalid={!valid}
+            className="input min-w-0 flex-1 text-center text-3xl font-semibold tabular-nums [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none" />
+          <button type="button" onClick={() => set((valid ? n : 0) + 1)} disabled={valid && n >= EINHEITEN_MAX} aria-label="Eine mehr"
+            className="grid w-14 shrink-0 place-items-center rounded-2xl border border-line bg-white text-navy transition hover:border-navy disabled:opacity-40">
+            <Plus className="h-5 w-5" aria-hidden />
+          </button>
+        </div>
+        {!valid && <p className="field-error">Bitte gib eine Zahl zwischen 1 und {EINHEITEN_MAX} ein.</p>}
+        <div className="mt-4 flex flex-wrap gap-2" aria-label="Schnellauswahl">
+          {QUICK.map((q) => (
+            <button key={q} type="button" onClick={() => set(q)} aria-pressed={n === q}
+              className={`rounded-full border px-4 py-2 text-sm font-medium transition ${n === q ? "border-navy bg-sun text-navy" : "border-line bg-white text-ink-soft hover:border-navy/40"}`}>
+              {q === 10 ? "10+" : q}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <button type="submit" disabled={!valid}
+        className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-navy py-4 text-base font-medium text-white transition hover:bg-navy-800 disabled:opacity-40">
+        Weiter <ArrowRight className="h-4 w-4" aria-hidden />
+      </button>
+    </form>
   );
 }
 

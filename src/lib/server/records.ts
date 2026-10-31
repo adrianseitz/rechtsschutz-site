@@ -2,7 +2,7 @@ import "server-only";
 import { randomUUID } from "node:crypto";
 import type { Attribution, ContactFormInput, LeadInput } from "../schemas";
 import { CONSENT_TEXTS, CONSENT_VERSION } from "../schemas";
-import { labelFor, MULTI_AREAS, SITUATION } from "../funnel";
+import { einheitenLabel, labelFor, MULTI_AREAS, SITUATION } from "../funnel";
 
 export type ConsentRecord = { granted: boolean; text: string; version: string; at: string };
 
@@ -60,6 +60,9 @@ export function buildLeadRecord(input: LeadInput, meta: SubmissionRecord["meta"]
           ? answers.situation.map((s) => MULTI_AREAS.find((m) => m.value === s)?.label ?? s).join(", ")
           : labelFor("situation", answers.situation[0], answers.bereich),
       },
+      ...(answers.bereich === "vermieter" && answers.einheiten !== undefined
+        ? { einheiten: { value: String(answers.einheiten), label: einheitenLabel(answers.einheiten) } }
+        : {}),
       beginn: { value: answers.beginn, label: labelFor("beginn", answers.beginn) },
       bestand: { value: answers.bestand, label: labelFor("bestand", answers.bestand) },
     },

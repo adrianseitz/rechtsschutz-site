@@ -25,6 +25,7 @@ export type CrmLead = {
   phone?: string;
   contactMethod?: string;
   situation?: string;
+  einheiten?: string;
   beginn?: string;
   bestand?: string;
   requestType?: string;

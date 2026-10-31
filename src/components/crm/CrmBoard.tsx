@@ -4,11 +4,12 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import {
-  AlertCircle, BarChart3, Check, Columns3, Download, List, LogOut, Mail, Phone, RefreshCw, RotateCcw, Search, Trash2, X,
+  AlertCircle, BarChart3, Check, Columns3, Download, List, LogOut, Settings, Mail, Phone, RefreshCw, RotateCcw, Search, Trash2, X,
 } from "lucide-react";
 import { STATUSES, type CrmLead, type LeadStatus } from "@/lib/crm";
 import type { StatsData } from "@/lib/stats";
 import { StatsView } from "./StatsView";
+import { SettingsView } from "./SettingsView";
 
 const fmt = (iso: string) =>
   new Date(iso).toLocaleString("de-DE", { timeZone: "Europe/Berlin", day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
@@ -37,9 +38,9 @@ const overdue = (l: CrmLead) => l.status === "neu" && Date.now() - new Date(l.cr
 const channelShort = (c: string) =>
   c.startsWith("Google Ads") ? "Google Ads" : c.startsWith("Meta Ads") ? "Meta Ads" : c.startsWith("Kampagne") ? "Kampagne" : c.startsWith("Suchmaschine") ? "Google organisch" : c.startsWith("Social") ? "Social" : c.startsWith("Verweis") ? "Verweis" : "Direkt";
 
-type View = "pipeline" | "liste" | "statistik";
-const VIEWS: { v: View; label: string }[] = [{ v: "pipeline", label: "Pipeline" }, { v: "liste", label: "Liste" }, { v: "statistik", label: "Statistik" }];
-const ViewIcon = ({ v }: { v: View }) => (v === "pipeline" ? <Columns3 className="h-4 w-4" aria-hidden /> : v === "liste" ? <List className="h-4 w-4" aria-hidden /> : <BarChart3 className="h-4 w-4" aria-hidden />);
+type View = "pipeline" | "liste" | "statistik" | "einstellungen";
+const VIEWS: { v: View; label: string }[] = [{ v: "pipeline", label: "Pipeline" }, { v: "liste", label: "Liste" }, { v: "statistik", label: "Statistik" }, { v: "einstellungen", label: "Einstellungen" }];
+const ViewIcon = ({ v }: { v: View }) => (v === "pipeline" ? <Columns3 className="h-4 w-4" aria-hidden /> : v === "liste" ? <List className="h-4 w-4" aria-hidden /> : v === "statistik" ? <BarChart3 className="h-4 w-4" aria-hidden /> : <Settings className="h-4 w-4" aria-hidden />);
 
 export function CrmBoard({ initial, storage, error, stats: traffic = {} }: { initial: CrmLead[]; storage: boolean; error: string; stats?: StatsData }) {
   const router = useRouter();
@@ -55,7 +56,7 @@ export function CrmBoard({ initial, storage, error, stats: traffic = {} }: { ini
   useEffect(() => {
     try {
       const v = localStorage.getItem("rs_crm_view");
-      if (v === "liste" || v === "pipeline" || v === "statistik") setView(v);
+      if (v === "liste" || v === "pipeline" || v === "statistik" || v === "einstellungen") setView(v);
     } catch { /* */ }
   }, []);
   useEffect(() => {
@@ -134,6 +135,7 @@ export function CrmBoard({ initial, storage, error, stats: traffic = {} }: { ini
         <NavBtn label="Pipeline" active={view === "pipeline"} onClick={() => switchView("pipeline")}><Columns3 className="h-5 w-5" /></NavBtn>
         <NavBtn label="Liste" active={view === "liste"} onClick={() => switchView("liste")}><List className="h-5 w-5" /></NavBtn>
         <NavBtn label="Statistik" active={view === "statistik"} onClick={() => switchView("statistik")}><BarChart3 className="h-5 w-5" /></NavBtn>
+        <NavBtn label="Einstellungen" active={view === "einstellungen"} onClick={() => switchView("einstellungen")}><Settings className="h-5 w-5" /></NavBtn>
         <div className="flex-1" />
         <a href="/api/admin/leads?format=csv" className="grid h-11 w-11 place-items-center rounded-xl text-white/60 transition hover:bg-white/10 hover:text-white" aria-label="Als CSV exportieren" title="Export (CSV)"><Download className="h-5 w-5" /></a>
         <button onClick={logout} className="grid h-11 w-11 place-items-center rounded-xl text-white/60 transition hover:bg-white/10 hover:text-white" aria-label="Abmelden" title="Abmelden"><LogOut className="h-5 w-5" /></button>
@@ -142,7 +144,7 @@ export function CrmBoard({ initial, storage, error, stats: traffic = {} }: { ini
       <div className="flex min-w-0 flex-1 flex-col">
         {/* Kopfzeile */}
         <header className="flex shrink-0 flex-wrap items-center gap-3 border-b border-line bg-white px-4 py-3 md:h-16 md:flex-nowrap md:py-0">
-          <h1 className="text-lg font-semibold tracking-[-0.02em]">{view === "statistik" ? "Statistik" : "Anfragen"}</h1>
+          <h1 className="text-lg font-semibold tracking-[-0.02em]">{view === "statistik" ? "Statistik" : view === "einstellungen" ? "Einstellungen" : "Anfragen"}</h1>
           <div className="flex rounded-lg bg-paper p-0.5" role="tablist" aria-label="Ansicht">
             {VIEWS.map(({ v, label }) => (
               <button key={v} role="tab" aria-selected={view === v} aria-label={label} onClick={() => switchView(v)}
@@ -152,7 +154,7 @@ export function CrmBoard({ initial, storage, error, stats: traffic = {} }: { ini
               </button>
             ))}
           </div>
-          <label className={`relative order-last w-full md:order-none md:ml-4 md:w-auto md:max-w-sm md:flex-1 ${view === "statistik" ? "hidden" : ""}`}>
+          <label className={`relative order-last w-full md:order-none md:ml-4 md:w-auto md:max-w-sm md:flex-1 ${view === "statistik" || view === "einstellungen" ? "hidden" : ""}`}>
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-muted" aria-hidden />
             <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Suchen: Name, E-Mail, Telefon …" aria-label="Suchen"
               className="h-10 w-full rounded-lg border border-line bg-[#F6F6F2] pl-9 pr-3 text-sm placeholder:text-ink-muted focus:border-navy focus:bg-white focus:outline-none" />
@@ -165,7 +167,7 @@ export function CrmBoard({ initial, storage, error, stats: traffic = {} }: { ini
         </header>
 
         {/* Kennzahlen */}
-        {view !== "statistik" && (
+        {view !== "statistik" && view !== "einstellungen" && (
           <div className="flex shrink-0 gap-2 overflow-x-auto px-4 pt-3 [scrollbar-width:none] sm:grid sm:grid-cols-4 sm:gap-3 sm:overflow-visible sm:pt-4">
             <Stat label="Offen in der Pipeline" value={stats.open} />
             <Stat label="Neu (7 Tage)" value={stats.week} />
@@ -182,7 +184,9 @@ export function CrmBoard({ initial, storage, error, stats: traffic = {} }: { ini
 
         {/* Inhalt */}
         <div className="min-h-0 flex-1 pt-4">
-          {view === "statistik" ? (
+          {view === "einstellungen" ? (
+            <SettingsView />
+          ) : view === "statistik" ? (
             <StatsView stats={traffic} leads={leads} />
           ) : view === "pipeline" ? (
             <div className="flex h-full snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-4 md:snap-none">
@@ -220,7 +224,7 @@ export function CrmBoard({ initial, storage, error, stats: traffic = {} }: { ini
                               {overdue(l) && <AlertCircle className="h-4 w-4 shrink-0 text-rose-500" aria-label="Seit über 24 Stunden unbearbeitet" />}
                               {retentionDue(l) && <Trash2 className="h-4 w-4 shrink-0 text-neutral-500" aria-label="Löschfrist erreicht" />}
                             </div>
-                            {(l.situation || l.requestType) && <p className="mt-2 line-clamp-2 text-xs leading-snug text-ink-muted">{l.situation ?? l.requestType}</p>}
+                            {(l.situation || l.requestType) && <p className="mt-2 line-clamp-2 text-xs leading-snug text-ink-muted">{l.situation ?? l.requestType}{l.einheiten ? ` · ${l.einheiten}` : ""}</p>}
                             <div className="mt-2.5 flex items-center gap-2 text-[11px] text-ink-muted">
                               <span className="truncate whitespace-nowrap rounded bg-paper px-1.5 py-0.5 font-medium text-ink-soft">{channelShort(l.channel)}</span>
                               <span className="hidden whitespace-nowrap rounded bg-paper px-1.5 py-0.5 2xl:inline">{l.type === "lead" ? "Check" : "Kontakt"}</span>
@@ -379,6 +383,7 @@ function Drawer({ lead: l, onClose, onStatus, onDelete }: { lead: CrmLead; onClo
           </Section>
           <Section title="Anfrage">
             <Field k="Situation" v={l.situation} />
+            <Field k="Wohneinheiten" v={l.einheiten} />
             <Field k="Gewünschter Beginn" v={l.beginn} />
             <Field k="Bestehender Rechtsschutz" v={l.bestand} />
             <Field k="Anliegen" v={l.requestType} />

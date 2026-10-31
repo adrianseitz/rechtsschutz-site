@@ -52,6 +52,7 @@ function toCsv(rows: SubmissionRecord[], st: Awaited<ReturnType<typeof readStatu
     ["Typ", (r) => r.type],
     ["Bereich", (r) => r.productLabel],
     ["Situation", (r) => r.answers.situation?.label],
+    ["Wohneinheiten", (r) => r.answers.einheiten?.value],
     ["Beginn", (r) => r.answers.beginn?.label],
     ["Bestehender RS", (r) => r.answers.bestand?.label],
     ["Anliegen", (r) => r.request?.requestType],
