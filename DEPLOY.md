@@ -55,7 +55,7 @@ dann `docker compose up -d`.
 
 | Aufgabe | Befehl (im Ordner `rechtsschutz-site`) |
 |---|---|
-| Neuen Stand von GitHub übernehmen | `bash deploy/update.sh` |
+| Neuen Stand von GitHub übernehmen | automatisch alle 15 Min. (einmalig einschalten: `bash deploy/auto.sh`); sofort: `bash deploy/update.sh` |
 | Datensicherung | läuft täglich automatisch; manuell: `bash deploy/backup.sh` → `deploy/backups/` |
 | Logs ansehen | `docker compose logs -f app` |
 | Neustart | `docker compose restart` |
