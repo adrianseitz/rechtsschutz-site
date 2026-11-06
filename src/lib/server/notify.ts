@@ -6,6 +6,7 @@ import type { SubmissionRecord } from "./records";
 import { legal, site } from "../site";
 import { rateLimit } from "./rateLimit";
 import { hashIdentifier } from "./crypto";
+import { confirmationHtml } from "./mailTemplate";
 
 const esc = (s: unknown) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
 const REQUEST_LABEL: Record<string, string> = { termin: "Beratungstermin", rueckruf: "Rückruf", frage: "Allgemeine Frage" };
@@ -122,20 +123,11 @@ export async function sendConfirmation(r: SubmissionRecord) {
     "Du erhältst diese Mail, weil diese Adresse auf meiner Website angegeben wurde. Warst du das nicht? Dann antworte kurz auf diese Mail, ich lösche die Anfrage.",
   ].join("\n");
 
-  const html = `<div style="font-family:Arial,Helvetica,sans-serif;color:#0B0B0A;max-width:540px;line-height:1.55;font-size:15px">
-<p style="margin:0 0 4px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#71716B">§ ${esc(site.brand)}</p>
-<h2 style="margin:0 0 18px;font-size:22px">Deine Anfrage ist angekommen</h2>
-<p style="margin:0 0 12px">${esc(hello)}</p>
-<p style="margin:0 0 12px">vielen Dank für deine Anfrage – sie ist bei mir angekommen. Ich schaue mir deine Angaben persönlich an und melde mich <strong>${esc(way)}</strong> bei dir.</p>
-<table cellpadding="6" style="border-collapse:collapse;margin:16px 0;background:#F6F5F0;border-radius:10px;width:100%">${visible
-    .map(([k, v]) => `<tr><td style="color:#71716B;vertical-align:top;padding-left:14px;width:42%">${esc(k)}</td><td><strong>${esc(v)}</strong></td></tr>`)
-    .join("")}</table>
-<p style="margin:0 0 12px">Fragen vorab? Ruf mich gern an: <a href="tel:${esc(site.phone.replace(/\s/g, ""))}" style="color:#0B0B0A;font-weight:bold">${esc(site.phone)}</a></p>
-<p style="margin:18px 0 0">Viele Grüße<br><strong>${esc(legal.name)}</strong></p>
-<hr style="border:none;border-top:1px solid #E5E4DE;margin:24px 0 12px">
-<p style="font-size:12px;color:#71716B;margin:0 0 8px">${esc(legal.name)} · ${esc(legal.street)} · ${esc(legal.city)}<br>${esc(legal.status)}<br>
-<a href="${esc(site.url)}/impressum" style="color:#71716B">Impressum</a> · <a href="${esc(site.url)}/datenschutz" style="color:#71716B">Datenschutz</a></p>
-<p style="font-size:12px;color:#71716B;margin:0">Du erhältst diese Mail, weil diese Adresse auf meiner Website angegeben wurde. Warst du das nicht? Dann antworte kurz auf diese Mail, ich lösche die Anfrage.</p></div>`;
+  const html = confirmationHtml({
+    subject, firstName: first, way, rows: visible,
+    receivedAt: new Date(r.createdAt).toLocaleString("de-DE", { timeZone: "Europe/Berlin", dateStyle: "medium", timeStyle: "short" }) + " Uhr",
+    phone: site.phone, siteUrl: site.url, brand: site.brand, owner: legal.name, street: legal.street, city: legal.city, status: legal.status,
+  });
 
   const fromAddr = m.from || m.user;
   await transportFor(m).sendMail({
