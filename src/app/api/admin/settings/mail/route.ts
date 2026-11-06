@@ -17,6 +17,7 @@ const schema = z.object({
   from: z.string().trim().max(160),
   to: z.string().trim().email("Ungültige Empfänger-Adresse").max(160),
   enabled: z.boolean(),
+  confirm: z.boolean().optional(),
 });
 
 export async function GET() {

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { CheckCircle2, Loader2, Mail, Send, ShieldCheck } from "lucide-react";
 
-type Settings = { host: string; port: number; secure: boolean; user: string; from: string; to: string; enabled: boolean; hasPassword: boolean; source: "crm" | "env"; updatedAt: string };
+type Settings = { host: string; port: number; secure: boolean; user: string; from: string; to: string; enabled: boolean; confirm: boolean; hasPassword: boolean; source: "crm" | "env"; updatedAt: string };
 
 const PRESETS = [
   { id: "gmail", label: "Gmail", host: "smtp.gmail.com", port: 465, secure: true },
@@ -22,6 +22,7 @@ export function SettingsView() {
   const [pass, setPass] = useState("");
   const [to, setTo] = useState(DEFAULT_TO);
   const [enabled, setEnabled] = useState(true);
+  const [confirm, setConfirm] = useState(true);
   const [busy, setBusy] = useState<"" | "save" | "test">("");
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
 
@@ -31,7 +32,7 @@ export function SettingsView() {
       if (!s) return;
       setLoaded(s);
       if (s.host) {
-        setHost(s.host); setPort(s.port || 465); setUser(s.user || ""); setTo(s.to || DEFAULT_TO); setEnabled(s.enabled);
+        setHost(s.host); setPort(s.port || 465); setUser(s.user || ""); setTo(s.to || DEFAULT_TO); setEnabled(s.enabled); setConfirm(s.confirm !== false);
         setPreset(PRESETS.find((p) => p.host === s.host)?.id ?? "andere");
       }
     }).catch(() => undefined);
@@ -50,7 +51,7 @@ export function SettingsView() {
     try {
       const res = await fetch("/api/admin/settings/mail", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ host: host.trim(), port, secure: port === 465, user: user.trim(), pass, from: user.trim(), to: to.trim(), enabled }),
+        body: JSON.stringify({ host: host.trim(), port, secure: port === 465, user: user.trim(), pass, from: user.trim(), to: to.trim(), enabled, confirm }),
       });
       const j = await res.json().catch(() => ({}));
       if (!res.ok) { setMsg({ ok: false, text: j.error || "Speichern fehlgeschlagen." }); return false; }
@@ -146,6 +147,12 @@ export function SettingsView() {
           <label className="flex cursor-pointer items-center gap-3 text-sm">
             <input type="checkbox" className="h-5 w-5 accent-navy" checked={enabled} onChange={(e) => setEnabled(e.target.checked)} />
             Benachrichtigungen eingeschaltet
+          </label>
+          <label className="flex cursor-pointer items-start gap-3 text-sm">
+            <input type="checkbox" className="mt-0.5 h-5 w-5 shrink-0 accent-navy" checked={confirm} onChange={(e) => setConfirm(e.target.checked)} />
+            <span>Eingangsbestätigung an den Kunden schicken
+              <span className="mt-0.5 block text-xs text-ink-muted">Der Kunde bekommt eine kurze Mail mit seinen Angaben und deiner Telefonnummer. Antworten darauf landen bei {to || DEFAULT_TO}.</span>
+            </span>
           </label>
         </div>
 

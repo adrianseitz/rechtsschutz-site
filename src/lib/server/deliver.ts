@@ -1,7 +1,7 @@
 import "server-only";
 import { fileStorageEnabled, storeRecord } from "./storage";
 import { sendToCrm, webhookConfigured } from "./crm";
-import { mailReady, sendNotification } from "./notify";
+import { mailReady, sendConfirmation, sendNotification } from "./notify";
 import type { SubmissionRecord } from "./records";
 
 export class DeliveryError extends Error {}
@@ -27,7 +27,11 @@ export async function deliver(r: SubmissionRecord) {
     console.error("[lead] E-Mail-Benachrichtigung fehlgeschlagen:", (e as Error).message);
     return false;
   });
-  if (stored) return { stored, mailed: null };
+  if (stored) {
+    // Eingangsbestätigung an den Kunden – ebenfalls im Hintergrund.
+    sendConfirmation(r).catch((e) => console.error("[lead] Eingangsbestätigung fehlgeschlagen:", (e as Error).message));
+    return { stored, mailed: null };
+  }
   const mailed = await notify;
 
   if (!stored && !mailed) throw new DeliveryError("Die Anfrage konnte in keinem Ziel gespeichert werden.");

@@ -9,7 +9,7 @@ import { decrypt, encrypt, encryptionEnabled } from "./crypto";
  * Das Passwort wird mit LEAD_ENCRYPTION_KEY verschlüsselt gespeichert.
  * Ohne Datei gelten die Werte aus der .env (SMTP_*, LEAD_NOTIFY_TO).
  */
-export type MailSettings = { host: string; port: number; secure: boolean; user: string; from: string; to: string; enabled: boolean };
+export type MailSettings = { host: string; port: number; secure: boolean; user: string; from: string; to: string; enabled: boolean; /** Eingangsbestätigung an den Kunden */ confirm?: boolean };
 type Stored = MailSettings & { pass: string; updatedAt: string };
 
 const file = () => path.join(serverConfig.storageDir, "mail-settings.json");
@@ -28,11 +28,11 @@ export async function effectiveMail(): Promise<(MailSettings & { pass: string })
   const s = await readStored().catch(() => null);
   if (s) {
     if (!s.enabled || !s.host || !s.to) return null;
-    return { ...s, pass: s.pass ? decrypt(s.pass) : "" };
+    return { ...s, confirm: s.confirm !== false, pass: s.pass ? decrypt(s.pass) : "" };
   }
   const { smtp, notifyTo } = serverConfig;
   if (!smtp.host || !smtp.from || !notifyTo) return null;
-  return { host: smtp.host, port: smtp.port, secure: smtp.secure, user: smtp.user, pass: smtp.pass, from: smtp.from, to: notifyTo, enabled: true };
+  return { host: smtp.host, port: smtp.port, secure: smtp.secure, user: smtp.user, pass: smtp.pass, from: smtp.from, to: notifyTo, enabled: true, confirm: true };
 }
 
 /** Für die Oberfläche – ohne Passwort. */
@@ -40,12 +40,12 @@ export async function publicMailSettings() {
   const s = await readStored().catch(() => null);
   if (s) {
     const { pass, ...rest } = s;
-    return { ...rest, hasPassword: Boolean(pass), source: "crm" as const };
+    return { ...rest, confirm: rest.confirm !== false, hasPassword: Boolean(pass), source: "crm" as const };
   }
   const { smtp, notifyTo } = serverConfig;
   return {
     host: smtp.host, port: smtp.port, secure: smtp.secure, user: smtp.user, from: smtp.from, to: notifyTo,
-    enabled: Boolean(smtp.host && notifyTo), hasPassword: Boolean(smtp.pass), updatedAt: "", source: "env" as const,
+    enabled: Boolean(smtp.host && notifyTo), confirm: true, hasPassword: Boolean(smtp.pass), updatedAt: "", source: "env" as const,
   };
 }
 
@@ -58,7 +58,7 @@ export async function saveMailSettings(input: MailSettings & { pass?: string }) 
   else if (!prev && serverConfig.smtp.pass) pass = encrypt(serverConfig.smtp.pass);
   const data: Stored = {
     host: input.host, port: input.port, secure: input.secure, user: input.user,
-    from: input.from || input.user, to: input.to, enabled: input.enabled, pass, updatedAt: new Date().toISOString(),
+    from: input.from || input.user, to: input.to, enabled: input.enabled, confirm: input.confirm ?? prev?.confirm ?? true, pass, updatedAt: new Date().toISOString(),
   };
   await mkdir(serverConfig.storageDir, { recursive: true, mode: 0o700 });
   const tmp = `${file()}.${process.pid}.tmp`;
