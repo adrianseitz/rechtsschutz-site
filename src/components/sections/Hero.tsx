@@ -54,6 +54,8 @@ function Floater({ card, mx, my, delay }: { card: FloatCard; mx: MotionValue<num
   const rotate = "rotate" in card && card.rotate !== undefined ? card.rotate : 0;
   return (
     <motion.div style={{ x, y }} className={`absolute z-20 ${card.pos}`}>
+      {/* Auf dem Handy etwas kleiner, damit sich die Zettel nicht gegenseitig verdecken. */}
+      <div className={`max-sm:scale-[0.8] ${/(^|\s)-?left-/.test(card.pos) ? "max-sm:origin-top-left" : /bottom-/.test(card.pos) ? "max-sm:origin-bottom-right" : "max-sm:origin-top-right"}`}>
       <motion.div initial={{ opacity: 0, y: 30, rotate: rotate - 10, scale: 0.9 }} animate={{ opacity: 1, y: 0, rotate, scale: 1 }}
         transition={{ type: "spring", stiffness: 140, damping: 16, delay }} whileHover={{ rotate: rotate * -0.5, scale: 1.03 }} whileTap={{ rotate: rotate * 2.2, scale: 0.94 }} data-burst>
         {card.type === "badge" && <RotatingBadge size={118} />}
@@ -79,6 +81,7 @@ function Floater({ card, mx, my, delay }: { card: FloatCard; mx: MotionValue<num
           </div>
         )}
       </motion.div>
+      </div>
     </motion.div>
   );
 }
@@ -130,10 +133,9 @@ export function Hero({ eyebrow, title, emphasis, subtitle, chipsLabel, chips, se
               <Scribble kind="arrow" className="mb-[-14px] hidden h-10 w-14 sm:block" width={2} delay={1.1} />
             </div>
             <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-2.5">
-              {chips.map((c, i) => (
-                <Link key={c.href} href={c.href} className="group relative flex min-h-[48px] items-center gap-3 overflow-hidden rounded-full border border-navy/15 bg-white py-2.5 pl-4 pr-3 text-[16px] font-medium text-navy transition duration-300 hover:border-navy active:bg-sun sm:inline-flex sm:min-h-0 sm:text-[15px]">
+              {chips.map((c) => (
+                <Link key={c.href} href={c.href} className="group relative flex min-h-[48px] items-center gap-3 overflow-hidden rounded-full border border-navy/15 bg-white py-2.5 pl-5 pr-3 text-[16px] font-medium text-navy transition duration-300 hover:border-navy active:bg-sun sm:inline-flex sm:min-h-0 sm:text-[15px]">
                   <span aria-hidden className="absolute inset-0 -z-0 origin-left scale-x-0 bg-sun transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-x-100" />
-                  <span className="relative font-mono text-[11px] text-navy/45">{String(i + 1).padStart(2, "0")}</span>
                   <span className="relative flex-1 sm:flex-none">{c.label}</span>
                   <span className="relative grid h-7 w-7 place-items-center rounded-full bg-navy text-white transition duration-300 group-hover:rotate-45 sm:h-6 sm:w-6"><ArrowUpRight className="h-3.5 w-3.5" aria-hidden /></span>
                 </Link>

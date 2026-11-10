@@ -61,8 +61,8 @@ export function ProductCards() {
                     <span className={`font-mono text-xs uppercase tracking-[0.14em] ${st.dark ? "text-white/50" : "text-navy/50"}`}>0{i + 1} — {p.short}</span>
                   </div>
                   <div className={`relative z-10 mt-auto ${p.key === "firma" ? "lg:max-w-xl" : ""}`}>
-                    <h3 className={`font-semibold leading-[1] tracking-[-0.045em] ${big ? "text-[2.5rem] sm:text-6xl" : "text-[2rem] sm:text-4xl"} ${st.dark ? "text-white" : "text-navy"}`}>
-                      {p.name.replace("rechtsschutz", "")}<span className="font-serif font-normal italic tracking-[-0.01em]">rechtsschutz</span>
+                    <h3 className={`font-semibold leading-[1] tracking-[-0.045em] [hyphens:manual] [overflow-wrap:normal] ${big ? "text-[2rem] min-[400px]:text-[2.3rem] sm:text-6xl" : "text-[1.8rem] min-[400px]:text-[2rem] sm:text-4xl"} ${st.dark ? "text-white" : "text-navy"}`}>
+                      {p.name.replace("rechtsschutz", "")}&shy;<span className="font-serif font-normal italic tracking-[-0.01em]">rechtsschutz</span>
                     </h3>
                     <p className={`mt-4 max-w-md text-[17px] leading-7 ${st.text}`}>{p.cardText}</p>
                     <div className="mt-6 flex flex-wrap items-center gap-2">

@@ -41,8 +41,8 @@ export function WaitingTimeline({ area = "z. B. im Arbeits-, Vertrags- oder Miet
                 </motion.div>
               </div>
               <div className="relative mt-3 h-10 text-xs font-medium text-ink-muted">
-                <span className="absolute -translate-x-1/2 text-center" style={{ left: `${pct(0)}%` }}>Vertrags&shy;beginn</span>
-                <span className="absolute -translate-x-1/2 text-center" style={{ left: `${pct(WAIT)}%` }}>nach ca. 3 Mon.</span>
+                <span className="absolute w-[4.5rem] -translate-x-1/2 text-center leading-tight sm:w-auto sm:whitespace-nowrap" style={{ left: `${pct(0)}%` }}>Vertrags&shy;beginn</span>
+                <span className="absolute w-[4.5rem] -translate-x-1/2 text-center leading-tight sm:w-auto sm:whitespace-nowrap" style={{ left: `${pct(WAIT)}%` }}>nach ca. 3&nbsp;Mon.</span>
               </div>
               <label htmlFor="tl" className="sr-only">Zeitpunkt des Konflikts in Monaten relativ zum Vertragsbeginn</label>
               <input id="tl" type="range" min={MIN} max={MAX} step={1} value={m} onChange={(e) => setM(Number(e.target.value))} className="range w-full cursor-pointer" style={{ ["--fill" as string]: `${pct(m)}%` }} />

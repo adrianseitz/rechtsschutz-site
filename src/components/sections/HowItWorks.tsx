@@ -18,10 +18,10 @@ function StepCard({ s, i, progress }: { s: (typeof steps)[number]; i: number; pr
   return (
     <div className="sticky" style={{ top: `calc(7rem + ${i * 28}px)` }}>
       <motion.div style={{ scale }} className={`origin-top rounded-[28px] border border-line p-7 shadow-[0_-12px_40px_-24px_rgba(11,11,10,0.25)] sm:p-10 ${s.tone}`}>
-        <div className="flex items-start justify-between gap-6">
-          <div>
+        <div className="flex items-start justify-between gap-8 sm:gap-14">
+          <div className="min-w-0">
             <span className="font-mono text-xs uppercase tracking-[0.14em] text-navy/50">Schritt 0{i + 1}</span>
-            <h3 className="mt-4 text-3xl font-semibold tracking-[-0.04em] text-navy sm:text-4xl">{s.title}</h3>
+            <h3 className="mt-4 text-[1.7rem] font-semibold leading-[1.1] tracking-[-0.04em] text-navy sm:text-4xl">{s.title}</h3>
             <p className="mt-4 max-w-md text-[17px] leading-7 text-ink-soft">{s.text}</p>
           </div>
           <span className="relative shrink-0 font-serif text-[5.5rem] italic leading-[0.8] text-navy/90 sm:text-[7rem]">

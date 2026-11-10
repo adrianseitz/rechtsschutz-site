@@ -1,19 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Mail, Phone } from "lucide-react";
 import { Logo } from "./Logo";
-import { site } from "@/lib/site";
+import { legal, site } from "@/lib/site";
+import { countEvent } from "@/lib/localEvents";
 import { productList } from "@/lib/products";
 import { useConsent } from "../consent/ConsentManager";
 
 export function Footer() {
   const { openSettings } = useConsent();
   return (
-    <footer className="px-3 pb-3 pt-3">
+    <footer className="px-3 pb-[112px] pt-3 lg:pb-3">
       <div className="mx-auto max-w-[1400px] overflow-hidden rounded-[36px] bg-navy text-white/60">
         <div className="px-6 pt-16 sm:px-12">
-          <div className="grid gap-12 md:grid-cols-[1.4fr_1fr_1fr]">
+          <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1.1fr]">
             <div>
               <Logo light />
               <p className="mt-5 max-w-sm text-sm leading-6">
@@ -37,6 +38,14 @@ export function Footer() {
                 <li><Link href="/impressum" className="text-white/80 transition hover:text-sun">Impressum & Vermittlerangaben</Link></li>
                 <li><Link href="/datenschutz" className="text-white/80 transition hover:text-sun">Datenschutz</Link></li>
                 <li><button onClick={openSettings} className="text-left text-white/80 transition hover:text-sun">Cookie-Einstellungen</button></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-mono text-[11px] font-normal uppercase tracking-[0.14em] text-white/40">Direkter Draht</h3>
+              <ul className="mt-5 space-y-3 text-[15px]">
+                <li><a href={`tel:${site.phone.replace(/[^\d+]/g, "").replace(/^0/, "+49")}`} onClick={() => countEvent("call")} className="inline-flex items-center gap-2.5 text-white transition hover:text-sun"><Phone className="h-4 w-4 text-sun" aria-hidden />{site.phone}</a></li>
+                <li><a href={`mailto:${site.email}`} onClick={() => countEvent("mail")} className="inline-flex items-center gap-2.5 break-all text-white/80 transition hover:text-sun"><Mail className="h-4 w-4 shrink-0 text-sun" aria-hidden />{site.email}</a></li>
+                <li className="pt-1 text-sm leading-6 text-white/50">{legal.street}<br />{legal.city}</li>
               </ul>
             </div>
           </div>

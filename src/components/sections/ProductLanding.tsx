@@ -79,12 +79,12 @@ export function ProductLanding({ product }: { product: Product }) {
           <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {product.topics.map((t, i) => (
               <Reveal key={t.title} delay={(i % 3) * 0.06}>
-                <div className={`group relative h-full overflow-hidden rounded-[28px] border p-7 transition duration-500 hover:-translate-y-1 ${i === 0 ? "border-navy bg-sun" : "border-line bg-white hover:border-navy/30"}`}>
+                <div className={`group relative h-full overflow-hidden rounded-[28px] border p-6 transition duration-500 hover:-translate-y-1 sm:p-7 ${i === 0 ? "border-navy bg-sun" : "border-line bg-white hover:border-navy/30"}`}>
                   <div className="flex items-start justify-between">
                     <span className="font-mono text-xs text-navy/50">{String(i + 1).padStart(2, "0")}</span>
-                    <span className={`grid h-14 w-14 place-items-center rounded-full border transition duration-500 group-hover:rotate-[-8deg] ${i === 0 ? "border-navy/30" : "border-line group-hover:border-navy"}`}><Icon name={TOPIC_ICONS[product.key][i] ?? "Shield"} className="h-6 w-6 text-navy" /></span>
+                    <span className={`grid h-11 w-11 place-items-center rounded-full border sm:h-14 sm:w-14 transition duration-500 group-hover:rotate-[-8deg] ${i === 0 ? "border-navy/30" : "border-line group-hover:border-navy"}`}><Icon name={TOPIC_ICONS[product.key][i] ?? "Shield"} className="h-5 w-5 text-navy sm:h-6 sm:w-6" /></span>
                   </div>
-                  <h3 className="mt-8 text-2xl font-semibold tracking-[-0.035em] text-navy">{t.title}</h3>
+                  <h3 className="mt-4 text-[1.4rem] font-semibold leading-tight tracking-[-0.035em] text-navy sm:mt-8 sm:text-2xl">{t.title}</h3>
                   <p className={`mt-3 text-[15px] leading-7 ${i === 0 ? "text-navy/70" : "text-ink-soft"}`}>{t.text}</p>
                 </div>
               </Reveal>
