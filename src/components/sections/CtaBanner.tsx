@@ -4,8 +4,9 @@ import { Scribble } from "../ui/Scribble";
 import { Magnetic } from "../ui/Magnetic";
 import { Emph } from "../ui/SectionHeading";
 import { site } from "@/lib/site";
+import { CallLink } from "../ui/CallLink";
 
-export function CtaBanner({ title = "Finde heraus, welcher Rechtsschutz zu dir passt.", emphasis = "passt.", text = "Kostenlos, unverbindlich und in rund 60 Sekunden erledigt.", href = "/rechtsschutz-check", label = "Jetzt Rechtsschutz-Check starten" }: { title?: string; emphasis?: string; text?: string; href?: string; label?: string }) {
+export function CtaBanner({ title = "Finde heraus, welcher Rechtsschutz zu dir passt.", emphasis = "passt.", text = "Kostenlos, unverbindlich und in rund 60 Sekunden erledigt. Wegen der Wartezeit gilt: je früher, desto besser.", href = "/rechtsschutz-check", label = "Jetzt Rechtsschutz-Check starten" }: { title?: string; emphasis?: string; text?: string; href?: string; label?: string }) {
   const secondary = site.bookingUrl || "/kontakt?anliegen=termin";
   return (
     <section className="px-3 pb-3">
@@ -23,6 +24,7 @@ export function CtaBanner({ title = "Finde heraus, welcher Rechtsschutz zu dir p
             <Magnetic><ButtonLink href={href} variant="sun" arrow>{label}</ButtonLink></Magnetic>
             <ButtonLink href={secondary} variant="light">Beratungstermin anfragen</ButtonLink>
           </div>
+          <p className="mt-7 text-[15px] text-white/60">Oder ruf mich direkt an: <CallLink className="font-semibold text-sun underline decoration-sun/40 underline-offset-4 hover:decoration-sun" /></p>
         </div>
       </div>
     </section>

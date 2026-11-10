@@ -28,7 +28,7 @@ export default function HomePage() {
           { label: "Vermietung", href: "/rechtsschutz-check?bereich=vermieter", icon: "house" },
           { label: "Unternehmen", href: "/rechtsschutz-check?bereich=firma", icon: "office" },
         ]}
-        secondary={{ href: site.bookingUrl || "/kontakt?anliegen=termin", label: "Kostenlose Beratung anfragen" }}
+        secondary={{ href: "/kontakt?anliegen=rueckruf", label: "Rückruf anfordern" }}
         cards={[
           { type: "receipt", title: "Kostenrisiko¹", rows: [["Eigene Anwältin", "1.078 €"], ["Gegnerische Seite", "1.078 €"], ["Gericht", "512 €"]], total: ["Gesamt", "2.668 €"], foot: "Beispiel: Streitwert 5.000 €", pos: "-left-2 top-[6%] sm:left-0", depth: 1.1, rotate: -5 },
           { type: "note", text: "Wartezeit meist 3 Monate² – früh dran sein lohnt sich!", sign: "Adrian", pos: "right-0 bottom-[10%] sm:-right-2", depth: -0.9, rotate: 4 },

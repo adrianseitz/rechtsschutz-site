@@ -6,6 +6,7 @@ import { RotatingBadge } from "../ui/RotatingBadge";
 import { StickyNote } from "../ui/StickyNote";
 import { Reveal } from "../ui/Reveal";
 import { site } from "@/lib/site";
+import { CallLink } from "../ui/CallLink";
 
 /** Lege ein Porträt unter public/images/adrian.jpg ab – es wird automatisch verwendet. */
 const PORTRAIT = "/images/adrian.jpg";
@@ -34,6 +35,7 @@ export function AboutAdvisor() {
             <ButtonLink href={site.bookingUrl || "/kontakt?anliegen=termin"} arrow>Beratungstermin anfragen</ButtonLink>
             <ButtonLink href="/kontakt?anliegen=rueckruf" variant="secondary" className="!border-navy/20 !bg-transparent hover:!bg-white/40">Rückruf anfordern</ButtonLink>
           </div>
+          <p className="mt-6 text-[15px] text-navy/75">Oder direkt anrufen: <CallLink className="font-semibold text-navy underline decoration-navy/40 underline-offset-4 hover:decoration-navy" /></p>
         </div>
 
         <Reveal>

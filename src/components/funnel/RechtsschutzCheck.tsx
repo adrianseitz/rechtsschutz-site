@@ -291,7 +291,7 @@ function ContactStep({ answers, startedAt, onSuccess, headingRef }: {
   const honeypot = useRef<HTMLInputElement>(null);
   const { register, handleSubmit, watch, setValue, formState: { errors, isSubmitting } } = useForm<ContactFields>({
     resolver: zodResolver(contactFieldsSchema),
-    defaultValues: { firstName: "", lastName: "", email: "", phone: "", contactMethod: "email", reachable: "", consentMarketing: false },
+    defaultValues: { firstName: "", lastName: "", email: "", phone: "", contactMethod: "telefon", reachable: "", consentMarketing: false },
     mode: "onTouched",
   });
   const method = watch("contactMethod");

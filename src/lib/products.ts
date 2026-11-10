@@ -33,9 +33,9 @@ export const products: Record<ProductKey, Product> = {
     },
     hero: {
       eyebrow: "Privatrechtsschutz",
-      title: "Im Alltag abgesichert, wenn es rechtlich wird.",
+      title: "Privatrechtsschutz, der zu deinem Alltag passt.",
       subtitle:
-        "Ob Streit mit dem Online-Händler, dem Handwerker oder einer Behörde – informiere dich, wie Privatrechtsschutz dich bei zukünftigen Auseinandersetzungen unterstützen kann.",
+        "Ärger mit Händler, Handwerker oder Behörde: Ein Rechtsstreit wird schnell teuer. Finde in 60 Sekunden heraus, welcher Schutz zu dir passt – ich berate dich persönlich. Versichert sind künftige Streitfälle.",
       cta: "Privatrechtsschutz prüfen",
     },
     topicsTitle: "Typische Bereiche im Privatrechtsschutz",
@@ -74,9 +74,9 @@ export const products: Record<ProductKey, Product> = {
     },
     hero: {
       eyebrow: "Arbeitsrechtsschutz",
-      title: "Rechtzeitig abgesichert, wenn es im Job schwierig wird.",
+      title: "Arbeitsrechtsschutz – bevor es im Job schwierig wird.",
       subtitle:
-        "Informiere dich über Rechtsschutz für zukünftige arbeitsrechtliche Streitigkeiten und finde eine passende Absicherung.",
+        "Kündigung, Abmahnung, Zeugnis: Vor dem Arbeitsgericht zahlt in der ersten Instanz jede Seite ihren Anwalt selbst. Finde in 60 Sekunden heraus, welcher Schutz zu dir passt. Versichert sind künftige Streitfälle.",
       cta: "Arbeitsrechtsschutz prüfen",
     },
     topicsTitle: "Typische Themen im Arbeitsrecht",
@@ -117,9 +117,9 @@ export const products: Record<ProductKey, Product> = {
     },
     hero: {
       eyebrow: "Vermieterrechtsschutz",
-      title: "Vermieten bringt Verantwortung. Sichere dich passend ab.",
+      title: "Vermieterrechtsschutz, der zu deinen Immobilien passt.",
       subtitle:
-        "Informiere dich über Rechtsschutzmöglichkeiten für zukünftige rechtliche Auseinandersetzungen rund um deine vermietete Immobilie.",
+        "Mietrückstand, Nebenkosten, Räumung: Ein Rechtsstreit mit Mietern wird schnell teuer. Finde in 60 Sekunden heraus, welcher Schutz zu deiner Wohnung oder deinem Haus passt – ich berate dich persönlich. Versichert sind künftige Streitfälle.",
       cta: "Vermieterrechtsschutz prüfen",
     },
     topicsTitle: "Typische Themen für Vermieter",
@@ -159,9 +159,9 @@ export const products: Record<ProductKey, Product> = {
     },
     hero: {
       eyebrow: "Firmenrechtsschutz",
-      title: "Konzentriere dich auf dein Unternehmen. Informiere dich über passenden Rechtsschutz.",
+      title: "Firmenrechtsschutz, der zu deinem Betrieb passt.",
       subtitle:
-        "Rechtliche Auseinandersetzungen können Zeit und Geld kosten. Finde heraus, welche Absicherung für dein Unternehmen infrage kommt.",
+        "Streit mit Mitarbeitern, Behörden oder Vertragspartnern kostet Zeit und Geld. Finde in 60 Sekunden heraus, welche Absicherung für dein Unternehmen infrage kommt – ich berate dich persönlich. Versichert sind künftige Streitfälle.",
       cta: "Firmenrechtsschutz prüfen",
     },
     topicsTitle: "Typische Bereiche im Firmenrechtsschutz",

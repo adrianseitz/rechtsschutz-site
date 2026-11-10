@@ -3,14 +3,14 @@
 import Link from "next/link";
 import { useRef } from "react";
 import { motion, useMotionValue, useReducedMotion, useSpring, useTransform, type MotionValue } from "motion/react";
-import { ArrowUpRight, Check } from "lucide-react";
+import { ArrowUpRight, Check, Phone } from "lucide-react";
 import { ShieldScene } from "../three/ShieldScene";
 import { RotatingBadge } from "../ui/RotatingBadge";
 import { Polaroid } from "../art/Polaroid";
 import type { PhotoKey } from "@/lib/photos";
 import { Scribble } from "../ui/Scribble";
-import { Magnetic } from "../ui/Magnetic";
-import { ButtonLink } from "../ui/Button";
+import { CallLink } from "../ui/CallLink";
+import { site } from "@/lib/site";
 
 export type HeroChip = { label: string; href: string; icon: string };
 export type FloatCard =
@@ -22,8 +22,14 @@ export type FloatCard =
 
 function Headline({ title, emphasis }: { title: string; emphasis?: string }) {
   const words = title.split(" ");
+  // Lange Wörter wie „Vermieterrechtsschutz“ müssen in eine Zeile passen – die Schriftgröße richtet sich nach dem längsten Wort.
+  const longest = Math.max(...words.map((w) => w.length));
+  const size = longest >= 21 ? "text-[7.8vw] sm:text-[3.2rem] lg:text-[min(3.85rem,4.25vw)]"
+    : longest >= 18 ? "text-[9.2vw] sm:text-[3.6rem] lg:text-[min(4.4rem,4.9vw)]"
+    : title.length > 60 ? "text-[2.05rem] min-[400px]:text-[2.3rem] sm:text-[3.6rem] lg:text-[4.2rem]"
+    : "text-[2.3rem] min-[400px]:text-[2.6rem] sm:text-[4.4rem] lg:text-[5.4rem]";
   return (
-    <h1 className={`text-balance font-semibold leading-[0.98] tracking-[-0.05em] text-navy ${title.length > 60 ? "text-[2.05rem] min-[400px]:text-[2.3rem] sm:text-[3.6rem] lg:text-[4.2rem]" : "text-[2.3rem] min-[400px]:text-[2.6rem] sm:text-[4.4rem] lg:text-[5.4rem]"}`} >
+    <h1 className={`text-balance font-semibold leading-[0.98] tracking-[-0.05em] text-navy [hyphens:manual] ${size}`} >
       {words.map((w, i) => {
         const clean = w.replace(/[.,!?]/g, "");
         const isEm = emphasis && clean === emphasis;
@@ -113,8 +119,8 @@ export function Hero({ eyebrow, title, emphasis, subtitle, chipsLabel, chips, se
         <span className="absolute bottom-10 right-8 font-mono text-[10px] uppercase tracking-[0.2em] text-navy/35">Abb. 1 — Rechtsschutz, modular</span>
       </div>
 
-      <div className="container relative grid items-center gap-8 lg:grid-cols-[1.12fr_0.88fr]">
-        <div>
+      <div className="container relative grid items-center gap-8 lg:grid-cols-[minmax(0,1.12fr)_minmax(0,0.88fr)]">
+        <div className="min-w-0">
           {eyebrow && (
             <span className="hero-fade eyebrow">{eyebrow.split(" · ")[0]}{eyebrow.includes(" · ") && <span className="hidden sm:inline">· {eyebrow.split(" · ").slice(1).join(" · ")}</span>}</span>
           )}
@@ -146,8 +152,12 @@ export function Hero({ eyebrow, title, emphasis, subtitle, chipsLabel, chips, se
           </div>
 
           {secondary && (
-            <div className="hero-fade mt-6 flex flex-wrap items-center gap-4" style={{ animationDelay: "0.4s" }}>
-              <Magnetic><ButtonLink href={secondary.href} variant="primary" arrow>{secondary.label}</ButtonLink></Magnetic>
+            <div className="hero-fade mt-7 flex flex-wrap items-center gap-x-3 gap-y-2 text-[15px] text-ink-soft" style={{ animationDelay: "0.4s" }}>
+              <span>Lieber direkt sprechen?</span>
+              <CallLink className="inline-flex items-center gap-2 rounded-full border border-navy/20 bg-white px-4 py-2 font-semibold text-navy transition hover:border-navy">
+                <Phone className="h-4 w-4" aria-hidden />{site.phone}
+              </CallLink>
+              <Link href={secondary.href} className="font-medium text-navy underline decoration-navy/30 underline-offset-4 transition hover:decoration-navy">{secondary.label}</Link>
             </div>
           )}
 
