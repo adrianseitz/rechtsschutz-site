@@ -51,6 +51,13 @@ erzeugt alle Schlüssel und startet die Seite. Danach:
 `nano .env` → SMTP-Werte eintragen (z. B. Gmail mit App-Passwort: `smtp.gmail.com`, Port `465`, `SMTP_SECURE=true`),
 dann `docker compose up -d`.
 
+## 4a. Google Ads (Conversion-Tracking)
+
+Im CRM unter **Einstellungen → Google Ads: Anfragen messen** Conversion-ID (`AW-…`) und Conversion-Label eintragen.
+Das wirkt sofort, ohne Neustart. Erst dann erscheint für Besucher die Cookie-Abfrage; gemessen wird nur mit Einwilligung.
+Unter **Statistik** lassen sich Termine und Abschlüsse als Datei für den Import in Google Ads herunterladen
+(Conversion-Aktionen vom Typ „Import“ mit den Namen `CRM Termin` und `CRM Abschluss`).
+
 ## 5. Laufender Betrieb
 
 | Aufgabe | Befehl (im Ordner `rechtsschutz-site`) |

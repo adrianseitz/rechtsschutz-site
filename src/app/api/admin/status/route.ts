@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { isLeadStatus } from "@/lib/crm";
 import { isAdmin } from "@/lib/server/adminAuth";
-import { setStatus } from "@/lib/server/crmStatus";
+import { publicEntry, setStatus } from "@/lib/server/crmStatus";
 import { fileStorageEnabled } from "@/lib/server/storage";
 import { jsonError, originAllowed, readJson } from "@/lib/server/request";
 
@@ -22,6 +22,6 @@ export async function POST(req: Request) {
   const id = typeof body?.id === "string" && /^[0-9a-f-]{36}$/i.test(body.id) ? body.id : null;
   if (!id || !isLeadStatus(body.status)) return jsonError(400, "invalid");
 
-  const entry = await setStatus(id, body.status);
+  const entry = publicEntry(await setStatus(id, body.status));
   return NextResponse.json({ ok: true, entry }, { headers: { "Cache-Control": "no-store" } });
 }

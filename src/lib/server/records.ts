@@ -2,7 +2,7 @@ import "server-only";
 import { randomUUID } from "node:crypto";
 import type { Attribution, ContactFormInput, LeadInput } from "../schemas";
 import { CONSENT_TEXTS, CONSENT_VERSION } from "../schemas";
-import { einheitenLabel, labelFor, MULTI_AREAS, SITUATION } from "../funnel";
+import { einheitenLabel, labelFor, MULTI_AREAS, reachableLabel, SITUATION } from "../funnel";
 
 export type ConsentRecord = { granted: boolean; text: string; version: string; at: string };
 
@@ -13,7 +13,7 @@ export type SubmissionRecord = {
   product: string;
   productLabel: string;
   answers: Record<string, { value: string | string[]; label: string }>;
-  contact: { firstName?: string; lastName?: string; name?: string; email: string; phone?: string; contactMethod?: string };
+  contact: { firstName?: string; lastName?: string; name?: string; email: string; phone?: string; contactMethod?: string; reachable?: string };
   request?: { requestType: string; preferredTime?: string; message?: string };
   attribution: Attribution & { channel: string };
   consents: { contact: ConsentRecord; marketing?: ConsentRecord; tracking: { statistics: boolean; marketing: boolean } };
@@ -72,6 +72,7 @@ export function buildLeadRecord(input: LeadInput, meta: SubmissionRecord["meta"]
       email: contact.email.toLowerCase(),
       phone: contact.phone || undefined,
       contactMethod: contact.contactMethod,
+      reachable: contact.phone && contact.reachable ? reachableLabel(contact.reachable) : undefined,
     },
     attribution: { ...input.attribution, channel: deriveChannel(input.attribution) },
     consents: {

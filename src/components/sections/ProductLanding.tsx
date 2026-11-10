@@ -54,7 +54,7 @@ const PHOTO_CAPTION: Record<Product["key"], string> = {
 export function ProductLanding({ product }: { product: Product }) {
   const checkHref = `/rechtsschutz-check?bereich=${product.key}`;
   const situation = SITUATION[product.key];
-  const faq = [...product.faq, ...generalFaq.filter((f) => /Wartezeit|bestehende|kostenlos/i.test(f.q))];
+  const faq = [...product.faq, ...generalFaq.filter((f) => /kostet|Wartezeit|bestehende|kostenlos/i.test(f.q))];
 
   return (
     <>

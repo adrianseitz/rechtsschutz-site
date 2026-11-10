@@ -8,12 +8,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { Cookie, X } from "lucide-react";
 import { readConsent, writeConsent, type ConsentState } from "@/lib/consent";
 import { captureAttribution } from "@/lib/attribution";
-
-const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID;
-const GA4_ID = process.env.NEXT_PUBLIC_GA4_ID;
-const ADS_ID = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID;
-const META_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
-const TRACKING_CONFIGURED = Boolean(GTM_ID || GA4_ID || ADS_ID || META_ID);
+import { getTrackingConfig, loadTrackingConfig, trackingConfigured, type TrackingConfig } from "@/lib/trackingConfig";
 
 type Ctx = { consent: ConsentState | null; openSettings: () => void };
 const ConsentContext = createContext<Ctx>({ consent: null, openSettings: () => {} });
@@ -27,6 +22,7 @@ export function ConsentManager({ children }: { children: React.ReactNode }) {
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [stat, setStat] = useState(false);
   const [mkt, setMkt] = useState(false);
+  const [cfg, setCfg] = useState<TrackingConfig | null>(null);
 
   useEffect(() => {
     captureAttribution();
@@ -36,7 +32,13 @@ export function ConsentManager({ children }: { children: React.ReactNode }) {
       setConsent(c);
       setStat(c.statistics);
       setMkt(c.marketing);
-    } else {
+    }
+    // Kennungen laden (im CRM gepflegt). Ohne aktive Dienste gibt es nichts einzuwilligen – dann erscheint kein Banner.
+    let cancelled = false;
+    loadTrackingConfig().then((loaded) => {
+      if (cancelled) return;
+      setCfg(loaded);
+      if (c || !trackingConfigured(loaded)) return;
       // Banner erst nach dem Intro zeigen, damit sich beides nicht überlagert.
       const open = () => setBannerOpen(true);
       if ((window as unknown as { __rsIntroDone?: boolean }).__rsIntroDone) open();
@@ -44,8 +46,9 @@ export function ConsentManager({ children }: { children: React.ReactNode }) {
         window.addEventListener("rs:intro-done", open, { once: true });
         setTimeout(open, 3200);
       }
-    }
+    });
     setReady(true);
+    return () => { cancelled = true; };
   }, []);
 
   const save = useCallback(
@@ -72,6 +75,16 @@ export function ConsentManager({ children }: { children: React.ReactNode }) {
   const statistics = !!consent?.statistics;
   const marketing = !!consent?.marketing;
   const anyTracking = statistics || marketing;
+  const t = cfg ?? getTrackingConfig();
+  const GTM_ID = cfg ? t.gtmId : "";
+  const GA4_ID = cfg ? t.ga4Id : "";
+  const ADS_ID = cfg ? t.adsId : "";
+  const META_ID = cfg ? t.metaPixelId : "";
+  const TRACKING_CONFIGURED = trackingConfigured(t);
+  const hasStat = Boolean(GTM_ID || GA4_ID);
+  const hasMkt = Boolean(GTM_ID || ADS_ID || META_ID);
+  const mktServices = [ADS_ID || GTM_ID ? "Google Ads" : "", META_ID ? "Meta Pixel" : ""].filter(Boolean).join(", ") || "Google Ads";
+  const services = [hasStat ? "Google Analytics" : "", ADS_ID || GTM_ID ? "Google Ads" : "", META_ID ? "Meta" : ""].filter(Boolean).join(", ");
   const consentMode = `{
     ad_storage: '${marketing ? "granted" : "denied"}',
     ad_user_data: '${marketing ? "granted" : "denied"}',
@@ -125,56 +138,55 @@ fbq('init','${META_ID}');fbq('track','PageView');`}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 24 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
-            className="fixed inset-x-3 bottom-3 z-[60] mx-auto max-w-xl rounded-2xl border border-line bg-white p-5 shadow-lift sm:bottom-5 sm:p-6"
+            className="fixed inset-x-2 bottom-2 z-[60] mx-auto max-w-xl rounded-2xl border border-line bg-white p-4 shadow-lift sm:inset-x-3 sm:bottom-5 sm:p-6"
           >
             <div className="flex items-start gap-3">
-              <span className="mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-teal-50 text-teal-700">
+              <span className="mt-0.5 hidden h-9 w-9 shrink-0 place-items-center rounded-xl bg-teal-50 text-teal-700 sm:grid">
                 <Cookie className="h-5 w-5" aria-hidden />
               </span>
               <div className="min-w-0 flex-1">
-                <h2 id="consent-title" className="text-base font-bold">Datenschutz-Einstellungen</h2>
-                <p className="mt-1 text-sm leading-6 text-ink-soft">
-                  Wir verwenden notwendige Technologien für den Betrieb der Website.
+                <h2 id="consent-title" className="text-[15px] font-bold sm:text-base">Datenschutz-Einstellungen</h2>
+                <p className="mt-1 text-[13px] leading-5 text-ink-soft sm:text-sm sm:leading-6">
                   {TRACKING_CONFIGURED
-                    ? " Mit deiner Einwilligung nutzen wir zusätzlich Statistik- und Marketing-Dienste (z. B. Google, Meta), um unser Angebot zu verbessern und Werbung zu messen. Du kannst deine Auswahl jederzeit im Footer ändern."
-                    : " Statistik- und Marketing-Dienste sind derzeit nicht aktiv."}{" "}
+                    ? `Notwendige Technologien sind immer aktiv. Mit deiner Einwilligung ${hasStat && hasMkt ? "nutzen wir zusätzlich Statistik und messen den Erfolg unserer Werbung" : hasStat ? "nutzen wir zusätzlich eine Besucherstatistik" : "messen wir zusätzlich den Erfolg unserer Werbung"} (${services}). Jederzeit im Footer änderbar.`
+                    : "Wir verwenden nur notwendige Technologien für den Betrieb der Website. Statistik- und Marketing-Dienste von Drittanbietern sind nicht aktiv."}{" "}
+                  {!detailsOpen && TRACKING_CONFIGURED && <><button type="button" onClick={() => setDetailsOpen(true)} className="font-medium text-teal-700 underline underline-offset-2">Einstellungen</button>{" · "}</>}
                   <Link href="/datenschutz" className="font-medium text-teal-700 underline underline-offset-2">Mehr erfahren</Link>
                 </p>
               </div>
-              {consent && (
+              {(consent || !TRACKING_CONFIGURED) && (
                 <button aria-label="Schließen" onClick={() => setBannerOpen(false)} className="-mr-1 -mt-1 rounded-lg p-1.5 text-ink-muted hover:bg-surface">
                   <X className="h-4 w-4" />
                 </button>
               )}
             </div>
 
-            {detailsOpen && (
+            {detailsOpen && TRACKING_CONFIGURED && (
               <div className="mt-4 space-y-2">
                 <ToggleRow title="Notwendig" text="Grundfunktionen, Formulare, Speicherung deiner Auswahl." checked disabled />
-                <ToggleRow title="Statistik" text="Anonymisierte Reichweitenmessung (Google Analytics 4)." checked={stat} onChange={setStat} />
-                <ToggleRow title="Marketing" text="Messung von Werbeanzeigen (Google Ads, Meta Pixel)." checked={mkt} onChange={setMkt} />
+                {hasStat && <ToggleRow title="Statistik" text="Reichweitenmessung (Google Analytics 4)." checked={stat} onChange={setStat} />}
+                {hasMkt && <ToggleRow title="Marketing" text={`Messung von Werbeanzeigen (${mktServices}).`} checked={mkt} onChange={setMkt} />}
               </div>
             )}
 
-            <div className="mt-5 grid grid-cols-2 gap-2 sm:flex sm:justify-end">
-              {detailsOpen ? (
-                <button onClick={() => save(stat, mkt)} className="col-span-2 rounded-xl bg-navy px-4 py-3 text-sm font-semibold text-white hover:bg-navy-800">
-                  Auswahl speichern
-                </button>
-              ) : (
-                <>
-                  <button onClick={() => setDetailsOpen(true)} className="col-span-2 rounded-xl px-4 py-3 text-sm font-semibold text-navy underline-offset-2 hover:underline sm:col-span-1">
-                    Einstellungen
+            {TRACKING_CONFIGURED && (
+              <div className="mt-3.5 grid grid-cols-2 gap-2 sm:mt-5 sm:flex sm:justify-end">
+                {detailsOpen ? (
+                  <button onClick={() => save(hasStat && stat, hasMkt && mkt)} className="col-span-2 rounded-xl bg-navy px-4 py-3 text-sm font-semibold text-white hover:bg-navy-800">
+                    Auswahl speichern
                   </button>
-                  <button onClick={() => save(false, false)} className="rounded-xl border border-navy px-4 py-3 text-sm font-semibold text-navy hover:bg-navy-50">
-                    Nur notwendige
-                  </button>
-                  <button onClick={() => save(true, true)} className="rounded-xl border border-navy bg-navy px-4 py-3 text-sm font-semibold text-white hover:bg-navy-800">
-                    Alle akzeptieren
-                  </button>
-                </>
-              )}
-            </div>
+                ) : (
+                  <>
+                    <button onClick={() => save(false, false)} className="rounded-xl border border-navy px-4 py-3 text-sm font-semibold text-navy hover:bg-navy-50">
+                      Nur notwendige
+                    </button>
+                    <button onClick={() => save(hasStat, hasMkt)} className="rounded-xl border border-navy bg-navy px-4 py-3 text-sm font-semibold text-white hover:bg-navy-800">
+                      Alle akzeptieren
+                    </button>
+                  </>
+                )}
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

@@ -7,10 +7,12 @@ import { safeEqual } from "./crypto";
 /**
  * Login für das CRM unter /admin.
  * Passwort kommt aus ADMIN_PASSWORD (mind. 12 Zeichen). Die Sitzung ist ein signiertes,
- * HttpOnly-Cookie (12 Stunden). Wird das Passwort geändert, sind alle Sitzungen ungültig.
+ * HttpOnly-Cookie (12 Stunden, mit „Angemeldet bleiben“ 30 Tage). Wird das Passwort geändert,
+ * sind alle Sitzungen ungültig.
  */
 export const ADMIN_COOKIE = "rs_admin";
 const MAX_AGE = 12 * 60 * 60;
+export const REMEMBER_MAX_AGE = 30 * 24 * 60 * 60;
 
 const password = () => (process.env.ADMIN_PASSWORD ?? "").trim();
 export const adminEnabled = () => password().length >= 12;
@@ -18,8 +20,8 @@ export const adminEnabled = () => password().length >= 12;
 const secret = () => createHmac("sha256", `${serverConfig.hashSalt}:crm-session`).update(password()).digest();
 const sign = (payload: string) => createHmac("sha256", secret()).update(payload).digest("base64url");
 
-export function createSession(): string {
-  const payload = `${Math.floor(Date.now() / 1000) + MAX_AGE}.${randomBytes(12).toString("hex")}`;
+export function createSession(maxAge = MAX_AGE): string {
+  const payload = `${Math.floor(Date.now() / 1000) + maxAge}.${randomBytes(12).toString("hex")}`;
   return `${payload}.${sign(payload)}`;
 }
 

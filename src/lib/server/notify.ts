@@ -45,10 +45,12 @@ export async function sendNotification(r: SubmissionRecord) {
     ...Object.entries(r.answers).filter(([k]) => k !== "bereich").map(([k, v]) => [ANSWER_LABEL[k] ?? k, v.label] as [string, unknown]),
     ...(r.request ? ([["Anliegen", REQUEST_LABEL[r.request.requestType]]] as [string, unknown][]) : []),
     ["Gewünschter Kontakt", r.contact.contactMethod ? METHOD_LABEL[r.contact.contactMethod] : r.contact.phone ? "Telefon möglich" : "E-Mail"],
+    ...(r.contact.reachable ? ([["Am besten erreichbar", r.contact.reachable]] as [string, unknown][]) : []),
     ["Herkunft", r.attribution.channel],
+    ...(r.attribution.utm_term ? ([["Suchbegriff", r.attribution.utm_term]] as [string, unknown][]) : []),
   ];
   const visible = rows.filter(([, v]) => v !== undefined && v !== "");
-  const link = crmLink();
+  const link = `${crmLink()}?lead=${r.id}`;
   const html = `<div style="font-family:Arial,Helvetica,sans-serif;color:#0B0B0A;max-width:520px">
 <p style="margin:0 0 4px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#71716B">§ Seitz Rechtsschutz</p>
 <h2 style="margin:0 0 16px;font-size:22px">${esc(subject)}</h2>

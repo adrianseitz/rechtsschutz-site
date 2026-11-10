@@ -3,7 +3,7 @@ import { createHash, randomBytes } from "node:crypto";
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { serverConfig } from "./config";
-import { emptyDay, PAGE_LABEL, type StatsData } from "../stats";
+import { emptyDay, EVENT_LABEL, PAGE_LABEL, type StatsData } from "../stats";
 
 /**
  * Reichweitenmessung ohne Cookies:
@@ -84,14 +84,17 @@ export async function readStats(): Promise<StatsData> {
 /* Zählungen werden im Speicher gesammelt und alle paar Sekunden gebündelt geschrieben. */
 type Hit = { day: string; page: string; source: string | null; device: string; newVisitor: boolean };
 let pending: Hit[] = [];
+let pendingEvents: { day: string; name: string }[] = [];
 let timer: NodeJS.Timeout | null = null;
 let writing: Promise<void> = Promise.resolve();
 
 async function flush() {
   timer = null;
   const hits = pending;
+  const events = pendingEvents;
   pending = [];
-  if (!hits.length) return;
+  pendingEvents = [];
+  if (!hits.length && !events.length) return;
   writing = writing.then(async () => {
     const all = await readStats();
     for (const h of hits) {
@@ -103,6 +106,11 @@ async function flush() {
         if (h.source) d.sources[h.source] = (d.sources[h.source] ?? 0) + 1;
         d.devices[h.device] = (d.devices[h.device] ?? 0) + 1;
       }
+    }
+    for (const e of events) {
+      const d = (all[e.day] ??= emptyDay());
+      const ev = (d.events ??= {});
+      ev[e.name] = (ev[e.name] ?? 0) + 1;
     }
     const cutoff = dayKey(new Date(Date.now() - KEEP_DAYS * 86400000));
     for (const k of Object.keys(all)) if (k < cutoff) delete all[k];
@@ -118,6 +126,14 @@ export function recordHit(input: { ip: string; ua: string; page: string; source:
   const newVisitor = !seenToday(input.ip, input.ua);
   pending.push({ day: dayKey(), page: input.page, source: newVisitor ? input.source : null, device: input.mobile ? "Handy" : "Computer", newVisitor });
   if (pending.length > 500) void flush();
+  else if (!timer) timer = setTimeout(() => void flush(), 5000);
+}
+
+/** Zählt eine anonyme Aktion (nur bekannte Namen). */
+export function recordEvent(name: string) {
+  if (!(name in EVENT_LABEL)) return;
+  pendingEvents.push({ day: dayKey(), name });
+  if (pendingEvents.length > 500) void flush();
   else if (!timer) timer = setTimeout(() => void flush(), 5000);
 }
 

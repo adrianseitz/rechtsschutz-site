@@ -140,6 +140,8 @@ export const products: Record<ProductKey, Product> = {
     faq: [
       { q: "Brauche ich für jede Wohnung einen eigenen Vertrag?", a: "Nicht unbedingt. Häufig lassen sich mehrere Wohneinheiten in einem Vertrag absichern. Entscheidend sind Anzahl und Art der Objekte." },
       { q: "Sind ausstehende Mieten versichert?", a: "Rechtsschutz übernimmt – je nach Tarif – Kosten für die rechtliche Durchsetzung, ersetzt aber nicht die ausgefallene Miete selbst. Bereits bestehende Rückstände sind nicht versicherbar." },
+      { q: "Kann ich die Beiträge von der Steuer absetzen?", a: "Die Beiträge hängen mit deinen Mieteinnahmen zusammen und lassen sich deshalb in der Regel als Werbungskosten bei den Einkünften aus Vermietung und Verpachtung ansetzen. Verbindlich klärt das deine Steuerberatung." },
+      { q: "Kann ich die Kosten auf meine Mieter umlegen?", a: "Nein. Eine Rechtsschutzversicherung gehört nicht zu den umlagefähigen Betriebskosten und kann nicht über die Nebenkostenabrechnung weitergegeben werden." },
     ],
   },
   firma: {
@@ -180,6 +182,7 @@ export const products: Record<ProductKey, Product> = {
     faq: [
       { q: "Ist mein Vertragsstreit mit einem Kunden versichert?", a: "Das hängt stark vom Tarif ab. Vertragsrechtsschutz für Unternehmen ist häufig nur als optionaler Baustein und mit Einschränkungen erhältlich." },
       { q: "Gibt es Lösungen für Freiberufler?", a: "Ja, es gibt Angebote für Selbstständige und Freiberufler. Welche Bausteine passen, klären wir anhand deiner Tätigkeit." },
+      { q: "Kann ich die Beiträge als Betriebsausgabe absetzen?", a: "Beiträge für einen betrieblichen Rechtsschutz sind in der Regel Betriebsausgaben. Verbindlich klärt das deine Steuerberatung." },
     ],
   },
 };

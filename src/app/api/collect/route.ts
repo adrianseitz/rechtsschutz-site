@@ -1,4 +1,4 @@
-import { classifySource, isBot, normalizePath, recordHit } from "@/lib/server/analytics";
+import { classifySource, isBot, normalizePath, recordEvent, recordHit } from "@/lib/server/analytics";
 import { fileStorageEnabled } from "@/lib/server/storage";
 import { hashIdentifier } from "@/lib/server/crypto";
 import { rateLimit } from "@/lib/server/rateLimit";
@@ -28,12 +28,16 @@ export async function POST(req: Request) {
   const ip = clientIp(req);
   if (!rateLimit(`collect:${hashIdentifier(ip)}`, 120, 60_000).ok) return ok();
 
-  let body: { p?: unknown; r?: unknown; s?: unknown; m?: unknown; g?: unknown; f?: unknown; w?: unknown };
+  let body: { e?: unknown; p?: unknown; r?: unknown; s?: unknown; m?: unknown; g?: unknown; f?: unknown; w?: unknown };
   try {
     const text = await req.text();
     if (text.length > 2048) return ok();
     body = JSON.parse(text);
   } catch {
+    return ok();
+  }
+  if (typeof body.e === "string") {
+    recordEvent(body.e.slice(0, 40));
     return ok();
   }
   const page = typeof body.p === "string" ? normalizePath(body.p) : null;

@@ -22,6 +22,7 @@ export const contactFieldsSchema = z
     email: trimmed(160).email("Bitte gib eine gültige E-Mail-Adresse an."),
     phone: trimmed(30).optional().or(z.literal("")),
     contactMethod: z.enum(["email", "telefon", "egal"], { errorMap: () => ({ message: "Bitte wähle einen Kontaktweg." }) }),
+    reachable: z.enum(["vormittags", "mittags", "nachmittags", "abends"]).optional().or(z.literal("")),
     consentContact: z.literal(true, { errorMap: () => ({ message: "Bitte bestätige die Kontaktaufnahme zu deiner Anfrage." }) }),
     consentMarketing: z.boolean(),
   })

@@ -10,7 +10,8 @@ export const INTRO_DONE_EVENT = "rs:intro-done";
  * Einstiegs-Moment „Der Stempel“ (ca. 2,3 s):
  * Brief rutscht ins Bild → Stempel „Abgesichert“ knallt drauf (Bildschirm wackelt, gelbe Druckwelle)
  * → Claim erscheint → gelber Vorhang gibt die Seite frei.
- * Nur einmal pro Sitzung, per Klick/Taste überspringbar, entfällt bei „Bewegung reduzieren“.
+ * Nur einmal pro Sitzung und nur auf der Startseite, per Klick/Taste überspringbar,
+ * entfällt bei „Bewegung reduzieren“ sowie für Besucher aus Anzeigen (gclid/utm), damit die sofort den Inhalt sehen.
  */
 export function Intro() {
   const [show, setShow] = useState(false);
@@ -22,7 +23,10 @@ export function Intro() {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const bot = /bot|crawl|spider|lighthouse|headless/i.test(navigator.userAgent);
     const uncover = () => document.documentElement.classList.remove("intro-pending");
-    if (seen || reduce || bot) { uncover(); (window as unknown as { __rsIntroDone?: boolean }).__rsIntroDone = true; window.dispatchEvent(new Event(INTRO_DONE_EVENT)); return; }
+    // Nur auf der Startseite und nie für Besucher aus Anzeigen/Kampagnen: Die sollen sofort den Inhalt sehen.
+    const campaign = /[?&](gclid|gbraid|wbraid|fbclid|msclkid|utm_[a-z]+)=/.test(window.location.search);
+    const noIntro = campaign || window.location.pathname !== "/";
+    if (seen || reduce || bot || noIntro) { uncover(); (window as unknown as { __rsIntroDone?: boolean }).__rsIntroDone = true; window.dispatchEvent(new Event(INTRO_DONE_EVENT)); return; }
     try { sessionStorage.setItem(KEY, "1"); } catch { /* */ }
     setShow(true);
     requestAnimationFrame(() => requestAnimationFrame(uncover));

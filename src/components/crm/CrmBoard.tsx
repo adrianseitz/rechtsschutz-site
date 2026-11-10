@@ -4,9 +4,10 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import {
-  AlertCircle, BarChart3, Check, Columns3, Download, List, LogOut, Settings, Mail, Phone, RefreshCw, RotateCcw, Search, Trash2, X,
+  AlertCircle, BarChart3, Bell, Check, Columns3, Download, List, LogOut, Settings, Mail, MessageSquare, Phone, PhoneMissed, RefreshCw, RotateCcw, Search, Trash2, X,
 } from "lucide-react";
-import { STATUSES, type CrmLead, type LeadStatus } from "@/lib/crm";
+import { channelShort, followUpDue, LOST_REASONS, STATUSES, todayKey, type CrmLead, type LeadStatus, type StatusEntry } from "@/lib/crm";
+import { site } from "@/lib/site";
 import type { StatsData } from "@/lib/stats";
 import { StatsView } from "./StatsView";
 import { SettingsView } from "./SettingsView";
@@ -35,24 +36,51 @@ const retentionDue = (l: CrmLead) =>
 
 const overdue = (l: CrmLead) => l.status === "neu" && Date.now() - new Date(l.createdAt).getTime() > 24 * 3600 * 1000;
 
-const channelShort = (c: string) =>
-  c.startsWith("Google Ads") ? "Google Ads" : c.startsWith("Meta Ads") ? "Meta Ads" : c.startsWith("Kampagne") ? "Kampagne" : c.startsWith("Suchmaschine") ? "Google organisch" : c.startsWith("Social") ? "Social" : c.startsWith("Verweis") ? "Verweis" : "Direkt";
+/** Noch nicht kontaktiert: Wie dringend ist der erste Anruf? (Wer schnell anruft, erreicht deutlich mehr Leute.) */
+function urgency(l: CrmLead): { label: string; cls: string } | null {
+  if (l.status !== "neu") return null;
+  const since = new Date(l.attempts?.length ? l.attempts[l.attempts.length - 1] : l.createdAt).getTime();
+  const min = (Date.now() - since) / 60000;
+  if (l.attempts?.length) return min > 240 ? { label: "Nochmal versuchen", cls: "bg-amber-100 text-amber-900" } : { label: `${l.attempts.length}× nicht erreicht`, cls: "bg-paper text-ink-soft" };
+  if (min < 60) return { label: l.phone ? "Jetzt anrufen" : "Jetzt melden", cls: "bg-emerald-100 text-emerald-900" };
+  if (min < 24 * 60) return { label: `Wartet ${ago(l.createdAt)}`, cls: "bg-amber-100 text-amber-900" };
+  return { label: `Wartet ${ago(l.createdAt)}`, cls: "bg-rose-100 text-rose-900" };
+}
+
+const firstName = (l: CrmLead) => l.name.split(/\s+/)[0] || "";
+const dateLabel = (k: string) => { const [y, m, d] = k.split("-"); return `${d}.${m}.${y}`; };
+const plusDays = (n: number) => new Date(Date.now() + n * 86400000).toLocaleDateString("sv-SE", { timeZone: "Europe/Berlin" });
+
+/** Vorformulierte Nachrichten – öffnen im eigenen Mail-/SMS-Programm, nichts wird automatisch verschickt. */
+function mailHref(l: CrmLead, kind: "first" | "missed") {
+  const hello = firstName(l) && l.name !== "–" ? `Hallo ${firstName(l)},` : "Hallo,";
+  const body = kind === "first"
+    ? `${hello}\n\nvielen Dank für deine Anfrage zum ${l.productLabel}. Gern stelle ich dir eine passende Lösung vor.\n\nWann passt es dir für ein kurzes Telefonat? Du erreichst mich auch direkt unter ${site.phone}.\n\nViele Grüße\n${site.owner}`
+    : `${hello}\n\nich habe gerade versucht, dich wegen deiner Anfrage zum ${l.productLabel} telefonisch zu erreichen – leider ohne Erfolg.\n\nWann passt es dir am besten? Antworte einfach auf diese Mail oder ruf mich an: ${site.phone}.\n\nViele Grüße\n${site.owner}`;
+  return `mailto:${l.email}?subject=${encodeURIComponent("Deine Anfrage zum " + l.productLabel)}&body=${encodeURIComponent(body)}`;
+}
+const smsHref = (l: CrmLead) =>
+  `sms:${(l.phone ?? "").replace(/[^+0-9]/g, "")}?&body=${encodeURIComponent(`Hallo${firstName(l) && l.name !== "–" ? " " + firstName(l) : ""}, hier ist ${site.owner} wegen deiner Rechtsschutz-Anfrage. Ich habe dich gerade nicht erreicht – wann passt dir ein Rückruf?`)}`;
 
 type View = "pipeline" | "liste" | "statistik" | "einstellungen";
 const VIEWS: { v: View; label: string }[] = [{ v: "pipeline", label: "Pipeline" }, { v: "liste", label: "Liste" }, { v: "statistik", label: "Statistik" }, { v: "einstellungen", label: "Einstellungen" }];
 const ViewIcon = ({ v }: { v: View }) => (v === "pipeline" ? <Columns3 className="h-4 w-4" aria-hidden /> : v === "liste" ? <List className="h-4 w-4" aria-hidden /> : v === "statistik" ? <BarChart3 className="h-4 w-4" aria-hidden /> : <Settings className="h-4 w-4" aria-hidden />);
 
-export function CrmBoard({ initial, storage, error, stats: traffic = {} }: { initial: CrmLead[]; storage: boolean; error: string; stats?: StatsData }) {
+export function CrmBoard({ initial, storage, error, stats: traffic = {}, openLead }: { initial: CrmLead[]; storage: boolean; error: string; stats?: StatsData; openLead?: string }) {
   const router = useRouter();
   const [leads, setLeads] = useState(initial);
   const [view, setView] = useState<View>("pipeline");
   const [q, setQ] = useState("");
-  const [openId, setOpenId] = useState<string | null>(null);
+  const [openId, setOpenId] = useState<string | null>(openLead ?? null);
   const [toast, setToast] = useState("");
   const [dragId, setDragId] = useState<string | null>(null);
   const [overCol, setOverCol] = useState<LeadStatus | null>(null);
 
   useEffect(() => setLeads(initial), [initial]);
+  // Direktlink aus der Benachrichtigungs-Mail (?lead=…): nach dem Öffnen aus der Adresse entfernen.
+  useEffect(() => {
+    if (openLead) window.history.replaceState(null, "", "/admin");
+  }, [openLead]);
   useEffect(() => {
     try {
       const v = localStorage.getItem("rs_crm_view");
@@ -73,7 +101,7 @@ export function CrmBoard({ initial, storage, error, stats: traffic = {} }: { ini
   const filtered = useMemo(() => {
     const n = q.trim().toLowerCase();
     if (!n) return leads;
-    return leads.filter((l) => [l.name, l.email, l.phone, l.productLabel, l.situation, l.message, l.channel].some((v) => v?.toLowerCase().includes(n)));
+    return leads.filter((l) => [l.name, l.email, l.phone, l.productLabel, l.situation, l.message, l.channel, l.keyword, ...(l.notes ?? []).map((x) => x.text)].some((v) => v?.toLowerCase().includes(n)));
   }, [leads, q]);
 
   const stats = useMemo(() => {
@@ -83,13 +111,30 @@ export function CrmBoard({ initial, storage, error, stats: traffic = {} }: { ini
     return {
       open: leads.filter((l) => statusOf(l.status).stage).length,
       week: leads.filter((l) => new Date(l.createdAt).getTime() > weekAgo).length,
-      overdue: leads.filter(overdue).length,
+      waiting: leads.filter((l) => l.status === "neu").length,
+      due: leads.filter(followUpDue).length,
       won,
       rate: won + lost > 0 ? Math.round((won / (won + lost)) * 100) : null,
     };
   }, [leads]);
 
   const current = leads.find((l) => l.id === openId) ?? null;
+
+  const merge = (id: string, e: StatusEntry) =>
+    setLeads((ls) => ls.map((l) => (l.id === id ? { ...l, status: e.status, statusUpdatedAt: e.updatedAt, history: e.history, notes: e.notes, attempts: e.attempts, followUp: e.followUp, value: e.value, lostReason: e.lostReason, firstResponseAt: e.firstResponseAt } : l)));
+
+  async function meta(id: string, patch: Record<string, unknown>, done?: string) {
+    try {
+      const res = await fetch("/api/admin/meta", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id, ...patch }) });
+      if (res.status === 401) return router.replace("/admin/login");
+      const j = await res.json().catch(() => ({}));
+      if (!res.ok || !j.entry) throw new Error();
+      merge(id, j.entry as StatusEntry);
+      if (done) setToast(done);
+    } catch {
+      setToast("Speichern fehlgeschlagen – bitte erneut versuchen.");
+    }
+  }
 
   async function changeStatus(id: string, status: LeadStatus) {
     const lead = leads.find((l) => l.id === id);
@@ -100,7 +145,9 @@ export function CrmBoard({ initial, storage, error, stats: traffic = {} }: { ini
     try {
       const res = await fetch("/api/admin/status", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id, status }) });
       if (res.status === 401) return router.replace("/admin/login");
+      const j = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error();
+      if (j.entry) merge(id, j.entry as StatusEntry);
       setToast(`${lead.name} → ${statusOf(status).label}`);
     } catch {
       setLeads(before);
@@ -170,8 +217,8 @@ export function CrmBoard({ initial, storage, error, stats: traffic = {} }: { ini
         {view !== "statistik" && view !== "einstellungen" && (
           <div className="flex shrink-0 gap-2 overflow-x-auto px-4 pt-3 [scrollbar-width:none] sm:grid sm:grid-cols-4 sm:gap-3 sm:overflow-visible sm:pt-4">
             <Stat label="Offen in der Pipeline" value={stats.open} />
-            <Stat label="Neu (7 Tage)" value={stats.week} />
-            <Stat label="Unbearbeitet > 24 Std." value={stats.overdue} warn={stats.overdue > 0} />
+            <Stat label="Noch nicht kontaktiert" value={stats.waiting} warn={stats.waiting > 0} sub={stats.waiting > 0 ? "schnell melden" : undefined} />
+            <Stat label="Wiedervorlage fällig" value={stats.due} warn={stats.due > 0} />
             <Stat label="Abschlussquote" value={stats.rate === null ? "–" : `${stats.rate} %`} sub={`${stats.won} gewonnen`} />
           </div>
         )}
@@ -221,10 +268,17 @@ export function CrmBoard({ initial, storage, error, stats: traffic = {} }: { ini
                                 <p className="truncate text-[14px] font-semibold leading-tight">{l.name}</p>
                                 <p className="mt-0.5 truncate text-xs text-ink-soft">{l.productLabel}</p>
                               </div>
+                              {followUpDue(l) && <Bell className="h-4 w-4 shrink-0 text-amber-600" aria-label="Wiedervorlage fällig" />}
                               {overdue(l) && <AlertCircle className="h-4 w-4 shrink-0 text-rose-500" aria-label="Seit über 24 Stunden unbearbeitet" />}
                               {retentionDue(l) && <Trash2 className="h-4 w-4 shrink-0 text-neutral-500" aria-label="Löschfrist erreicht" />}
                             </div>
                             {(l.situation || l.requestType) && <p className="mt-2 line-clamp-2 text-xs leading-snug text-ink-muted">{l.situation ?? l.requestType}{l.einheiten ? ` · ${l.einheiten}` : ""}</p>}
+                            {(urgency(l) || (l.followUp && statusOf(l.status).stage)) && (
+                              <p className="mt-2 flex flex-wrap gap-1.5 text-[11px] font-semibold">
+                                {urgency(l) && <span className={`rounded-full px-2 py-0.5 ${urgency(l)!.cls}`}>{urgency(l)!.label}</span>}
+                                {l.followUp && statusOf(l.status).stage && <span className={`rounded-full px-2 py-0.5 ${followUpDue(l) ? "bg-amber-100 text-amber-900" : "bg-paper text-ink-soft"}`}>Wiedervorlage {l.followUp === todayKey() ? "heute" : dateLabel(l.followUp)}</span>}
+                              </p>
+                            )}
                             <div className="mt-2.5 flex items-center gap-2 text-[11px] text-ink-muted">
                               <span className="truncate whitespace-nowrap rounded bg-paper px-1.5 py-0.5 font-medium text-ink-soft">{channelShort(l.channel)}</span>
                               <span className="hidden whitespace-nowrap rounded bg-paper px-1.5 py-0.5 2xl:inline">{l.type === "lead" ? "Check" : "Kontakt"}</span>
@@ -265,6 +319,7 @@ export function CrmBoard({ initial, storage, error, stats: traffic = {} }: { ini
                           <div className="flex items-center gap-2.5">
                             <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full text-[11px] font-semibold" style={{ background: `${s.dot}33` }}>{initials(l.name)}</span>
                             <span className="font-semibold">{l.name}</span>
+                            {followUpDue(l) && <Bell className="h-4 w-4 text-amber-600" aria-label="Wiedervorlage fällig" />}
                             {overdue(l) && <AlertCircle className="h-4 w-4 text-rose-500" aria-label="Unbearbeitet" />}
                           </div>
                         </td>
@@ -285,7 +340,7 @@ export function CrmBoard({ initial, storage, error, stats: traffic = {} }: { ini
 
       {/* Detailansicht */}
       <AnimatePresence>
-        {current && <Drawer key={current.id} lead={current} onClose={() => setOpenId(null)} onStatus={(s) => changeStatus(current.id, s)} onDelete={() => remove(current.id)} />}
+        {current && <Drawer key={current.id} lead={current} onClose={() => setOpenId(null)} onStatus={(s) => changeStatus(current.id, s)} onMeta={(patch, done) => meta(current.id, patch, done)} onDelete={() => remove(current.id)} />}
       </AnimatePresence>
 
       <AnimatePresence>
@@ -300,8 +355,15 @@ export function CrmBoard({ initial, storage, error, stats: traffic = {} }: { ini
   );
 }
 
-function Drawer({ lead: l, onClose, onStatus, onDelete }: { lead: CrmLead; onClose: () => void; onStatus: (s: LeadStatus) => void; onDelete: () => void }) {
+function Drawer({ lead: l, onClose, onStatus, onMeta, onDelete }: { lead: CrmLead; onClose: () => void; onStatus: (s: LeadStatus) => void; onMeta: (patch: Record<string, unknown>, done?: string) => void; onDelete: () => void }) {
   const [confirm, setConfirm] = useState(false);
+  const [note, setNote] = useState("");
+  const [value, setValue] = useState(l.value !== undefined ? String(l.value).replace(".", ",") : "");
+  const attempts = l.attempts?.length ?? 0;
+  const timeline = [
+    ...l.history.map((h) => ({ at: h.at, dot: statusOf(h.status).dot, text: <>Phase <b>{statusOf(h.status).label}</b></> })),
+    ...(l.attempts ?? []).map((at) => ({ at, dot: "#F59E0B", text: <>Nicht erreicht</> })),
+  ].sort((a, b) => b.at.localeCompare(a.at));
   const s = statusOf(l.status);
   const stageIdx = STAGES.findIndex((x) => x.value === l.status);
   const closed = !s.stage;
@@ -366,7 +428,74 @@ function Drawer({ lead: l, onClose, onStatus, onDelete }: { lead: CrmLead; onClo
             ) : (
               <span className="flex items-center justify-center gap-2 rounded-lg bg-paper py-3 text-sm text-ink-muted">Keine Telefonnummer</span>
             )}
-            <a href={`mailto:${l.email}?subject=${encodeURIComponent("Ihre Anfrage zum " + l.productLabel)}`} className="flex items-center justify-center gap-2 rounded-lg border border-line py-3 text-sm font-semibold hover:border-navy"><Mail className="h-4 w-4" aria-hidden />E-Mail</a>
+            <a href={mailHref(l, "first")} className="flex items-center justify-center gap-2 rounded-lg border border-line py-3 text-sm font-semibold hover:border-navy"><Mail className="h-4 w-4" aria-hidden />E-Mail</a>
+          </div>
+          {l.reachable && l.phone && <p className="px-5 pt-2 text-xs text-ink-muted">Am besten erreichbar: <b className="text-navy">{l.reachable.toLowerCase()}</b></p>}
+
+          {/* Nachfassen */}
+          {!closed && (
+            <div className="px-5 pt-3">
+              <div className={`grid gap-2 ${l.phone && l.contactMethod !== "email" ? "grid-cols-3" : "grid-cols-2"}`}>
+                <button onClick={() => onMeta({ action: "attempt" }, "Kontaktversuch notiert")} className="flex items-center justify-center gap-1.5 rounded-lg border border-line px-2 py-2.5 text-[13px] font-medium hover:border-navy">
+                  <PhoneMissed className="h-4 w-4 shrink-0" aria-hidden />Nicht erreicht{attempts > 0 ? ` (${attempts})` : ""}
+                </button>
+                <a href={mailHref(l, "missed")} className="flex items-center justify-center gap-1.5 rounded-lg border border-line px-2 py-2.5 text-[13px] font-medium hover:border-navy"><Mail className="h-4 w-4 shrink-0" aria-hidden />Nachfass-Mail</a>
+                {l.phone && l.contactMethod !== "email" && <a href={smsHref(l)} className="flex items-center justify-center gap-1.5 rounded-lg border border-line px-2 py-2.5 text-[13px] font-medium hover:border-navy"><MessageSquare className="h-4 w-4 shrink-0" aria-hidden />SMS</a>}
+              </div>
+              <div className="mt-3 rounded-xl border border-line p-3">
+                <div className="flex items-center justify-between gap-2">
+                  <label htmlFor="followup" className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.1em] text-ink-muted"><Bell className="h-3.5 w-3.5" aria-hidden />Wiedervorlage</label>
+                  {l.followUp && <button onClick={() => onMeta({ action: "followUp", date: null }, "Wiedervorlage entfernt")} className="text-xs font-medium text-ink-muted underline-offset-2 hover:underline">Entfernen</button>}
+                </div>
+                <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                  <input id="followup" type="date" min={todayKey()} value={l.followUp ?? ""} onChange={(e) => e.target.value && onMeta({ action: "followUp", date: e.target.value }, `Wiedervorlage am ${dateLabel(e.target.value)}`)}
+                    className={`h-9 rounded-lg border px-2 text-sm ${followUpDue(l) ? "border-amber-400 bg-amber-50" : "border-line bg-white"}`} />
+                  {([["Morgen", 1], ["In 3 Tagen", 3], ["In 1 Woche", 7]] as const).map(([label, n]) => (
+                    <button key={label} onClick={() => onMeta({ action: "followUp", date: plusDays(n) }, `Wiedervorlage am ${dateLabel(plusDays(n))}`)} className="h-9 rounded-lg bg-paper px-2.5 text-xs font-medium text-ink-soft hover:bg-sun hover:text-navy">{label}</button>
+                  ))}
+                </div>
+                {followUpDue(l) && <p className="mt-2 text-xs font-medium text-amber-800">Fällig – heute melden.</p>}
+              </div>
+            </div>
+          )}
+
+          {l.status === "abschluss" && (
+            <form className="mx-5 mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-3" onSubmit={(e) => { e.preventDefault(); const n = Number(value.replace(/\./g, "").replace(",", ".")); onMeta({ action: "value", value: value.trim() === "" || !Number.isFinite(n) ? null : n }, "Jahresbeitrag gespeichert"); }}>
+              <label htmlFor="value" className="text-xs font-semibold uppercase tracking-[0.1em] text-emerald-900">Jahresbeitrag in € (optional)</label>
+              <div className="mt-2 flex gap-2">
+                <input id="value" inputMode="decimal" value={value} onChange={(e) => setValue(e.target.value.replace(/[^0-9.,]/g, ""))} placeholder="z. B. 320" className="h-9 min-w-0 flex-1 rounded-lg border border-emerald-300 bg-white px-3 text-sm" />
+                <button type="submit" className="h-9 rounded-lg bg-emerald-700 px-3 text-sm font-semibold text-white hover:bg-emerald-800">Speichern</button>
+              </div>
+              <p className="mt-1.5 text-xs text-emerald-900/70">Damit siehst du in der Statistik, welche Quelle wie viel Umsatz bringt.</p>
+            </form>
+          )}
+          {l.status === "verloren" && (
+            <div className="mx-5 mt-4 rounded-xl border border-line p-3">
+              <p className="text-xs font-semibold uppercase tracking-[0.1em] text-ink-muted">Warum verloren?</p>
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {LOST_REASONS.map((r) => (
+                  <button key={r} onClick={() => onMeta({ action: "lostReason", reason: l.lostReason === r ? null : r })} aria-pressed={l.lostReason === r}
+                    className={`rounded-full border px-3 py-1.5 text-xs font-medium ${l.lostReason === r ? "border-navy bg-sun text-navy" : "border-line text-ink-soft hover:border-navy/40"}`}>{r}</button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Notizen */}
+          <div className="px-5 pt-5">
+            <h3 className="text-xs font-semibold uppercase tracking-[0.1em] text-ink-muted">Notizen</h3>
+            {(l.notes?.length ?? 0) > 0 && (
+              <ul className="mt-2 space-y-2">
+                {[...(l.notes ?? [])].reverse().map((n, i) => (
+                  <li key={i} className="rounded-lg bg-[#FFF8D6] px-3 py-2 text-sm"><span className="whitespace-pre-wrap">{n.text}</span><span className="mt-1 block text-[11px] text-ink-muted">{fmt(n.at)}</span></li>
+                ))}
+              </ul>
+            )}
+            <form className="mt-2" onSubmit={(e) => { e.preventDefault(); if (!note.trim()) return; onMeta({ action: "note", text: note.trim() }, "Notiz gespeichert"); setNote(""); }}>
+              <textarea value={note} onChange={(e) => setNote(e.target.value)} rows={2} maxLength={2000} placeholder="z. B. Rückruf Donnerstag ab 17 Uhr, 3 Wohnungen in Neuwied …" aria-label="Neue Notiz"
+                className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm placeholder:text-ink-muted focus:border-navy focus:outline-none" />
+              <button type="submit" disabled={!note.trim()} className="mt-1.5 rounded-lg bg-navy px-3 py-2 text-sm font-semibold text-white disabled:opacity-40">Notiz speichern</button>
+            </form>
           </div>
 
           {retentionDue(l) && (
@@ -379,7 +508,8 @@ function Drawer({ lead: l, onClose, onStatus, onDelete }: { lead: CrmLead; onClo
           <Section title="Kontakt">
             <Field k="E-Mail" v={l.email} wide />
             <Field k="Telefon" v={l.phone} />
-            <Field k="Gewünschter Kontaktweg" v={l.contactMethod === "telefon" ? "Telefon" : l.contactMethod === "email" ? "E-Mail" : l.contactMethod} />
+            <Field k="Gewünschter Kontaktweg" v={l.contactMethod === "telefon" ? "Telefon" : l.contactMethod === "email" ? "E-Mail" : l.contactMethod === "egal" ? "Egal" : l.contactMethod} />
+            <Field k="Am besten erreichbar" v={l.reachable} />
           </Section>
           <Section title="Anfrage">
             <Field k="Situation" v={l.situation} />
@@ -392,18 +522,20 @@ function Drawer({ lead: l, onClose, onStatus, onDelete }: { lead: CrmLead; onClo
           </Section>
           <Section title="Herkunft">
             <Field k="Quelle" v={l.channel} />
+            <Field k="Suchbegriff" v={l.keyword} />
             <Field k="Kampagne" v={l.campaign} />
             <Field k="Einstiegsseite" v={l.landingPage} />
             <Field k="Werbe-Einwilligung" v={l.marketingConsent ? "Ja" : "Nein"} />
+            <Field k="Rückmeldung an Google Ads" v={l.hasClickId ? "möglich (Klick-Kennung vorhanden)" : undefined} />
           </Section>
 
           <div className="px-5 pb-6 pt-5">
             <h3 className="text-xs font-semibold uppercase tracking-[0.1em] text-ink-muted">Verlauf</h3>
             <ol className="mt-3 space-y-3 border-l border-line pl-4">
-              {[...l.history].reverse().map((h, i) => (
+              {timeline.map((h, i) => (
                 <li key={i} className="relative text-sm">
-                  <span className="absolute -left-[21px] top-1.5 h-2.5 w-2.5 rounded-full ring-2 ring-white" style={{ background: statusOf(h.status).dot }} />
-                  Phase <b>{statusOf(h.status).label}</b>
+                  <span className="absolute -left-[21px] top-1.5 h-2.5 w-2.5 rounded-full ring-2 ring-white" style={{ background: h.dot }} />
+                  {h.text}
                   <span className="block text-xs text-ink-muted">{fmt(h.at)}</span>
                 </li>
               ))}

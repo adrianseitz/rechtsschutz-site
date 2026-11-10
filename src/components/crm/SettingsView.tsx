@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CheckCircle2, Loader2, Mail, Send, ShieldCheck } from "lucide-react";
+import { CheckCircle2, Copy, Loader2, Mail, Megaphone, Send, ShieldCheck } from "lucide-react";
 
 type Settings = { host: string; port: number; secure: boolean; user: string; from: string; to: string; enabled: boolean; confirm: boolean; hasPassword: boolean; source: "crm" | "env"; updatedAt: string };
 
@@ -174,6 +174,107 @@ export function SettingsView() {
         </div>
         {loaded?.updatedAt && <p className="mt-4 text-xs text-ink-muted">Zuletzt geändert: {new Date(loaded.updatedAt).toLocaleString("de-DE", { timeZone: "Europe/Berlin" })}</p>}
       </section>
+      <AdsSettings />
     </div>
+  );
+}
+
+const URL_SUFFIX = "utm_source=google&utm_medium=cpc&utm_campaign={campaignid}&utm_term={keyword}";
+
+/** Google-Ads-Conversion-Tracking: Kennungen eintragen, ohne dass am Server etwas geändert werden muss. */
+function AdsSettings() {
+  const [adsId, setAdsId] = useState("");
+  const [label, setLabel] = useState("");
+  const [saved, setSaved] = useState<{ adsId: string; label: string } | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/admin/settings/tracking").then((r) => r.json()).then((j) => {
+      const t = j.tracking as { adsId?: string; adsLeadLabel?: string } | undefined;
+      if (!t) return;
+      setAdsId(t.adsId ?? ""); setLabel(t.adsLeadLabel ?? "");
+      setSaved({ adsId: t.adsId ?? "", label: t.adsLeadLabel ?? "" });
+    }).catch(() => undefined);
+  }, []);
+
+  // Google zeigt beides oft zusammen an: „AW-123456789/AbCdEfGh“ – das darf man so einfügen.
+  const paste = (raw: string) => {
+    const m = raw.match(/(AW-\d{6,15})\/([A-Za-z0-9_-]{4,60})/);
+    if (m) { setAdsId(m[1]); setLabel(m[2]); return true; }
+    return false;
+  };
+
+  async function save() {
+    setBusy(true); setMsg(null);
+    try {
+      const res = await fetch("/api/admin/settings/tracking", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ adsId: adsId.trim(), adsLeadLabel: label.trim() }) });
+      const j = await res.json().catch(() => ({}));
+      if (!res.ok) { setMsg({ ok: false, text: j.error || "Speichern fehlgeschlagen." }); return; }
+      setSaved({ adsId: adsId.trim(), label: label.trim() });
+      setMsg({ ok: true, text: adsId.trim() ? "Gespeichert. Das Conversion-Tracking ist sofort aktiv – Besucher sehen ab jetzt die Cookie-Abfrage." : "Gespeichert. Das Conversion-Tracking ist ausgeschaltet, die Cookie-Abfrage entfällt." });
+    } catch {
+      setMsg({ ok: false, text: "Keine Verbindung." });
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  const active = Boolean(saved?.adsId && saved.label);
+  const changed = !saved || saved.adsId !== adsId.trim() || saved.label !== label.trim();
+
+  return (
+    <section className="mx-auto mt-4 max-w-2xl rounded-xl border border-line bg-white p-5 sm:p-7">
+      <div className="flex items-start gap-3">
+        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-sun"><Megaphone className="h-5 w-5" aria-hidden /></span>
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <h2 className="text-lg font-semibold tracking-[-0.02em]">Google Ads: Anfragen messen</h2>
+            <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${active ? "bg-emerald-100 text-emerald-900" : "bg-paper text-ink-muted"}`}>{active ? "Aktiv" : "Aus"}</span>
+          </div>
+          <p className="mt-1 text-sm text-ink-soft">Damit erfährt Google, welche Klicks zu einer Anfrage geführt haben – die Voraussetzung dafür, dass der Algorithmus lernt. Gemessen wird nur bei Besuchern, die zugestimmt haben.</p>
+        </div>
+      </div>
+
+      <div className="mt-4 rounded-lg border border-sky-200 bg-sky-50 px-3 py-3 text-sm leading-6 text-sky-950">
+        <b>Wo finde ich das?</b> In Google Ads unter <b>Zielvorhaben → Conversions → Neue Conversion-Aktion → Website</b>, Kategorie „Lead-Formular senden“, manuell einrichten. Bei „Tag einrichten → Google-Tag verwenden“ steht eine Zeile wie <code className="font-mono text-[13px]">send_to: 'AW-123456789/AbCdEfGh'</code>. Der Teil vor dem Schrägstrich ist die ID, der Teil danach das Label. Du kannst die Zeile auch komplett ins erste Feld einfügen.
+      </div>
+
+      <div className="mt-5 grid gap-4 sm:grid-cols-2">
+        <div>
+          <label htmlFor="adsid" className="label">Conversion-ID</label>
+          <input id="adsid" className="input font-mono" value={adsId} placeholder="AW-123456789" autoComplete="off"
+            onChange={(e) => { if (!paste(e.target.value)) setAdsId(e.target.value.trim()); }} />
+        </div>
+        <div>
+          <label htmlFor="adslabel" className="label">Conversion-Label</label>
+          <input id="adslabel" className="input font-mono" value={label} placeholder="AbCdEfGhIjK" autoComplete="off"
+            onChange={(e) => { if (!paste(e.target.value)) setLabel(e.target.value.trim()); }} />
+        </div>
+      </div>
+
+      {msg && (
+        <p role="status" className={`mt-4 flex items-start gap-2 rounded-lg px-3 py-2.5 text-sm ${msg.ok ? "bg-emerald-50 text-emerald-900" : "bg-rose-50 text-rose-900"}`}>
+          {msg.ok && <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />}{msg.text}
+        </p>
+      )}
+      <button type="button" onClick={save} disabled={busy || !changed}
+        className="mt-5 inline-flex items-center gap-2 rounded-full bg-navy px-5 py-3 text-sm font-semibold text-white transition hover:bg-navy-800 disabled:opacity-40">
+        {busy && <Loader2 className="h-4 w-4 animate-spin" aria-hidden />} Speichern
+      </button>
+
+      <div className="mt-7 border-t border-line pt-5">
+        <h3 className="text-sm font-semibold">Sehen, welches Keyword die Anfrage gebracht hat</h3>
+        <p className="mt-1 text-sm text-ink-soft">Trage diesen Text in Google Ads ein: <b>Kampagne → Einstellungen → Weitere Einstellungen → Kampagnen-URL-Optionen → Suffix der finalen URL</b>. Danach steht bei jeder Anfrage der Suchbegriff, und die Statistik zeigt, welche Keywords sich lohnen.</p>
+        <div className="mt-3 flex items-stretch gap-2">
+          <code className="min-w-0 flex-1 overflow-x-auto whitespace-nowrap rounded-lg bg-paper px-3 py-2.5 font-mono text-[12.5px]">{URL_SUFFIX}</code>
+          <button type="button" onClick={() => { navigator.clipboard?.writeText(URL_SUFFIX).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); }).catch(() => undefined); }}
+            className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-line px-3 text-sm font-medium hover:border-navy">
+            <Copy className="h-4 w-4" aria-hidden />{copied ? "Kopiert" : "Kopieren"}
+          </button>
+        </div>
+      </div>
+    </section>
   );
 }

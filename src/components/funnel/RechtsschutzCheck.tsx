@@ -7,11 +7,13 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertCircle, ArrowLeft, ArrowRight, Check, Loader2, Lock, Minus, Plus } from "lucide-react";
-import { AREAS, BEGINN, BESTAND, CONTACT_METHODS, EINHEITEN_MAX, SITUATION, type Question } from "@/lib/funnel";
+import { AREAS, BEGINN, BESTAND, CONTACT_METHODS, EINHEITEN_MAX, REACHABLE, SITUATION, type Question } from "@/lib/funnel";
 import { CONSENT_TEXTS, contactFieldsSchema, type ContactFields } from "@/lib/schemas";
 import { getAttribution } from "@/lib/attribution";
 import { currentTrackingConsent } from "@/lib/consent";
 import { track } from "@/lib/tracking";
+import { countEvent } from "@/lib/localEvents";
+import { legal } from "@/lib/site";
 import { Icon3D } from "../ui/Icon3D";
 import { StampOverlay } from "../ui/StampOverlay";
 import { fireBurst } from "../ui/ClickBurst";
@@ -63,6 +65,7 @@ export function RechtsschutzCheck() {
     if (started.current) return;
     started.current = true;
     track("funnel_started", { bereich }, { dedupeKey: runId.current });
+    countEvent("check_start");
   };
 
   const STEPS = answers.bereich === "vermieter" ? VERMIETER_STEPS : BASE_STEPS;
@@ -80,7 +83,9 @@ export function RechtsschutzCheck() {
     setStep(to);
   }, [step]);
 
+  const counted = useRef(new Set<string>());
   const completeStep = (id: StepId, bereich?: string) => {
+    if (id !== "bereich" && id !== "kontakt" && !counted.current.has(id)) { counted.current.add(id); countEvent(`step_${id}`); }
     track("funnel_step_completed", { step_number: step + 1, step_name: id, bereich: bereich ?? answers.bereich }, { dedupeKey: `${runId.current}:${id}` });
   };
 
@@ -208,6 +213,7 @@ export function RechtsschutzCheck() {
               startedAt={startedAt.current}
               onSuccess={(leadId) => {
                 track("lead_submitted", { bereich: answers.bereich, beginn: answers.beginn }, { dedupeKey: leadId, eventId: leadId });
+                countEvent("lead");
                 try { sessionStorage.setItem("rs_last_submission", JSON.stringify({ type: "check", bereich: answers.bereich })); } catch {}
                 setStamped(true);
                 fireBurst(window.innerWidth / 2, window.innerHeight / 2, true);
@@ -285,10 +291,12 @@ function ContactStep({ answers, startedAt, onSuccess, headingRef }: {
   const honeypot = useRef<HTMLInputElement>(null);
   const { register, handleSubmit, watch, setValue, formState: { errors, isSubmitting } } = useForm<ContactFields>({
     resolver: zodResolver(contactFieldsSchema),
-    defaultValues: { firstName: "", lastName: "", email: "", phone: "", contactMethod: "email", consentMarketing: false },
+    defaultValues: { firstName: "", lastName: "", email: "", phone: "", contactMethod: "email", reachable: "", consentMarketing: false },
     mode: "onTouched",
   });
   const method = watch("contactMethod");
+  const reachable = watch("reachable");
+  const phoneValue = watch("phone");
 
   const onSubmit = async (data: ContactFields) => {
     setServerError(null);
@@ -356,8 +364,23 @@ function ContactStep({ answers, startedAt, onSuccess, headingRef }: {
         <div>
           <label htmlFor="phone" className="label">Telefonnummer {method === "email" && <span className="font-normal text-ink-muted">(optional)</span>}</label>
           <input id="phone" type="tel" inputMode="tel" autoComplete="tel" placeholder="z. B. 0170 1234567" className="input" aria-invalid={!!errors.phone} {...register("phone")} />
-          {errors.phone && <p className="field-error">{errors.phone.message}</p>}
+          {errors.phone ? <p className="field-error">{errors.phone.message}</p> : method === "email" && <p className="mt-1.5 text-xs text-ink-muted">Am Telefon lassen sich Fragen meist am schnellsten klären.</p>}
         </div>
+
+        {(method !== "email" || (phoneValue ?? "").trim().length > 5) && (
+          <div>
+            <span className="label" id="reach-label">Wann erreiche ich dich am besten? <span className="font-normal text-ink-muted">(optional)</span></span>
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4" role="radiogroup" aria-labelledby="reach-label">
+              {REACHABLE.map((r) => (
+                <button key={r.value} type="button" role="radio" aria-checked={reachable === r.value}
+                  onClick={() => setValue("reachable", reachable === r.value ? "" : r.value)}
+                  className={`rounded-full border py-2.5 text-sm font-medium transition ${reachable === r.value ? "border-navy bg-sun text-navy" : "border-line bg-white text-ink-soft hover:border-navy/40"}`}>
+                  {r.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Honeypot gegen Bots – für Menschen unsichtbar */}
         <div aria-hidden className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
@@ -391,6 +414,9 @@ function ContactStep({ answers, startedAt, onSuccess, headingRef }: {
         {isSubmitting ? <><Loader2 className="h-5 w-5 animate-spin" aria-hidden /> Wird gesendet …</> : <>Kostenlose Beratung anfordern <ArrowRight className="h-4 w-4" aria-hidden /></>}
       </button>
       <p className="mt-3 text-center text-xs text-ink-muted">Unverbindlich – es entsteht kein Vertrag und keine Kosten.</p>
+      <p className="mx-auto mt-4 max-w-md rounded-2xl bg-white px-4 py-3 text-center text-xs leading-5 text-ink-soft">
+        Deine Anfrage landet direkt bei mir, nicht in einem Callcenter: <strong className="text-navy">{legal.name}</strong>, eingetragener Versicherungsvertreter (Vermittlerregister-Nr.&nbsp;<span className="whitespace-nowrap">{legal.registerNumber}</span>).
+      </p>
     </form>
   );
 }

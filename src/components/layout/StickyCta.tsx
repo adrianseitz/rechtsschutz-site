@@ -4,8 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Phone } from "lucide-react";
 import { productList } from "@/lib/products";
+import { site } from "@/lib/site";
+import { countEvent } from "@/lib/localEvents";
 
 const HIDDEN = ["/rechtsschutz-check", "/kontakt", "/vielen-dank", "/datenschutz", "/impressum"];
 
@@ -30,9 +32,15 @@ export function StickyCta() {
       {visible && (
         <motion.div initial={{ y: 90 }} animate={{ y: 0 }} exit={{ y: 90 }} transition={{ type: "spring", stiffness: 380, damping: 34 }}
           className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-white/95 px-4 pb-[max(env(safe-area-inset-bottom),12px)] pt-3 backdrop-blur md:hidden">
-          <Link href={href} className="flex w-full items-center justify-center gap-2 rounded-full bg-sun py-3.5 text-[15px] font-semibold text-navy">
-            {label} <ArrowRight className="h-4 w-4" aria-hidden />
-          </Link>
+          <div className="flex items-stretch gap-2">
+            <a href={`tel:${site.phone.replace(/[^\d+]/g, "").replace(/^0/, "+49")}`} onClick={() => countEvent("call")} aria-label={`Anrufen: ${site.phone}`}
+              className="grid w-[52px] shrink-0 place-items-center rounded-full border border-navy bg-white text-navy">
+              <Phone className="h-5 w-5" aria-hidden />
+            </a>
+            <Link href={href} className="flex min-w-0 flex-1 items-center justify-center gap-2 rounded-full bg-sun py-3.5 text-[15px] font-semibold text-navy">
+              <span className="truncate">{label}</span> <ArrowRight className="h-4 w-4 shrink-0" aria-hidden />
+            </Link>
+          </div>
           <p className="mt-1.5 text-center text-[11px] text-ink-muted">Kostenlos & unverbindlich · ca. 60 Sekunden</p>
         </motion.div>
       )}

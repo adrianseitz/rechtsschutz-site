@@ -35,6 +35,7 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image" },
   robots: { index: true, follow: true },
   formatDetection: { telephone: false },
+  ...(site.googleVerification ? { verification: { google: site.googleVerification } } : {}),
 };
 
 export const viewport: Viewport = {
@@ -51,7 +52,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Deckt die Seite vom ersten Bildaufbau an ab, bis das Intro übernimmt – verhindert kurzes Aufblitzen. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{var s=sessionStorage.getItem('rs_intro_seen')==='1',r=matchMedia('(prefers-reduced-motion: reduce)').matches,b=/bot|crawl|spider|lighthouse|headless/i.test(navigator.userAgent);if(!(s||r||b||location.pathname.indexOf('/admin')===0)){document.documentElement.classList.add('intro-pending');setTimeout(function(){document.documentElement.classList.remove('intro-pending')},4000)}}catch(e){}`,
+            __html: `try{var s=sessionStorage.getItem('rs_intro_seen')==='1',r=matchMedia('(prefers-reduced-motion: reduce)').matches,b=/bot|crawl|spider|lighthouse|headless/i.test(navigator.userAgent);var c=/[?&](gclid|gbraid|wbraid|fbclid|msclkid|utm_[a-z]+)=/.test(location.search);if(!(s||r||b||c||location.pathname!=='/')){document.documentElement.classList.add('intro-pending');setTimeout(function(){document.documentElement.classList.remove('intro-pending')},4000)}}catch(e){}`,
           }}
         />
       </head>

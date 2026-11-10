@@ -4,8 +4,9 @@ import { LoginForm } from "@/components/crm/LoginForm";
 
 export const dynamic = "force-dynamic";
 
-export default async function LoginPage() {
-  if (await isAdmin()) redirect("/admin");
+export default async function LoginPage({ searchParams }: { searchParams: Promise<{ lead?: string }> }) {
+  const { lead } = await searchParams;
+  if (await isAdmin()) redirect(lead && /^[0-9a-f-]{36}$/i.test(lead) ? `/admin?lead=${lead}` : "/admin");
   return (
     <div className="grid min-h-screen place-items-center px-4">
       <div className="w-full max-w-sm">

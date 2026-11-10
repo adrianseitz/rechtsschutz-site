@@ -22,6 +22,8 @@ export const site = {
   /** Optionaler externer Buchungslink (z. B. Calendly). Ohne Wert läuft die Terminanfrage über /kontakt. */
   bookingUrl: process.env.NEXT_PUBLIC_BOOKING_URL?.trim() || "",
   locale: "de_DE",
+  /** Google Search Console – Wert aus dem HTML-Tag (content="…"). */
+  googleVerification: env("NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION", ""),
   description:
     "Persönliche Beratung zu Privat-, Arbeits-, Vermieter- und Firmenrechtsschutz. Kostenloser Rechtsschutz-Check in rund 60 Sekunden – unverbindlich und transparent.",
 };

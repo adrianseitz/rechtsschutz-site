@@ -5,6 +5,8 @@ export type DayStats = {
   pages: Record<string, number>;
   sources: Record<string, number>;
   devices: Record<string, number>;
+  /** Anonyme Zähler für Aktionen (z. B. Anruf-Klick, Schritte im Check). */
+  events?: Record<string, number>;
 };
 
 export type StatsData = Record<string, DayStats>; // Schlüssel: YYYY-MM-DD (Europe/Berlin)
@@ -22,4 +24,16 @@ export const PAGE_LABEL: Record<string, string> = {
   "/vielen-dank": "Danke-Seite (Anfrage gesendet)",
   "/impressum": "Impressum",
   "/datenschutz": "Datenschutz",
+};
+
+/** Aktionen, die gezählt werden dürfen (alles andere wird verworfen). */
+export const EVENT_LABEL: Record<string, string> = {
+  call: "Anruf-Klicks",
+  mail: "E-Mail-Klicks",
+  check_start: "Check gestartet",
+  step_situation: "Situation gewählt",
+  step_einheiten: "Wohneinheiten angegeben",
+  step_beginn: "Beginn gewählt",
+  step_bestand: "Kontaktformular erreicht",
+  lead: "Anfrage abgeschickt",
 };

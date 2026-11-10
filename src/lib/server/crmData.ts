@@ -1,12 +1,12 @@
 import "server-only";
 import type { CrmLead } from "../crm";
-import { readStatuses } from "./crmStatus";
+import { publicEntry, readStatuses } from "./crmStatus";
 import { readRecords } from "./storage";
 import type { SubmissionRecord } from "./records";
 
 const REQUEST_LABEL: Record<string, string> = { termin: "Termin", rueckruf: "Rückruf", frage: "Frage", angebot: "Angebot" };
 
-function toLead(r: SubmissionRecord): Omit<CrmLead, "status" | "statusUpdatedAt" | "history"> {
+function toLead(r: SubmissionRecord): Omit<CrmLead, "status" | "statusUpdatedAt" | "history" | "notes" | "attempts" | "followUp" | "value" | "lostReason" | "firstResponseAt"> {
   const name = [r.contact.firstName, r.contact.lastName].filter(Boolean).join(" ") || r.contact.name || "–";
   return {
     id: r.id,
@@ -28,6 +28,9 @@ function toLead(r: SubmissionRecord): Omit<CrmLead, "status" | "statusUpdatedAt"
     campaign: r.attribution.utm_campaign,
     landingPage: r.attribution.landingPage,
     marketingConsent: r.consents.marketing?.granted === true,
+    reachable: r.contact.reachable,
+    keyword: r.attribution.utm_term,
+    hasClickId: Boolean(r.attribution.gclid),
   };
 }
 
@@ -36,8 +39,11 @@ export async function loadCrmLeads(): Promise<CrmLead[]> {
   const [leads, contacts, statuses] = await Promise.all([readRecords("lead"), readRecords("contact"), readStatuses()]);
   return [...leads, ...contacts]
     .map((r) => {
-      const s = statuses[r.id];
-      return { ...toLead(r), status: s?.status ?? "neu", statusUpdatedAt: s?.updatedAt, history: s?.history ?? [] };
+      const s = statuses[r.id] ? publicEntry(statuses[r.id]) : undefined;
+      return {
+        ...toLead(r), status: s?.status ?? "neu", statusUpdatedAt: s?.updatedAt, history: s?.history ?? [],
+        notes: s?.notes, attempts: s?.attempts, followUp: s?.followUp, value: s?.value, lostReason: s?.lostReason, firstResponseAt: s?.firstResponseAt,
+      };
     })
     .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }

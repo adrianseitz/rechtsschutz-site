@@ -8,8 +8,10 @@ import type { StatsData } from "@/lib/stats";
 
 export const dynamic = "force-dynamic";
 
-export default async function CrmPage() {
-  if (!(await isAdmin())) redirect("/admin/login");
+export default async function CrmPage({ searchParams }: { searchParams: Promise<{ lead?: string }> }) {
+  const { lead } = await searchParams;
+  const openId = lead && /^[0-9a-f-]{36}$/i.test(lead) ? lead : undefined;
+  if (!(await isAdmin())) redirect(openId ? `/admin/login?lead=${openId}` : "/admin/login");
   const storage = fileStorageEnabled();
   let leads: Awaited<ReturnType<typeof loadCrmLeads>> = [];
   let error = "";
@@ -27,5 +29,5 @@ export default async function CrmPage() {
       error = e instanceof Error ? e.message : "Unbekannter Fehler";
     }
   }
-  return <CrmBoard initial={leads} storage={storage} error={error} stats={stats} />;
+  return <CrmBoard initial={leads} storage={storage} error={error} stats={stats} openLead={openId} />;
 }

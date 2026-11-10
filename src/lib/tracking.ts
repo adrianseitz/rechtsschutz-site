@@ -1,4 +1,5 @@
 import { currentTrackingConsent } from "./consent";
+import { getTrackingConfig } from "./trackingConfig";
 
 export type TrackEvent =
   | "funnel_started"
@@ -13,13 +14,8 @@ type Win = Window & {
   fbq?: (...args: unknown[]) => void;
 };
 
-const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID;
-const ADS_ID = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID;
-const ADS_LABELS: Partial<Record<TrackEvent, string | undefined>> = {
-  lead_submitted: process.env.NEXT_PUBLIC_GOOGLE_ADS_LEAD_LABEL,
-  appointment_requested: process.env.NEXT_PUBLIC_GOOGLE_ADS_APPOINTMENT_LABEL,
-  contact_form_submitted: process.env.NEXT_PUBLIC_GOOGLE_ADS_CONTACT_LABEL,
-};
+const adsLabel = (event: TrackEvent, c: ReturnType<typeof getTrackingConfig>) =>
+  event === "lead_submitted" ? c.adsLeadLabel : event === "appointment_requested" ? c.adsAppointmentLabel || c.adsLeadLabel : event === "contact_form_submitted" ? c.adsContactLabel || c.adsLeadLabel : "";
 const META_EVENTS: Partial<Record<TrackEvent, string>> = {
   lead_submitted: "Lead",
   appointment_requested: "Schedule",
@@ -54,7 +50,8 @@ export function track(event: TrackEvent, params: Record<string, unknown> = {}, o
   const w = window as Win;
   const payload = { ...params, ...(opts.eventId ? { event_id: opts.eventId } : {}) };
 
-  if (GTM_ID) {
+  const cfg = getTrackingConfig();
+  if (cfg.gtmId) {
     // Mit GTM werden alle Tags (GA4, Ads, Meta) im Container gesteuert.
     w.dataLayer = w.dataLayer || [];
     w.dataLayer.push({ event, ...payload });
@@ -64,9 +61,9 @@ export function track(event: TrackEvent, params: Record<string, unknown> = {}, o
   if (consent.statistics && w.gtag) w.gtag("event", event, payload);
 
   if (consent.marketing) {
-    const label = ADS_LABELS[event];
-    if (w.gtag && ADS_ID && label) {
-      w.gtag("event", "conversion", { send_to: `${ADS_ID}/${label}`, ...(opts.eventId ? { transaction_id: opts.eventId } : {}) });
+    const label = adsLabel(event, cfg);
+    if (w.gtag && cfg.adsId && label) {
+      w.gtag("event", "conversion", { send_to: `${cfg.adsId}/${label}`, ...(opts.eventId ? { transaction_id: opts.eventId } : {}) });
     }
     const metaEvent = META_EVENTS[event];
     if (w.fbq && metaEvent) w.fbq("track", metaEvent, { content_category: params.bereich ?? params.topic }, opts.eventId ? { eventID: opts.eventId } : undefined);

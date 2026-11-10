@@ -1,17 +1,23 @@
 import type { Metadata } from "next";
+import { effectiveTracking } from "@/lib/server/trackingSettings";
 import { LegalShell, V } from "@/components/legal/LegalShell";
 import { legal, site } from "@/lib/site";
 
 export const metadata: Metadata = { title: "Datenschutzerklärung", alternates: { canonical: "/datenschutz" } };
 
-const GA4 = Boolean(process.env.NEXT_PUBLIC_GA4_ID || process.env.NEXT_PUBLIC_GTM_ID);
-const ADS = Boolean(process.env.NEXT_PUBLIC_GOOGLE_ADS_ID || process.env.NEXT_PUBLIC_META_PIXEL_ID || process.env.NEXT_PUBLIC_GTM_ID);
-const GTM = Boolean(process.env.NEXT_PUBLIC_GTM_ID);
+// Die Abschnitte zu Drittanbietern richten sich nach den im CRM gepflegten Kennungen – deshalb zur Laufzeit.
+export const dynamic = "force-dynamic";
 
-export default function DatenschutzPage() {
+export default async function DatenschutzPage() {
+  const { tracking: t } = await effectiveTracking();
+  const GTM = Boolean(t.gtmId);
+  const GA4 = Boolean(t.ga4Id || t.gtmId);
+  const GOOGLE_ADS = Boolean(t.adsId || t.gtmId);
+  const META = Boolean(t.metaPixelId);
+  const ADS = GOOGLE_ADS || META;
   return (
     <LegalShell title="Datenschutzerklärung">
-      <p>Stand: Oktober 2026</p>
+      <p>Stand: November 2026</p>
 
       <h2>Verantwortlicher</h2>
       <p>{legal.name}<br /><V v={legal.street} /><br /><V v={legal.city} /><br />E-Mail: <V v={site.email} /> · Telefon: <V v={site.phone} /></p>
@@ -21,7 +27,7 @@ export default function DatenschutzPage() {
       <p>Ein Zugriffsprotokoll mit IP-Adressen wird nicht geführt. Zum Schutz vor Missbrauch (z. B. massenhaften Formulareinsendungen) wird die IP-Adresse nur in gehashter Form und nur kurzzeitig im Arbeitsspeicher verarbeitet. Technische Fehlerprotokolle enthalten keine Formularinhalte.</p>
 
       <h2>Reichweitenmessung ohne Cookies</h2>
-      <p>Um zu erfahren, wie viele Menschen diese Website besuchen, welche Seiten aufgerufen werden und über welche Wege Besucher kommen (z. B. Suchmaschine, soziale Netzwerke oder Werbeanzeige), erfasse ich Seitenaufrufe mit einer eigenen, datensparsamen Messung auf meinem Server. Dabei werden keine Cookies gesetzt und keine Informationen auf deinem Gerät gespeichert oder ausgelesen; es werden keine Drittanbieter eingebunden.</p>
+      <p>Um zu erfahren, wie viele Menschen diese Website besuchen, welche Seiten aufgerufen werden und über welche Wege Besucher kommen (z. B. Suchmaschine, soziale Netzwerke oder Werbeanzeige), erfasse ich Seitenaufrufe sowie einzelne Aktionen als reine Zähler (z. B. Klick auf die Telefonnummer, Fortschritt im Rechtsschutz-Check) mit einer eigenen, datensparsamen Messung auf meinem Server. Dabei werden keine Cookies gesetzt und keine Informationen auf deinem Gerät gespeichert oder ausgelesen; es werden keine Drittanbieter eingebunden.</p>
       <p>Verarbeitet werden die aufgerufene Seite, die verweisende Website bzw. Kampagnenkennzeichnung, die Bildschirmbreite (zur Unterscheidung Handy/Computer) sowie technisch übermittelte Daten (IP-Adresse, Browserkennung). Die IP-Adresse wird nicht gespeichert: Zur Zählung eindeutiger Besucher pro Tag wird sie zusammen mit der Browserkennung und einem täglich wechselnden Zufallswert zu einer nicht umkehrbaren Prüfsumme verrechnet, die nur im Arbeitsspeicher vorliegt und täglich verworfen wird. Gespeichert werden ausschließlich zusammengefasste Tageswerte (z. B. Anzahl Besucher, Seitenaufrufe, Herkunft, Gerätetyp), die keinen Rückschluss auf einzelne Personen zulassen. Diese Tageswerte werden nach spätestens 24 Monaten gelöscht. Rechtsgrundlage ist mein berechtigtes Interesse an der bedarfsgerechten Gestaltung und Bewerbung meines Angebots (Art. 6 Abs. 1 lit. f DSGVO). Du kannst dieser Verarbeitung jederzeit widersprechen (Art. 21 DSGVO), z. B. per E-Mail.</p>
 
       <h2>Rechtsschutz-Check und Kontaktformular</h2>
@@ -52,8 +58,9 @@ export default function DatenschutzPage() {
       )}
       {ADS && (
         <>
-          <h2>Marketing: Google Ads und Meta Pixel (nur mit Einwilligung)</h2>
-          <p>Mit deiner Einwilligung messe ich, ob Werbeanzeigen zu Anfragen führen (Conversion-Tracking). Eingesetzt werden Google Ads (Google Ireland Limited) und das Meta Pixel der Meta Platforms Ireland Limited, Merrion Road, Dublin 4, Irland. Dabei können Daten in die USA übermittelt werden; beide Anbieter sind nach dem EU-US Data Privacy Framework zertifiziert. Für das Meta Pixel besteht eine gemeinsame Verantwortlichkeit mit Meta nach Art. 26 DSGVO für die Erhebung und Übermittlung. Es werden keine Kontaktdaten aus dem Formular an Google oder Meta übertragen.</p>
+          <h2>Marketing: {[GOOGLE_ADS ? "Google Ads" : "", META ? "Meta Pixel" : ""].filter(Boolean).join(" und ")} (nur mit Einwilligung)</h2>
+          <p>Mit deiner Einwilligung messe ich, ob Werbeanzeigen zu Anfragen führen (Conversion-Tracking).{GOOGLE_ADS && " Dafür setze ich Google Ads der Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland, ein."}{META && " Außerdem nutze ich das Meta Pixel der Meta Platforms Ireland Limited, Merrion Road, Dublin 4, Irland; hierfür besteht eine gemeinsame Verantwortlichkeit mit Meta nach Art. 26 DSGVO für die Erhebung und Übermittlung."} Dabei können Daten in die USA übermittelt werden; die Anbieter sind nach dem EU-US Data Privacy Framework zertifiziert. Es werden keine Kontaktdaten aus dem Formular (Name, E-Mail-Adresse, Telefonnummer) an diese Anbieter übertragen. Rechtsgrundlage ist deine Einwilligung (Art. 6 Abs. 1 lit. a DSGVO, § 25 Abs. 1 TDDDG), die du jederzeit über „Cookie-Einstellungen“ widerrufen kannst.</p>
+          {GOOGLE_ADS && <p>Kommst du über eine Google-Anzeige auf diese Website und hast eingewilligt, speichere ich die von Google vergebene Klick-Kennung zusammen mit deiner Anfrage. So kann ich Google später mitteilen, ob aus einer Anzeige eine Beratung oder ein Vertrag entstanden ist (Offline-Conversion). Übermittelt werden dabei nur die Klick-Kennung, der Zeitpunkt und die Art des Ergebnisses – keine Namen oder Kontaktdaten.</p>}
         </>
       )}
       {GTM && (

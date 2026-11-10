@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { adminEnabled, checkPassword, createSession, sessionCookie } from "@/lib/server/adminAuth";
+import { adminEnabled, checkPassword, createSession, REMEMBER_MAX_AGE, sessionCookie } from "@/lib/server/adminAuth";
 import { hashIdentifier } from "@/lib/server/crypto";
 import { rateLimit } from "@/lib/server/rateLimit";
 import { clientIp, jsonError, originAllowed, readJson } from "@/lib/server/request";
@@ -25,7 +25,8 @@ export async function POST(req: Request) {
     return jsonError(401, "invalid");
   }
   const res = NextResponse.json({ ok: true });
-  res.cookies.set(sessionCookie(createSession()));
+  const remember = (body as { remember?: unknown })?.remember === true;
+  res.cookies.set(remember ? sessionCookie(createSession(REMEMBER_MAX_AGE), REMEMBER_MAX_AGE) : sessionCookie(createSession()));
   res.headers.set("Cache-Control", "no-store");
   return res;
 }

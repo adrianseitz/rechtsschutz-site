@@ -107,6 +107,15 @@ export const CONTACT_METHODS = [
   { value: "egal", label: "Egal" },
 ] as const;
 
+/** Optional: Wann ist jemand telefonisch am besten erreichbar? */
+export const REACHABLE = [
+  { value: "vormittags", label: "Vormittags" },
+  { value: "mittags", label: "Mittags" },
+  { value: "nachmittags", label: "Nachmittags" },
+  { value: "abends", label: "Abends" },
+] as const;
+export const reachableLabel = (v?: string) => REACHABLE.find((r) => r.value === v)?.label;
+
 /** Lesbare Labels für Benachrichtigungen, CSV-Export und CRM. */
 export function labelFor(questionId: string, value: string, bereich?: string): string {
   if (questionId === "bereich") return AREAS.find((a) => a.value === value)?.label ?? value;

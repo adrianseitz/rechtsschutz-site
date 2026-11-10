@@ -4,10 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowUpRight, Menu, X } from "lucide-react";
+import { ArrowUpRight, Menu, Phone, X } from "lucide-react";
 import { Logo } from "./Logo";
-import { nav } from "@/lib/site";
+import { nav, site } from "@/lib/site";
+import { countEvent } from "@/lib/localEvents";
 
+const telHref = site.phone.replace(/[^\d+]/g, "").replace(/^0/, "+49");
 const LONG: Record<string, string> = { Privat: "Privatrechtsschutz", Arbeit: "Arbeitsrechtsschutz", Vermieter: "Vermieterrechtsschutz", Firma: "Firmenrechtsschutz", Kontakt: "Kontakt" };
 
 export function Header() {
@@ -48,6 +50,13 @@ export function Header() {
               <span className="grid h-8 w-8 place-items-center rounded-full bg-sun text-navy"><ArrowUpRight className="h-4 w-4 transition group-hover:rotate-45" aria-hidden /></span>
             </Link>
           )}
+          <a href={`tel:${telHref}`} onClick={() => countEvent("call")} aria-label={`Anrufen: ${site.phone}`}
+            className={`grid h-11 w-11 place-items-center rounded-full border border-navy/15 bg-white text-navy transition hover:border-navy max-[349px]:hidden md:hidden ${minimal ? "hidden" : ""}`}>
+            <Phone className="h-[18px] w-[18px]" aria-hidden />
+          </a>
+          <a href={`tel:${telHref}`} onClick={() => countEvent("call")} className={`order-first hidden items-center gap-2 rounded-full px-3 py-2 text-sm font-medium text-navy hover:bg-navy-50 xl:inline-flex ${minimal ? "!hidden" : ""}`}>
+            <Phone className="h-4 w-4" aria-hidden /> {site.phone}
+          </a>
           {minimal ? (
             <Link href="/" className="rounded-full px-4 py-2 text-sm font-medium text-ink-soft hover:bg-navy-50 hover:text-navy">Abbrechen</Link>
           ) : (
