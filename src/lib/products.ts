@@ -92,7 +92,7 @@ export const products: Record<ProductKey, Product> = {
         title: "Eigene Anwaltskosten in der 1. Instanz",
         text: "Vor dem Arbeitsgericht trägt in der ersten Instanz jede Partei ihre Anwaltskosten in der Regel selbst – unabhängig vom Ausgang (§ 12a ArbGG).",
       },
-      { title: "Wartezeit einplanen", text: "Im Arbeitsrecht gilt meist eine Wartezeit, häufig drei Monate. Wer früh vorsorgt, ist im Ernstfall besser vorbereitet." },
+      { title: "Wartezeit einplanen", text: "Im Arbeitsrecht gilt meist eine Wartezeit, häufig drei Monate. Wer erst handelt, wenn die Stimmung im Betrieb kippt, ist oft zu spät dran." },
       { title: "Kein rückwirkender Schutz", text: "Konflikte, die sich bereits abzeichnen oder laufen, sind nicht versicherbar. Entscheidend ist der Zeitpunkt der Ursache." },
     ],
     notice:
@@ -131,9 +131,9 @@ export const products: Record<ProductKey, Product> = {
       { title: "Auseinandersetzungen mit Mietern", text: "Etwa bei Schäden an der Mietsache oder Streit über Mieterhöhungen." },
     ],
     facts: [
-      { title: "Pro Objekt versichert", text: "Vermieterrechtsschutz bezieht sich meist auf konkrete Objekte bzw. Wohneinheiten. Weitere Einheiten lassen sich oft ergänzen." },
-      { title: "Wartezeit beachten", text: "Für Miet- und Grundstücksangelegenheiten gilt in der Regel eine Wartezeit, häufig drei Monate." },
-      { title: "Bestehende Konflikte ausgeschlossen", text: "Ein bereits bestehender Mietrückstand oder Streit kann nachträglich nicht versichert werden." },
+      { title: "Privatrechtsschutz reicht nicht", text: "Ein privater Rechtsschutz deckt Streit um vermietete Objekte in der Regel nicht ab. Dafür brauchst du den Vermieter-Baustein – das übersehen viele, bis es zum Streit kommt." },
+      { title: "Jede Einheit zählt", text: "Versichert werden konkrete Objekte bzw. Wohneinheiten. Kommt eine Wohnung dazu, sollte sie in den Vertrag – sonst ist sie nicht geschützt." },
+      { title: "Vor dem Streit absichern", text: "Für Mietangelegenheiten gilt meist eine Wartezeit, häufig drei Monate. Ein bestehender Mietrückstand oder Streit lässt sich nicht nachträglich versichern." },
     ],
     notice:
       "Leistungen wie die Übernahme von Kosten für Räumungsverfahren, Leistungsgrenzen und Selbstbeteiligungen unterscheiden sich je nach Tarif. Pauschale Zusagen sind deshalb nicht möglich – ich prüfe gern, was zu deiner Immobilie passt.",
@@ -175,7 +175,7 @@ export const products: Record<ProductKey, Product> = {
     facts: [
       { title: "Nicht jedes Risiko ist versichert", text: "Typische unternehmerische Risiken – etwa Gesellschafterstreit oder bestimmte Vertragsstreitigkeiten – sind häufig ausgeschlossen oder nur eingeschränkt versicherbar." },
       { title: "Bausteine nach Bedarf", text: "Firmenrechtsschutz ist modular aufgebaut. Welche Bausteine sinnvoll sind, hängt von deinem Geschäftsmodell ab." },
-      { title: "Wartezeiten", text: "Auch im gewerblichen Bereich gelten für viele Rechtsgebiete Wartezeiten nach Vertragsbeginn." },
+      { title: "Privater Schutz gilt nicht im Betrieb", text: "Dein privater Rechtsschutz gilt in der Regel nicht für deine selbstständige Tätigkeit. Für den Betrieb brauchst du eine eigene Absicherung – am besten, bevor der erste Streit da ist, denn auch hier gelten Wartezeiten." },
     ],
     notice:
       "Nicht jedes unternehmerische Risiko ist automatisch versichert. Versicherungsschutz besteht nur im Rahmen des gewählten Tarifs und der Versicherungsbedingungen. Im Gespräch klären wir, was für dein Unternehmen tatsächlich infrage kommt.",

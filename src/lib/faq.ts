@@ -16,8 +16,16 @@ export const generalFaq = [
     a: "Nein. Versichert sind nur Rechtsfälle, deren Ursache nach Versicherungsbeginn und gegebenenfalls nach Ablauf der Wartezeit liegt. Ein Streit, der bereits läuft oder sich abzeichnet, kann nicht nachträglich versichert werden. Deshalb lohnt es sich, frühzeitig vorzusorgen.",
   },
   {
+    q: "Kann ich meinen Anwalt selbst aussuchen?",
+    a: "Ja. Die freie Anwaltswahl ist gesetzlich garantiert (§ 127 VVG). Du kannst deine Anwältin oder deinen Anwalt selbst bestimmen. Wenn du niemanden kennst, hilft dir die Versicherung auf Wunsch bei der Suche.",
+  },
+  {
+    q: "Ich habe schon eine Rechtsschutzversicherung – lohnt sich der Check trotzdem?",
+    a: "Oft ja. Viele Verträge sind schon älter und decken Bereiche wie Vermietung, Beruf oder Selbstständigkeit gar nicht ab. Ich schaue mit dir, was abgesichert ist und wo Lücken sind. Wichtig: Kündige einen bestehenden Vertrag nicht vorschnell. Bei einem nahtlosen Wechsel lässt sich häufig vermeiden, dass Wartezeiten neu beginnen.",
+  },
+  {
     q: "Wie funktioniert die Beratung?",
-    a: "Nach deiner Anfrage melde ich mich auf dem von dir gewählten Weg – per E-Mail oder telefonisch. Gemeinsam klären wir, welche Bereiche für dich sinnvoll sind. Ich bin als selbstständiger Vertriebspartner der ARAG tätig und stelle dir passende Tarife der ARAG vor.",
+    a: "Nach deiner Anfrage melde ich mich auf dem von dir gewählten Weg – per E-Mail oder telefonisch. Gemeinsam klären wir, welche Bereiche für dich sinnvoll sind – und welche nicht. Du entscheidest in Ruhe; online wird nichts abgeschlossen. Ich bin als selbstständiger Vertriebspartner der ARAG tätig und stelle dir passende Tarife der ARAG vor.",
   },
   {
     q: "Ist die Anfrage kostenlos?",

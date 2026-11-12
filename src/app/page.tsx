@@ -6,6 +6,7 @@ import { AboutAdvisor } from "@/components/sections/AboutAdvisor";
 import { Faq } from "@/components/sections/Faq";
 import { CtaBanner } from "@/components/sections/CtaBanner";
 import { Footnotes } from "@/components/sections/Footnotes";
+import { Leistungen } from "@/components/sections/Leistungen";
 import { Marquee } from "@/components/ui/Marquee";
 import { CostCalculatorSection } from "@/components/tools/CostCalculator";
 import { CoverageBuilder } from "@/components/tools/CoverageBuilder";
@@ -20,7 +21,7 @@ export default function HomePage() {
         eyebrow="Persönliche Rechtsschutz-Beratung · ARAG-Vertriebspartner"
         title="Rechtsschutz, der zu deinem Leben passt."
         emphasis="Leben"
-        subtitle="Ob im Beruf, als Vermieter oder im Unternehmen – finde heraus, welche Rechtsschutzversicherung zu deiner Situation passt."
+        subtitle="Ob im Beruf, als Vermieter oder im Unternehmen: Finde in 60 Sekunden heraus, welche Rechtsschutzversicherung zu deiner Situation passt – mit persönlicher Beratung statt Callcenter."
         chipsLabel="Was möchtest du absichern?"
         chips={[
           { label: "Beruf", href: "/rechtsschutz-check?bereich=arbeit", icon: "briefcase" },
@@ -39,6 +40,7 @@ export default function HomePage() {
       <PeopleStrip />
       <ProductCards />
       <CostCalculatorSection />
+      <Leistungen />
       <HowItWorks />
       <AboutAdvisor />
       <CoverageBuilder />

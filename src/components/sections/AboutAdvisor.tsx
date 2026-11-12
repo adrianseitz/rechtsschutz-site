@@ -29,7 +29,7 @@ export function AboutAdvisor() {
             Kein Callcenter. Kein Vergleichsportal. <span className="font-serif font-normal italic">Ein Mensch,</span> der deine Situation versteht.
           </p>
           <p className="mt-8 max-w-xl text-lg leading-8 text-navy/75">
-            Ich bin Adrian Seitz, selbstständiger Vertriebspartner der ARAG. Ich berate dich persönlich zu Rechtsschutz – vom ersten Check bis zur fertigen Absicherung.
+            Ich bin Adrian Seitz, selbstständiger Vertriebspartner der ARAG aus Urmitz bei Koblenz. Von mir bekommst du keine Standardlösung, sondern nur die Bausteine, die zu deiner Situation passen. Und wenn später etwas passiert, rufst du mich an – nicht eine Hotline.
           </p>
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
             <ButtonLink href={site.bookingUrl || "/kontakt?anliegen=termin"} arrow>Beratungstermin anfragen</ButtonLink>

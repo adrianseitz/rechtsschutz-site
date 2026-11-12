@@ -12,10 +12,10 @@ import { fireBurst } from "../ui/ClickBurst";
 type Moment = { photo: PhotoKey; front: string; back: string; tip: string; href: string; cta: string; rotate: number };
 
 const MOMENTS: Moment[] = [
-  { photo: "brief", front: "Post vom Arbeitgeber …", back: "Kündigung bekommen?", tip: "Für eine Kündigungsschutzklage bleiben nur 3 Wochen.", href: "/arbeitsrechtsschutz", cta: "Arbeitsrechtsschutz", rotate: -4 },
-  { photo: "einzug", front: "Endlich die eigene Wohnung!", back: "Ärger mit Vermieter oder Handwerker?", tip: "Wohnungs- und Privatrechtsschutz lassen sich kombinieren.", href: "/privatrechtsschutz", cta: "Privatrechtsschutz", rotate: 3 },
-  { photo: "vermieter", front: "Vermietet – und jetzt?", back: "Mieter zahlt nicht?", tip: "Mietstreit, Nebenkosten, Räumung – je nach Tarif.", href: "/vermieterrechtsschutz", cta: "Vermieterrechtsschutz", rotate: -2 },
-  { photo: "privat", front: "40 Minuten Warteschleife.", back: "Händler stellt sich quer?", tip: "Vertragsstreit im Alltag ist ein Klassiker im Privatrechtsschutz.", href: "/privatrechtsschutz", cta: "Privatrechtsschutz", rotate: 4 },
+  { photo: "brief", front: "Post vom Arbeitgeber …", back: "Und wenn die Kündigung kommt?", tip: "Für eine Kündigungsschutzklage bleiben nur 3 Wochen.", href: "/arbeitsrechtsschutz", cta: "Arbeitsrechtsschutz", rotate: -4 },
+  { photo: "einzug", front: "Endlich die eigene Wohnung!", back: "Ärger mit Handwerker oder Möbelhaus?", tip: "Wohnungs- und Privatrechtsschutz lassen sich kombinieren.", href: "/privatrechtsschutz", cta: "Privatrechtsschutz", rotate: 3 },
+  { photo: "vermieter", front: "Vermietet – und jetzt?", back: "Und wenn der Mieter nicht zahlt?", tip: "Mietstreit, Nebenkosten, Räumung – je nach Tarif.", href: "/vermieterrechtsschutz", cta: "Vermieterrechtsschutz", rotate: -2 },
+  { photo: "privat", front: "40 Minuten Warteschleife.", back: "Und wenn der Händler sich querstellt?", tip: "Vertragsstreit im Alltag ist ein Klassiker im Privatrechtsschutz.", href: "/privatrechtsschutz", cta: "Privatrechtsschutz", rotate: 4 },
   { photo: "firma", front: "Unser Laden, unser Risiko.", back: "Ärger als Arbeitgeber?", tip: "Auch Arbeitgeber zahlen vor dem Arbeitsgericht ihre Anwälte in der 1. Instanz selbst.", href: "/firmenrechtsschutz", cta: "Firmenrechtsschutz", rotate: -3 },
   { photo: "verkehr", front: "Kurz nicht aufgepasst.", back: "Wer ist schuld – wer zahlt?", tip: "Verkehrsrechtsschutz gibt es als Baustein dazu.", href: "/rechtsschutz-check?bereich=mehrere&auswahl=verkehr", cta: "Check starten", rotate: 2 },
   { photo: "stress", front: "Dieser Bescheid kann nicht stimmen.", back: "Widerspruch einlegen?", tip: "Meist bleibt dafür ein Monat ab Bekanntgabe.", href: "/privatrechtsschutz", cta: "Privatrechtsschutz", rotate: -5 },

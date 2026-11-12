@@ -5,6 +5,7 @@ import { generalFaq } from "@/lib/faq";
 import { site } from "@/lib/site";
 import { Hero, type FloatCard } from "./Hero";
 import { InlineCta } from "./InlineCta";
+import { Leistungen } from "./Leistungen";
 import { AboutAdvisor } from "./AboutAdvisor";
 import { HowItWorks } from "./HowItWorks";
 import { Faq } from "./Faq";
@@ -55,7 +56,7 @@ const PHOTO_CAPTION: Record<Product["key"], string> = {
 export function ProductLanding({ product }: { product: Product }) {
   const checkHref = `/rechtsschutz-check?bereich=${product.key}`;
   const situation = SITUATION[product.key];
-  const faq = [...product.faq, ...generalFaq.filter((f) => /kostet|Wartezeit|bestehende|kostenlos/i.test(f.q))];
+  const faq = [...product.faq, ...generalFaq.filter((f) => /kostet|Wartezeit|bestehende|kostenlos|schon eine/i.test(f.q))];
 
   return (
     <>
@@ -99,6 +100,8 @@ export function ProductLanding({ product }: { product: Product }) {
       <Ernstfall product={product.key} />
 
       <CostCalculatorSection defaultMode={product.key === "arbeit" ? "arbeit" : "zivil"} lockMode={product.key === "arbeit"} ctaHref={checkHref} />
+
+      <Leistungen />
 
       <section className="pb-8 pt-8">
         <div className="container">
