@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Cartoon-Short</title>
+<style>
+  @font-face { font-family: "Geist"; src: url(../fonts/geist.woff2) format("woff2"); font-weight: 100 900; }
+  @font-face { font-family: "Serif"; src: url(../fonts/serif-italic.woff2) format("woff2"); font-style: italic; }
+  @font-face { font-family: "Hand"; src: url(../fonts/caveat.woff2) format("woff2"); font-weight: 400 700; }
+  :root { --ink: #0B0B0A; --sun: #FFD60A; --paper: #F4F3EE; --red: #FF4F3F; --mint: #22C55E; }
+  html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: var(--paper); }
+  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; font-family: Geist, sans-serif; color: var(--ink); background: var(--paper); }
+  .beat { position: absolute; inset: 0; }
+  .abs { position: absolute; left: 0; top: 0; will-change: transform, opacity; box-sizing: border-box; }
+  .cap { position: absolute; left: 80px; top: 230px; width: 900px; font-weight: 820; line-height: 0.98; letter-spacing: -0.045em; }
+  .cap .ln { white-space: nowrap; }
+  .cap .w { display: inline-block; transform-origin: 50% 80%; margin-right: 0.22em; }
+  .cap .em { font-family: Serif; font-weight: 400; font-style: italic; letter-spacing: -0.02em; }
+  .cap .mark { background: linear-gradient(transparent 58%, var(--sun) 58%, var(--sun) 92%, transparent 92%); padding: 0 0.06em; }
+  .note { font-family: Hand; font-weight: 600; font-size: 54px; white-space: nowrap; }
+  .chip { position: absolute; padding: 20px 36px; border: 8px solid var(--ink); border-radius: 999px; background: #fff; font-weight: 800; font-size: 56px; letter-spacing: -0.03em; white-space: nowrap; }
+  .row { position: absolute; left: 0; top: 0; width: 900px; min-height: 124px; display: flex; align-items: center; gap: 28px; padding: 18px 30px; box-sizing: border-box;
+         border: 8px solid var(--ink); border-radius: 34px; background: #fff; box-shadow: 10px 10px 0 var(--ink); font-weight: 780; font-size: 52px; letter-spacing: -0.03em; line-height: 1.05; }
+  .badge { flex: none; width: 76px; height: 76px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-weight: 900; font-size: 46px; }
+  .sticker { position: absolute; padding: 30px 52px 36px; border: 10px solid var(--ink); border-radius: 44px; background: var(--sun); box-shadow: 14px 14px 0 var(--ink);
+             font-weight: 900; letter-spacing: -0.055em; white-space: nowrap; line-height: 1; }
+  .card { width: 900px; padding: 44px 50px; border: 9px solid var(--ink); border-radius: 44px; background: var(--sun); box-shadow: 14px 14px 0 var(--ink); }
+  .fine { position: absolute; left: 80px; right: 160px; top: 1560px; font-family: Geist; font-size: 26px; line-height: 1.35; color: rgba(11,11,10,.6); }
+  svg { overflow: visible; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <!-- „Boil“: Linien zittern leicht wie handgezeichnet -->
+      <filter id="boil" x="-5%" y="-5%" width="110%" height="110%">
+        <feTurbulence id="turb" type="fractalNoise" baseFrequency="0.022" numOctaves="2" seed="1" result="n" />
+        <feDisplacementMap in="SourceGraphic" in2="n" scale="5" />
+      </filter>
+    </defs>
+  </svg>
+  <div id="beats"></div>
+  <div id="overlay"></div>
+</div>
+
+<script>
+/* ======================================================================
+   Cartoon-Vorlage: baut aus einer Episode (window.EP) die Szenen – ein Abschnitt (beat) = eine Szene.
+   Typen: hook, cost, fact, list, solution, warning, cta. Zeiten aus window.EP_TIMING (Länge der Sprachaufnahme).
+   render(t) ist deterministisch – so kann jedes Einzelbild exakt erzeugt werden.
+   Text-Auszeichnung: [betont] (Serifen-kursiv), {markiert} (gelb unterlegt).
+   ====================================================================== */
+const EP = window.EP, TM = window.EP_TIMING;
+const INK = "#0B0B0A", SUN = "#FFD60A", RED = "#FF4F3F", MINT = "#22C55E", PAPER = "#F4F3EE", BLUE = "#3B82F6";
+const $ = (html) => { const d = document.createElement("div"); d.innerHTML = html.trim(); return d.firstElementChild; };
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const lerp = (a, b, x) => a + (b - a) * x;
+const ease = (x) => 1 - Math.pow(1 - clamp(x), 3);
+const easeIn = (x) => Math.pow(clamp(x), 3);
+const spring = (x) => { x = clamp(x); return 1 - Math.cos(x * Math.PI * 2.4) * Math.exp(-5.2 * x); };
+const win = (t, a, b) => clamp((t - a) / (b - a));
+const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const set = (el, { x = 0, y = 0, s = 1, sx, sy, r = 0, o = 1 }) => {
+  el.style.transform = `translate(${x}px, ${y}px) rotate(${r}deg) scale(${sx ?? s}, ${sy ?? s})`;
+  el.style.opacity = o;
+  el.style.visibility = o <= 0.001 ? "hidden" : "visible";
+};
+window.SFX = [];
+const STROKE = `stroke="${INK}" stroke-width="10" stroke-linejoin="round" stroke-linecap="round"`;
+const S8 = `stroke="${INK}" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"`;
+
+/* ---------- Text mit Auszeichnung ---------- */
+function parse(s) {
+  const out = []; let cur = "", mode = null;
+  for (const ch of String(s)) {
+    if (ch === "[" || ch === "{") { if (cur) out.push({ t: cur, m: mode }); cur = ""; mode = ch === "[" ? "em" : "hl"; continue; }
+    if (ch === "]" || ch === "}") { if (cur) out.push({ t: cur, m: mode }); cur = ""; mode = null; continue; }
+    cur += ch;
+  }
+  if (cur) out.push({ t: cur, m: mode });
+  return out;
+}
+const plain = (s) => parse(s).map((p) => p.t).join("");
+
+/* ---------- Figuren & Symbole (eigene Zeichnungen, flacher Cartoon-Stil) ---------- */
+function mascotSVG() {
+  return `
+  <svg class="abs" width="420" height="520" viewBox="-210 -230 420 520" filter="url(#boil)">
+    <g class="legs">
+      <path d="M-50 150 L-58 230" ${STROKE} fill="none"/><path d="M50 150 L58 230" ${STROKE} fill="none"/>
+      <ellipse cx="-70" cy="236" rx="38" ry="18" fill="${INK}"/><ellipse cx="70" cy="236" rx="38" ry="18" fill="${INK}"/>
+    </g>
+    <g class="armL"><path d="M-118 10 Q-175 40 -180 95" ${STROKE} fill="none"/><circle cx="-180" cy="100" r="22" fill="#fff" ${STROKE}/></g>
+    <g class="armR"><path d="M118 10 Q175 -20 190 -70" ${STROKE} fill="none"/><circle cx="192" cy="-78" r="22" fill="#fff" ${STROKE}/></g>
+    <path d="M0 -170 C60 -140 110 -140 128 -140 L128 10 C128 95 60 145 0 172 C-60 145 -128 95 -128 10 L-128 -140 C-110 -140 -60 -140 0 -170Z" fill="${SUN}" ${STROKE}/>
+    <path d="M-92 -112 L-92 0 C-92 50 -55 92 -18 112" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round" opacity=".55"/>
+    <g class="face">
+      <ellipse cx="-42" cy="-46" rx="26" ry="32" fill="#fff" ${STROKE}/><ellipse cx="42" cy="-46" rx="26" ry="32" fill="#fff" ${STROKE}/>
+      <circle class="pupil" cx="-36" cy="-40" r="11" fill="${INK}"/><circle class="pupil" cx="48" cy="-40" r="11" fill="${INK}"/>
+      <rect class="lid" x="-74" y="-82" width="150" height="0" fill="${SUN}"/>
+      <path class="brows" d="M-66 -96 Q-42 -110 -18 -98 M18 -98 Q42 -110 66 -96" ${STROKE} fill="none"/>
+      <path class="mouth" d="M-40 22 Q0 62 40 22" ${STROKE} fill="#fff"/>
+      <circle cx="-80" cy="12" r="15" fill="${RED}" opacity=".35"/><circle cx="80" cy="12" r="15" fill="${RED}" opacity=".35"/>
+    </g>
+  </svg>`;
+}
+const FACES = {
+  happy: { mouth: "M-40 22 Q0 62 40 22", brows: "M-66 -96 Q-42 -110 -18 -98 M18 -98 Q42 -110 66 -96", look: "translate(0 0)" },
+  worried: { mouth: "M-30 34 Q0 22 30 34", brows: "M-66 -92 Q-42 -98 -18 -110 M18 -110 Q42 -98 66 -92", look: "translate(-10 -4)" },
+  proud: { mouth: "M-44 18 Q0 70 44 18", brows: "M-66 -100 Q-42 -114 -18 -104 M18 -104 Q42 -114 66 -100", look: "translate(4 -10)" },
+};
+function poseMascot(m, face, wave, t) {
+  const f = FACES[face] || FACES.happy;
+  m.querySelector(".mouth").setAttribute("d", f.mouth);
+  m.querySelector(".brows").setAttribute("d", f.brows);
+  m.querySelectorAll(".pupil").forEach((p) => p.setAttribute("transform", f.look));
+  m.querySelector(".lid").setAttribute("height", (t % 3.1) < 0.12 ? 64 : 0);
+  const armR = m.querySelector(".armR"); armR.style.transformOrigin = "118px 10px"; armR.style.transform = `rotate(${wave}deg)`;
+}
+
+const ICON = {
+  house: () => [560, 560, `<svg viewBox="0 0 560 560">
+    <rect x="60" y="230" width="440" height="300" rx="10" fill="#fff" ${STROKE}/>
+    <path d="M30 250 L280 50 L530 250Z" fill="${INK}" ${STROKE}/>
+    <rect x="390" y="90" width="56" height="100" fill="#fff" ${STROKE}/>
+    <rect x="110" y="300" width="120" height="110" rx="6" fill="#DDEBFF" ${STROKE}/><path d="M170 300 V410 M110 355 H230" ${STROKE}/>
+    <rect x="320" y="300" width="120" height="110" rx="6" fill="#DDEBFF" ${STROKE}/><path d="M380 300 V410 M320 355 H440" ${STROKE}/>
+    <rect x="235" y="420" width="90" height="110" rx="6" fill="${SUN}" ${STROKE}/><circle cx="305" cy="478" r="7" fill="${INK}"/></svg>`],
+  calendar: (label = "") => [300, 330, `<svg viewBox="0 0 300 330">
+    <rect x="10" y="30" width="280" height="290" rx="22" fill="#fff" ${STROKE}/>
+    <path d="M10 52 Q10 30 32 30 H268 Q290 30 290 52 V100 H10Z" fill="${INK}"/>
+    <path d="M80 10 V55 M220 10 V55" ${STROKE}/>
+    <text x="150" y="82" text-anchor="middle" font-family="Geist" font-weight="800" font-size="${label.length > 7 ? 32 : 40}" fill="#fff">${esc(label)}</text>
+    <g class="x" opacity="0"><path d="M95 150 L205 270 M205 150 L95 270" stroke="${RED}" stroke-width="26" stroke-linecap="round"/></g>
+    <g class="ok" opacity="0"><path d="M85 215 L135 262 L220 160" stroke="${MINT}" stroke-width="26" stroke-linecap="round" stroke-linejoin="round" fill="none"/></g></svg>`],
+  coin: () => [120, 120, `<svg viewBox="-60 -60 120 120"><circle r="48" fill="${SUN}" ${STROKE}/><text y="18" text-anchor="middle" font-family="Geist" font-weight="900" font-size="54" fill="${INK}">€</text></svg>`],
+  wallet: () => [360, 260, `<svg viewBox="0 0 360 260"><path d="M40 70 L250 20 L270 70" fill="#fff" ${STROKE}/><rect x="20" y="70" width="320" height="170" rx="26" fill="${INK}"/>
+    <rect x="230" y="125" width="110" height="60" rx="18" fill="${SUN}" ${STROKE}/><circle cx="262" cy="155" r="10" fill="${INK}"/></svg>`],
+  clock: () => [260, 380, `<svg viewBox="0 0 260 380">
+    <rect x="20" y="10" width="220" height="34" rx="12" fill="${INK}"/><rect x="20" y="336" width="220" height="34" rx="12" fill="${INK}"/>
+    <path d="M50 44 C50 140 120 160 120 190 C120 220 50 240 50 336 H210 C210 240 140 220 140 190 C140 160 210 140 210 44Z" fill="#fff" ${STROKE}/>
+    <path class="sandTop" d="M70 70 H190 C190 120 140 150 130 175 C120 150 70 120 70 70Z" fill="${SUN}"/>
+    <path class="sandBot" d="M70 330 H190 C185 300 150 280 130 270 C110 280 75 300 70 330Z" fill="${SUN}"/>
+    <path d="M130 178 V300" stroke="${SUN}" stroke-width="8"/></svg>`],
+  bill: () => [300, 380, `<svg viewBox="0 0 300 380">
+    <path d="M30 20 H270 V340 L240 365 L210 340 L180 365 L150 340 L120 365 L90 340 L60 365 L30 340Z" fill="#fff" ${STROKE}/>
+    <path d="M70 80 H230 M70 130 H200 M70 180 H230 M70 230 H170" ${S8}/>
+    <rect x="160" y="262" width="80" height="44" rx="10" fill="${RED}"/><text x="200" y="296" text-anchor="middle" font-family="Geist" font-weight="900" font-size="34" fill="#fff">€</text></svg>`],
+  letter: () => [400, 280, `<svg viewBox="0 0 400 280">
+    <rect x="20" y="20" width="360" height="240" rx="20" fill="#fff" ${STROKE}/>
+    <path d="M30 40 L200 160 L370 40" fill="none" ${STROKE}/>
+    <circle cx="330" cy="215" r="34" fill="${RED}" ${STROKE}/><path d="M318 215 H342" stroke="#fff" stroke-width="8" stroke-linecap="round"/></svg>`],
+  gavel: () => [420, 380, `<svg viewBox="0 0 420 380">
+    <g transform="rotate(-35 200 150)"><rect x="90" y="90" width="220" height="100" rx="18" fill="#C98A4B" ${STROKE}/><rect x="70" y="80" width="40" height="120" rx="12" fill="${INK}"/><rect x="290" y="80" width="40" height="120" rx="12" fill="${INK}"/>
+    <rect x="182" y="190" width="36" height="200" rx="14" fill="#C98A4B" ${STROKE}/></g>
+    <rect x="200" y="300" width="200" height="56" rx="14" fill="${INK}"/></svg>`],
+  car: () => [520, 300, `<svg viewBox="0 0 520 300">
+    <path d="M30 210 V160 Q30 140 52 134 L120 120 L170 60 Q180 48 196 48 H340 Q356 48 366 60 L420 120 L470 132 Q492 138 492 160 V210Z" fill="${BLUE}" ${STROKE}/>
+    <path d="M190 72 H262 V120 H150Z M286 72 H344 L392 120 H286Z" fill="#DDEBFF" ${S8}/>
+    <circle cx="140" cy="214" r="46" fill="${INK}"/><circle cx="140" cy="214" r="18" fill="#fff"/>
+    <circle cx="384" cy="214" r="46" fill="${INK}"/><circle cx="384" cy="214" r="18" fill="#fff"/>
+    <rect x="460" y="150" width="30" height="20" rx="6" fill="${SUN}"/></svg>`],
+  wrench: () => [340, 340, `<svg viewBox="0 0 340 340"><g transform="rotate(45 170 170)">
+    <path d="M140 110 H200 V310 Q200 330 170 330 Q140 330 140 310Z" fill="#B9C3D0" ${STROKE}/>
+    <path d="M110 30 Q90 80 120 120 H220 Q250 80 230 30 L200 60 V90 H140 V60Z" fill="#B9C3D0" ${STROKE}/></g></svg>`],
+  building: () => [360, 480, `<svg viewBox="0 0 360 480">
+    <rect x="40" y="40" width="280" height="420" rx="14" fill="#DDEBFF" ${STROKE}/>
+    ${[0, 1, 2, 3].map((r) => [0, 1, 2].map((c) => `<rect x="${78 + c * 74}" y="${78 + r * 78}" width="52" height="50" rx="6" fill="${(r + c) % 3 ? "#fff" : SUN}" ${S8}/>`).join("")).join("")}
+    <rect x="140" y="390" width="80" height="70" rx="8" fill="${INK}"/></svg>`],
+  contract: () => [320, 400, `<svg viewBox="0 0 320 400">
+    <path d="M30 20 H230 L290 80 V380 H30Z" fill="#fff" ${STROKE}/><path d="M230 20 V80 H290" fill="none" ${STROKE}/>
+    <path d="M70 120 H250 M70 170 H220 M70 220 H250 M70 270 H190" ${S8}/>
+    <path d="M70 330 Q100 295 120 330 T170 330 T220 320" fill="none" stroke="${BLUE}" stroke-width="8" stroke-linecap="round"/></svg>`],
+  fire: () => [300, 380, `<svg viewBox="0 0 300 380">
+    <path d="M150 20 C190 90 260 130 260 230 C260 310 210 360 150 360 C90 360 40 310 40 235 C40 170 80 140 100 90 C115 130 130 140 140 150 C140 100 130 60 150 20Z" fill="#FF8A4C" ${STROKE}/>
+    <path d="M150 190 C175 230 200 250 200 290 C200 325 178 345 150 345 C122 345 100 325 100 292 C100 260 130 240 150 190Z" fill="${SUN}"/></svg>`],
+  phone: () => [240, 420, `<svg viewBox="0 0 240 420"><rect x="20" y="20" width="200" height="380" rx="36" fill="${INK}"/><rect x="40" y="70" width="160" height="270" rx="10" fill="#DDEBFF"/>
+    <circle cx="120" cy="370" r="14" fill="#fff"/><path d="M70 230 L100 170 L130 210 L150 180 L180 230Z" fill="${MINT}"/><circle cx="160" cy="120" r="18" fill="${SUN}"/></svg>`],
+  person: () => [280, 380, `<svg viewBox="0 0 280 380"><circle cx="140" cy="100" r="70" fill="#F7D5B8" ${STROKE}/><path d="M30 370 Q30 200 140 200 Q250 200 250 370Z" fill="${BLUE}" ${STROKE}/>
+    <circle cx="116" cy="96" r="8" fill="${INK}"/><circle cx="164" cy="96" r="8" fill="${INK}"/><path d="M118 128 Q140 142 162 128" ${S8} fill="none"/></svg>`],
+  money: () => [420, 260, `<svg viewBox="0 0 420 260"><rect x="60" y="20" width="340" height="180" rx="18" fill="#8CD49B" ${STROKE} transform="rotate(-6 230 110)"/>
+    <rect x="20" y="60" width="340" height="180" rx="18" fill="#8CD49B" ${STROKE}/><circle cx="190" cy="150" r="48" fill="#fff" ${STROKE}/>
+    <text x="190" y="170" text-anchor="middle" font-family="Geist" font-weight="900" font-size="56" fill="${INK}">€</text></svg>`],
+};
+function iconEl(name, w, label) {
+  const [iw, ih, svg] = (ICON[name] || ICON.house)(label);
+  const h = Math.round((w * ih) / iw);
+  const el = $(`<div class="abs" style="width:${w}px;height:${h}px">${svg.replace("<svg ", `<svg width="${w}" height="${h}" filter="url(#boil)" `)}</div>`);
+  return { el, w, h };
+}
+
+/* ---------- Akteure: { n, el, a, b, update(lt) } ---------- */
+function capActor(root, lines, { top = 230, size = 96, color = INK } = {}) {
+  const el = $(`<div class="cap" style="top:${top}px;font-size:${size}px;color:${color}"></div>`);
+  const words = [];
+  lines.forEach((line) => {
+    const ln = document.createElement("div"); ln.className = "ln";
+    for (const seg of parse(line)) seg.t.split(/\s+/).filter(Boolean).forEach((w) => {
+      const span = $(`<span class="w${seg.m === "em" ? " em" : seg.m === "hl" ? " mark" : ""}">${esc(w).replace(/&amp;shy;/g, "&shy;")}</span>`);
+      ln.appendChild(span); words.push(span);
+    });
+    el.appendChild(ln);
+  });
+  root.appendChild(el);
+  // passend machen: keine Zeile breiter als 900 px
+  let s = size; const widest = () => Math.max(...[...el.children].map((c) => c.scrollWidth));
+  while (widest() > 900 && s > 40) { s -= 2; el.style.fontSize = s + "px"; }
+  const A = { n: 0.3 + words.length * 0.11, el, height: el.offsetHeight, size: s, sound: false };
+  A.update = (lt) => {
+    const stagger = Math.min(0.11, (A.b - A.a - 0.3) / Math.max(1, words.length));
+    words.forEach((w, i) => {
+      const k = win(lt, A.a + i * stagger, A.a + i * stagger + 0.32), p = spring(k);
+      w.style.opacity = k > 0 ? 1 : 0;
+      w.style.transform = `translateY(${(1 - p) * 40}px) scale(${0.6 + 0.4 * p})`;
+    });
+  };
+  return A;
+}
+// Element, das mit Federschwung auftaucht (von unten / klein)
+function popActor(root, el, x, y, { r = 0, s = 1, n = 0.5, from = 140, sfx = "pop", bob = 0 } = {}) {
+  root.appendChild(el);
+  const A = { n, el, sfx };
+  A.update = (lt) => {
+    const k = win(lt, A.a, A.a + 0.45), p = spring(k);
+    set(el, { x, y: y + (1 - p) * from + Math.sin(lt * 3.2) * bob, r: r + (1 - p) * 6, s: s * (0.7 + 0.3 * p), o: k > 0 ? 1 : 0 });
+  };
+  return A;
+}
+function noteActor(root, text, x, y, { size = 54, r = -2, color = "rgba(11,11,10,.7)", n = 0.35 } = {}) {
+  const el = $(`<div class="abs note" style="font-size:${size}px;color:${color}">${esc(plain(text))}</div>`);
+  root.appendChild(el);
+  let s = size; while (el.scrollWidth > 900 && s > 30) { s -= 2; el.style.fontSize = s + "px"; }
+  const A = { n, el, sfx: null };
+  A.update = (lt) => { const k = win(lt, A.a, A.a + 0.35); set(el, { x, y: y + (1 - ease(k)) * 20, r, o: ease(k) }); };
+  return A;
+}
+function mascotActor(root, x, y, { s = 1, face = "happy", mode = "jump", n = 0.9, cheerAt = null } = {}) {
+  const el = $(mascotSVG()); root.appendChild(el);
+  const A = { n, el, sfx: "boing" };
+  A.update = (lt) => {
+    const k = win(lt, A.a, A.a + 0.6), since = lt - A.a;
+    const jump = mode === "jump" ? Math.abs(Math.sin(win(lt, A.a, A.a + 1.2) * Math.PI * 2)) * (1 - win(lt, A.a, A.a + 1.2)) * 80 : 0;
+    const sq = 1 + Math.sin(lt * 7) * 0.025;
+    let f = face, wave = mode === "worried" ? -38 : Math.sin(lt * 9) * 18 * (1 - win(lt, A.a + 2.4, A.a + 2.9));
+    let hop = 0;
+    if (cheerAt && lt > cheerAt()) { f = "proud"; const c = lt - cheerAt(); hop = Math.max(0, Math.sin(c * 9)) * 30 * Math.exp(-c * 2); wave = -30 + Math.sin(lt * 10) * 14; }
+    if (mode === "wave") wave = -30 + Math.sin(lt * 8) * 10;
+    const shake = mode === "worried" ? Math.sin(lt * 30) * 2 : 0;
+    set(el, { x: x + shake, y: y - jump - hop + (1 - ease(k)) * 700, sx: s / sq, sy: s * sq, o: since > 0 ? 1 : 0 });
+    poseMascot(el, f, wave, lt);
+  };
+  return A;
+}
+
+/* ---------- Layouts je Abschnittstyp ---------- */
+const BEATS = {
+  hook(bt, root) {
+    const A = [], cap = capActor(root, bt.lines, { size: 104 }); A.push(cap);
+    if (bt.items && bt.items.length) {
+      const items = bt.items.slice(0, 3), mk = bt.mark === "check" ? ".ok" : ".x";
+      const house = iconEl(bt.icon || "house", 520);
+      A.push(popActor(root, house.el, 280, 960, { from: 400, sfx: "whoosh", n: 0.5 }));
+      items.forEach((m, i) => {
+        const c = iconEl("calendar", 270, plain(m)), x = 70 + i * 315;
+        const P = popActor(root, c.el, x, 640, { r: (i - 1) * 6, from: -200, sfx: null, n: 0.45 });
+        const up = P.update; P.update = (lt) => { up(lt); const sk = win(lt, P.b - 0.05, P.b + 0.1); const g = c.el.querySelector(mk); g.setAttribute("opacity", sk > 0 ? 1 : 0); g.style.transformOrigin = "150px 210px"; g.style.transform = `scale(${1.6 - 0.6 * ease(sk)})`; };
+        P.sfx = "stamp"; P.sfxAt = "end";
+        A.push(P);
+      });
+    } else if (bt.icon) {
+      const ic = iconEl(bt.icon, 520, bt.iconLabel); A.push(popActor(root, ic.el, 540 - ic.w / 2, Math.max(640, 300 + cap.height + 150), { n: 0.55 }));
+    }
+    if (bt.note) A.push(noteActor(root, bt.note, 90, 1480));
+    return A;
+  },
+  cost(bt, root) {
+    const A = [], cap = capActor(root, [bt.title], { size: 88 }); A.push(cap);
+    const y0 = 300 + cap.height + 60;
+    const big = $(`<div class="abs" style="font-weight:900;font-size:180px;letter-spacing:-0.06em;color:${RED};white-space:nowrap"></div>`); root.appendChild(big);
+    const txt = plain(bt.big), m = txt.match(/^(.*?)(\d{1,3}(?:\.\d{3})+|\d+)(.*)$/);
+    big.textContent = txt; let bs = 180; while (big.scrollWidth > 900 && bs > 70) { bs -= 4; big.style.fontSize = bs + "px"; }
+    const target = m ? parseInt(m[2].replace(/\./g, ""), 10) : 0;
+    const C = { n: 1.6, el: big, sfx: "coin" };
+    C.update = (lt) => {
+      const k = win(lt, C.a, C.b - 0.2);
+      big.textContent = m ? `${m[1]}${Math.round(target * ease(k)).toLocaleString("de-DE")}${m[3]}` : txt;
+      const shake = lt > C.a && lt < C.b ? Math.sin(lt * 60) * 4 : 0;
+      set(big, { x: 80 + shake, y: y0 + (1 - ease(win(lt, C.a, C.a + 0.3))) * 40, o: lt > C.a ? 1 : 0 });
+    };
+    A.push(C);
+    let y = y0 + bs * 1.05;
+    if (bt.note) { A.push(noteActor(root, bt.note, 88, y, { size: 46 })); y += 90; }
+    y += 50;
+    const items = bt.items || [];
+    if (items.length) {
+      if (bt.itemsTitle) { const t = $(`<div class="abs" style="font-weight:820;font-size:64px;letter-spacing:-0.035em;white-space:nowrap">${esc(plain(bt.itemsTitle))}</div>`); A.push(popActor(root, t, 80, y, { from: 30, n: 0.3, sfx: null })); y += 110; }
+      let x = 80, row = 0; const rot = [-4, 3, -2, 4];
+      items.forEach((w, i) => {
+        const c = $(`<div class="chip">${esc(plain(w))}</div>`); root.appendChild(c); const cw = c.offsetWidth;
+        if (x + cw > 1000) { x = 120; row++; }
+        A.push(popActor(root, c, x, y + row * 140 + (i % 2) * 18, { r: rot[i % 4], from: -60, n: 0.32 }));
+        x += cw + 30;
+      });
+      y += (row + 1) * 140 + 60;
+    }
+    if (y < 1300) {
+      const w = iconEl(bt.icon || "wallet", 340); const W = popActor(root, w.el, 370, Math.max(y, 1200), { from: 300, n: 0.4, sfx: null }); A.splice(1, 0, W);
+      // Münzen fliegen heraus, während der Betrag hochzählt
+      const coins = Array.from({ length: 6 }, () => iconEl("coin", 110));
+      coins.forEach((c, i) => { root.appendChild(c.el); });
+      const CA = { n: 0, el: null, sfx: null, free: true };
+      CA.update = (lt) => coins.forEach((c, i) => {
+        const t0 = C.a + i * 0.25, k = win(lt, t0, t0 + 0.9), dir = i % 2 ? 1 : -1, wy = Math.max(y, 1200);
+        set(c.el, { x: 480 + dir * k * (200 + i * 30), y: wy - k * 480 + k * k * 360, r: k * 360 * dir, s: 1 - k * 0.2, o: k > 0 && k < 1 ? 1 : 0 });
+      });
+      A.push(CA);
+    }
+    return A;
+  },
+  fact(bt, root) {
+    const A = []; let y = 230;
+    if (bt.kicker) { const cap = capActor(root, bt.kicker, { size: 92 }); A.push(cap); y += cap.height + 90; }
+    const st = $(`<div class="sticker" style="font-size:190px">${esc(plain(bt.big))}</div>`); root.appendChild(st);
+    let fs = 190; while (st.offsetWidth > 900 && fs > 60) { fs -= 6; st.style.fontSize = fs + "px"; }
+    A.push(popActor(root, st, 80, y, { r: -3, from: 120, n: 0.55, sfx: "stamp" }));
+    y += st.offsetHeight + 90;
+    (bt.lines || []).forEach((l, i) => { A.push(noteActor(root, l, 90, y + i * 78, { size: 62, r: -1.5, color: INK })); });
+    y += (bt.lines || []).length * 78 + 30;
+    if (bt.icon) { const ic = iconEl(bt.icon, 300, bt.iconLabel); A.push(popActor(root, ic.el, 1000 - ic.w, Math.max(y, 1500 - ic.h), { n: 0.5, r: 4 })); }
+    if (bt.note) A.push(noteActor(root, bt.note, 90, 1480, { size: 46 }));
+    return A;
+  },
+  list(bt, root) {
+    const A = [], cap = capActor(root, bt.title, { size: 96 }); A.push(cap);
+    let y = 300 + cap.height + 80; const n = bt.items.length, rows = [];
+    bt.items.forEach((it, i) => {
+      const kind = (bt.marks && bt.marks[i]) || bt.mark || "check";
+      const badge = kind === "num" ? `<div class="badge" style="background:${INK}">${i + 1}</div>` : kind === "cross" ? `<div class="badge" style="background:${RED}">✕</div>` : `<div class="badge" style="background:${MINT}">✓</div>`;
+      const row = $(`<div class="row">${badge}<div>${parse(it).map((p) => p.m === "em" ? `<em style="font-family:Serif;font-weight:400">${esc(p.t)}</em>` : p.m === "hl" ? `<span style="background:${SUN};padding:0 .1em">${esc(p.t)}</span>` : esc(p.t)).join("")}</div></div>`);
+      root.appendChild(row); let fs = 54; row.style.fontSize = fs + "px"; while (row.offsetHeight > 200 && fs > 34) { fs -= 2; row.style.fontSize = fs + "px"; }
+      rows.push(row);
+    });
+    const gap = 34, total = rows.reduce((a, r) => a + r.offsetHeight + gap, 0);
+    y = Math.max(y, Math.min(y + 140, (y + 1480 - total) / 2));
+    rows.forEach((row, i) => { A.push(popActor(root, row, 80, y, { r: i % 2 ? 1 : -1, from: 90, n: 0.42 })); y += row.offsetHeight + gap; });
+    if (bt.note) A.push(noteActor(root, bt.note, 90, Math.min(1500, y + 10), { size: 58, color: INK }));
+    return A;
+  },
+  solution(bt, root) {
+    const A = []; const prod = []; (bt.product || []).forEach((p) => { if (prod.length && /-$/.test(prod[prod.length - 1])) prod[prod.length - 1] = prod[prod.length - 1].slice(0, -1) + p; else prod.push(p); });
+    const capLines = [prod.join(" "), ...(bt.lines || [])].map((l) => l.replace(/^(.*)$/, "$1"));
+    const cap = capActor(root, capLines, { size: 84 }); A.push(cap);
+    let cheer = null;
+    const hasCard = !!bt.highlight;
+    const top = 300 + cap.height;
+    A.push(mascotActor(root, 330, hasCard ? top - 30 : top + 230, { s: hasCard ? 0.8 : 1.25, cheerAt: () => cheer, n: 1.1 }));
+    if (hasCard) {
+      const card = $(`<div class="abs card"><div style="font-weight:850;font-size:70px;letter-spacing:-0.04em;line-height:1">${esc(plain(bt.highlight))}</div>
+        <div style="margin-top:18px;font-size:46px;font-weight:600;line-height:1.2">${esc((bt.highlightLines || []).map(plain).join(" "))}</div></div>`);
+      const C = popActor(root, card, 80, top + 470, { r: -2, from: 120, n: 0.6, sfx: "ching" }); A.push(C);
+      A.after = () => { cheer = C.a + 0.5; };
+    }
+    return A;
+  },
+  warning(bt, root) {
+    const A = []; const title = bt.title || "Aber Achtung:";
+    const cap = capActor(root, ["[" + title.replace(/[[\]]/g, "") + "]", ...bt.lines], { size: 96 }); A.push(cap);
+    cap.el.querySelector(".ln").style.color = RED;
+    const y = 300 + cap.height + 40;
+    if (bt.note) A.push(noteActor(root, bt.note, 90, y, { size: 60, r: -3, color: INK }));
+    const ic = iconEl(bt.icon || "clock", bt.icon && bt.icon !== "clock" ? 320 : 250, bt.iconLabel);
+    const I = popActor(root, ic.el, 130, y + 170, { n: 0.45, sfx: "whoosh" });
+    const up = I.update; I.update = (lt) => { up(lt); const f = win(lt, I.a, I.a + 6); const st = ic.el.querySelector(".sandTop"), sb = ic.el.querySelector(".sandBot"); if (st) { st.setAttribute("transform", `translate(0 ${f * 60}) scale(1 ${1 - f * 0.6})`); sb.setAttribute("transform", `translate(130 330) scale(1 ${0.4 + f * 0.8}) translate(-130 -330)`); } };
+    A.push(I);
+    A.push(mascotActor(root, 560, y + 40, { s: 0.9, face: "worried", mode: "worried", n: 0.6 }));
+    return A;
+  },
+  cta(bt, root) {
+    const A = [], cap = capActor(root, bt.question, { size: 100 }); A.push(cap);
+    const y = 300 + cap.height + 130;
+    const box = bt.box || "Kostenloser Check", sub = bt.sub || "in 60 Sekunden – persönliche Beratung, kein Callcenter";
+    const card = $(`<div class="abs" style="width:900px;padding:56px 56px 50px;border-radius:52px;background:${INK};color:#fff">
+      <div style="font-weight:850;font-size:84px;letter-spacing:-0.045em;line-height:1">${esc(plain(box))}</div>
+      <div style="margin-top:14px;font-size:50px;color:rgba(255,255,255,.75)">${esc(plain(sub))}</div>
+      <div style="margin-top:40px;display:inline-flex;align-items:center;gap:20px;background:${SUN};color:${INK};border-radius:999px;padding:22px 40px;font-weight:800;font-size:56px">Link in der Bio <span style="font-size:60px">↑</span></div></div>`);
+    A.push(popActor(root, card, 80, y, { r: -1.5, s: 1, from: 160, n: 0.6, sfx: "pop", bob: 6 }));
+    A.push(mascotActor(root, 640, y + 430, { s: 0.55, mode: "wave", n: 0.6 }));
+    return A;
+  },
+};
+
+/* ---------- Aufbau ---------- */
+const beatsRoot = document.getElementById("beats"), overlayRoot = document.getElementById("overlay");
+const PLANS = [];
+function schedule(items, w0, w1) {
+  const live = items.filter((it) => !it.free), gap = 0.12;
+  const nat = live.reduce((s, it) => s + it.n, 0) + gap * Math.max(0, live.length - 1);
+  const k = Math.min(1.35, (w1 - w0) / Math.max(nat, 0.01));
+  let t = w0; for (const it of live) { it.a = t; it.b = t + it.n * k; t = it.b + gap * k; }
+}
+function build() {
+  EP.beats.forEach((bt, i) => {
+    const root = $(`<div class="beat"></div>`); beatsRoot.appendChild(root);
+    const D = TM.beats[i].dur, A = (BEATS[bt.type] || BEATS.fact)(bt, root);
+    schedule(A, 0.1, D - (bt.type === "cta" ? 1.4 : 0.6));
+    if (A.after) A.after();
+    PLANS.push({ root, A, D, start: TM.beats[i].start });
+    // Geräusche
+    if (i > 0) SFX.push({ time: TM.beats[i].start, kind: "whoosh", gain: 0.8 });
+    A.forEach((a) => { if (a.sfx) SFX.push({ time: TM.beats[i].start + (a.sfxAt === "end" ? a.b : a.a), kind: a.sfx, gain: a.sfx === "coin" ? 0.7 : 1 }); });
+  });
+  // Markenzeile + Pflichtangaben
+  const brand = $(`<div class="abs" style="display:flex;align-items:center;gap:22px;white-space:nowrap">
+    <svg width="86" height="86" viewBox="0 0 86 86"><rect width="86" height="86" rx="22" fill="${INK}"/><path d="M43 16 C55 22 64 22 68 22 V44 C68 58 56 67 43 72 C30 67 18 58 18 44 V22 C22 22 31 22 43 16Z" fill="${SUN}"/><path d="M32 44 L40 52 L55 35" stroke="${INK}" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span style="font-weight:800;font-size:58px;letter-spacing:-0.04em">Seitz <em style="font-family:Serif;font-weight:400">Rechtsschutz</em></span></div>`);
+  overlayRoot.appendChild(brand);
+  const fine = $(`<div class="fine">${esc(EP.fine || "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.")}</div>`);
+  overlayRoot.appendChild(fine);
+  const sol = EP.beats.findIndex((b) => b.type === "solution" && JSON.stringify(b).includes("*")), cta = EP.beats.findIndex((b) => b.type === "cta");
+  OVER = { brand, fine, sol: sol >= 0 ? TM.beats[sol] : null, cta: cta >= 0 ? TM.beats[cta] : null };
+}
+let OVER = null;
+
+function render(t) {
+  document.getElementById("turb").setAttribute("seed", String(1 + Math.floor(t * 10) % 5));
+  let cur = 0; while (cur + 1 < PLANS.length && t >= PLANS[cur + 1].start) cur++;
+  PLANS.forEach((P, i) => {
+    if (i !== cur) { P.root.style.display = "none"; return; }
+    P.root.style.display = "block";
+    const lt = t - P.start, last = i === PLANS.length - 1;
+    const out = last ? 0 : easeIn(win(lt, P.D - 0.32, P.D));
+    P.root.style.transform = `translateY(${-out * 90}px)`; P.root.style.opacity = 1 - out;
+    P.A.forEach((a) => a.update(lt));
+  });
+  // Pflichtangaben: während der Lösung (wenn Sternchen) und am Schluss
+  const inSol = OVER.sol && t > OVER.sol.start + Math.min(3, OVER.sol.dur * 0.45) && t < OVER.sol.start + OVER.sol.dur - 0.3;
+  const inCta = OVER.cta && t > OVER.cta.start + 1.6;
+  set(OVER.fine, { o: inSol || inCta ? 0.9 : 0 });
+  const bk = OVER.cta ? ease(win(t, OVER.cta.start + 1.4, OVER.cta.start + 1.8)) : 0;
+  set(OVER.brand, { x: 90, y: 1400 + (1 - bk) * 20, o: bk });
+}
+window.render = render;
+window.collectSfx = () => SFX;
+document.fonts.ready.then(() => { build(); render(0); window.ready = true; });
+</script>
+</body>
+</html>

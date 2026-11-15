@@ -1,7 +1,8 @@
-"""Tonspur für die Shorts: leichte Ukulele-artige Hintergrundmusik + Geräusche an den Szenen-Zeitpunkten.
-Alles wird hier synthetisch erzeugt – keine fremden Musikrechte.
-Aufruf: python3 audio.py sfx.json out.wav"""
-import json, sys
+"""Tonspur für die Shorts: leichte Ukulele-artige Hintergrundmusik + Geräusche an den Szenen-Zeitpunkten + Stimme.
+Musik und Geräusche werden hier synthetisch erzeugt – keine fremden Musikrechte. Unter der Stimme wird die Musik leiser.
+Aufruf: python3 audio.py job.json out.wav
+job.json: { duration, sfx: [{time, kind, dur?, gain?}], voice: [{time, file}], seed }"""
+import json, sys, subprocess, zlib
 import numpy as np
 from scipy.io import wavfile
 from scipy.signal import butter, sosfilt
@@ -27,11 +28,16 @@ def pluck(freq, dur=0.6, bright=0.5):
 def note(m):  # MIDI -> Hz
     return 440 * 2 ** ((m - 69) / 12)
 
-def music(dur):
-    bpm = 104; beat = 60 / bpm; eighth = beat / 2
-    # C – G – Am – F
-    chords = [[60, 64, 67, 72], [59, 62, 67, 71], [57, 60, 64, 69], [57, 60, 65, 69]]
-    bass = [48, 43, 45, 41]
+# drei Varianten, damit nicht jedes Video gleich klingt (Auswahl über die Episode)
+VARIANTS = [
+    (104, [[60, 64, 67, 72], [59, 62, 67, 71], [57, 60, 64, 69], [57, 60, 65, 69]], [48, 43, 45, 41]),   # C – G – Am – F
+    (96, [[57, 60, 65, 69], [55, 60, 64, 67], [57, 62, 65, 69], [58, 62, 65, 70]], [41, 48, 50, 46]),    # F – C – Dm – B
+    (112, [[59, 62, 67, 71], [57, 62, 66, 69], [59, 64, 67, 71], [60, 64, 67, 72]], [43, 50, 52, 48]),   # G – D – Em – C
+]
+
+def music(dur, variant=0):
+    bpm, chords, bass = VARIANTS[variant % len(VARIANTS)]
+    beat = 60 / bpm; eighth = beat / 2
     out = np.zeros(int(SR * (dur + 2)))
     cache = {}
     def place(sig, t, g):
@@ -108,13 +114,37 @@ def sfx(kind, dur=0.5):
         return out * np.sin(np.pi * t / t[-1]) * 0.35
     return np.zeros(1)
 
+def load_voice(path):
+    raw = subprocess.run(["ffmpeg", "-v", "error", "-i", path, "-ac", "1", "-ar", str(SR), "-f", "s16le", "-"], capture_output=True, check=True).stdout
+    v = np.frombuffer(raw, dtype=np.int16).astype(np.float64) / 32768
+    return v / (np.max(np.abs(v)) + 1e-9) * 0.9
+
+def smooth(x, attack, release):
+    """Hüllkurve: schnell hoch, langsam runter"""
+    out = np.empty_like(x); a = np.exp(-1 / (attack * SR)); r = np.exp(-1 / (release * SR)); y = 0.0
+    for i in range(0, len(x), 64):  # blockweise reicht für eine Ducking-Kurve
+        v = x[i]; y = a * y + (1 - a) * v if v > y else r * y + (1 - r) * v
+        out[i:i + 64] = y
+    return out
+
 def main():
-    data = json.load(open(sys.argv[1])); dur = data["duration"]
-    mix = music(dur) * 0.55
-    for e in data["sfx"]:
-        s = sfx(e["kind"], e.get("dur", 0.5)) * e.get("gain", 1)
-        i = int(e["time"] * SR); j = min(len(mix), i + len(s))
-        if i < len(mix): mix[i:j] += s[: j - i]
+    job = json.load(open(sys.argv[1])); dur = job["duration"]; n = int(SR * dur)
+    variant = zlib.crc32(str(job.get("seed", "")).encode()) % len(VARIANTS)
+    mus = music(dur, variant)[:n]; mus = np.pad(mus, (0, n - len(mus)))
+    fx = np.zeros(n)
+    for e in job.get("sfx", []):
+        sg = sfx(e["kind"], e.get("dur", 0.5)) * e.get("gain", 1)
+        i = int(e["time"] * SR); j = min(n, i + len(sg))
+        if 0 <= i < n: fx[i:j] += sg[: j - i]
+    voice = np.zeros(n)
+    for v in job.get("voice", []):
+        sg = load_voice(v["file"]); i = int(v["time"] * SR); j = min(n, i + len(sg))
+        if 0 <= i < n: voice[i:j] += sg[: j - i]
+    if np.any(voice):
+        talk = smooth((np.abs(voice) > 0.02).astype(np.float64), 0.05, 0.45)
+        mix = mus * 0.42 * (1 - 0.68 * talk) + fx * (1 - 0.45 * talk) + voice * 1.0
+    else:
+        mix = mus * 0.55 + fx
     mix = np.tanh(mix * 1.1)  # sanft begrenzen
     mix = mix / (np.max(np.abs(mix)) + 1e-9) * 0.89
     stereo = np.stack([mix, mix], axis=1)

@@ -1,0 +1,82 @@
+{
+  "id": "03-firma-privatschutz-gilt-nicht",
+  "order": 3,
+  "topic": "firma",
+  "style": "whiteboard",
+  "title": "Selbstständig? Dein Privat-Rechtsschutz zählt nicht",
+  "caption": "Selbstständig? Dein privater Rechtsschutz gilt in der Regel nicht für deinen Betrieb. Streit mit Mitarbeitern, Bußgeldverfahren oder Steuerstreit vor Gericht brauchen einen eigenen Firmenrechtsschutz – modular nach Branche und Größe (je nach Tarif). Kostenloser Check über den Link in der Bio.\n\n#selbstständig #unternehmer #firmenrechtsschutz #gewerbe #rechtsschutz",
+  "youtube": {
+    "title": "Selbstständig? Darum zählt dein Privat-Rechtsschutz nicht #shorts",
+    "description": "Privater Rechtsschutz gilt in der Regel nicht für die selbstständige Tätigkeit. Firmenrechtsschutz ist modular – je nach Tarif mit Arbeitgeber- oder Steuer-Rechtsschutz.",
+    "tags": [
+      "Selbstständig",
+      "Firmenrechtsschutz",
+      "Gewerbe",
+      "Unternehmer",
+      "Rechtsschutz"
+    ]
+  },
+  "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+  "beats": [
+    {
+      "type": "hook",
+      "say": "Du bist selbstständig? Dann Achtung: Dein privater Rechtsschutz gilt in der Regel nicht für deine Firma.",
+      "lines": [
+        "Selbstständig?",
+        "Privatschutz zählt",
+        "[nicht] im Betrieb."
+      ],
+      "icon": "building"
+    },
+    {
+      "type": "list",
+      "say": "Typischer Ärger im Betrieb: Streit mit Mitarbeitern, ein Bußgeldverfahren oder ein Steuerstreit vor Gericht.",
+      "title": [
+        "Typischer Ärger",
+        "im Betrieb:"
+      ],
+      "items": [
+        "Streit mit Mitarbeitern",
+        "Bußgeldverfahren",
+        "Steuerstreit vor Gericht"
+      ],
+      "mark": "num"
+    },
+    {
+      "type": "solution",
+      "say": "Dafür gibt es den Firmenrechtsschutz: passend zu Branche, Größe und Rechtsform, je nach Tarif mit Bausteinen wie Arbeitgeber- oder Steuer-Rechtsschutz.",
+      "product": [
+        "Firmen-",
+        "rechtsschutz"
+      ],
+      "lines": [
+        "passend zu Branche,",
+        "Größe und Rechtsform.*"
+      ],
+      "highlight": "+ Bausteine nach Bedarf",
+      "highlightLines": [
+        "z. B. Arbeitgeber- oder",
+        "Steuer-Rechtsschutz.*"
+      ]
+    },
+    {
+      "type": "warning",
+      "say": "Wichtig: Nicht jedes unternehmerische Risiko ist versicherbar. Ich prüfe mit dir, was wirklich passt.",
+      "title": "Wichtig:",
+      "lines": [
+        "Nicht jedes Risiko",
+        "ist [versicherbar.]"
+      ],
+      "note": "Ich prüfe, was wirklich passt.",
+      "icon": "contract"
+    },
+    {
+      "type": "cta",
+      "say": "Passt dein Schutz zu deinem Betrieb? Kostenloser Check, Link in der Bio.",
+      "question": [
+        "Passt der Schutz",
+        "[zu deinem Betrieb?]"
+      ]
+    }
+  ]
+}

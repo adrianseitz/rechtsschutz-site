@@ -1,0 +1,70 @@
+{
+  "id": "10-verkehr-aerger-ums-auto",
+  "order": 10,
+  "topic": "privat",
+  "style": "cartoon",
+  "title": "Ärger ums Auto? Das passiert schneller als gedacht",
+  "caption": "Unfall mit Streit um die Schuld, Bußgeldbescheid oder Pfusch in der Werkstatt – Ärger ums Auto passiert schneller als gedacht. Verkehrsrechtsschutz gibt es als Baustein zum Privatrechtsschutz und übernimmt je nach Tarif Anwalt und Gericht. Kostenloser Check über den Link in der Bio.\n\n#auto #verkehrsrecht #bußgeld #unfall #rechtsschutz",
+  "youtube": {
+    "title": "Ärger ums Auto? Das hilft wirklich #shorts",
+    "description": "Unfall, Bußgeld, Werkstatt: Verkehrsrechtsschutz als Baustein zum Privatrechtsschutz, je nach Tarif mit Anwalt und Gericht.",
+    "tags": [
+      "Auto",
+      "Verkehrsrecht",
+      "Bußgeld",
+      "Unfall",
+      "Verkehrsrechtsschutz"
+    ]
+  },
+  "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+  "beats": [
+    {
+      "type": "hook",
+      "say": "Ärger rund ums Auto?",
+      "lines": [
+        "Ärger rund",
+        "[ums Auto?]"
+      ],
+      "icon": "car"
+    },
+    {
+      "type": "list",
+      "say": "Das passiert schneller als gedacht: Streit nach einem Unfall, ein Bußgeldbescheid oder eine Werkstatt, die gepfuscht hat.",
+      "title": [
+        "Passiert schneller",
+        "als gedacht:"
+      ],
+      "items": [
+        "Unfall – Streit um die Schuld",
+        "Bußgeldbescheid",
+        "Werkstatt hat gepfuscht"
+      ],
+      "mark": "cross"
+    },
+    {
+      "type": "solution",
+      "say": "Dafür gibt es den Verkehrsrechtsschutz, als Baustein zum Privatrechtsschutz. Er übernimmt je nach Tarif Anwalt und Gericht.",
+      "product": [
+        "Verkehrs-",
+        "rechtsschutz"
+      ],
+      "lines": [
+        "übernimmt Anwalt",
+        "und Gericht.*"
+      ],
+      "highlight": "+ als Baustein",
+      "highlightLines": [
+        "zum Privatrechtsschutz",
+        "kombinierbar.*"
+      ]
+    },
+    {
+      "type": "cta",
+      "say": "Ist Verkehrsrecht bei dir mit drin? Kostenloser Check, Link in der Bio.",
+      "question": [
+        "Ist Verkehrsrecht",
+        "[bei dir mit drin?]"
+      ]
+    }
+  ]
+}

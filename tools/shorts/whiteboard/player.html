@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Whiteboard-Short</title>
+<style>
+  /* Schriften lokal (keine Abfrage bei Google) */
+  @font-face { font-family: "Kalam"; font-weight: 400; src: url(../fonts/kalam-latin-400-normal.woff2) format("woff2"); font-display: block; }
+  @font-face { font-family: "Kalam"; font-weight: 700; src: url(../fonts/kalam-latin-700-normal.woff2) format("woff2"); font-display: block; }
+  @font-face { font-family: "Kalam"; font-weight: 700; src: url(../fonts/kalam-latin-ext-700-normal.woff2) format("woff2"); unicode-range: U+0100-024F; font-display: block; }
+  @font-face { font-family: "Geist"; font-weight: 100 900; src: url(../fonts/geist.woff2) format("woff2"); font-display: block; }
+  @font-face { font-family: "SerifI"; font-style: italic; src: url(../fonts/serif-italic.woff2) format("woff2"); font-display: block; }
+  html, body { margin: 0; background: #fff; }
+  #out { display: block; }
+</style>
+</head>
+<body>
+<canvas id="out" width="1080" height="1920"></canvas>
+<!-- window.EP (Episode) und window.EP_TIMING setzt der Renderer vor dem Laden -->
+<script src="src/config.js"></script>
+<script src="src/kit.js"></script>
+<script src="src/whiteboard.js"></script>
+<script src="src/brand.js"></script>
+<script src="src/beats.js"></script>
+</body>
+</html>

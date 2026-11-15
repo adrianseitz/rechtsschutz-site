@@ -1,0 +1,76 @@
+{
+  "id": "04-vermieter-privatschutz-reicht-nicht",
+  "order": 4,
+  "topic": "vermieter",
+  "style": "cartoon",
+  "title": "Rechtsschutz + Mietwohnung? Das deckt er nicht",
+  "caption": "Du hast Rechtsschutz und vermietest eine Wohnung? Ein privater Rechtsschutz deckt Streit mit Mietern in der Regel nicht ab. Dafür brauchst du den Vermieter-Baustein – und jede Wohnung muss im Vertrag stehen. Optional mit Mietausfallschutz. Kostenloser Check über den Link in der Bio.\n\n#vermieter #immobilien #mietrecht #kapitalanlage #rechtsschutz",
+  "youtube": {
+    "title": "Du vermietest? Dein Rechtsschutz deckt das wohl nicht #shorts",
+    "description": "Privatrechtsschutz deckt Streit mit Mietern in der Regel nicht. Dafür gibt es den Vermieter-Baustein, optional mit Mietausfallschutz der ARAG (je nach Tarif).",
+    "tags": [
+      "Vermieter",
+      "Vermieterrechtsschutz",
+      "Immobilien",
+      "Kapitalanlage",
+      "Mietrecht"
+    ]
+  },
+  "fine": "* je nach Tarif. Mietausfallschutz als Zusatzbaustein in ausgewählten Tarifen; Leerstand und bestehende Rückstände sind nicht versichert. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+  "beats": [
+    {
+      "type": "hook",
+      "say": "Du hast Rechtsschutz und vermietest eine Wohnung?",
+      "lines": [
+        "Du hast Rechtsschutz",
+        "und eine [Mietwohnung?]"
+      ],
+      "icon": "house"
+    },
+    {
+      "type": "fact",
+      "say": "Dann aufgepasst: Ein privater Rechtsschutz deckt Streit mit deinen Mietern in der Regel nicht ab.",
+      "kicker": [
+        "Dann aufgepasst:"
+      ],
+      "big": "Nicht drin!",
+      "lines": [
+        "Privatrechtsschutz deckt Streit",
+        "mit Mietern meist nicht ab."
+      ],
+      "icon": "contract"
+    },
+    {
+      "type": "list",
+      "say": "Dafür brauchst du den Vermieter-Baustein. Jede vermietete Wohnung muss im Vertrag stehen. Und optional gibt es den Mietausfallschutz dazu.",
+      "title": [
+        "Was du dafür",
+        "brauchst:"
+      ],
+      "items": [
+        "Vermieter-Baustein",
+        "Jede Wohnung im Vertrag",
+        "Optional: Mietausfallschutz*"
+      ],
+      "mark": "check"
+    },
+    {
+      "type": "warning",
+      "say": "Neue Wohnung gekauft? Dann gleich nachmelden, sonst ist sie nicht geschützt.",
+      "title": "Neue Wohnung?",
+      "lines": [
+        "Gleich [nachmelden!]"
+      ],
+      "note": "sonst ist sie nicht geschützt",
+      "icon": "house"
+    },
+    {
+      "type": "cta",
+      "say": "Sind alle deine Wohnungen richtig abgesichert? Kostenloser Check, Link in der Bio.",
+      "question": [
+        "Sind alle Wohnungen",
+        "[richtig abgesichert?]"
+      ]
+    }
+  ]
+}

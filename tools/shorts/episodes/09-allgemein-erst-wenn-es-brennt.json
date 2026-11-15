@@ -1,0 +1,79 @@
+{
+  "id": "09-allgemein-erst-wenn-es-brennt",
+  "order": 9,
+  "topic": "allgemein",
+  "style": "whiteboard",
+  "title": "Rechtsschutz erst, wenn's brennt? Zu spät",
+  "caption": "Feuerversicherung abschließen, wenn's schon brennt? Genau das versuchen viele beim Rechtsschutz. Ein Streit, der schon läuft, ist nicht versicherbar. Entscheidend sind Ursache, Wartezeit und welche Bereiche du versichert hast. Kostenloser Check über den Link in der Bio.\n\n#rechtsschutz #versicherung #finanzen #tipps #wissen",
+  "youtube": {
+    "title": "Rechtsschutz erst abschließen, wenn's brennt? Darum klappt das nicht #shorts",
+    "description": "Laufende Streitfälle sind nicht versicherbar. Entscheidend: wann die Ursache entstanden ist, Wartezeiten und die versicherten Bereiche.",
+    "tags": [
+      "Rechtsschutz",
+      "Versicherung",
+      "Wartezeit",
+      "Tipps",
+      "Finanzen"
+    ]
+  },
+  "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+  "beats": [
+    {
+      "type": "hook",
+      "say": "Eine Feuerversicherung abschließen, wenn es schon brennt? Klingt verrückt.",
+      "lines": [
+        "Feuerversicherung",
+        "abschließen, wenn's",
+        "[schon brennt?]"
+      ],
+      "icon": "fire"
+    },
+    {
+      "type": "fact",
+      "say": "Beim Rechtsschutz versuchen es trotzdem viele. Aber ein Streit, der schon läuft, ist nicht versicherbar.",
+      "kicker": [
+        "Beim Rechtsschutz",
+        "versuchen's viele:"
+      ],
+      "big": "Zu spät!",
+      "lines": [
+        "Laufende Streitfälle",
+        "sind nicht versicherbar."
+      ],
+      "icon": "letter"
+    },
+    {
+      "type": "list",
+      "say": "Entscheidend ist: wann die Ursache entstanden ist, ob die Wartezeit vorbei ist und welche Bereiche du versichert hast.",
+      "title": [
+        "Entscheidend ist:"
+      ],
+      "items": [
+        "Wann die Ursache entstand",
+        "Ob die Wartezeit vorbei ist",
+        "Welche Bereiche versichert sind"
+      ],
+      "mark": "num"
+    },
+    {
+      "type": "solution",
+      "say": "Deshalb: Rechtsschutz abschließen, solange alles ruhig ist. Passend für Privat, Beruf, Verkehr, Wohnen oder Vermietung.",
+      "product": [
+        "Rechtsschutz",
+        "nach Maß"
+      ],
+      "lines": [
+        "Privat, Beruf, Verkehr,",
+        "Wohnen, Vermietung.*"
+      ]
+    },
+    {
+      "type": "cta",
+      "say": "Was davon brauchst du wirklich? Finde es raus im kostenlosen Check, Link in der Bio.",
+      "question": [
+        "Was davon",
+        "[brauchst du wirklich?]"
+      ]
+    }
+  ]
+}

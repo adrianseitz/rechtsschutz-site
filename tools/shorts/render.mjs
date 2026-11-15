@@ -1,47 +1,146 @@
-// Rendert die Szene Bild für Bild (deterministisch) und baut daraus ein MP4 mit Tonspur.
-// Aufruf: node render.mjs <html> <ausgabe.mp4> [--stills 1,4.5,9]
-import { chromium } from "playwright";
-import { execFileSync } from "node:child_process";
-import { mkdirSync, rmSync, writeFileSync } from "node:fs";
-import path from "node:path";
+// render.mjs: macht aus einer Episode (episodes/*.json) ein fertiges Hochformat-Video – Bild für Bild in Chrome
+// gerendert (deterministisch), Tonspur aus Musik, Geräuschen und Stimme, am Ende auf -14 LUFS gebracht.
+//
+//   node render.mjs episodes/01-….json --out=out/01.mp4                 Video (Stimme optional: --voice=<ordner>)
+//   node render.mjs episodes/01-….json --sheet --out=out/01.jpg         Kontrollbild: 15 Momente als Raster
+//   Optionen: --voice=<ordner mit beat-0.mp3 …>  --chrome=<pfad>  --workers=2  --stills=1.5,7,12 (PNG-Einzelbilder)
+//
+// Als Modul: import { renderEpisode } from './render.mjs'
+import puppeteer from "puppeteer-core";
+import { spawn, execFileSync } from "node:child_process";
+import { existsSync, mkdirSync, readFileSync, writeFileSync, rmSync, mkdtempSync } from "node:fs";
+import { dirname, join, resolve } from "node:path";
+import { tmpdir } from "node:os";
+import { fileURLToPath, pathToFileURL } from "node:url";
+import { planTiming } from "./lib/timing.mjs";
 
-const [html, out] = process.argv.slice(2);
-const stillsArg = process.argv.indexOf("--stills");
-const FPS = 30;
-const b = await chromium.launch({ executablePath: "/opt/google/chrome/chrome", args: ["--no-sandbox", "--force-color-profile=srgb"] });
-const p = await b.newPage({ viewport: { width: 1080, height: 1920 }, deviceScaleFactor: 1 });
-await p.goto("file://" + path.resolve(html));
-await p.waitForFunction(() => window.READY === true);
-await p.waitForTimeout(300);
+const HERE = dirname(fileURLToPath(import.meta.url));
+const PLAYER = { whiteboard: join(HERE, "whiteboard/player.html"), cartoon: join(HERE, "cartoon/player.html") };
+const FPS = { whiteboard: 24, cartoon: 30 };
 
-if (stillsArg > 0) {
-  const times = process.argv[stillsArg + 1].split(",").map(Number);
-  for (const t of times) {
-    await p.evaluate((tt) => window.render(tt), t);
-    await p.screenshot({ path: `${out}-${String(t).replace(".", "_")}.png` });
+function findChrome(p) {
+  const list = [p, process.env.CHROME_PATH, "/usr/bin/chromium", "/usr/bin/chromium-browser", "/opt/google/chrome/chrome", "/usr/bin/google-chrome"];
+  const c = list.find((x) => x && existsSync(x));
+  if (!c) throw new Error("Chrome/Chromium nicht gefunden (--chrome=<pfad> oder CHROME_PATH)");
+  return c;
+}
+
+function run(cmd, args, input) {
+  return new Promise((ok, bad) => {
+    const p = spawn(cmd, args, { stdio: [input ? "pipe" : "ignore", "ignore", "pipe"] });
+    let err = "";
+    p.stderr.on("data", (d) => (err += d));
+    p.on("close", (c) => (c ? bad(new Error(`${cmd} ${c}: ${err.slice(-800)}`)) : ok()));
+    if (input) input(p.stdin);
+  });
+}
+
+/** Dauer einer Audiodatei in Sekunden */
+export function audioDuration(file) {
+  const out = execFileSync("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "default=nw=1:nk=1", file]).toString();
+  return parseFloat(out);
+}
+
+/** Sprachaufnahmen je Abschnitt (beat-0.mp3 …) einsammeln, falls vorhanden */
+function voiceFiles(ep, dir) {
+  if (!dir) return null;
+  const files = ep.beats.map((_, i) => join(dir, `beat-${i}.mp3`));
+  return files.every((f) => existsSync(f)) ? files : null;
+}
+
+async function openPlayer(browser, ep, timing) {
+  const page = await browser.newPage();
+  await page.setViewport({ width: 1080, height: 1920, deviceScaleFactor: 1 });
+  page.on("pageerror", (e) => console.log("[Seite]", e.message));
+  page.on("console", (m) => { if (m.type() === "error") console.log("[Seite]", m.text()); });
+  await page.evaluateOnNewDocument((e, t) => { window.EP = e; window.EP_TIMING = t; }, ep, timing);
+  await page.goto(pathToFileURL(PLAYER[ep.style]).href + "?render", { waitUntil: "load" });
+  await page.waitForFunction("window.ready === true", { timeout: 60000 });
+  return page;
+}
+
+async function frameJpeg(page, style, t) {
+  if (style === "whiteboard") {
+    const url = await page.evaluate((tt) => window.renderAt(tt, "image/jpeg", 0.93), t);
+    return Buffer.from(url.slice(url.indexOf(",") + 1), "base64");
   }
-  await b.close();
-  process.exit(0);
+  await page.evaluate((tt) => window.render(tt), t);
+  return page.screenshot({ type: "jpeg", quality: 93 });
 }
 
-const dur = await p.evaluate(() => window.DURATION);
-const frames = Math.round(dur * FPS);
-const dir = out + ".frames";
-rmSync(dir, { recursive: true, force: true }); mkdirSync(dir, { recursive: true });
-const t0 = Date.now();
-for (let i = 0; i < frames; i++) {
-  await p.evaluate((tt) => window.render(tt), i / FPS);
-  await p.screenshot({ path: `${dir}/${String(i).padStart(5, "0")}.jpg`, type: "jpeg", quality: 94 });
-  if (i % 150 === 0) console.log(`Bild ${i}/${frames} (${Math.round((Date.now() - t0) / 1000)} s)`);
-}
-const sfx = await p.evaluate(() => window.SFX);
-writeFileSync(out + ".sfx.json", JSON.stringify({ duration: dur, sfx }));
-await b.close();
+/**
+ * @param {object} o { episode (Pfad oder Objekt), out, voiceDir?, chrome?, workers?, sheet?, stills?, log? }
+ * @returns {{ out: string, duration: number, timing: object }}
+ */
+export async function renderEpisode(o) {
+  const ep = typeof o.episode === "string" ? JSON.parse(readFileSync(o.episode, "utf8")) : o.episode;
+  if (!PLAYER[ep.style]) throw new Error(`Unbekannter Stil: ${ep.style}`);
+  const log = o.log || console.log;
+  const voices = voiceFiles(ep, o.voiceDir);
+  const timing = planTiming(ep, voices ? voices.map(audioDuration) : null);
+  const fps = FPS[ep.style], frames = Math.round(timing.total * fps);
+  mkdirSync(dirname(resolve(o.out)), { recursive: true });
+  // eine Browser-Instanz je Arbeiter: Screenshots von Seiten im Hintergrund können sonst hängen bleiben
+  const launch = () => puppeteer.launch({
+    executablePath: findChrome(o.chrome), headless: true, protocolTimeout: 180_000,
+    args: ["--no-sandbox", "--allow-file-access-from-files", "--force-color-profile=srgb", "--disable-renderer-backgrounding", "--disable-background-timer-throttling", "--disable-backgrounding-occluded-windows", "--font-render-hinting=none", "--disable-dev-shm-usage"],
+  });
+  const browsers = [];
+  const browser = await launch(); browsers.push(browser);
+  const tmp = mkdtempSync(join(tmpdir(), "short-"));
+  try {
+    // Kontrollbild oder Einzelbilder
+    if (o.sheet || o.stills) {
+      const page = await openPlayer(browser, ep, timing);
+      const times = o.stills || Array.from({ length: 15 }, (_, i) => +(((i + 0.5) / 15) * timing.total).toFixed(2));
+      const files = [];
+      for (const [i, t] of times.entries()) { const f = join(tmp, `s${String(i).padStart(2, "0")}.jpg`); writeFileSync(f, await frameJpeg(page, ep.style, t)); files.push(f); }
+      if (o.stills) { files.forEach((f, i) => execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-i", f, `${o.out}-${times[i]}.png`])); return { out: o.out, duration: timing.total, timing }; }
+      await run("ffmpeg", ["-y", "-loglevel", "error", "-framerate", "1", "-i", join(tmp, "s%02d.jpg"), "-vf", "scale=360:-1,tile=5x3:padding=6:color=white", "-frames:v", "1", o.out]);
+      return { out: o.out, duration: timing.total, timing };
+    }
 
-// Tonspur erzeugen (Musik + Geräusche), dann zusammenfügen
-execFileSync("python3", [path.join(path.dirname(new URL(import.meta.url).pathname), "audio.py"), out + ".sfx.json", out + ".wav"], { stdio: "inherit" });
-execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-framerate", String(FPS), "-i", `${dir}/%05d.jpg`, "-i", out + ".wav",
-  "-c:v", "libx264", "-preset", "medium", "-crf", "19", "-pix_fmt", "yuv420p", "-profile:v", "high", "-movflags", "+faststart",
-  "-af", "loudnorm=I=-14:TP=-1.5:LRA=11", "-c:a", "aac", "-b:a", "192k", "-ar", "44100", "-shortest", out], { stdio: "inherit" });
-rmSync(dir, { recursive: true, force: true });
-console.log("fertig:", out, `${Math.round((Date.now() - t0) / 1000)} s`);
+    // Video: mehrere Seiten rendern parallel, Bilder gehen der Reihe nach an ffmpeg
+    const workers = Math.max(1, Math.min(4, o.workers || 2));
+    const pages = [await openPlayer(browser, ep, timing)];
+    for (let i = 1; i < workers; i++) { const b = await launch(); browsers.push(b); pages.push(await openPlayer(b, ep, timing)); }
+    const sfx = await pages[0].evaluate(() => (window.collectSfx ? window.collectSfx() : window.SFX || []));
+    const silent = join(tmp, "video.mp4"), t0 = Date.now();
+    await run("ffmpeg", ["-y", "-loglevel", "error", "-f", "image2pipe", "-c:v", "mjpeg", "-framerate", String(fps), "-i", "-",
+      "-vf", "scale=out_range=tv", "-c:v", "libx264", "-preset", "veryfast", "-crf", "18", "-pix_fmt", "yuv420p", "-color_range", "tv", "-movflags", "+faststart", silent], async (stdin) => {
+      const done = new Map(); let next = 0, issued = 0;
+      const write = (buf) => new Promise((ok) => (stdin.write(buf) ? ok() : stdin.once("drain", ok)));
+      async function worker(page) {
+        while (issued < frames) {
+          const i = issued++;
+          done.set(i, await frameJpeg(page, ep.style, i / fps));
+          while (done.has(next)) { const b = done.get(next); done.delete(next); next++; await write(b); if (next % 240 === 0) log(`Bild ${next}/${frames} (${Math.round((Date.now() - t0) / 1000)} s)`); }
+        }
+      }
+      await Promise.all(pages.map(worker));
+      stdin.end();
+    });
+
+    // Tonspur: Musik + Geräusche + Stimme
+    const job = { duration: timing.total, sfx, seed: ep.id, voice: voices ? voices.map((f, i) => ({ time: timing.beats[i].voiceAt, file: f })) : [] };
+    writeFileSync(join(tmp, "audio.json"), JSON.stringify(job));
+    execFileSync("python3", [join(HERE, "audio.py"), join(tmp, "audio.json"), join(tmp, "audio.wav")], { stdio: "inherit" });
+    await run("ffmpeg", ["-y", "-loglevel", "error", "-i", silent, "-i", join(tmp, "audio.wav"), "-map", "0:v", "-map", "1:a", "-c:v", "copy",
+      "-af", "loudnorm=I=-14:TP=-1.5:LRA=11", "-c:a", "aac", "-b:a", "192k", "-ar", "44100", "-shortest", "-movflags", "+faststart", o.out]);
+    log(`fertig: ${o.out} (${timing.total.toFixed(1)} s Video, ${Math.round((Date.now() - t0) / 1000)} s Rechenzeit)`);
+    return { out: o.out, duration: timing.total, timing };
+  } finally {
+    await Promise.all(browsers.map((b) => b.close().catch(() => {})));
+    rmSync(tmp, { recursive: true, force: true });
+  }
+}
+
+// ---- Aufruf von der Kommandozeile ----
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  const args = Object.fromEntries(process.argv.slice(3).map((a) => { const [k, v] = a.replace(/^--/, "").split("="); return [k, v ?? true]; }));
+  const episode = process.argv[2];
+  if (!episode) { console.error("Aufruf: node render.mjs <episode.json> --out=<datei> [--sheet] [--voice=<ordner>]"); process.exit(1); }
+  const out = args.out || join(HERE, "out", episode.replace(/^.*\//, "").replace(/\.json$/, args.sheet ? ".jpg" : ".mp4"));
+  renderEpisode({ episode, out, voiceDir: args.voice, chrome: args.chrome, workers: +args.workers || 2, sheet: !!args.sheet, stills: args.stills ? String(args.stills).split(",").map(Number) : null })
+    .catch((e) => { console.error(e); process.exit(1); });
+}

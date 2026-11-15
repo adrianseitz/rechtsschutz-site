@@ -4,13 +4,14 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import {
-  AlertCircle, BarChart3, Bell, Check, Columns3, Download, List, LogOut, Settings, Mail, MessageSquare, Phone, PhoneMissed, RefreshCw, RotateCcw, Search, Trash2, X,
+  AlertCircle, BarChart3, Bell, Check, Clapperboard, Columns3, Download, List, LogOut, Settings, Mail, MessageSquare, Phone, PhoneMissed, RefreshCw, RotateCcw, Search, Trash2, X,
 } from "lucide-react";
 import { channelShort, followUpDue, LOST_REASONS, STATUSES, todayKey, type CrmLead, type LeadStatus, type StatusEntry } from "@/lib/crm";
 import { site } from "@/lib/site";
 import type { StatsData } from "@/lib/stats";
 import { StatsView } from "./StatsView";
 import { SettingsView } from "./SettingsView";
+import { SocialView } from "./SocialView";
 
 const fmt = (iso: string) =>
   new Date(iso).toLocaleString("de-DE", { timeZone: "Europe/Berlin", day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
@@ -62,9 +63,9 @@ function mailHref(l: CrmLead, kind: "first" | "missed") {
 const smsHref = (l: CrmLead) =>
   `sms:${(l.phone ?? "").replace(/[^+0-9]/g, "")}?&body=${encodeURIComponent(`Hallo${firstName(l) && l.name !== "–" ? " " + firstName(l) : ""}, hier ist ${site.owner} wegen deiner Rechtsschutz-Anfrage. Ich habe dich gerade nicht erreicht – wann passt dir ein Rückruf?`)}`;
 
-type View = "pipeline" | "liste" | "statistik" | "einstellungen";
-const VIEWS: { v: View; label: string }[] = [{ v: "pipeline", label: "Pipeline" }, { v: "liste", label: "Liste" }, { v: "statistik", label: "Statistik" }, { v: "einstellungen", label: "Einstellungen" }];
-const ViewIcon = ({ v }: { v: View }) => (v === "pipeline" ? <Columns3 className="h-4 w-4" aria-hidden /> : v === "liste" ? <List className="h-4 w-4" aria-hidden /> : v === "statistik" ? <BarChart3 className="h-4 w-4" aria-hidden /> : <Settings className="h-4 w-4" aria-hidden />);
+type View = "pipeline" | "liste" | "statistik" | "videos" | "einstellungen";
+const VIEWS: { v: View; label: string }[] = [{ v: "pipeline", label: "Pipeline" }, { v: "liste", label: "Liste" }, { v: "statistik", label: "Statistik" }, { v: "videos", label: "Videos" }, { v: "einstellungen", label: "Einstellungen" }];
+const ViewIcon = ({ v }: { v: View }) => (v === "pipeline" ? <Columns3 className="h-4 w-4" aria-hidden /> : v === "liste" ? <List className="h-4 w-4" aria-hidden /> : v === "statistik" ? <BarChart3 className="h-4 w-4" aria-hidden /> : v === "videos" ? <Clapperboard className="h-4 w-4" aria-hidden /> : <Settings className="h-4 w-4" aria-hidden />);
 
 export function CrmBoard({ initial, storage, error, stats: traffic = {}, openLead }: { initial: CrmLead[]; storage: boolean; error: string; stats?: StatsData; openLead?: string }) {
   const router = useRouter();
@@ -84,7 +85,7 @@ export function CrmBoard({ initial, storage, error, stats: traffic = {}, openLea
   useEffect(() => {
     try {
       const v = localStorage.getItem("rs_crm_view");
-      if (v === "liste" || v === "pipeline" || v === "statistik" || v === "einstellungen") setView(v);
+      if (v === "liste" || v === "pipeline" || v === "statistik" || v === "videos" || v === "einstellungen") setView(v);
     } catch { /* */ }
   }, []);
   useEffect(() => {
@@ -182,6 +183,7 @@ export function CrmBoard({ initial, storage, error, stats: traffic = {}, openLea
         <NavBtn label="Pipeline" active={view === "pipeline"} onClick={() => switchView("pipeline")}><Columns3 className="h-5 w-5" /></NavBtn>
         <NavBtn label="Liste" active={view === "liste"} onClick={() => switchView("liste")}><List className="h-5 w-5" /></NavBtn>
         <NavBtn label="Statistik" active={view === "statistik"} onClick={() => switchView("statistik")}><BarChart3 className="h-5 w-5" /></NavBtn>
+        <NavBtn label="Videos" active={view === "videos"} onClick={() => switchView("videos")}><Clapperboard className="h-5 w-5" /></NavBtn>
         <NavBtn label="Einstellungen" active={view === "einstellungen"} onClick={() => switchView("einstellungen")}><Settings className="h-5 w-5" /></NavBtn>
         <div className="flex-1" />
         <a href="/api/admin/leads?format=csv" className="grid h-11 w-11 place-items-center rounded-xl text-white/60 transition hover:bg-white/10 hover:text-white" aria-label="Als CSV exportieren" title="Export (CSV)"><Download className="h-5 w-5" /></a>
@@ -191,7 +193,7 @@ export function CrmBoard({ initial, storage, error, stats: traffic = {}, openLea
       <div className="flex min-w-0 flex-1 flex-col">
         {/* Kopfzeile */}
         <header className="flex shrink-0 flex-wrap items-center gap-3 border-b border-line bg-white px-4 py-3 md:h-16 md:flex-nowrap md:py-0">
-          <h1 className="text-lg font-semibold tracking-[-0.02em]">{view === "statistik" ? "Statistik" : view === "einstellungen" ? "Einstellungen" : "Anfragen"}</h1>
+          <h1 className="text-lg font-semibold tracking-[-0.02em]">{view === "statistik" ? "Statistik" : view === "videos" ? "Videos" : view === "einstellungen" ? "Einstellungen" : "Anfragen"}</h1>
           <div className="flex rounded-lg bg-paper p-0.5" role="tablist" aria-label="Ansicht">
             {VIEWS.map(({ v, label }) => (
               <button key={v} role="tab" aria-selected={view === v} aria-label={label} onClick={() => switchView(v)}
@@ -201,7 +203,7 @@ export function CrmBoard({ initial, storage, error, stats: traffic = {}, openLea
               </button>
             ))}
           </div>
-          <label className={`relative order-last w-full md:order-none md:ml-4 md:w-auto md:max-w-sm md:flex-1 ${view === "statistik" || view === "einstellungen" ? "hidden" : ""}`}>
+          <label className={`relative order-last w-full md:order-none md:ml-4 md:w-auto md:max-w-sm md:flex-1 ${view === "statistik" || view === "videos" || view === "einstellungen" ? "hidden" : ""}`}>
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-muted" aria-hidden />
             <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Suchen: Name, E-Mail, Telefon …" aria-label="Suchen"
               className="h-10 w-full rounded-lg border border-line bg-[#F6F6F2] pl-9 pr-3 text-sm placeholder:text-ink-muted focus:border-navy focus:bg-white focus:outline-none" />
@@ -214,7 +216,7 @@ export function CrmBoard({ initial, storage, error, stats: traffic = {}, openLea
         </header>
 
         {/* Kennzahlen */}
-        {view !== "statistik" && view !== "einstellungen" && (
+        {view !== "statistik" && view !== "videos" && view !== "einstellungen" && (
           <div className="flex shrink-0 gap-2 overflow-x-auto px-4 pt-3 [scrollbar-width:none] sm:grid sm:grid-cols-4 sm:gap-3 sm:overflow-visible sm:pt-4">
             <Stat label="Offen in der Pipeline" value={stats.open} />
             <Stat label="Noch nicht kontaktiert" value={stats.waiting} warn={stats.waiting > 0} sub={stats.waiting > 0 ? "schnell melden" : undefined} />
@@ -233,6 +235,8 @@ export function CrmBoard({ initial, storage, error, stats: traffic = {}, openLea
         <div className="min-h-0 flex-1 pt-4">
           {view === "einstellungen" ? (
             <SettingsView />
+          ) : view === "videos" ? (
+            <SocialView />
           ) : view === "statistik" ? (
             <StatsView stats={traffic} leads={leads} />
           ) : view === "pipeline" ? (

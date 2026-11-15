@@ -23,6 +23,20 @@ services:
       - leads:/app/data
     restart: unless-stopped
 
+  # Video-Automatik (TikTok, Instagram, YouTube Shorts) – Einstellungen im CRM unter „Videos“
+  shorts:
+    build:
+      context: ./tools/shorts
+      dockerfile: worker/Dockerfile
+    env_file: .env
+    environment:
+      SOCIAL_DIR: /data/social
+    volumes:
+      - leads:/data
+    restart: unless-stopped
+    cpus: 1.0
+    mem_limit: 1536m
+
   caddy:
     image: caddy:2-alpine
     ports:

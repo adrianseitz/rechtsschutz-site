@@ -1,0 +1,75 @@
+{
+  "id": "07-privat-handwerker-pfuscht",
+  "order": 7,
+  "topic": "privat",
+  "style": "whiteboard",
+  "title": "Handwerker hat gepfuscht? Das tust du jetzt",
+  "caption": "Der Handwerker hat gepfuscht? 1. Mängel mit Fotos festhalten. 2. Schriftlich eine Frist zur Nachbesserung setzen. 3. Nicht vorschnell selbst reparieren lassen. Geht es vor Gericht, hilft Privatrechtsschutz mit Vertragsrecht (je nach Tarif, Ausschlüsse beachten). Kostenloser Check über den Link in der Bio.\n\n#handwerker #verbraucher #rechtsschutz #tipps #hausbesitzer",
+  "youtube": {
+    "title": "Handwerker hat gepfuscht? 3 Schritte, die du kennen musst #shorts",
+    "description": "Mängel dokumentieren, schriftlich Frist setzen, nicht vorschnell selbst reparieren. Privatrechtsschutz mit Vertragsrecht je nach Tarif; Ausschlüsse wie Baurisiko beachten.",
+    "tags": [
+      "Handwerker",
+      "Pfusch",
+      "Verbraucher",
+      "Privatrechtsschutz",
+      "Tipps"
+    ]
+  },
+  "fine": "* je nach Tarif und Versicherungsbedingungen; Ausschlüsse (z. B. bei Bauvorhaben) und Wartezeiten beachten. Keine Rechtsberatung. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+  "beats": [
+    {
+      "type": "hook",
+      "say": "Der Handwerker hat gepfuscht und meldet sich nicht mehr?",
+      "lines": [
+        "Der Handwerker",
+        "hat [gepfuscht?]"
+      ],
+      "icon": "wrench"
+    },
+    {
+      "type": "list",
+      "say": "Dann: Mängel mit Fotos festhalten, schriftlich eine Frist zur Nachbesserung setzen, und nicht vorschnell selbst reparieren lassen.",
+      "title": [
+        "Das solltest",
+        "du jetzt tun:"
+      ],
+      "items": [
+        "Mängel mit Fotos festhalten",
+        "Schriftlich Frist setzen",
+        "Nicht vorschnell selbst reparieren"
+      ],
+      "mark": "num"
+    },
+    {
+      "type": "solution",
+      "say": "Ein Privatrechtsschutz mit Vertragsrecht hilft je nach Tarif bei Ärger mit Handwerkern, Händlern und Dienstleistern.",
+      "product": [
+        "Privat-",
+        "rechtsschutz"
+      ],
+      "lines": [
+        "hilft bei Ärger mit",
+        "Handwerkern & Händlern.*"
+      ]
+    },
+    {
+      "type": "warning",
+      "say": "Aber: Versichert ist nur, was nach Vertragsbeginn passiert, meist mit drei Monaten Wartezeit.",
+      "lines": [
+        "Nur Ärger, der",
+        "[später] entsteht."
+      ],
+      "note": "Wartezeit meist 3 Monate",
+      "icon": "clock"
+    },
+    {
+      "type": "cta",
+      "say": "Bist du für den Ernstfall abgesichert? Kostenloser Check, Link in der Bio.",
+      "question": [
+        "Bist du für den",
+        "[Ernstfall] bereit?"
+      ]
+    }
+  ]
+}

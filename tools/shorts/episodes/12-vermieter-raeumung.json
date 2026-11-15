@@ -1,0 +1,83 @@
+{
+  "id": "12-vermieter-raeumung",
+  "order": 12,
+  "topic": "vermieter",
+  "style": "cartoon",
+  "title": "Mieter zieht nicht aus? So teuer wird das",
+  "caption": "Mieter zieht nicht aus? Kündigung durchsetzen, Räumungsklage, Gerichtsvollzieher – das kann Monate dauern. Beispiel: 1.100 € Miete, 8 Monate = 8.800 € weg, plus Anwalt, Gericht und Räumung. Vermieterrechtsschutz plus Mietausfallschutz (je nach Tarif). Kostenloser Check über den Link in der Bio.\n\n#vermieter #räumungsklage #mietrecht #immobilien #mietausfall",
+  "youtube": {
+    "title": "Mieter zieht nicht aus? So teuer kann das werden #shorts",
+    "description": "Räumungsklage kann Monate dauern. Vermieterrechtsschutz übernimmt je nach Tarif Kosten des Räumungsverfahrens, Mietausfallschutz der ARAG ersetzt ausfallende Miete.",
+    "tags": [
+      "Vermieter",
+      "Räumungsklage",
+      "Mietausfall",
+      "Vermieterrechtsschutz",
+      "Immobilien"
+    ]
+  },
+  "fine": "* je nach Tarif. Mietausfallschutz als Zusatzbaustein in ausgewählten Tarifen; Leerstand und bestehende Rückstände sind nicht versichert. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+  "beats": [
+    {
+      "type": "hook",
+      "say": "Dein Mieter zieht einfach nicht aus?",
+      "lines": [
+        "Mieter zieht",
+        "[einfach nicht aus?]"
+      ],
+      "icon": "house"
+    },
+    {
+      "type": "list",
+      "say": "Dann wird es zäh: Kündigung durchsetzen, Räumungsklage, Gerichtsvollzieher. Das kann Monate dauern.",
+      "title": [
+        "Dann wird's zäh:"
+      ],
+      "items": [
+        "Kündigung durchsetzen",
+        "Räumungsklage",
+        "Gerichtsvollzieher"
+      ],
+      "mark": "num",
+      "note": "Das kann Monate dauern."
+    },
+    {
+      "type": "cost",
+      "say": "Bei 1.100 Euro Miete und acht Monaten fehlen dir 8.800 Euro. Plus Anwalt, Gericht und Räumung.",
+      "title": "Bei 1.100 € Miete, 8 Monate:",
+      "big": "– 8.800 €",
+      "note": "Beispielrechnung",
+      "itemsTitle": "Plus:",
+      "items": [
+        "Anwalt",
+        "Gericht",
+        "Räumung"
+      ]
+    },
+    {
+      "type": "solution",
+      "say": "Der Vermieterrechtsschutz übernimmt je nach Tarif die Kosten fürs Räumungsverfahren. Und der Mietausfallschutz ersetzt dir die Miete, bis zu zwölf Monate.",
+      "product": [
+        "Vermieter-",
+        "rechtsschutz"
+      ],
+      "lines": [
+        "übernimmt Kosten",
+        "der Räumung.*"
+      ],
+      "highlight": "+ Mietausfallschutz",
+      "highlightLines": [
+        "ersetzt die Miete –",
+        "bis zu 12 Monate.*"
+      ]
+    },
+    {
+      "type": "cta",
+      "say": "Ist deine Wohnung abgesichert? Mach den kostenlosen Check, Link in der Bio.",
+      "question": [
+        "Ist deine Wohnung",
+        "[abgesichert?]"
+      ]
+    }
+  ]
+}

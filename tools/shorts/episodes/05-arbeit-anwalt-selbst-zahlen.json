@@ -1,0 +1,73 @@
+{
+  "id": "05-arbeit-anwalt-selbst-zahlen",
+  "order": 5,
+  "topic": "arbeit",
+  "style": "whiteboard",
+  "title": "Gewonnen – und trotzdem den Anwalt zahlen?",
+  "caption": "Du gewinnst vor dem Arbeitsgericht und zahlst trotzdem deinen Anwalt? In der 1. Instanz trägt jede Seite ihre Anwaltskosten selbst (§ 12a ArbGG). Arbeitsrechtsschutz übernimmt das je nach Tarif – für künftige Fälle, Wartezeit beachten. Kostenloser Check über den Link in der Bio.\n\n#arbeitsrecht #arbeitsgericht #kündigung #rechtsschutz #job",
+  "youtube": {
+    "title": "Vor Gericht gewonnen und trotzdem zahlen? Arbeitsrecht erklärt #shorts",
+    "description": "Vor dem Arbeitsgericht trägt in der 1. Instanz jede Seite ihre Anwaltskosten selbst (§ 12a ArbGG). Arbeitsrechtsschutz je nach Tarif, nur für künftige Fälle.",
+    "tags": [
+      "Arbeitsrecht",
+      "Arbeitsgericht",
+      "Anwaltskosten",
+      "Arbeitsrechtsschutz",
+      "Rechtsschutz"
+    ]
+  },
+  "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+  "beats": [
+    {
+      "type": "hook",
+      "say": "Du gewinnst vor Gericht und zahlst trotzdem deinen Anwalt?",
+      "lines": [
+        "Du gewinnst",
+        "vor Gericht –",
+        "und [zahlst trotzdem?]"
+      ],
+      "icon": "gavel"
+    },
+    {
+      "type": "fact",
+      "say": "Im Arbeitsrecht ist das normal. In der ersten Instanz zahlt jede Seite ihren Anwalt selbst, egal wie es ausgeht.",
+      "kicker": [
+        "Im Arbeitsrecht normal:"
+      ],
+      "big": "§ 12a ArbGG",
+      "lines": [
+        "1. Instanz: Jede Seite",
+        "zahlt ihren Anwalt selbst."
+      ],
+      "icon": "money"
+    },
+    {
+      "type": "cost",
+      "say": "Bei einer Kündigungsschutzklage ist das je nach Gehalt schnell ein vierstelliger Betrag.",
+      "title": "Anwalt bei Kündigungsschutzklage:",
+      "big": "schnell 4-stellig",
+      "note": "je nach Gehalt bzw. Streitwert",
+      "icon": "bill"
+    },
+    {
+      "type": "solution",
+      "say": "Mit Arbeitsrechtsschutz übernimmt die Versicherung je nach Tarif deine Anwaltskosten. Für künftige Fälle, nach der Wartezeit.",
+      "product": [
+        "Arbeits-",
+        "rechtsschutz"
+      ],
+      "lines": [
+        "übernimmt deine",
+        "Anwaltskosten.*"
+      ]
+    },
+    {
+      "type": "cta",
+      "say": "Wie gut bist du im Job geschützt? Mach den kostenlosen Check, Link in der Bio.",
+      "question": [
+        "Wie gut bist du",
+        "[im Job geschützt?]"
+      ]
+    }
+  ]
+}

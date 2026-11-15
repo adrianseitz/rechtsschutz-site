@@ -58,13 +58,27 @@ Das wirkt sofort, ohne Neustart. Erst dann erscheint für Besucher die Cookie-Ab
 Unter **Statistik** lassen sich Termine und Abschlüsse als Datei für den Import in Google Ads herunterladen
 (Conversion-Aktionen vom Typ „Import“ mit den Namen `CRM Termin` und `CRM Abschluss`).
 
+## 4b. Video-Automatik (TikTok, Instagram, YouTube Shorts)
+
+Läuft als eigener Docker-Service `shorts` (wird mit `docker compose up -d --build` bzw. dem Auto-Update gebaut; der
+erste Bau dauert wegen Chromium einige Minuten). Er erstellt die Videos aus `tools/shorts/episodes/` und postet sie
+zum Termin. Alles Weitere im CRM unter **Videos**:
+
+1. Konto bei [Upload-Post](https://www.upload-post.com) anlegen (Basic-Tarif, sonst fehlt TikTok), Profil anlegen,
+   TikTok, Instagram (Business/Creator) und YouTube verbinden, API-Schlüssel + Profilname im CRM eintragen.
+2. Konto bei [ElevenLabs](https://elevenlabs.io) (Starter reicht), API-Schlüssel eintragen, Stimme wählen, Probe hören.
+3. Zeitplan wählen und **Automatik starten**. Pausieren geht jederzeit mit einem Klick.
+
+Die Schlüssel werden verschlüsselt gespeichert (`LEAD_ENCRYPTION_KEY`). Logs: `docker compose logs -f shorts`.
+Neue Themen = neue Dateien in `tools/shorts/episodes/` (siehe `tools/shorts/README.md`).
+
 ## 5. Laufender Betrieb
 
 | Aufgabe | Befehl (im Ordner `rechtsschutz-site`) |
 |---|---|
 | Neuen Stand von GitHub übernehmen | automatisch alle 15 Min. (einmalig einschalten: `bash deploy/auto.sh`); sofort: `bash deploy/update.sh` |
 | Datensicherung | läuft täglich automatisch; manuell: `bash deploy/backup.sh` → `deploy/backups/` |
-| Logs ansehen | `docker compose logs -f app` |
+| Logs ansehen | `docker compose logs -f app` (Videos: `docker compose logs -f shorts`) |
 | Neustart | `docker compose restart` |
 | CRM-Passwort ändern | `.env` → `ADMIN_PASSWORD` ändern, dann `docker compose up -d` |
 

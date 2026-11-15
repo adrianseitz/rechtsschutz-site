@@ -1,0 +1,235 @@
+// worker.mjs: läuft dauerhaft neben der Website (Docker-Service „shorts“).
+// Jede Minute: Aufträge aus dem CRM erledigen → laufende Uploads prüfen → die nächsten Videos vorab erstellen
+// (mit ElevenLabs-Stimme, sobald Schlüssel + Stimme im CRM hinterlegt sind) → zum Termin posten (Upload-Post).
+import { createHash } from "node:crypto";
+import { existsSync } from "node:fs";
+import { mkdir, readFile, readdir, rename, rm, writeFile } from "node:fs/promises";
+import { execFileSync } from "node:child_process";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { renderEpisode } from "../render.mjs";
+import { P, decrypt, ensureDirs, log, ownFile, readJson, takeJobs, trimLog, writeJson } from "./store.mjs";
+import { elevenlabsUsage, tts, uploadStatus, uploadVideo } from "./services.mjs";
+import { berlin, dueSlot, nextSlotLabel } from "./schedule.mjs";
+
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+const EPISODES = join(ROOT, "episodes");
+const SITE = (process.env.NEXT_PUBLIC_SITE_URL || "https://www.seitz-rechtsschutz.de").replace(/\/$/, "");
+const TICK = +(process.env.SHORTS_TICK_MS || 60_000);
+const AHEAD = 3;   // so viele Videos liegen fertig bereit
+const SLUG = { vermieter: "/vermieterrechtsschutz", firma: "/firmenrechtsschutz", arbeit: "/arbeitsrechtsschutz", privat: "/privatrechtsschutz" };
+const PLATFORMS = ["tiktok", "instagram", "youtube"];
+const sha = (s) => createHash("sha1").update(s).digest("hex");
+const now = () => new Date().toISOString();
+const msg = (e) => (e instanceof Error ? e.message : String(e)).slice(0, 300);
+
+// ---------- Bibliothek ----------
+async function loadLibrary() {
+  const files = (await readdir(EPISODES).catch(() => [])).filter((f) => f.endsWith(".json"));
+  const eps = [];
+  for (const f of files) {
+    try {
+      const ep = JSON.parse(await readFile(join(EPISODES, f), "utf8"));
+      if (ep.id && ["whiteboard", "cartoon"].includes(ep.style) && Array.isArray(ep.beats) && ep.beats.length) eps.push(ep);
+    } catch (e) { await log("fehler", `Episode ${f} unlesbar: ${msg(e)}`); }
+  }
+  return eps.sort((a, b) => (a.order ?? 999) - (b.order ?? 999) || a.id.localeCompare(b.id));
+}
+// nur was im Video zu sehen/hören ist – eine geänderte Bildunterschrift erzeugt kein neues Video
+const epHash = (ep) => sha(JSON.stringify({ style: ep.style, beats: ep.beats, fine: ep.fine })).slice(0, 12);
+const sayHash = (ep) => sha(JSON.stringify(ep.beats.map((b) => b.say))).slice(0, 10);
+const voiceSig = (s) => (s.voiceId ? sha([s.voiceId, s.speed ?? 1.1, s.model || "eleven_multilingual_v2"].join("|")).slice(0, 10) : "none");
+
+function keysOf(settings) {
+  const k = settings.keys || {};
+  const get = (v) => { try { return decrypt(v || ""); } catch { return ""; } };
+  return { el: get(k.elevenlabs), up: get(k.uploadpost) };
+}
+
+// ---------- Stimme ----------
+async function makeVoice(ep, settings, key) {
+  const dir = join(P.voice, `${ep.id}-${voiceSig(settings)}-${sayHash(ep)}`);   // neue Aufnahme nur bei geändertem Sprechertext
+  await mkdir(dir, { recursive: true }); await ownFile(dir);
+  let chars = 0;
+  for (const [i, b] of ep.beats.entries()) {
+    const f = join(dir, `beat-${i}.mp3`);
+    if (existsSync(f)) continue;
+    const buf = await tts({ key, voiceId: settings.voiceId, text: b.say, speed: settings.speed ?? 1.1, model: settings.model || "eleven_multilingual_v2", previous: ep.beats[i - 1]?.say, next: ep.beats[i + 1]?.say });
+    await writeFile(f, buf); await ownFile(f); chars += b.say.length;
+  }
+  return { dir, chars };
+}
+
+// ---------- Video erstellen ----------
+async function render(ep, settings, keys, state) {
+  const e = (state.episodes[ep.id] ||= {});
+  const wasPosted = e.status === "gepostet";   // erneut erstellt, aber nicht noch einmal posten
+  Object.assign(e, { status: "rendert", error: null });
+  state.busy = `Erstellt gerade: ${ep.title}`;
+  await writeJson(P.state, state);
+  try {
+    let voiceDir = null, voiced = false;
+    if (keys.el && settings.voiceId) {
+      try { const v = await makeVoice(ep, settings, keys.el); voiceDir = v.dir; voiced = true; if (v.chars) await log("stimme", `Stimme aufgenommen: ${ep.title} (${v.chars} Zeichen)`); }
+      catch (err) { await log("fehler", `Stimme für „${ep.title}“ fehlgeschlagen – Video ohne Stimme: ${msg(err)}`); }
+    }
+    const out = join(P.videos, `${ep.id}.mp4`), tmp = join(P.videos, `${ep.id}.tmp.mp4`), thumb = join(P.videos, `${ep.id}.jpg`);
+    const r = await renderEpisode({ episode: ep, out: tmp, voiceDir, workers: +process.env.SHORTS_WORKERS || 1, log: () => {} });
+    await rename(tmp, out); await ownFile(out);
+    execFileSync("ffmpeg", ["-y", "-v", "error", "-ss", String((r.duration * 0.55).toFixed(2)), "-i", out, "-frames:v", "1", "-vf", "scale=360:-1", "-q:v", "4", thumb]);
+    await ownFile(thumb);
+    Object.assign(e, { status: wasPosted ? "gepostet" : "bereit", video: `${ep.id}.mp4`, thumb: `${ep.id}.jpg`, duration: Math.round(r.duration * 10) / 10, voiced, voiceSig: voiced ? voiceSig(settings) : "none", epHash: epHash(ep), renderedAt: now(), error: null });
+    await log("video", `Video fertig: ${ep.title} (${voiced ? "mit Stimme" : "ohne Stimme"}, ${e.duration} s)`);
+  } catch (err) {
+    Object.assign(e, { status: "fehler", error: `Erstellen fehlgeschlagen: ${msg(err)}` });
+    await log("fehler", `Video „${ep.title}“: ${msg(err)}`);
+  } finally {
+    state.busy = null;
+  }
+}
+
+function needsRender(e, ep, settings, keys) {
+  if (!e || !e.status) return true;
+  if (["gepostet", "wird gepostet", "fehler"].includes(e.status)) return false;
+  if (!e.video || !existsSync(join(P.videos, e.video))) return true;
+  if (e.epHash !== epHash(ep)) return true;
+  if (keys.el && settings.voiceId && e.voiceSig !== voiceSig(settings)) return true;
+  return false;
+}
+
+// ---------- Posten ----------
+function youtubeDescription(ep) {
+  const link = `${SITE}${SLUG[ep.topic] || "/"}?utm_source=youtube&utm_medium=social&utm_campaign=shorts&utm_content=${ep.id}`;
+  return [ep.youtube?.description || ep.title, "", `Kostenloser Rechtsschutz-Check: ${link}`, "",
+    `Adrian Seitz – gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG. Impressum: ${SITE}/impressum`].join("\n");
+}
+
+async function post(ep, settings, keys, state, why) {
+  const e = (state.episodes[ep.id] ||= {});
+  const platforms = (settings.platforms || PLATFORMS).filter((p) => PLATFORMS.includes(p));
+  if (!platforms.length) { await log("fehler", "Keine Plattform ausgewählt – nichts gepostet."); return false; }
+  const requestId = `${ep.id}-${Date.now()}`;
+  Object.assign(e, { status: "wird gepostet", requestId, postStartedAt: now(), platforms: Object.fromEntries(platforms.map((p) => [p, { status: "queued" }])), error: null, why });
+  await writeJson(P.state, state);
+  try {
+    await uploadVideo({ key: keys.up, user: settings.uploadUser, platforms, file: join(P.videos, e.video), ep, requestId, youtubeDescription: youtubeDescription(ep), aiLabel: settings.aiLabel !== false, promo: settings.promo !== false });
+    await log("post", `Wird veröffentlicht: ${ep.title} (${platforms.join(", ")})`);
+    return true;
+  } catch (err) {
+    Object.assign(e, { status: "fehler", error: `Posten fehlgeschlagen: ${msg(err)}` });
+    await log("fehler", `Posten „${ep.title}“: ${msg(err)}`);
+    return false;
+  }
+}
+
+const FINAL = new Set(["completed", "failed", "skipped"]);
+async function poll(id, e, keys) {
+  if (!keys.up) return;
+  let st;
+  try { st = await uploadStatus({ key: keys.up, requestId: e.requestId }); } catch (err) { e.pollError = msg(err); return; }
+  const results = Array.isArray(st.results) ? st.results : [];
+  for (const r of results) {
+    const s = r.skipped ? "skipped" : r.status || (r.success ? "completed" : r.success === false ? "failed" : "processing");
+    const url = typeof r.post_url === "string" && /^https?:\/\//.test(r.post_url) ? r.post_url : null;
+    e.platforms[r.platform] = { status: s, url, inbox: !!r.fallback_to_inbox, message: r.success === false || s === "failed" ? String(r.message || r.error || "").slice(0, 200) : undefined };
+  }
+  const states = Object.values(e.platforms || {}).map((p) => p.status);
+  const allFinal = results.length > 0 && states.every((s) => FINAL.has(s));
+  const age = Date.now() - Date.parse(e.postStartedAt || now());
+  if (st.status === "completed" || allFinal) {
+    const ok = states.some((s) => s === "completed");
+    Object.assign(e, ok ? { status: "gepostet", postedAt: now() } : { status: "fehler", error: "Posten auf allen Plattformen fehlgeschlagen" });
+    const failed = Object.entries(e.platforms).filter(([, p]) => p.status === "failed").map(([k]) => k);
+    await log(ok ? "post" : "fehler", ok ? `Veröffentlicht: ${id}${failed.length ? ` (fehlgeschlagen: ${failed.join(", ")})` : ""}` : `Posten fehlgeschlagen: ${id}`);
+  } else if (st.status === "failed" || st.status === "not_found" || age > 3 * 3600_000) {
+    Object.assign(e, { status: "fehler", error: st.message ? `Posten fehlgeschlagen: ${String(st.message).slice(0, 200)}` : "Posten fehlgeschlagen (keine Rückmeldung)" });
+    await log("fehler", `Posten fehlgeschlagen: ${id}`);
+  }
+}
+
+// ---------- Hauptschleife ----------
+let lastUsage = 0;
+async function tick() {
+  const settings = await readJson(P.settings, {});
+  const keys = keysOf(settings);
+  const state = await readJson(P.state, {});
+  state.episodes ||= {};
+  const lib = await loadLibrary();
+  const byId = new Map(lib.map((ep) => [ep.id, ep]));
+  state.library = lib.map((ep) => ({ id: ep.id, order: ep.order, title: ep.title, topic: ep.topic, style: ep.style, caption: ep.caption, beats: ep.beats.length }));
+  const disabled = new Set(settings.disabled || []);
+
+  // 1) Aufträge aus dem CRM
+  for (const job of await takeJobs()) {
+    const ep = byId.get(job.id);
+    if (job.type === "usage") { lastUsage = 0; continue; }
+    if (!ep) continue;
+    if (job.type === "render") { delete state.episodes[ep.id]?.error; await render(ep, settings, keys, state); }
+    else if (job.type === "reset") { delete state.episodes[ep.id]; await log("info", `Wieder eingereiht: ${ep.title}`); }
+    else if (job.type === "post") {
+      if (!keys.up || !settings.uploadUser) { await log("fehler", "Posten nicht möglich: Upload-Post-Schlüssel oder Profilname fehlt."); continue; }
+      const e = state.episodes[ep.id];
+      if (!e || needsRender(e, ep, settings, keys) || e.status === "fehler" && !existsSync(join(P.videos, e.video || "-"))) await render(ep, settings, keys, state);
+      if (state.episodes[ep.id]?.video) await post(ep, settings, keys, state, "manuell");
+    }
+    await writeJson(P.state, state);
+  }
+
+  // 2) laufende Uploads
+  for (const [id, e] of Object.entries(state.episodes)) if (e.status === "wird gepostet" && e.requestId) await poll(id, e, keys);
+
+  // 3) Warteschlange + vorab erstellen (ein Video pro Durchlauf, damit Aufträge nicht lange warten)
+  const queue = lib.filter((ep) => !disabled.has(ep.id) && !["gepostet", "wird gepostet"].includes(state.episodes[ep.id]?.status));
+  state.queue = queue.map((ep) => ep.id);
+  for (const ep of queue.slice(0, AHEAD)) {
+    if (needsRender(state.episodes[ep.id], ep, settings, keys)) { await render(ep, settings, keys, state); break; }
+  }
+
+  // 4) Termin fällig?
+  if (settings.enabled) {
+    const slot = dueSlot(settings, state.lastSlot);
+    if (slot) {
+      const next = queue.find((ep) => state.episodes[ep.id]?.status === "bereit");
+      if (!keys.up || !settings.uploadUser) await log("fehler", "Termin verpasst: Upload-Post-Schlüssel oder Profilname fehlt.");
+      else if (!next) await log("fehler", "Termin verpasst: kein fertiges Video in der Warteschlange.");
+      else await post(next, settings, keys, state, `Termin ${slot}`);
+      state.lastSlot = slot;
+    }
+  }
+  state.nextSlot = settings.enabled ? nextSlotLabel(settings, state.lastSlot) : null;
+
+  // 5) Verbrauch der Stimme (stündlich)
+  if (keys.el && Date.now() - lastUsage > 3600_000) {
+    lastUsage = Date.now();
+    try { state.credits = { ...(await elevenlabsUsage(keys.el)), at: now() }; } catch (err) { state.credits = { error: msg(err), at: now() }; }
+  }
+
+  // alte Sprachaufnahmen von Episoden, die es nicht mehr gibt, aufräumen
+  for (const d of await readdir(P.voice).catch(() => [])) if (![...byId.keys()].some((id) => d.startsWith(id + "-"))) await rm(join(P.voice, d), { recursive: true, force: true });
+
+  state.heartbeat = now();
+  state.clock = berlin();
+  state.worker = { site: SITE };
+  await writeJson(P.state, state);
+}
+
+async function main() {
+  await ensureDirs();
+  // Ein Neustart mitten im Erstellen: diese Videos neu erstellen
+  const st = await readJson(P.state, {});
+  for (const e of Object.values(st.episodes || {})) if (e.status === "rendert") e.status = "";
+  st.busy = null;
+  await writeJson(P.state, st);
+  await log("info", "Video-Automatik gestartet");
+  let stop = false;
+  for (const sig of ["SIGTERM", "SIGINT"]) process.on(sig, () => { stop = true; process.exit(0); });
+  while (!stop) {
+    const t0 = Date.now();
+    try { await tick(); } catch (err) { await log("fehler", `Durchlauf: ${msg(err)}`); }
+    await trimLog();
+    await new Promise((r) => setTimeout(r, Math.max(5_000, TICK - (Date.now() - t0))));
+  }
+}
+
+if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) main();
+export { tick, loadLibrary };

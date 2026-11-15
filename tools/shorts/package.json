@@ -1,0 +1,9 @@
+{
+  "name": "seitz-shorts",
+  "private": true,
+  "type": "module",
+  "description": "Erklärvideos (Whiteboard + Cartoon) für TikTok, Instagram Reels und YouTube Shorts – rendern, vertonen, posten",
+  "dependencies": {
+    "puppeteer-core": "25.12.0"
+  }
+}

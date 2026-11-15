@@ -1,0 +1,90 @@
+{
+  "id": "02-arbeit-kuendigung-3-wochen",
+  "order": 2,
+  "topic": "arbeit",
+  "style": "cartoon",
+  "title": "Kündigung bekommen? Du hast nur 3 Wochen",
+  "caption": "Kündigung im Briefkasten? Für die Kündigungsschutzklage hast du nur 3 Wochen ab Zugang. Und vor dem Arbeitsgericht zahlst du deinen Anwalt in der 1. Instanz selbst – auch wenn du gewinnst. Arbeitsrechtsschutz übernimmt das je nach Tarif, aber nur für künftige Fälle. Kostenloser Check über den Link in der Bio.\n\n#arbeitsrecht #kündigung #job #rechtsschutz #arbeitnehmer",
+  "youtube": {
+    "title": "Kündigung bekommen? Diese Frist musst du kennen #shorts",
+    "description": "Nach Zugang der Kündigung hast du 3 Wochen für die Kündigungsschutzklage (§ 4 KSchG). In der 1. Instanz zahlt jede Seite ihren Anwalt selbst (§ 12a ArbGG). Arbeitsrechtsschutz je nach Tarif, nur für künftige Fälle.",
+    "tags": [
+      "Kündigung",
+      "Arbeitsrecht",
+      "Kündigungsschutzklage",
+      "Arbeitsrechtsschutz",
+      "Rechtsschutz"
+    ]
+  },
+  "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+  "beats": [
+    {
+      "type": "hook",
+      "say": "Du hast eine Kündigung im Briefkasten?",
+      "lines": [
+        "Kündigung im",
+        "[Briefkasten?]"
+      ],
+      "icon": "letter"
+    },
+    {
+      "type": "fact",
+      "say": "Dann läuft die Uhr. Für eine Kündigungsschutzklage hast du nur drei Wochen ab Zugang.",
+      "kicker": [
+        "Jetzt läuft die Uhr:"
+      ],
+      "big": "3 Wochen",
+      "lines": [
+        "Frist für die Kündigungsschutzklage –",
+        "ab Zugang der Kündigung."
+      ],
+      "icon": "calendar",
+      "note": "§ 4 KSchG"
+    },
+    {
+      "type": "fact",
+      "say": "Und vor dem Arbeitsgericht zahlst du deinen Anwalt in der ersten Instanz selbst. Auch wenn du gewinnst.",
+      "kicker": [
+        "Und vor dem",
+        "Arbeitsgericht:"
+      ],
+      "big": "Du zahlst selbst",
+      "lines": [
+        "deinen Anwalt in der 1. Instanz –",
+        "[auch wenn du gewinnst.]"
+      ],
+      "icon": "gavel",
+      "note": "§ 12a ArbGG"
+    },
+    {
+      "type": "solution",
+      "say": "Genau dafür gibt es den Arbeitsrechtsschutz. Er übernimmt je nach Tarif Anwalt und Gericht.",
+      "product": [
+        "Arbeits-",
+        "rechtsschutz"
+      ],
+      "lines": [
+        "übernimmt Anwalt",
+        "und Gericht.*"
+      ]
+    },
+    {
+      "type": "warning",
+      "say": "Aber nur für künftige Fälle, meist mit drei Monaten Wartezeit. Also lieber jetzt absichern.",
+      "lines": [
+        "Nur für künftige Fälle –",
+        "[jetzt] absichern."
+      ],
+      "note": "Wartezeit meist 3 Monate",
+      "icon": "clock"
+    },
+    {
+      "type": "cta",
+      "say": "Bist du im Job abgesichert? Mach den kostenlosen Check, Link in der Bio.",
+      "question": [
+        "Bist du im Job",
+        "[abgesichert?]"
+      ]
+    }
+  ]
+}
