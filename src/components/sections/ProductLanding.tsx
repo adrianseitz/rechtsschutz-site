@@ -22,7 +22,7 @@ import { SectionHeading } from "../ui/SectionHeading";
 const TOPIC_ICONS: Record<Product["key"], string[]> = {
   privat: ["ShoppingBag", "Coins", "Landmark", "Receipt", "Gavel", "MessageCircle"],
   arbeit: ["DoorOpen", "Mailbox", "Award", "Wallet", "FileSignature"],
-  vermieter: ["Scale", "FileText", "KeyRound", "Receipt", "Users"],
+  vermieter: ["Wallet", "Scale", "FileText", "KeyRound", "Receipt", "Users"],
   firma: ["Users", "FileSignature", "Receipt", "Store", "Layers"],
 };
 const WAIT_AREA: Record<Product["key"], string> = {
@@ -101,7 +101,7 @@ export function ProductLanding({ product }: { product: Product }) {
 
       <CostCalculatorSection defaultMode={product.key === "arbeit" ? "arbeit" : "zivil"} lockMode={product.key === "arbeit"} ctaHref={checkHref} />
 
-      <Leistungen />
+      <Leistungen product={product.key} />
 
       <section className="pb-8 pt-8">
         <div className="container">

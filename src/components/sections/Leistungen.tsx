@@ -1,5 +1,6 @@
 import { Check, X } from "lucide-react";
 import { SectionHeading } from "../ui/SectionHeading";
+import type { ProductKey } from "@/lib/products";
 
 /**
  * Das Kernversprechen in klaren Worten: was eine Rechtsschutzversicherung im versicherten Fall übernimmt –
@@ -15,12 +16,18 @@ const COVERED = [
 
 const NOT_COVERED = [
   { title: "Laufende und absehbare Streitfälle", text: "Was schon begonnen hat oder sich abzeichnet, lässt sich nicht nachträglich versichern." },
-  { title: "Die Forderung selbst", text: "Bezahlt werden die Kosten des Rechtsstreits – nicht die offene Miete, der Kaufpreis oder der Schaden." },
+  { title: "Die Forderung selbst", text: "Bezahlt werden die Kosten des Rechtsstreits – nicht der Kaufpreis oder der Schaden. Ausnahme für Vermieter: der Mietausfallschutz als Zusatzbaustein." },
   { title: "Nicht gewählte Bereiche", text: "Versichert ist nur, was im Vertrag steht. Vermietung und Selbstständigkeit brauchen eigene Bausteine." },
   { title: "Vorsätzliche Straftaten", text: "Wer vorsätzlich eine Straftat begeht, hat dafür keinen Versicherungsschutz." },
 ];
 
-export function Leistungen() {
+const RENT = { title: "Ausfallende Miete – mit Mietausfallschutz", text: "Als Zusatzbaustein: Zahlt dein Mieter nicht, wird die Miete samt laufender Nebenkosten ersetzt – je nach Vereinbarung für bis zu 6 oder 12 Monate." };
+
+export function Leistungen({ product }: { product?: ProductKey }) {
+  const covered = product === "vermieter" ? [RENT, ...COVERED.slice(0, 4)] : COVERED;
+  const notCovered = product === "vermieter"
+    ? NOT_COVERED.map((c) => (c.title === "Die Forderung selbst" ? { title: "Leerstand und alte Rückstände", text: "Der Mietausfallschutz gilt nicht für Leerstand ohne Mietverhältnis und nicht für Rückstände, die beim Abschluss schon bestehen." } : c))
+    : NOT_COVERED;
   return (
     <section className="py-16 sm:py-20" id="leistungen">
       <div className="container">
@@ -30,7 +37,7 @@ export function Leistungen() {
           <div className="rounded-[28px] border border-navy bg-white p-6 sm:p-9">
             <h3 className="text-xl font-semibold tracking-[-0.03em] text-navy">Das zahlt die Versicherung</h3>
             <ul className="mt-5 divide-y divide-line">
-              {COVERED.map((c) => (
+              {covered.map((c) => (
                 <li key={c.title} className="flex gap-4 py-4 first:pt-0 last:pb-0">
                   <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-sun text-navy"><Check className="h-4 w-4" strokeWidth={2.5} aria-hidden /></span>
                   <div>
@@ -44,7 +51,7 @@ export function Leistungen() {
           <div className="rounded-[28px] bg-paper p-6 sm:p-9">
             <h3 className="text-xl font-semibold tracking-[-0.03em] text-navy">Das ist nicht versichert</h3>
             <ul className="mt-5 divide-y divide-navy/10">
-              {NOT_COVERED.map((c) => (
+              {notCovered.map((c) => (
                 <li key={c.title} className="flex gap-4 py-4 first:pt-0 last:pb-0">
                   <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full border border-navy/25 text-navy/60"><X className="h-4 w-4" strokeWidth={2.5} aria-hidden /></span>
                   <div>

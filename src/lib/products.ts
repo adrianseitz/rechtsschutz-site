@@ -108,22 +108,23 @@ export const products: Record<ProductKey, Product> = {
     name: "Vermieterrechtsschutz",
     short: "Vermieter",
     icon: "House",
-    cardText: "Für zukünftige Auseinandersetzungen rund um deine vermietete Wohnung oder dein Haus.",
-    cardTopics: ["Mietstreit", "Betriebskosten", "Räumung"],
+    cardText: "Für zukünftige Auseinandersetzungen rund um deine vermietete Wohnung oder dein Haus – auf Wunsch mit Mietausfallschutz.",
+    cardTopics: ["Mietstreit", "Räumung", "Mietausfallschutz"],
     meta: {
       title: "Vermieterrechtsschutz – für deine vermietete Immobilie",
       description:
-        "Vermieterrechtsschutz verständlich erklärt: Mietstreitigkeiten, Kündigung, Räumungsklage, Betriebskosten. Persönliche Beratung und kostenloser Check.",
+        "Vermieterrechtsschutz verständlich erklärt: Mietstreit, Kündigung, Räumungsklage, Betriebskosten – auf Wunsch mit Mietausfallschutz. Persönliche Beratung und kostenloser Check.",
     },
     hero: {
       eyebrow: "Vermieterrechtsschutz",
       title: "Vermieterrechtsschutz, der zu deinen Immobilien passt.",
       subtitle:
-        "Mietrückstand, Nebenkosten, Räumung: Ein Rechtsstreit mit Mietern wird schnell teuer. Finde in 60 Sekunden heraus, welcher Schutz zu deiner Wohnung oder deinem Haus passt – ich berate dich persönlich. Versichert sind künftige Streitfälle.",
+        "Mietrückstand, Nebenkosten, Räumung: Ein Rechtsstreit mit Mietern wird schnell teuer. Finde in 60 Sekunden heraus, welcher Schutz zu deiner Wohnung oder deinem Haus passt – auf Wunsch mit Mietausfallschutz. Versichert sind künftige Streitfälle.",
       cta: "Vermieterrechtsschutz prüfen",
     },
     topicsTitle: "Typische Themen für Vermieter",
     topics: [
+      { title: "Mietausfallschutz", text: "Zahlt dein Mieter nicht mehr, ersetzt der Mietausfallschutz der ARAG die ausfallende Miete samt laufender Nebenkosten – je nach Vereinbarung für bis zu 6 oder 12 Monate. Als Zusatzbaustein wählbar." },
       { title: "Mietstreitigkeiten", text: "Auseinandersetzungen mit Mietern über Pflichten aus dem Mietvertrag." },
       { title: "Kündigung von Mietverhältnissen", text: "Wenn eine Kündigung rechtlich durchgesetzt oder verteidigt werden muss." },
       { title: "Räumungsklagen", text: "Rechtliche Schritte, wenn eine Wohnung trotz beendetem Mietverhältnis nicht geräumt wird – Umfang laut Tarif." },
@@ -136,10 +137,11 @@ export const products: Record<ProductKey, Product> = {
       { title: "Vor dem Streit absichern", text: "Für Mietangelegenheiten gilt meist eine Wartezeit, häufig drei Monate. Ein bestehender Mietrückstand oder Streit lässt sich nicht nachträglich versichern." },
     ],
     notice:
-      "Leistungen wie die Übernahme von Kosten für Räumungsverfahren, Leistungsgrenzen und Selbstbeteiligungen unterscheiden sich je nach Tarif. Pauschale Zusagen sind deshalb nicht möglich – ich prüfe gern, was zu deiner Immobilie passt.",
+      "Der Mietausfallschutz ist ein Zusatzbaustein in ausgewählten Tarifen. Für ihn gilt eine Wartezeit von drei Monaten; Leerstand und bereits bestehende Zahlungsrückstände sind nicht versichert. Leistungen wie die Übernahme von Kosten für Räumungsverfahren, Leistungsgrenzen und Selbstbeteiligungen unterscheiden sich je nach Tarif. Pauschale Zusagen sind deshalb nicht möglich – ich prüfe gern, was zu deiner Immobilie passt.",
     faq: [
       { q: "Brauche ich für jede Wohnung einen eigenen Vertrag?", a: "Nicht unbedingt. Häufig lassen sich mehrere Wohneinheiten in einem Vertrag absichern. Entscheidend sind Anzahl und Art der Objekte." },
-      { q: "Sind ausstehende Mieten versichert?", a: "Rechtsschutz übernimmt – je nach Tarif – Kosten für die rechtliche Durchsetzung, ersetzt aber nicht die ausgefallene Miete selbst. Bereits bestehende Rückstände sind nicht versicherbar." },
+      { q: "Was ist, wenn mein Mieter nicht mehr zahlt?", a: "Der Rechtsschutz übernimmt – je nach Tarif – die Kosten, um deine Ansprüche durchzusetzen: Mahnverfahren, Anwalt, Gericht und Räumung. Die Miete selbst ersetzt er nicht. Dafür gibt es bei der ARAG den Mietausfallschutz als Zusatzbaustein: Er ersetzt die ausfallende Miete samt laufender Nebenkosten, je nach Vereinbarung für bis zu 6 oder 12 Monate." },
+      { q: "Was muss ich beim Mietausfallschutz beachten?", a: "Er lässt sich in ausgewählten Tarifen zum Vermieterrechtsschutz dazuwählen. Es gilt eine Wartezeit von drei Monaten. Nicht versichert sind Leerstand ohne Mietverhältnis und Zahlungsrückstände, die beim Abschluss schon bestehen oder bekannt sind. Die genauen Voraussetzungen gehe ich mit dir anhand der Bedingungen durch." },
       { q: "Kann ich die Beiträge von der Steuer absetzen?", a: "Die Beiträge hängen mit deinen Mieteinnahmen zusammen und lassen sich deshalb in der Regel als Werbungskosten bei den Einkünften aus Vermietung und Verpachtung ansetzen. Verbindlich klärt das deine Steuerberatung." },
       { q: "Kann ich die Kosten auf meine Mieter umlegen?", a: "Nein. Eine Rechtsschutzversicherung gehört nicht zu den umlagefähigen Betriebskosten und kann nicht über die Nebenkostenabrechnung weitergegeben werden." },
     ],
