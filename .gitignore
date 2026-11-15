@@ -6,3 +6,4 @@ data/*.ndjson
 data/*.json
 !data/.gitkeep
 deploy/backups
+tools/shorts/out/

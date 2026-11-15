@@ -69,7 +69,7 @@ export type CrmLead = {
 
 /** Kurzname der Quelle für Karten und Auswertungen. */
 export const channelShort = (c: string) =>
-  c.startsWith("Google Ads") ? "Google Ads" : c.startsWith("Meta Ads") ? "Meta Ads" : c.startsWith("Kampagne") ? c.replace(/ \/ .*$/, "") : c.startsWith("Suchmaschine") ? "Google organisch" : c.startsWith("Social") ? "Social" : c.startsWith("Verweis") ? "Verweis" : "Direkt";
+  c.startsWith("Google Ads") ? "Google Ads" : c.startsWith("Meta Ads") ? "Meta Ads" : c.startsWith("Kampagne") ? c.replace(/ \/ .*$/, "") : c.startsWith("Suchmaschine") ? "Google organisch" : c.startsWith("Social: ") ? c.slice(8) : c.startsWith("Social") ? "Social" : c.startsWith("Verweis") ? "Verweis" : "Direkt";
 
 /** Hat die Anfrage mindestens die Phase „Termin“ erreicht? */
 export const reachedAppointment = (l: { status: LeadStatus; history: { status: LeadStatus }[] }) =>

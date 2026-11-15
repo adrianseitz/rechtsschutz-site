@@ -58,6 +58,8 @@ export function classifySource(opts: { ref?: string; utm?: string; medium?: stri
   if (utm) {
     const paid = /cpc|paid|ads|ppc/.test((opts.medium || "").toLowerCase());
     if (/google/.test(utm)) return paid ? "Google Ads" : "Google";
+    if (!paid && /tiktok/.test(utm)) return "TikTok";
+    if (!paid && /youtube|^yt$/.test(utm)) return "YouTube";
     if (/facebook|fb|instagram|ig|meta/.test(utm)) return paid ? "Meta Ads (Facebook/Instagram)" : utm.includes("insta") || utm === "ig" ? "Instagram" : "Facebook";
     return `Kampagne: ${utm.replace(/[^a-z0-9._-]/g, "")}`;
   }

@@ -34,7 +34,11 @@ export function deriveChannel(a: Attribution): string {
   const med = (a.utm_medium || "").toLowerCase();
   const ref = (a.referrer || "").toLowerCase();
   if (a.gclid || (src.includes("google") && /cpc|paid|ppc|ads/.test(med))) return "Google Ads";
-  if (a.fbclid || /facebook|instagram|meta|fb|ig/.test(src)) return /cpc|paid|ads|social_paid/.test(med) || a.fbclid ? "Meta Ads" : "Social (organisch)";
+  const paid = /cpc|paid|ads|social_paid/.test(med);
+  if (!paid && /tiktok/.test(src)) return "Social: TikTok";
+  if (!paid && /youtube|^yt$/.test(src)) return "Social: YouTube";
+  if (!paid && /instagram|^ig$/.test(src)) return "Social: Instagram";
+  if (a.fbclid || /facebook|instagram|meta|fb|ig/.test(src)) return paid || a.fbclid ? "Meta Ads" : "Social (organisch)";
   if (src) return `Kampagne: ${src}${med ? ` / ${med}` : ""}`;
   if (/google\.|bing\.|duckduckgo\.|ecosia\./.test(ref)) return "Suchmaschine (organisch)";
   if (/facebook\.|instagram\.|t\.co|linkedin\./.test(ref)) return "Social (organisch)";
