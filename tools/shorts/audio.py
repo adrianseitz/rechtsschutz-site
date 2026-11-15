@@ -61,7 +61,20 @@ def music(dur):
     out[: int(SR * 0.3)] *= np.linspace(0, 1, int(SR * 0.3))
     return out
 
-def sfx(kind):
+def sfx(kind, dur=0.5):
+    if kind == "marker":   # Filzstift auf Whiteboard: gefiltertes Rauschen im Strich-Rhythmus
+        n = int(dur * SR); t = np.arange(n) / SR
+        noise = sosfilt(butter(2, [1800, 6500], "bp", fs=SR, output="sos"), rng.normal(0, 1, n))
+        rate = 6.5 + rng.uniform(-1, 1)
+        am = np.clip(np.sin(2 * np.pi * rate * t + rng.uniform(0, 6)), 0, 1) ** .6 * (0.6 + 0.4 * np.sin(2 * np.pi * 1.3 * t) ** 2)
+        edge = np.minimum(1, np.minimum(t / .03, (dur - t) / .05))
+        return noise * am * edge * 0.28
+    if kind == "erase":    # Tafelwischer
+        n = int(dur * SR); t = np.arange(n) / SR
+        noise = sosfilt(butter(2, [300, 2500], "bp", fs=SR, output="sos"), rng.normal(0, 1, n))
+        am = 0.5 + 0.5 * np.abs(np.sin(2 * np.pi * 2.8 * t))
+        edge = np.minimum(1, np.minimum(t / .05, (dur - t) / .1))
+        return noise * am * edge * 0.3
     if kind == "pop":
         n = int(0.09 * SR); t = np.arange(n) / SR
         return np.sin(2 * np.pi * (380 + 2600 * t) * t) * env(n, 0.002, 0.03) * 0.9
@@ -99,7 +112,7 @@ def main():
     data = json.load(open(sys.argv[1])); dur = data["duration"]
     mix = music(dur) * 0.55
     for e in data["sfx"]:
-        s = sfx(e["kind"]) * e.get("gain", 1)
+        s = sfx(e["kind"], e.get("dur", 0.5)) * e.get("gain", 1)
         i = int(e["time"] * SR); j = min(len(mix), i + len(s))
         if i < len(mix): mix[i:j] += s[: j - i]
     mix = np.tanh(mix * 1.1)  # sanft begrenzen
