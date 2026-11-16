@@ -2,8 +2,15 @@
   "name": "seitz-shorts",
   "private": true,
   "type": "module",
-  "description": "Erklärvideos (Whiteboard + Cartoon) für TikTok, Instagram Reels und YouTube Shorts – rendern, vertonen, posten",
+  "description": "Erklärvideos (3D-Studio, Whiteboard, Cartoon) für TikTok, Instagram Reels und YouTube Shorts – rendern, vertonen, posten",
   "dependencies": {
     "puppeteer-core": "25.12.0"
+  },
+  "devDependencies": {
+    "three": "0.170.0",
+    "esbuild": "^0.24.0"
+  },
+  "scripts": {
+    "build:three": "esbuild vendor/three-entry.js --bundle --format=iife --global-name=THREE --minify --outfile=vendor/three.iife.js"
   }
 }

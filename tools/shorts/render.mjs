@@ -4,6 +4,7 @@
 //   node render.mjs episodes/01-….json --out=out/01.mp4                 Video (Stimme optional: --voice=<ordner>)
 //   node render.mjs episodes/01-….json --sheet --out=out/01.jpg         Kontrollbild: 15 Momente als Raster
 //   Optionen: --voice=<ordner mit beat-0.mp3 …>  --chrome=<pfad>  --workers=2  --stills=1.5,7,12 (PNG-Einzelbilder)
+//             --style=studio3d|cartoon|whiteboard (überschreibt den Stil aus der Episode)
 //
 // Als Modul: import { renderEpisode } from './render.mjs'
 import puppeteer from "puppeteer-core";
@@ -15,8 +16,8 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { planTiming } from "./lib/timing.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const PLAYER = { whiteboard: join(HERE, "whiteboard/player.html"), cartoon: join(HERE, "cartoon/player.html") };
-const FPS = { whiteboard: 24, cartoon: 30 };
+const PLAYER = { whiteboard: join(HERE, "whiteboard/player.html"), cartoon: join(HERE, "cartoon/player.html"), studio3d: join(HERE, "studio3d/player.html") };
+const FPS = { whiteboard: 24, cartoon: 30, studio3d: 25 };
 
 function findChrome(p) {
   const list = [p, process.env.CHROME_PATH, "/usr/bin/chromium", "/usr/bin/chromium-browser", "/opt/google/chrome/chrome", "/usr/bin/google-chrome"];
@@ -87,6 +88,7 @@ async function frameJpeg(page, style, t) {
  */
 export async function renderEpisode(o) {
   const ep = typeof o.episode === "string" ? JSON.parse(readFileSync(o.episode, "utf8")) : o.episode;
+  if (o.style) ep.style = o.style;
   if (!PLAYER[ep.style]) throw new Error(`Unbekannter Stil: ${ep.style}`);
   const log = o.log || console.log;
   const voices = voiceFiles(ep, o.voiceDir);
@@ -97,7 +99,9 @@ export async function renderEpisode(o) {
   // eine Browser-Instanz je Arbeiter: Screenshots von Seiten im Hintergrund können sonst hängen bleiben
   const launch = () => puppeteer.launch({
     executablePath: findChrome(o.chrome), headless: true, protocolTimeout: 180_000,
-    args: ["--no-sandbox", "--allow-file-access-from-files", "--force-color-profile=srgb", "--disable-renderer-backgrounding", "--disable-background-timer-throttling", "--disable-backgrounding-occluded-windows", "--font-render-hinting=none", "--disable-dev-shm-usage"],
+    args: ["--no-sandbox", "--allow-file-access-from-files", "--force-color-profile=srgb", "--disable-renderer-backgrounding", "--disable-background-timer-throttling", "--disable-backgrounding-occluded-windows", "--font-render-hinting=none", "--disable-dev-shm-usage",
+      // 3D-Stil: WebGL ohne Grafikkarte (Software-Renderer)
+      ...(ep.style === "studio3d" ? ["--use-angle=swiftshader", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist"] : [])],
   });
   const browsers = [];
   const browser = await launch(); browsers.push(browser);
@@ -155,6 +159,6 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
   const episode = process.argv[2];
   if (!episode) { console.error("Aufruf: node render.mjs <episode.json> --out=<datei> [--sheet] [--voice=<ordner>]"); process.exit(1); }
   const out = args.out || join(HERE, "out", episode.replace(/^.*\//, "").replace(/\.json$/, args.sheet ? ".jpg" : ".mp4"));
-  renderEpisode({ episode, out, voiceDir: args.voice, chrome: args.chrome, workers: +args.workers || 2, sheet: !!args.sheet, stills: args.stills ? String(args.stills).split(",").map(Number) : null })
+  renderEpisode({ episode, out, style: args.style, voiceDir: args.voice, chrome: args.chrome, workers: +args.workers || 2, sheet: !!args.sheet, stills: args.stills ? String(args.stills).split(",").map(Number) : null })
     .catch((e) => { console.error(e); process.exit(1); });
 }

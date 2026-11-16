@@ -14,7 +14,7 @@ export function validateEpisode(ep, fileId = null) {
   const str = (v, min, max) => typeof v === "string" && v.trim().length >= min && v.length <= max;
   if (!/^[a-z0-9][a-z0-9-]{0,80}$/.test(ep.id || "")) err.push("id ungültig");
   if (fileId && ep.id !== fileId) err.push("id passt nicht zum Dateinamen");
-  if (!["whiteboard", "cartoon"].includes(ep.style)) err.push("style muss whiteboard oder cartoon sein");
+  if (!["whiteboard", "cartoon", "studio3d"].includes(ep.style)) err.push("style muss studio3d, whiteboard oder cartoon sein");
   if (!str(ep.title, 5, 120)) err.push("title fehlt");
   if (!str(ep.caption, 40, 2200)) err.push("caption fehlt oder zu lang");
   if (!str(ep.youtube?.title, 5, 100)) err.push("youtube.title fehlt oder länger als 100 Zeichen");

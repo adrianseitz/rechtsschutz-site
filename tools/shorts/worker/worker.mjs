@@ -81,7 +81,15 @@ async function render(ep, settings, keys, state) {
       catch (err) { await log("fehler", `Stimme für „${ep.title}“ fehlgeschlagen – Video ohne Stimme: ${msg(err)}`); }
     }
     const out = join(P.videos, `${ep.id}.mp4`), tmp = join(P.videos, `${ep.id}.tmp.mp4`), thumb = join(P.videos, `${ep.id}.jpg`);
-    const r = await renderEpisode({ episode: ep, out: tmp, voiceDir, workers: +process.env.SHORTS_WORKERS || 1, log: () => {} });
+    const opts = { out: tmp, voiceDir, workers: +process.env.SHORTS_WORKERS || 1, log: () => {} };
+    let r;
+    try { r = await renderEpisode({ episode: ep, ...opts }); }
+    catch (err) {
+      // Der 3D-Stil braucht WebGL im Server-Chromium. Klappt das nicht, entsteht das Video im Cartoon-Stil statt gar nicht.
+      if (ep.style !== "studio3d") throw err;
+      await log("fehler", `3D-Video „${ep.title}“ fehlgeschlagen (${msg(err)}) – wird im Cartoon-Stil erstellt.`);
+      r = await renderEpisode({ episode: { ...ep, style: "cartoon" }, ...opts });
+    }
     await rename(tmp, out); await ownFile(out);
     execFileSync("ffmpeg", ["-y", "-v", "error", "-ss", String((r.duration * 0.55).toFixed(2)), "-i", out, "-frames:v", "1", "-vf", "scale=360:-1", "-q:v", "4", thumb]);
     await ownFile(thumb);

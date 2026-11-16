@@ -28,7 +28,7 @@ unzulässige Werbeaussagen). Der Server-Dienst überspringt alles, was durchfäl
 ```jsonc
 {
   "id": "15-vermieter-nebenkosten", "order": 15, "topic": "vermieter",   // vermieter | firma (Reserve: privat | arbeit | allgemein)
-  "style": "whiteboard",                                              // whiteboard | cartoon (am besten abwechselnd)
+  "style": "whiteboard",                                              // studio3d | whiteboard | cartoon
   "title": "…", "caption": "Text zum Video inkl. Hashtags",
   "youtube": { "title": "… #shorts", "description": "…", "tags": ["…"] },
   "fine": "* je nach Tarif … Pflichtangaben",                         // erscheint im Video
@@ -57,6 +57,7 @@ cd tools/shorts && npm install
 node render.mjs episodes/01-vermieter-mietausfall.json --sheet --out=out/01.jpg   # Kontrollbild (15 Momente)
 node render.mjs episodes/01-vermieter-mietausfall.json --out=out/01.mp4           # Video (ohne Stimme)
 node render.mjs episodes/01-….json --voice=<ordner mit beat-0.mp3 …> --out=out/01.mp4
+node render.mjs episodes/01-….json --style=studio3d --out=out/01-3d.mp4               # dasselbe Thema im 3D-Stil
 ```
 
 Voraussetzungen: Node 22, Chrome/Chromium (`--chrome=` oder `CHROME_PATH`), Python 3 mit numpy/scipy, ffmpeg.
@@ -65,6 +66,7 @@ Voraussetzungen: Node 22, Chrome/Chromium (`--chrome=` oder `CHROME_PATH`), Pyth
 
 - `whiteboard/` – Zeichen-Engine aus ReelMimic (MIT, siehe `LICENSE-ReelMimic.txt`), Vorlagen in `src/beats.js`, Maskottchen in `src/brand.js`
 - `cartoon/player.html` – Cartoon-Vorlagen (eigene Zeichnungen)
+- `studio3d/player.html` – 3D-Vorlagen: echte 3D-Bühne mit three.js (MIT, gebündelt in `vendor/three.iife.js`, neu bauen mit `npm run build:three`). Läuft ohne Grafikkarte über den Software-Renderer von Chrome; ein Video braucht dadurch etwa 10–20 Minuten Rechenzeit.
 - `render.mjs` – Bild für Bild in Chrome → ffmpeg, Tonspur aus `audio.py`, Lautheit −14 LUFS
 - `worker/` – Server-Dienst: Warteschlange, ElevenLabs, Upload-Post, Zeitplan (`Dockerfile` für den Service `shorts`)
 - `fonts/` – Geist, Instrument-Serif-Kursiv, Caveat, Kalam (OFL)
