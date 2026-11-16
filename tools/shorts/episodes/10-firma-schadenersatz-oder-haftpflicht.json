@@ -1,0 +1,79 @@
+{
+  "id": "10-firma-schadenersatz-oder-haftpflicht",
+  "order": 10,
+  "topic": "firma",
+  "style": "cartoon",
+  "title": "Rechtsschutz oder Haftpflicht? Das verwechseln viele",
+  "caption": "Rechtsschutz oder Betriebshaftpflicht? Faustregel: Willst du Geld von jemand anderem, hilft der Rechtsschutz, deine Ansprüche durchzusetzen. Will jemand Geld von dir, ist meist die Betriebshaftpflicht zuständig – sie wehrt unberechtigte Forderungen ab. Schadenersatz-Rechtsschutz im Firmenrechtsschutz je nach Tarif. Kostenloser Check über den Link in der Bio.\n\n#unternehmer #selbstständig #firmenrechtsschutz #haftpflicht #gewerbe",
+  "youtube": {
+    "title": "Rechtsschutz oder Haftpflicht? Der Unterschied in 30 Sekunden #shorts",
+    "description": "Eigene Ansprüche durchsetzen: Rechtsschutz. Forderungen gegen dich: meist Betriebshaftpflicht. Schadenersatz-Rechtsschutz im Firmenrechtsschutz je nach Tarif.",
+    "tags": [
+      "Firmenrechtsschutz",
+      "Betriebshaftpflicht",
+      "Unternehmer",
+      "Selbstständig",
+      "Schadenersatz"
+    ]
+  },
+  "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+  "beats": [
+    {
+      "type": "hook",
+      "say": "Rechtsschutz oder Haftpflicht? Das verwechseln viele Unternehmer.",
+      "lines": [
+        "Rechtsschutz",
+        "oder [Haftpflicht?]"
+      ],
+      "icon": "building"
+    },
+    {
+      "type": "fact",
+      "say": "Du willst Schadenersatz von jemand anderem? Dann hilft der Rechtsschutz, deine Ansprüche durchzusetzen.",
+      "kicker": [
+        "Du willst Geld von",
+        "jemand anderem?"
+      ],
+      "big": "Rechtsschutz",
+      "lines": [
+        "hilft, deine Ansprüche",
+        "durchzusetzen.*"
+      ],
+      "icon": "gavel"
+    },
+    {
+      "type": "fact",
+      "say": "Will jemand Geld von dir, ist meist die Betriebshaftpflicht dran. Sie prüft und wehrt unberechtigte Forderungen ab.",
+      "kicker": [
+        "Jemand will Geld",
+        "von dir?"
+      ],
+      "big": "Haftpflicht",
+      "lines": [
+        "prüft und wehrt unberechtigte",
+        "Forderungen ab."
+      ],
+      "icon": "contract"
+    },
+    {
+      "type": "solution",
+      "say": "Im Firmenrechtsschutz ist der Schadenersatz-Rechtsschutz je nach Tarif mit drin. Am besten passen beide zusammen.",
+      "product": [
+        "Firmen-",
+        "rechtsschutz"
+      ],
+      "lines": [
+        "mit Schadenersatz-",
+        "Rechtsschutz.*"
+      ]
+    },
+    {
+      "type": "cta",
+      "say": "Ist dein Betrieb richtig aufgestellt? Kostenloser Check, Link in der Bio.",
+      "question": [
+        "Ist dein Betrieb",
+        "[richtig aufgestellt?]"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "id": "13-vermieter-eigenbedarf",
+  "order": 13,
+  "topic": "vermieter",
+  "style": "whiteboard",
+  "title": "Eigenbedarf anmelden? Darum gibt's oft Streit",
+  "caption": "Du brauchst deine vermietete Wohnung selbst? Bei einer Eigenbedarfskündigung wehren sich viele Mieter – oft bis vor Gericht. Typische Streitpunkte: Ist der Eigenbedarf echt, liegt ein Härtefall vor, stimmen Fristen und Form? Vermieterrechtsschutz je nach Tarif – aber abschließen, bevor du kündigst (Wartezeit meist 3 Monate). Kostenloser Check über den Link in der Bio.\n\n#vermieter #eigenbedarf #mietrecht #immobilien #vermieterrechtsschutz",
+  "youtube": {
+    "title": "Eigenbedarf anmelden? Darauf musst du achten #shorts",
+    "description": "Eigenbedarfskündigungen landen oft vor Gericht: Eigenbedarf echt, Härtefall, Fristen und Form. Vermieterrechtsschutz je nach Tarif, vor der Kündigung abschließen.",
+    "tags": [
+      "Vermieter",
+      "Eigenbedarf",
+      "Kündigung",
+      "Mietrecht",
+      "Vermieterrechtsschutz"
+    ]
+  },
+  "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+  "beats": [
+    {
+      "type": "hook",
+      "say": "Du brauchst deine vermietete Wohnung selbst?",
+      "lines": [
+        "Eigenbedarf",
+        "[anmelden?]"
+      ],
+      "icon": "house"
+    },
+    {
+      "type": "fact",
+      "say": "Dann kündigst du wegen Eigenbedarf. Und viele Mieter wehren sich, oft bis vor Gericht.",
+      "kicker": [
+        "Kündigung wegen",
+        "Eigenbedarf –"
+      ],
+      "big": "Streit!",
+      "lines": [
+        "Viele Mieter wehren sich –",
+        "oft bis vor Gericht."
+      ],
+      "icon": "gavel"
+    },
+    {
+      "type": "list",
+      "say": "Typische Streitpunkte: Ist der Eigenbedarf echt, liegt beim Mieter ein Härtefall vor, und stimmen Fristen und Form?",
+      "title": [
+        "Typische",
+        "Streitpunkte:"
+      ],
+      "items": [
+        "Ist der Eigenbedarf echt?",
+        "Härtefall beim Mieter?",
+        "Fristen und Form korrekt?"
+      ],
+      "mark": "num"
+    },
+    {
+      "type": "solution",
+      "say": "Der Vermieterrechtsschutz übernimmt je nach Tarif Anwalt, Gericht und Räumung.",
+      "product": [
+        "Vermieter-",
+        "rechtsschutz"
+      ],
+      "lines": [
+        "zahlt Anwalt, Gericht",
+        "und Räumung.*"
+      ]
+    },
+    {
+      "type": "warning",
+      "say": "Aber: Abschließen, bevor du kündigst. Meist gilt eine Wartezeit von drei Monaten.",
+      "lines": [
+        "Abschließen, [bevor]",
+        "du kündigst."
+      ],
+      "note": "Wartezeit meist 3 Monate",
+      "icon": "clock"
+    },
+    {
+      "type": "cta",
+      "say": "Planst du Eigenbedarf? Lass dich vorher beraten, Link in der Bio.",
+      "question": [
+        "Planst du",
+        "[Eigenbedarf?]"
+      ],
+      "box": "Kostenlose Beratung",
+      "sub": "vorher klären, was abgesichert ist"
+    }
+  ]
+}

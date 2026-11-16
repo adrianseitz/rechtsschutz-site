@@ -1,0 +1,79 @@
+{
+  "id": "07-vermieter-kaution",
+  "order": 7,
+  "topic": "vermieter",
+  "style": "whiteboard",
+  "title": "Mieter will die Kaution zurück? Das musst du wissen",
+  "caption": "Dein Mieter zieht aus und will die volle Kaution zurück? Streit gibt es oft um Schäden, offene Nebenkosten oder Schönheitsreparaturen. Wichtig: Ersatzansprüche wegen Schäden verjähren schon 6 Monate nach Rückgabe der Wohnung (§ 548 BGB). Vermieterrechtsschutz übernimmt im Streitfall je nach Tarif Anwalt und Gericht. Kostenloser Check über den Link in der Bio.\n\n#vermieter #kaution #mietrecht #immobilien #vermieterrechtsschutz",
+  "youtube": {
+    "title": "Mieter will die Kaution zurück? Diese Frist musst du kennen #shorts",
+    "description": "Ersatzansprüche des Vermieters wegen Schäden verjähren 6 Monate nach Rückgabe der Mietsache (§ 548 BGB). Vermieterrechtsschutz je nach Tarif.",
+    "tags": [
+      "Vermieter",
+      "Kaution",
+      "Mietrecht",
+      "Vermieterrechtsschutz",
+      "Immobilien"
+    ]
+  },
+  "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+  "beats": [
+    {
+      "type": "hook",
+      "say": "Dein Mieter zieht aus und will die volle Kaution zurück?",
+      "lines": [
+        "Mieter will die",
+        "[Kaution] zurück?"
+      ],
+      "icon": "money"
+    },
+    {
+      "type": "list",
+      "say": "Typischer Streit beim Auszug: Schäden in der Wohnung, offene Nebenkosten oder Schönheitsreparaturen.",
+      "title": [
+        "Typischer Streit",
+        "beim Auszug:"
+      ],
+      "items": [
+        "Schäden in der Wohnung",
+        "Offene Nebenkosten",
+        "Schönheitsreparaturen"
+      ],
+      "mark": "num"
+    },
+    {
+      "type": "fact",
+      "say": "Und Vorsicht: Deine Ansprüche wegen Schäden verjähren schon sechs Monate nach der Rückgabe der Wohnung.",
+      "kicker": [
+        "Vorsicht, Frist:"
+      ],
+      "big": "6 Monate",
+      "lines": [
+        "Ersatz für Schäden verjährt",
+        "6 Monate nach Rückgabe."
+      ],
+      "icon": "calendar",
+      "note": "§ 548 BGB"
+    },
+    {
+      "type": "solution",
+      "say": "Kommt es zum Streit, übernimmt der Vermieterrechtsschutz je nach Tarif Anwalt und Gericht.",
+      "product": [
+        "Vermieter-",
+        "rechtsschutz"
+      ],
+      "lines": [
+        "übernimmt Anwalt",
+        "und Gericht.*"
+      ]
+    },
+    {
+      "type": "cta",
+      "say": "Bist du als Vermieter gut abgesichert? Kostenloser Check, Link in der Bio.",
+      "question": [
+        "Bist du als Vermieter",
+        "[gut abgesichert?]"
+      ]
+    }
+  ]
+}

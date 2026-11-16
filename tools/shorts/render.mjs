@@ -48,12 +48,25 @@ function voiceFiles(ep, dir) {
   return files.every((f) => existsSync(f)) ? files : null;
 }
 
-async function openPlayer(browser, ep, timing) {
+/** Lautstärke-Verlauf einer Sprachaufnahme (0–1 je Videobild) – damit bewegt das Männchen den Mund */
+export function mouthEnvelope(file, fps) {
+  const raw = execFileSync("ffmpeg", ["-v", "error", "-i", file, "-ac", "1", "-ar", "8000", "-f", "s16le", "-"]);
+  const s = new Int16Array(raw.buffer, raw.byteOffset, Math.floor(raw.length / 2)), win = Math.round(8000 / fps), env = [];
+  for (let i = 0; i < s.length; i += win) {
+    let sum = 0; const end = Math.min(s.length, i + win);
+    for (let j = i; j < end; j++) sum += s[j] * s[j];
+    env.push(Math.sqrt(sum / Math.max(1, end - i)) / 32768);
+  }
+  const top = [...env].sort((a, b) => a - b)[Math.floor(env.length * 0.95)] || 1;
+  return env.map((v) => Math.round(Math.min(1, v / top) * 100) / 100);
+}
+
+async function openPlayer(browser, ep, timing, mouth = null) {
   const page = await browser.newPage();
   await page.setViewport({ width: 1080, height: 1920, deviceScaleFactor: 1 });
   page.on("pageerror", (e) => console.log("[Seite]", e.message));
   page.on("console", (m) => { if (m.type() === "error") console.log("[Seite]", m.text()); });
-  await page.evaluateOnNewDocument((e, t) => { window.EP = e; window.EP_TIMING = t; }, ep, timing);
+  await page.evaluateOnNewDocument((e, t, m) => { window.EP = e; window.EP_TIMING = t; window.EP_MOUTH = m; }, ep, timing, mouth);
   await page.goto(pathToFileURL(PLAYER[ep.style]).href + "?render", { waitUntil: "load" });
   await page.waitForFunction("window.ready === true", { timeout: 60000 });
   return page;
@@ -79,6 +92,7 @@ export async function renderEpisode(o) {
   const voices = voiceFiles(ep, o.voiceDir);
   const timing = planTiming(ep, voices ? voices.map(audioDuration) : null);
   const fps = FPS[ep.style], frames = Math.round(timing.total * fps);
+  const mouth = voices ? { fps, beats: voices.map((f) => mouthEnvelope(f, fps)) } : null;
   mkdirSync(dirname(resolve(o.out)), { recursive: true });
   // eine Browser-Instanz je Arbeiter: Screenshots von Seiten im Hintergrund können sonst hängen bleiben
   const launch = () => puppeteer.launch({
@@ -91,7 +105,7 @@ export async function renderEpisode(o) {
   try {
     // Kontrollbild oder Einzelbilder
     if (o.sheet || o.stills) {
-      const page = await openPlayer(browser, ep, timing);
+      const page = await openPlayer(browser, ep, timing, mouth);
       const times = o.stills || Array.from({ length: 15 }, (_, i) => +(((i + 0.5) / 15) * timing.total).toFixed(2));
       const files = [];
       for (const [i, t] of times.entries()) { const f = join(tmp, `s${String(i).padStart(2, "0")}.jpg`); writeFileSync(f, await frameJpeg(page, ep.style, t)); files.push(f); }
@@ -102,8 +116,8 @@ export async function renderEpisode(o) {
 
     // Video: mehrere Seiten rendern parallel, Bilder gehen der Reihe nach an ffmpeg
     const workers = Math.max(1, Math.min(4, o.workers || 2));
-    const pages = [await openPlayer(browser, ep, timing)];
-    for (let i = 1; i < workers; i++) { const b = await launch(); browsers.push(b); pages.push(await openPlayer(b, ep, timing)); }
+    const pages = [await openPlayer(browser, ep, timing, mouth)];
+    for (let i = 1; i < workers; i++) { const b = await launch(); browsers.push(b); pages.push(await openPlayer(b, ep, timing, mouth)); }
     const sfx = await pages[0].evaluate(() => (window.collectSfx ? window.collectSfx() : window.SFX || []));
     const silent = join(tmp, "video.mp4"), t0 = Date.now();
     await run("ffmpeg", ["-y", "-loglevel", "error", "-f", "image2pipe", "-c:v", "mjpeg", "-framerate", String(fps), "-i", "-",

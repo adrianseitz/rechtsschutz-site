@@ -204,8 +204,12 @@ async function tick() {
     try { state.credits = { ...(await elevenlabsUsage(keys.el)), at: now() }; } catch (err) { state.credits = { error: msg(err), at: now() }; }
   }
 
-  // alte Sprachaufnahmen von Episoden, die es nicht mehr gibt, aufräumen
+  // Aufnahmen und Videos von Episoden, die es nicht mehr gibt (umbenannt, in die Reserve verschoben), aufräumen
   for (const d of await readdir(P.voice).catch(() => [])) if (![...byId.keys()].some((id) => d.startsWith(id + "-"))) await rm(join(P.voice, d), { recursive: true, force: true });
+  for (const f of await readdir(P.videos).catch(() => [])) {
+    const id = f.replace(/(\.tmp)?\.(mp4|jpg)$/, "");
+    if (!byId.has(id) && state.episodes[id]?.status !== "gepostet") { await rm(join(P.videos, f), { force: true }); if (state.episodes[id]) delete state.episodes[id]; }
+  }
 
   state.heartbeat = now();
   state.clock = berlin();

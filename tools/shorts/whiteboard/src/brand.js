@@ -2,6 +2,7 @@
 // Das Maskottchen wird wie alles andere mit dem Marker gezeichnet (Striche → drawOn), danach per Versatz animiert.
 
 const BRAND = { sun: '#FFD60A', ink: '#0B0B0A', name: 'Seitz', name2: 'Rechtsschutz' };
+WB.handScale = .68;   // im Hochformat sonst zu wuchtig
 window.EXTRA_FONTS = [['800 40px "Geist"', 'Seitz Rechtsschutz'], ['italic 40px "SerifI"', 'Rechtsschutz'], ['500 30px "Geist"', 'je nach Tarif §']];
 // alle Texte der Episode, damit die Handschrift vorab geladen ist
 window.WB_TEXT = JSON.stringify(window.EP || {});
@@ -14,10 +15,17 @@ function shieldGuy(cx, cy, size = 400, o = {}) {
   const body = [[0, -50], [20, -43], [40, -42], [40, 0], [32, 26], [0, 49], [-32, 26], [-40, 0], [-40, -42], [-20, -43]];
   const out = [];
   // Arme und Beine zuerst (liegen hinter dem Körper)
-  const armR = { wave: [[39, -6], [56, -20], [60, -40]], up: [[39, -8], [52, -30], [54, -56]], down: [[39, 4], [52, 16], [56, 30]], cheer: [[39, -10], [58, -24], [66, -46]] }[arms];
-  const armL = arms === 'cheer' ? [[-39, -10], [-58, -24], [-66, -46]] : [[-39, 4], [-52, 16], [-56, 30]];
-  out.push(S.path(P(armL), { key: k + 'aL' }), S.path(P(armR), { key: k + 'aR' + arms }));
-  for (const [hx, hy, kk] of [[armL[2][0], armL[2][1], 'hL'], [armR[2][0], armR[2][1], 'hR' + arms]]) {
+  const ARMS = {   // [linker Arm, rechter Arm]
+    down: [[[-39, 4], [-52, 16], [-56, 30]], [[39, 4], [52, 16], [56, 30]]],
+    wave: [[[-39, 4], [-52, 16], [-56, 30]], [[39, -6], [56, -20], [60, -40]]],
+    up: [[[-39, 4], [-52, 16], [-56, 30]], [[39, -8], [52, -30], [54, -56]]],
+    cheer: [[[-39, -10], [-58, -24], [-66, -46]], [[39, -10], [58, -24], [66, -46]]],
+    point: [[[-39, -6], [-60, -22], [-82, -40]], [[39, 4], [52, 16], [56, 30]]],      // zeigt nach links oben
+    explain: [[[-39, 2], [-60, 2], [-72, -12]], [[39, 2], [60, 2], [72, -12]]],       // offene Hände
+  };
+  const [armL, armR] = ARMS[arms] || ARMS.down;
+  out.push(S.path(P(armL), { key: k + 'aL' + arms }), S.path(P(armR), { key: k + 'aR' + arms }));
+  for (const [hx, hy, kk] of [[armL[2][0], armL[2][1], 'hL' + arms], [armR[2][0], armR[2][1], 'hR' + arms]]) {
     out.push(S.circle(hx, hy, 6.5, 6.5, { key: k + kk, w: WB.w * .9 }), S.fill(polyCircle(hx, hy, 6, 6, 20), { col: '#FFFFFF', alpha: 1, mode: 'cover', z: -2 }));
   }
   out.push(S.path([[-14, 44], [-16, 62]], { key: k + 'lL' }), S.path([[14, 44], [16, 62]], { key: k + 'lR' }));
@@ -30,7 +38,7 @@ function shieldGuy(cx, cy, size = 400, o = {}) {
   const eyeY = -14;
   for (const s of [-1, 1]) {
     out.push(S.circle(s * 14, eyeY, 8.5, 10, { key: k + 'e' + s, w: WB.w * .85, turns: 1 }), S.fill(polyCircle(s * 14, eyeY, 8, 9.5, 24), { col: '#FFFFFF', alpha: 1, mode: 'cover', z: 0 }));
-    const look = face === 'worried' ? [-2, 2] : face === 'wow' ? [0, -1] : [2, 1];
+    const look = o.look || (face === 'worried' ? [-2, 2] : face === 'wow' ? [0, -1] : [2, 1]);
     out.push(S.dot(s * 14 + look[0] * 1.5, eyeY + look[1] * 1.5, WB.w * .55, { col: INK.black, z: 2 }));
     out.push(S.fill(polyCircle(s * 27, 6, 5.5, 4, 20), { col: '#FF8FA3', alpha: .55, z: 1 }));
   }
@@ -49,8 +57,12 @@ function shieldGuy(cx, cy, size = 400, o = {}) {
     sad: [[-11, 14], [0, 8], [11, 14]],
     wow: null,
   }[face];
-  if (mouth) out.push(S.path(mouth, { key: k + 'm' + face, z: 2 }));
-  else out.push(S.circle(0, 10, 6, 7.5, { key: k + 'mo', z: 2, turns: 1 }), S.fill(polyCircle(0, 10, 5.5, 7, 20), { col: INK.red, alpha: .85, z: 1 }));
+  const talk = o.talk || 0;
+  if (talk > .08) {   // sprechender Mund: Öffnung folgt der Stimme
+    const ry = 2.5 + talk * 8, rx = 8 + talk * 2.5, q = Math.round(talk * 6);
+    out.push(S.circle(0, 10, rx, ry, { key: k + 'mt' + q, z: 2, turns: 1 }), S.fill(polyCircle(0, 10, rx - .5, ry - .5, 20), { col: '#8E2A2A', alpha: .9, z: 1 }));
+  } else if (mouth) out.push(S.path(mouth, { key: k + 'm' + face, z: 2 }));
+  else if (!(talk > .08)) out.push(S.circle(0, 10, 6, 7.5, { key: k + 'mo', z: 2, turns: 1 }), S.fill(polyCircle(0, 10, 5.5, 7, 20), { col: INK.red, alpha: .85, z: 1 }));
   return place(out, cx, cy, o.rot || 0, u);
 }
 

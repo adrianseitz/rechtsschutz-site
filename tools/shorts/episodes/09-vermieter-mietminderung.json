@@ -1,0 +1,78 @@
+{
+  "id": "09-vermieter-mietminderung",
+  "order": 9,
+  "topic": "vermieter",
+  "style": "whiteboard",
+  "title": "Mieter kürzt die Miete? Darum wird's knifflig",
+  "caption": "Dein Mieter kürzt plötzlich die Miete – wegen Schimmel, Lärm oder kaputter Heizung? Dann wird es knifflig: Gibt es den Mangel wirklich, ist die Kürzung zu hoch, wer muss was beweisen? Vermieterrechtsschutz übernimmt im Streitfall je nach Tarif Anwalt, Gericht und Gerichtsgutachter. Kostenloser Check über den Link in der Bio.\n\n#vermieter #mietminderung #mietrecht #immobilien #vermieterrechtsschutz",
+  "youtube": {
+    "title": "Mieter mindert die Miete? Das musst du als Vermieter wissen #shorts",
+    "description": "Streit um Mietminderung: Gibt es den Mangel, ist die Kürzung angemessen, wer beweist was? Vermieterrechtsschutz je nach Tarif.",
+    "tags": [
+      "Vermieter",
+      "Mietminderung",
+      "Mietrecht",
+      "Vermieterrechtsschutz",
+      "Immobilien"
+    ]
+  },
+  "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+  "beats": [
+    {
+      "type": "hook",
+      "say": "Dein Mieter kürzt plötzlich die Miete?",
+      "lines": [
+        "Mieter kürzt",
+        "einfach die [Miete?]"
+      ],
+      "icon": "house"
+    },
+    {
+      "type": "fact",
+      "say": "Oft heißt es dann: Mietminderung wegen Schimmel, Lärm oder kaputter Heizung.",
+      "kicker": [
+        "Oft heißt es dann:"
+      ],
+      "big": "Mietminderung",
+      "lines": [
+        "wegen Schimmel, Lärm",
+        "oder kaputter Heizung."
+      ],
+      "icon": "bill"
+    },
+    {
+      "type": "list",
+      "say": "Dann wird es knifflig: Gibt es den Mangel wirklich, ist die Kürzung zu hoch, und wer muss was beweisen?",
+      "title": [
+        "Dann wird's",
+        "knifflig:"
+      ],
+      "items": [
+        "Gibt es den Mangel wirklich?",
+        "Ist die Kürzung zu hoch?",
+        "Wer muss was beweisen?"
+      ],
+      "mark": "num"
+    },
+    {
+      "type": "solution",
+      "say": "Der Vermieterrechtsschutz übernimmt im Streitfall je nach Tarif Anwalt, Gericht und vom Gericht bestellte Gutachter.",
+      "product": [
+        "Vermieter-",
+        "rechtsschutz"
+      ],
+      "lines": [
+        "zahlt Anwalt, Gericht",
+        "und Gerichtsgutachter.*"
+      ]
+    },
+    {
+      "type": "cta",
+      "say": "Bist du für Ärger mit Mietern abgesichert? Kostenloser Check, Link in der Bio.",
+      "question": [
+        "Bist du für Mieter-Ärger",
+        "[abgesichert?]"
+      ]
+    }
+  ]
+}

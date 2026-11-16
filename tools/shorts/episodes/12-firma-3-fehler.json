@@ -1,0 +1,75 @@
+{
+  "id": "12-firma-3-fehler",
+  "order": 12,
+  "topic": "firma",
+  "style": "cartoon",
+  "title": "3 Fehler, die Selbstständige beim Rechtsschutz machen",
+  "caption": "3 Fehler beim Firmenrechtsschutz: 1. Glauben, der private Rechtsschutz reicht. 2. Erst abschließen, wenn es schon kracht. 3. Der Betrieb wächst, der Vertrag nicht. Neue Mitarbeiter oder ein zweiter Standort? Dann den Vertrag mitwachsen lassen. Kostenloser Check über den Link in der Bio.\n\n#selbstständig #unternehmer #gründer #firmenrechtsschutz #gewerbe",
+  "youtube": {
+    "title": "3 Fehler, die Selbstständige beim Rechtsschutz machen #shorts",
+    "description": "Privatschutz reicht nicht, zu spät abgeschlossen, Vertrag wächst nicht mit: die drei häufigsten Fehler beim Firmenrechtsschutz.",
+    "tags": [
+      "Selbstständig",
+      "Firmenrechtsschutz",
+      "Unternehmer",
+      "Gründer",
+      "Gewerbe"
+    ]
+  },
+  "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+  "beats": [
+    {
+      "type": "hook",
+      "say": "Drei Fehler, die Selbstständige beim Rechtsschutz machen.",
+      "lines": [
+        "3 Fehler beim",
+        "[Firmenrechtsschutz]"
+      ],
+      "icon": "building"
+    },
+    {
+      "type": "list",
+      "say": "Erstens: Zu glauben, der private Rechtsschutz reicht. Zweitens: Erst abschließen, wenn es schon kracht. Drittens: Der Betrieb wächst, aber der Vertrag bleibt gleich.",
+      "title": [
+        "Diese 3 Fehler:"
+      ],
+      "items": [
+        "Privatschutz reicht doch",
+        "Erst abschließen, wenn's kracht",
+        "Betrieb wächst, Vertrag nicht"
+      ],
+      "mark": "cross"
+    },
+    {
+      "type": "warning",
+      "say": "Zum Beispiel neue Mitarbeiter oder ein zweiter Standort: Dann sollte der Vertrag mitwachsen.",
+      "title": "Zum Beispiel:",
+      "lines": [
+        "Neue Mitarbeiter?",
+        "[Vertrag anpassen.]"
+      ],
+      "note": "Bausteine regelmäßig prüfen",
+      "icon": "contract"
+    },
+    {
+      "type": "solution",
+      "say": "Ein Firmenrechtsschutz nach Maß passt sich Branche, Größe und Rechtsform an, je nach Tarif mit den passenden Bausteinen.",
+      "product": [
+        "Firmen-",
+        "rechtsschutz"
+      ],
+      "lines": [
+        "passend zu Branche,",
+        "Größe und Rechtsform.*"
+      ]
+    },
+    {
+      "type": "cta",
+      "say": "Passt dein Vertrag noch zu deinem Betrieb? Kostenloser Check, Link in der Bio.",
+      "question": [
+        "Passt dein Vertrag",
+        "[noch zum Betrieb?]"
+      ]
+    }
+  ]
+}

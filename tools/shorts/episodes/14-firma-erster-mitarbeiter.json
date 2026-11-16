@@ -1,0 +1,75 @@
+{
+  "id": "14-firma-erster-mitarbeiter",
+  "order": 14,
+  "topic": "firma",
+  "style": "cartoon",
+  "title": "Erster Mitarbeiter? Dann prüf deinen Rechtsschutz",
+  "caption": "Ersten Mitarbeiter eingestellt? Glückwunsch! Ab jetzt sind neue Streitfälle möglich: um eine Kündigung, ums Arbeitszeugnis oder um den Lohn. Der Arbeitgeber-Baustein im Firmenrechtsschutz deckt das je nach Tarif ab – rechtzeitig ergänzen, meist gilt eine Wartezeit. Kostenloser Check über den Link in der Bio.\n\n#arbeitgeber #gründer #selbstständig #firmenrechtsschutz #mitarbeiter",
+  "youtube": {
+    "title": "Erster Mitarbeiter eingestellt? Das solltest du jetzt prüfen #shorts",
+    "description": "Mit dem ersten Mitarbeiter kommen neue Streitfälle: Kündigung, Zeugnis, Lohn. Arbeitgeber-Rechtsschutz im Firmenrechtsschutz je nach Tarif, Wartezeit beachten.",
+    "tags": [
+      "Arbeitgeber",
+      "Mitarbeiter",
+      "Gründer",
+      "Firmenrechtsschutz",
+      "Arbeitsrecht"
+    ]
+  },
+  "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+  "beats": [
+    {
+      "type": "hook",
+      "say": "Du hast deinen ersten Mitarbeiter eingestellt? Glückwunsch!",
+      "lines": [
+        "Ersten Mitarbeiter",
+        "[eingestellt?]"
+      ],
+      "icon": "person"
+    },
+    {
+      "type": "list",
+      "say": "Ab jetzt sind neue Streitfälle möglich: um eine Kündigung, ums Arbeitszeugnis oder um den Lohn.",
+      "title": [
+        "Ab jetzt möglich:"
+      ],
+      "items": [
+        "Streit um eine Kündigung",
+        "Streit ums Zeugnis",
+        "Streit um den Lohn"
+      ],
+      "mark": "num"
+    },
+    {
+      "type": "solution",
+      "say": "Im Firmenrechtsschutz deckt der Arbeitgeber-Baustein solche Streitigkeiten je nach Tarif ab.",
+      "product": [
+        "Firmen-",
+        "rechtsschutz"
+      ],
+      "lines": [
+        "mit Arbeitgeber-",
+        "Rechtsschutz.*"
+      ]
+    },
+    {
+      "type": "warning",
+      "say": "Wichtig: Den Baustein rechtzeitig ergänzen, denn meist gilt eine Wartezeit von drei Monaten.",
+      "title": "Wichtig:",
+      "lines": [
+        "Baustein [rechtzeitig]",
+        "ergänzen."
+      ],
+      "note": "Wartezeit meist 3 Monate",
+      "icon": "clock"
+    },
+    {
+      "type": "cta",
+      "say": "Wächst dein Team? Dann lass deinen Schutz checken, Link in der Bio.",
+      "question": [
+        "Wächst dein Team?",
+        "Dann [Schutz checken.]"
+      ]
+    }
+  ]
+}

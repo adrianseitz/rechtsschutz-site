@@ -5,11 +5,19 @@ Erklärvideos im Hochformat (1080×1920) in zwei Stilen – **Whiteboard** (Mark
 (keine fremden Musikrechte). Auf dem Server läuft der Docker-Service `shorts`: Er erstellt die nächsten Videos vorab
 und postet sie zum Termin über Upload-Post. Eingerichtet und überwacht wird alles im CRM unter **Videos**.
 
+**Das Erklär-Männchen** (das Schild-Maskottchen) steht in jedem Video rechts unten vor der Tafel: Es bewegt den Mund
+passend zur Stimme (Lautstärke der Aufnahme, ohne Aufnahme aus dem Text geschätzt – `shared/talk.js`), zeigt auf die
+Inhalte, schaut besorgt beim Haken, jubelt bei der Lösung und winkt am Schluss. Inhalte bleiben deshalb oben (volle
+Breite bis y ≈ 1060) und links unten.
+
+**Schwerpunkt Vermieter + Firma:** In `episodes/` liegt nur, was gepostet werden soll. Themen zu Arbeit, Privat und
+Verkehr liegen in `episodes/reserve/` – zum Aktivieren mit Nummer und `order` zurück nach `episodes/` verschieben.
+
 ## Ein neues Video = eine Datei in `episodes/`
 
 ```jsonc
 {
-  "id": "13-vermieter-kaution", "order": 13, "topic": "vermieter",   // privat | arbeit | vermieter | firma | allgemein
+  "id": "15-vermieter-nebenkosten", "order": 15, "topic": "vermieter",   // vermieter | firma (Reserve: privat | arbeit | allgemein)
   "style": "whiteboard",                                              // whiteboard | cartoon (am besten abwechselnd)
   "title": "…", "caption": "Text zum Video inkl. Hashtags",
   "youtube": { "title": "… #shorts", "description": "…", "tags": ["…"] },

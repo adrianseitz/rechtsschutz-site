@@ -1,8 +1,8 @@
 {
-  "id": "08-vermieter-3-fakten",
-  "order": 8,
+  "id": "11-vermieter-3-fakten",
+  "order": 11,
   "topic": "vermieter",
-  "style": "cartoon",
+  "style": "whiteboard",
   "title": "3 Fakten, die jeder Vermieter kennen sollte",
   "caption": "3 Fakten für Vermieter: 1. Privatrechtsschutz deckt die Vermietung meist nicht. 2. Jede Wohnung muss im Vertrag stehen. 3. Die Beiträge sind in der Regel als Werbungskosten absetzbar (verbindlich klärt das deine Steuerberatung). Bonus: Mietausfallschutz ersetzt ausfallende Miete. Kostenloser Check über den Link in der Bio.\n\n#vermieter #immobilien #kapitalanlage #mietausfall #rechtsschutz",
   "youtube": {
@@ -35,9 +35,9 @@
         "Gut zu wissen:"
       ],
       "items": [
-        "Privatschutz deckt Vermietung meist nicht",
-        "Jede Wohnung muss in den Vertrag",
-        "Beiträge meist als Werbungskosten absetzbar"
+        "Privatschutz reicht nicht",
+        "Jede Wohnung in den Vertrag",
+        "Beiträge meist absetzbar"
       ],
       "mark": "num"
     },

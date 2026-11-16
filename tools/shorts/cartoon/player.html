@@ -44,6 +44,7 @@
   <div id="overlay"></div>
 </div>
 
+<script src="../shared/talk.js"></script>
 <script>
 /* ======================================================================
    Cartoon-Vorlage: baut aus einer Episode (window.EP) die Szenen – ein Abschnitt (beat) = eine Szene.
@@ -107,16 +108,50 @@ function mascotSVG() {
 }
 const FACES = {
   happy: { mouth: "M-40 22 Q0 62 40 22", brows: "M-66 -96 Q-42 -110 -18 -98 M18 -98 Q42 -110 66 -96", look: "translate(0 0)" },
-  worried: { mouth: "M-30 34 Q0 22 30 34", brows: "M-66 -92 Q-42 -98 -18 -110 M18 -110 Q42 -98 66 -92", look: "translate(-10 -4)" },
+  worried: { mouth: "M-30 34 Q0 22 30 34", fill: "none", brows: "M-66 -92 Q-42 -98 -18 -110 M18 -110 Q42 -98 66 -92", look: "translate(-10 -4)" },
   proud: { mouth: "M-44 18 Q0 70 44 18", brows: "M-66 -100 Q-42 -114 -18 -104 M18 -104 Q42 -114 66 -100", look: "translate(4 -10)" },
+  wow: { mouth: "M-16 32 a16 20 0 1 0 32 0 a16 20 0 1 0 -32 0Z", fill: "#7A1E1E", brows: "M-66 -104 Q-42 -118 -18 -106 M18 -106 Q42 -118 66 -104", look: "translate(0 -6)" },
 };
-function poseMascot(m, face, wave, t) {
-  const f = FACES[face] || FACES.happy;
-  m.querySelector(".mouth").setAttribute("d", f.mouth);
+// Erklär-Männchen: Arme drehen um die Schultern – [links, rechts] in Grad
+const ARMS = { down: [0, 103], point: [96, 103], explain: [45, 63], cheer: [115, -20], up: [0, -12], wave: [0, -5] };
+let HOST = null;
+function hostUpdate(t) {
+  const i = TALK.beatAt(t), bt = EP.beats[i], P = PLANS[i], lt = t - P.start, m = HOST;
+  const talking = TALK.talking(t), o = talking ? TALK.open(t) : 0, g = Math.floor(t * 0.75) % 2;
+  let face = "happy", arms = "down", hop = 0;
+  switch (bt.type) {
+    case "hook": face = lt < 1.4 ? "wow" : "happy"; arms = talking && g ? "explain" : "point"; break;
+    case "cost": face = "worried"; arms = lt < 1.6 ? "up" : talking && g ? "explain" : "point"; break;
+    case "fact": arms = talking && g ? "explain" : "point"; break;
+    case "list": arms = "point"; break;
+    case "solution": {
+      face = "proud"; arms = talking && g ? "explain" : "point";
+      const c = P.A.cheerAt != null ? lt - P.A.cheerAt : -1;
+      if (c > 0 && c < 1.6) { arms = "cheer"; hop = Math.max(0, Math.sin(c * 9)) * 34 * Math.exp(-c * 2); }
+      break;
+    }
+    case "warning": face = "worried"; arms = talking && g ? "explain" : "up"; break;
+    case "cta": arms = "wave"; hop = Math.abs(Math.sin(lt * 4)) * 10; break;
+  }
+  let [aL, aR] = ARMS[arms];
+  if (arms === "wave") aR += Math.sin(t * 9) * 20;
+  if (arms === "cheer") { aR += Math.sin(t * 11) * 10; aL -= Math.sin(t * 11) * 10; }
+  if (arms === "explain") { aL += Math.sin(t * 3.4) * 7; aR -= Math.sin(t * 3.4) * 7; }
+  if (arms === "point") aL += Math.sin(t * 5) * 3;
+  m.querySelector(".armL").setAttribute("transform", `rotate(${aL.toFixed(1)} -118 10)`);
+  m.querySelector(".armR").setAttribute("transform", `rotate(${aR.toFixed(1)} 118 10)`);
+  const f = FACES[face] || FACES.happy, mouth = m.querySelector(".mouth");
   m.querySelector(".brows").setAttribute("d", f.brows);
-  m.querySelectorAll(".pupil").forEach((p) => p.setAttribute("transform", f.look));
-  m.querySelector(".lid").setAttribute("height", (t % 3.1) < 0.12 ? 64 : 0);
-  const armR = m.querySelector(".armR"); armR.style.transformOrigin = "118px 10px"; armR.style.transform = `rotate(${wave}deg)`;
+  m.querySelectorAll(".pupil").forEach((p) => p.setAttribute("transform", "translate(-11 -3)"));   // schaut auf den Inhalt links
+  m.querySelector(".lid").setAttribute("height", t % 3.3 < 0.12 ? 64 : 0);
+  if (o > 0.06) {   // sprechender Mund: Öffnung folgt der Stimme
+    const rx = 26 - o * 4, ry = 6 + o * 24;
+    mouth.setAttribute("d", `M${-rx} 30 a${rx} ${ry} 0 1 0 ${2 * rx} 0 a${rx} ${ry} 0 1 0 ${-2 * rx} 0Z`);
+    mouth.setAttribute("fill", "#7A1E1E");
+  } else { mouth.setAttribute("d", f.mouth); mouth.setAttribute("fill", f.fill ?? "#fff"); }
+  if (P && lt < 0.45 && i > 0) hop += Math.sin((lt / 0.45) * Math.PI) * 14;   // kleiner Hüpfer beim neuen Abschnitt
+  const enter = spring(win(t, 0, 0.55)), sq = 1 + o * 0.035 + Math.sin(t * 2.3) * 0.01;
+  set(m, { x: 585, y: 1010 - hop + (1 - enter) * 600, sx: 0.82 / sq, sy: 0.82 * sq });
 }
 
 const ICON = {
@@ -227,51 +262,36 @@ function popActor(root, el, x, y, { r = 0, s = 1, n = 0.5, from = 140, sfx = "po
   };
   return A;
 }
-function noteActor(root, text, x, y, { size = 54, r = -2, color = "rgba(11,11,10,.7)", n = 0.35 } = {}) {
+function noteActor(root, text, x, y, { size = 54, r = -2, color = "rgba(11,11,10,.7)", n = 0.35, maxW = 900 } = {}) {
   const el = $(`<div class="abs note" style="font-size:${size}px;color:${color}">${esc(plain(text))}</div>`);
   root.appendChild(el);
-  let s = size; while (el.scrollWidth > 900 && s > 30) { s -= 2; el.style.fontSize = s + "px"; }
+  let s = size; while (el.scrollWidth > maxW && s > 30) { s -= 2; el.style.fontSize = s + "px"; }
   const A = { n, el, sfx: null };
   A.update = (lt) => { const k = win(lt, A.a, A.a + 0.35); set(el, { x, y: y + (1 - ease(k)) * 20, r, o: ease(k) }); };
   return A;
 }
-function mascotActor(root, x, y, { s = 1, face = "happy", mode = "jump", n = 0.9, cheerAt = null } = {}) {
-  const el = $(mascotSVG()); root.appendChild(el);
-  const A = { n, el, sfx: "boing" };
-  A.update = (lt) => {
-    const k = win(lt, A.a, A.a + 0.6), since = lt - A.a;
-    const jump = mode === "jump" ? Math.abs(Math.sin(win(lt, A.a, A.a + 1.2) * Math.PI * 2)) * (1 - win(lt, A.a, A.a + 1.2)) * 80 : 0;
-    const sq = 1 + Math.sin(lt * 7) * 0.025;
-    let f = face, wave = mode === "worried" ? -38 : Math.sin(lt * 9) * 18 * (1 - win(lt, A.a + 2.4, A.a + 2.9));
-    let hop = 0;
-    if (cheerAt && lt > cheerAt()) { f = "proud"; const c = lt - cheerAt(); hop = Math.max(0, Math.sin(c * 9)) * 30 * Math.exp(-c * 2); wave = -30 + Math.sin(lt * 10) * 14; }
-    if (mode === "wave") wave = -30 + Math.sin(lt * 8) * 10;
-    const shake = mode === "worried" ? Math.sin(lt * 30) * 2 : 0;
-    set(el, { x: x + shake, y: y - jump - hop + (1 - ease(k)) * 700, sx: s / sq, sy: s * sq, o: since > 0 ? 1 : 0 });
-    poseMascot(el, f, wave, lt);
-  };
-  return A;
-}
-
-/* ---------- Layouts je Abschnittstyp ---------- */
+/* ---------- Layouts je Abschnittstyp ----------
+   Platz: oben volle Breite bis y ≈ 1060, darunter nur links (x < 580) – rechts unten steht das Erklär-Männchen. */
+const LOW = 1060;
 const BEATS = {
   hook(bt, root) {
     const A = [], cap = capActor(root, bt.lines, { size: 104 }); A.push(cap);
     if (bt.items && bt.items.length) {
       const items = bt.items.slice(0, 3), mk = bt.mark === "check" ? ".ok" : ".x";
-      const house = iconEl(bt.icon || "house", 520);
-      A.push(popActor(root, house.el, 280, 960, { from: 400, sfx: "whoosh", n: 0.5 }));
+      const cy = 300 + cap.height + 60;
+      const house = iconEl(bt.icon || "house", 460);
+      A.push(popActor(root, house.el, 70, cy + 310, { from: 400, sfx: "whoosh", n: 0.5 }));
       items.forEach((m, i) => {
-        const c = iconEl("calendar", 270, plain(m)), x = 70 + i * 315;
-        const P = popActor(root, c.el, x, 640, { r: (i - 1) * 6, from: -200, sfx: null, n: 0.45 });
+        const c = iconEl("calendar", 250, plain(m)), x = 80 + i * 300;
+        const P = popActor(root, c.el, x, cy, { r: (i - 1) * 6, from: -200, sfx: null, n: 0.45 });
         const up = P.update; P.update = (lt) => { up(lt); const sk = win(lt, P.b - 0.05, P.b + 0.1); const g = c.el.querySelector(mk); g.setAttribute("opacity", sk > 0 ? 1 : 0); g.style.transformOrigin = "150px 210px"; g.style.transform = `scale(${1.6 - 0.6 * ease(sk)})`; };
         P.sfx = "stamp"; P.sfxAt = "end";
         A.push(P);
       });
     } else if (bt.icon) {
-      const ic = iconEl(bt.icon, 520, bt.iconLabel); A.push(popActor(root, ic.el, 540 - ic.w / 2, Math.max(640, 300 + cap.height + 150), { n: 0.55 }));
+      const ic = iconEl(bt.icon, 440, bt.iconLabel); A.push(popActor(root, ic.el, 90, Math.min(1480 - ic.h, 300 + cap.height + 120), { n: 0.55 }));
     }
-    if (bt.note) A.push(noteActor(root, bt.note, 90, 1480));
+    if (bt.note) A.push(noteActor(root, bt.note, 90, 1480, { maxW: 480 }));
     return A;
   },
   cost(bt, root) {
@@ -298,21 +318,22 @@ const BEATS = {
       let x = 80, row = 0; const rot = [-4, 3, -2, 4];
       items.forEach((w, i) => {
         const c = $(`<div class="chip">${esc(plain(w))}</div>`); root.appendChild(c); const cw = c.offsetWidth;
-        if (x + cw > 1000) { x = 120; row++; }
+        const right = y + row * 140 > LOW - 40 ? 580 : 1000;   // unten rechts steht das Männchen
+        if (x + cw > right) { x = 100; row++; }
         A.push(popActor(root, c, x, y + row * 140 + (i % 2) * 18, { r: rot[i % 4], from: -60, n: 0.32 }));
         x += cw + 30;
       });
       y += (row + 1) * 140 + 60;
     }
-    if (y < 1300) {
-      const w = iconEl(bt.icon || "wallet", 340); const W = popActor(root, w.el, 370, Math.max(y, 1200), { from: 300, n: 0.4, sfx: null }); A.splice(1, 0, W);
+    if (y < 1180) {
+      const w = iconEl(bt.icon || "wallet", 300); const W = popActor(root, w.el, 120, Math.max(y, 1180), { from: 300, n: 0.4, sfx: null }); A.splice(1, 0, W);
       // Münzen fliegen heraus, während der Betrag hochzählt
       const coins = Array.from({ length: 6 }, () => iconEl("coin", 110));
       coins.forEach((c, i) => { root.appendChild(c.el); });
       const CA = { n: 0, el: null, sfx: null, free: true };
       CA.update = (lt) => coins.forEach((c, i) => {
-        const t0 = C.a + i * 0.25, k = win(lt, t0, t0 + 0.9), dir = i % 2 ? 1 : -1, wy = Math.max(y, 1200);
-        set(c.el, { x: 480 + dir * k * (200 + i * 30), y: wy - k * 480 + k * k * 360, r: k * 360 * dir, s: 1 - k * 0.2, o: k > 0 && k < 1 ? 1 : 0 });
+        const t0 = C.a + i * 0.25, k = win(lt, t0, t0 + 0.9), dir = i % 2 ? 1 : -1, wy = Math.max(y, 1180);
+        set(c.el, { x: 215 + dir * k * (120 + i * 25), y: wy - k * 420 + k * k * 330, r: k * 360 * dir, s: 1 - k * 0.2, o: k > 0 && k < 1 ? 1 : 0 });
       });
       A.push(CA);
     }
@@ -325,10 +346,10 @@ const BEATS = {
     let fs = 190; while (st.offsetWidth > 900 && fs > 60) { fs -= 6; st.style.fontSize = fs + "px"; }
     A.push(popActor(root, st, 80, y, { r: -3, from: 120, n: 0.55, sfx: "stamp" }));
     y += st.offsetHeight + 90;
-    (bt.lines || []).forEach((l, i) => { A.push(noteActor(root, l, 90, y + i * 78, { size: 62, r: -1.5, color: INK })); });
-    y += (bt.lines || []).length * 78 + 30;
-    if (bt.icon) { const ic = iconEl(bt.icon, 300, bt.iconLabel); A.push(popActor(root, ic.el, 1000 - ic.w, Math.max(y, 1500 - ic.h), { n: 0.5, r: 4 })); }
-    if (bt.note) A.push(noteActor(root, bt.note, 90, 1480, { size: 46 }));
+    (bt.lines || []).forEach((l, i) => { const yy = y + i * 78; A.push(noteActor(root, l, 90, yy, { size: 62, r: -1.5, color: INK, maxW: yy > LOW - 60 ? 480 : 900 })); });
+    y += (bt.lines || []).length * 78 + 40;
+    if (bt.icon) { const ic = iconEl(bt.icon, 280, bt.iconLabel); if (Math.max(y, LOW + 40) + ic.h < 1440) A.push(popActor(root, ic.el, 110, Math.max(y, LOW + 40), { n: 0.5, r: -4 })); }
+    if (bt.note) A.push(noteActor(root, bt.note, 90, 1480, { size: 46, maxW: 480 }));
     return A;
   },
   list(bt, root) {
@@ -341,26 +362,28 @@ const BEATS = {
       root.appendChild(row); let fs = 54; row.style.fontSize = fs + "px"; while (row.offsetHeight > 200 && fs > 34) { fs -= 2; row.style.fontSize = fs + "px"; }
       rows.push(row);
     });
-    const gap = 34, total = rows.reduce((a, r) => a + r.offsetHeight + gap, 0);
-    y = Math.max(y, Math.min(y + 140, (y + 1480 - total) / 2));
+    let gap = 30, fs = 54;
+    const total = () => rows.reduce((a, r) => a + r.offsetHeight + gap, 0);
+    while (y + total() > LOW + 40 && fs > 34) { fs -= 2; rows.forEach((r) => (r.style.fontSize = fs + "px")); }
+    y = Math.max(y, Math.min(y + 60, LOW + 40 - total()));
     rows.forEach((row, i) => { A.push(popActor(root, row, 80, y, { r: i % 2 ? 1 : -1, from: 90, n: 0.42 })); y += row.offsetHeight + gap; });
-    if (bt.note) A.push(noteActor(root, bt.note, 90, Math.min(1500, y + 10), { size: 58, color: INK }));
+    if (bt.note) A.push(noteActor(root, bt.note, 90, Math.min(1460, y + 20), { size: 58, color: INK, maxW: 480 }));
     return A;
   },
   solution(bt, root) {
-    const A = []; const prod = []; (bt.product || []).forEach((p) => { if (prod.length && /-$/.test(prod[prod.length - 1])) prod[prod.length - 1] = prod[prod.length - 1].slice(0, -1) + p; else prod.push(p); });
-    const capLines = [prod.join(" "), ...(bt.lines || [])].map((l) => l.replace(/^(.*)$/, "$1"));
-    const cap = capActor(root, capLines, { size: 84 }); A.push(cap);
-    let cheer = null;
-    const hasCard = !!bt.highlight;
+    const A = [];
+    // Zeilen mit Trennstrich zusammenfügen: „Firmen-“ + „rechtsschutz“ → „Firmenrechtsschutz“, „Schadenersatz-“ + „Rechtsschutz“ bleibt mit Strich
+    const join = (arr) => (arr || []).reduce((out, l) => { const p = out[out.length - 1]; if (p != null && /-$/.test(p)) out[out.length - 1] = /^[a-zäöü]/.test(l) ? p.slice(0, -1) + l : p + l; else out.push(l); return out; }, []);
+    const prod = join(bt.product);
+    // mit Hervorhebung: Überschrift = Produkt + Zeilen, Karte = Hervorhebung; sonst Karte = die Zeilen
+    const hl = !!bt.highlight, lines = join(bt.lines).map(plain);
+    const cap = capActor(root, hl ? [prod.join(" "), ...(bt.lines || [])] : [prod.join(" ")], { size: hl ? 84 : 96, color: hl ? INK : INK }); A.push(cap);
     const top = 300 + cap.height;
-    A.push(mascotActor(root, 330, hasCard ? top - 30 : top + 230, { s: hasCard ? 0.8 : 1.25, cheerAt: () => cheer, n: 1.1 }));
-    if (hasCard) {
-      const card = $(`<div class="abs card"><div style="font-weight:850;font-size:70px;letter-spacing:-0.04em;line-height:1">${esc(plain(bt.highlight))}</div>
-        <div style="margin-top:18px;font-size:46px;font-weight:600;line-height:1.2">${esc((bt.highlightLines || []).map(plain).join(" "))}</div></div>`);
-      const C = popActor(root, card, 80, top + 470, { r: -2, from: 120, n: 0.6, sfx: "ching" }); A.push(C);
-      A.after = () => { cheer = C.a + 0.5; };
-    }
+    const title = hl ? plain(bt.highlight) : lines.join(" "), sub = hl ? (bt.highlightLines || []).map(plain).join(" ") : "";
+    const card = $(`<div class="abs card"><div style="font-weight:850;font-size:${hl ? 70 : 64}px;letter-spacing:-0.04em;line-height:1.05">${hl ? "" : '<span style="display:inline-grid;place-items:center;width:62px;height:62px;border-radius:50%;background:' + MINT + ';color:#fff;font-size:44px;margin-right:18px;vertical-align:-6px">✓</span>'}${esc(title)}</div>
+      ${sub ? `<div style="margin-top:18px;font-size:46px;font-weight:600;line-height:1.2">${esc(sub)}</div>` : ""}</div>`);
+    const C = popActor(root, card, 80, top + 70, { r: -2, from: 120, n: 0.6, sfx: "ching" }); A.push(C);
+    A.after = () => { A.cheerAt = C.a + 0.4; };
     return A;
   },
   warning(bt, root) {
@@ -370,22 +393,21 @@ const BEATS = {
     const y = 300 + cap.height + 40;
     if (bt.note) A.push(noteActor(root, bt.note, 90, y, { size: 60, r: -3, color: INK }));
     const ic = iconEl(bt.icon || "clock", bt.icon && bt.icon !== "clock" ? 320 : 250, bt.iconLabel);
-    const I = popActor(root, ic.el, 130, y + 170, { n: 0.45, sfx: "whoosh" });
+    const I = popActor(root, ic.el, 130, Math.min(y + 150, 1470 - ic.h), { n: 0.45, sfx: "whoosh" });
     const up = I.update; I.update = (lt) => { up(lt); const f = win(lt, I.a, I.a + 6); const st = ic.el.querySelector(".sandTop"), sb = ic.el.querySelector(".sandBot"); if (st) { st.setAttribute("transform", `translate(0 ${f * 60}) scale(1 ${1 - f * 0.6})`); sb.setAttribute("transform", `translate(130 330) scale(1 ${0.4 + f * 0.8}) translate(-130 -330)`); } };
     A.push(I);
-    A.push(mascotActor(root, 560, y + 40, { s: 0.9, face: "worried", mode: "worried", n: 0.6 }));
     return A;
   },
   cta(bt, root) {
     const A = [], cap = capActor(root, bt.question, { size: 100 }); A.push(cap);
     const y = 300 + cap.height + 130;
-    const box = bt.box || "Kostenloser Check", sub = bt.sub || "in 60 Sekunden – persönliche Beratung, kein Callcenter";
+    const box = bt.box || "Kostenloser Check", sub = bt.sub || "in 60 Sekunden – ohne Callcenter";
     const card = $(`<div class="abs" style="width:900px;padding:56px 56px 50px;border-radius:52px;background:${INK};color:#fff">
       <div style="font-weight:850;font-size:84px;letter-spacing:-0.045em;line-height:1">${esc(plain(box))}</div>
-      <div style="margin-top:14px;font-size:50px;color:rgba(255,255,255,.75)">${esc(plain(sub))}</div>
+      <div style="margin-top:14px;font-size:46px;color:rgba(255,255,255,.75);white-space:nowrap">${esc(plain(sub))}</div>
       <div style="margin-top:40px;display:inline-flex;align-items:center;gap:20px;background:${SUN};color:${INK};border-radius:999px;padding:22px 40px;font-weight:800;font-size:56px">Link in der Bio <span style="font-size:60px">↑</span></div></div>`);
     A.push(popActor(root, card, 80, y, { r: -1.5, s: 1, from: 160, n: 0.6, sfx: "pop", bob: 6 }));
-    A.push(mascotActor(root, 640, y + 430, { s: 0.55, mode: "wave", n: 0.6 }));
+
     return A;
   },
 };
@@ -409,7 +431,9 @@ function build() {
     // Geräusche
     if (i > 0) SFX.push({ time: TM.beats[i].start, kind: "whoosh", gain: 0.8 });
     A.forEach((a) => { if (a.sfx) SFX.push({ time: TM.beats[i].start + (a.sfxAt === "end" ? a.b : a.a), kind: a.sfx, gain: a.sfx === "coin" ? 0.7 : 1 }); });
+    if (A.cheerAt != null) SFX.push({ time: TM.beats[i].start + A.cheerAt, kind: "boing", gain: 0.6 });
   });
+  HOST = $(mascotSVG()); overlayRoot.appendChild(HOST);
   // Markenzeile + Pflichtangaben
   const brand = $(`<div class="abs" style="display:flex;align-items:center;gap:22px;white-space:nowrap">
     <svg width="86" height="86" viewBox="0 0 86 86"><rect width="86" height="86" rx="22" fill="${INK}"/><path d="M43 16 C55 22 64 22 68 22 V44 C68 58 56 67 43 72 C30 67 18 58 18 44 V22 C22 22 31 22 43 16Z" fill="${SUN}"/><path d="M32 44 L40 52 L55 35" stroke="${INK}" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -433,12 +457,13 @@ function render(t) {
     P.root.style.transform = `translateY(${-out * 90}px)`; P.root.style.opacity = 1 - out;
     P.A.forEach((a) => a.update(lt));
   });
+  hostUpdate(t);
   // Pflichtangaben: während der Lösung (wenn Sternchen) und am Schluss
   const inSol = OVER.sol && t > OVER.sol.start + Math.min(3, OVER.sol.dur * 0.45) && t < OVER.sol.start + OVER.sol.dur - 0.3;
   const inCta = OVER.cta && t > OVER.cta.start + 1.6;
   set(OVER.fine, { o: inSol || inCta ? 0.9 : 0 });
   const bk = OVER.cta ? ease(win(t, OVER.cta.start + 1.4, OVER.cta.start + 1.8)) : 0;
-  set(OVER.brand, { x: 90, y: 1400 + (1 - bk) * 20, o: bk });
+  set(OVER.brand, { x: 90, y: 1150 + (1 - bk) * 20, o: bk });
 }
 window.render = render;
 window.collectSfx = () => SFX;

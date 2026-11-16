@@ -27,7 +27,8 @@ export function planTiming(ep, voice = null) {
     const speech = voice && voice[i] != null ? voice[i] : estimateSpeech(b.say);
     const last = i === ep.beats.length - 1;
     const lead = i === 0 ? 0.15 : LEAD;
-    const dur = Math.max(MIN[b.type] || 5, lead + speech + (last ? END : TAIL));
+    const min = (MIN[b.type] || 5) + (b.type === 'hook' ? (b.items?.length || 0) * 0.25 + (b.icon ? 0.3 : 0) : 0);   // mehr zu zeichnen = etwas mehr Zeit
+    const dur = Math.max(min, lead + speech + (last ? END : TAIL));
     beats.push({ start: round(t), dur: round(dur), voiceAt: round(t + lead), speech: round(speech) });
     t += dur;
   });
