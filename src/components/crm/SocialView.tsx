@@ -9,7 +9,7 @@ import { CheckCircle2, CircleAlert, Clapperboard, Copy, ExternalLink, Loader2, M
 type Platform = "tiktok" | "instagram" | "youtube";
 type Settings = {
   enabled: boolean; days: number[]; times: string[]; platforms: Platform[]; uploadUser: string; voiceId: string; voiceName: string;
-  speed: number; aiLabel: boolean; promo: boolean; disabled: string[]; hasElevenlabs: boolean; hasUploadpost: boolean; updatedAt?: string;
+  speed: number; aiLabel: boolean; promo: boolean; repeat: boolean; disabled: string[]; hasElevenlabs: boolean; hasUploadpost: boolean; updatedAt?: string;
 };
 type Ep = { id: string; order: number; title: string; topic: string; style: "whiteboard" | "cartoon"; caption: string; beats: number };
 type EpState = {
@@ -18,7 +18,7 @@ type EpState = {
 };
 type State = {
   heartbeat?: string; busy?: string | null; library?: Ep[]; episodes?: Record<string, EpState>; queue?: string[];
-  nextSlot?: { key: string; label: string } | null; credits?: { used?: number | null; limit?: number | null; error?: string };
+  nextSlot?: { key: string; label: string } | null; cycle?: number; credits?: { used?: number | null; limit?: number | null; error?: string };
 };
 type LogEntry = { at: string; kind: string; text: string };
 
@@ -158,9 +158,9 @@ function Queue({ settings, state, onPreview, onAction }: { settings: Settings; s
     <section className="rounded-xl border border-line bg-white p-5 sm:p-7">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h2 className="text-lg font-semibold tracking-[-0.02em]">Videos</h2>
-        <span className="text-xs text-ink-muted">{left} in der Warteschlange · {settings.days.length * settings.times.length} pro Woche</span>
+        <span className="text-xs text-ink-muted">{left} in der Warteschlange · {settings.days.length * settings.times.length} pro Woche{settings.repeat ? ` · Runde ${(state.cycle ?? 0) + 1}` : ""}</span>
       </div>
-      {left > 0 && left <= 3 && <p className="mt-3 flex items-start gap-2 rounded-lg bg-amber-50 px-3 py-2.5 text-sm text-amber-950"><CircleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />Nur noch {left} Videos übrig – Zeit für neue Themen.</p>}
+      {left > 0 && left <= 3 && !settings.repeat && <p className="mt-3 flex items-start gap-2 rounded-lg bg-amber-50 px-3 py-2.5 text-sm text-amber-950"><CircleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />Nur noch {left} Videos übrig – Zeit für neue Themen.</p>}
       {!lib.length && <p className="mt-4 text-sm text-ink-muted">Noch keine Videos – der Server-Dienst liest die Themen beim Start ein.</p>}
       <ul className="mt-4 divide-y divide-line">
         {lib.map((ep) => {
@@ -326,9 +326,23 @@ function Setup({ settings, onSave }: { settings: Settings; onSave: (s: Settings,
               <button key={d} type="button" aria-pressed={s.days.includes(d)} onClick={() => toggleDay(d)}
                 className={`h-10 w-12 rounded-lg border text-sm font-semibold transition ${s.days.includes(d) ? "border-navy bg-sun" : "border-line text-ink-soft hover:border-navy/40"}`}>{l}</button>
             ))}
-            <input type="time" aria-label="Uhrzeit" className="input !w-32 !py-2" value={s.times[0] ?? "18:30"} onChange={(e) => set("times", [e.target.value || "18:30"])} />
           </div>
-          <p className="mt-2 text-xs text-ink-muted">Abends zwischen 18 und 20 Uhr erreichst du die meisten Leute. Drei Videos pro Woche reichen für den Anfang.</p>
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            {s.times.map((tm, i) => (
+              <span key={i} className="inline-flex items-center gap-1">
+                <input type="time" aria-label={`Uhrzeit ${i + 1}`} className="input !w-32 !py-2" value={tm} onChange={(e) => set("times", s.times.map((x, j) => (j === i ? e.target.value || x : x)))} />
+                {s.times.length > 1 && <button type="button" aria-label={`Uhrzeit ${i + 1} entfernen`} onClick={() => set("times", s.times.filter((_, j) => j !== i))} className="rounded-full p-1.5 text-ink-muted hover:bg-paper hover:text-ink"><X className="h-4 w-4" aria-hidden /></button>}
+              </span>
+            ))}
+            {s.times.length < 6 && <button type="button" onClick={() => set("times", [...s.times, ["12:15", "18:30", "20:30", "07:30", "16:00", "21:30"].find((x) => !s.times.includes(x)) ?? "12:00"])} className="rounded-full border border-line px-3 py-2 text-sm font-medium hover:border-navy">+ Uhrzeit</button>}
+          </div>
+          <p className="mt-2 text-xs text-ink-muted">
+            {s.days.length * s.times.length} Videos pro Woche. Gute Zeiten: mittags (12–13 Uhr) und abends (18–21 Uhr). Zwei pro Tag sind ein guter Rhythmus – mehr bringt selten mehr, weil sich die Themen dann schneller wiederholen.
+          </p>
+          <label className="mt-4 flex cursor-pointer items-start gap-3 text-sm">
+            <input type="checkbox" className="mt-0.5 h-5 w-5 shrink-0 accent-navy" checked={s.repeat} onChange={(e) => set("repeat", e.target.checked)} />
+            <span>Dauerbetrieb: Wenn alle Videos gepostet sind, von vorn beginnen<span className="mt-0.5 block text-xs text-ink-muted">Die nächste Runde läuft im jeweils anderen Stil (Whiteboard ↔ Cartoon), damit es kein Doppel-Post ist. Die Stimme wird wiederverwendet und kostet nichts extra.</span></span>
+          </label>
           <div className="mt-4 flex flex-wrap gap-4">
             {(Object.keys(PL) as Platform[]).map((p) => (
               <label key={p} className="flex cursor-pointer items-center gap-2 text-sm"><input type="checkbox" className="h-5 w-5 accent-navy" checked={s.platforms.includes(p)} onChange={() => togglePl(p)} />{PL[p]}</label>

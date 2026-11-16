@@ -1,0 +1,79 @@
+{
+  "id": "28-firma-bussgeld-b",
+  "order": 28,
+  "topic": "firma",
+  "style": "whiteboard",
+  "title": "Bußgeldbescheid für deinen Betrieb? Das zahlt die Versicherung",
+  "caption": "Bußgeldbescheid für deinen Betrieb – nach einer Hygiene-Kontrolle, wegen Arbeitsschutz oder vom Ordnungsamt? Gut zu wissen: Das Bußgeld selbst zahlt keine Versicherung, wohl aber die Verteidigung. Ordnungswidrigkeiten-Rechtsschutz im Firmenrechtsschutz (je nach Tarif). Kostenloser Check über den Link in der Bio.\n\n#selbstständig #unternehmer #gewerbe #firmenrechtsschutz #bußgeld",
+  "youtube": {
+    "title": "Bußgeld für deinen Betrieb? Was die Versicherung zahlt – und was nicht #shorts",
+    "description": "Das Bußgeld selbst ist nicht versichert, wohl aber die Verteidigung: Ordnungswidrigkeiten-Rechtsschutz im Firmenrechtsschutz (je nach Tarif).",
+    "tags": [
+      "Bußgeld",
+      "Firmenrechtsschutz",
+      "Selbstständig",
+      "Gewerbe",
+      "Ordnungswidrigkeit"
+    ]
+  },
+  "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+  "beats": [
+    {
+      "type": "hook",
+      "tag": "Für Selbstständige",
+      "say": "Das Bußgeld für deinen Betrieb zahlt keine Versicherung. Aber etwas anderes schon.",
+      "lines": [
+        "Bußgeld zahlt",
+        "[keine] Versicherung."
+      ],
+      "icon": "bill"
+    },
+    {
+      "type": "list",
+      "say": "Das passiert schneller als gedacht: nach einer Hygiene-Kontrolle, wegen Arbeitsschutz oder mit dem Ordnungsamt.",
+      "title": [
+        "Passiert schneller",
+        "als gedacht:"
+      ],
+      "items": [
+        "Hygiene-Kontrolle",
+        "Vorwurf beim Arbeitsschutz",
+        "Ärger mit dem Ordnungsamt"
+      ],
+      "mark": "cross"
+    },
+    {
+      "type": "fact",
+      "say": "Gut zu wissen: Das Bußgeld selbst zahlt keine Versicherung. Aber die Verteidigung, also Anwalt und Verfahren.",
+      "kicker": [
+        "Gut zu wissen:"
+      ],
+      "big": "Nicht das Bußgeld",
+      "lines": [
+        "Versichert ist die Verteidigung –",
+        "Anwalt und Verfahren."
+      ],
+      "icon": "gavel"
+    },
+    {
+      "type": "solution",
+      "say": "Im Firmenrechtsschutz ist der Ordnungswidrigkeiten-Rechtsschutz je nach Tarif mit drin.",
+      "product": [
+        "Firmen-",
+        "rechtsschutz"
+      ],
+      "lines": [
+        "mit Ordnungswidrigkeiten-",
+        "Rechtsschutz.*"
+      ]
+    },
+    {
+      "type": "cta",
+      "say": "Ist dein Betrieb gut abgesichert? Kostenloser Check, Link in der Bio.",
+      "question": [
+        "Ist dein Betrieb",
+        "[gut abgesichert?]"
+      ]
+    }
+  ]
+}

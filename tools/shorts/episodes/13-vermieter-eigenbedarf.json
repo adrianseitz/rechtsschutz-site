@@ -20,7 +20,8 @@
   "beats": [
     {
       "type": "hook",
-      "say": "Du brauchst deine vermietete Wohnung selbst?",
+      "tag": "Für Vermieter",
+      "say": "Vermieter aufgepasst: Du brauchst deine vermietete Wohnung selbst?",
       "lines": [
         "Eigenbedarf",
         "[anmelden?]"

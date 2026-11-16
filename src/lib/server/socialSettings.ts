@@ -23,13 +23,14 @@ export type SocialSettings = {
   speed: number;           // Sprechtempo 0,9–1,2
   aiLabel: boolean;        // als KI-erstellt kennzeichnen
   promo: boolean;          // TikTok: Werbung für das eigene Unternehmen kennzeichnen
+  repeat: boolean;         // wenn alle Videos gepostet sind: von vorn beginnen (im anderen Stil)
   disabled: string[];      // Videos, die nicht gepostet werden
 };
 type Stored = SocialSettings & { keys?: { elevenlabs?: string; uploadpost?: string }; updatedAt?: string };
 
 export const SOCIAL_DEFAULTS: SocialSettings = {
   enabled: false, days: [1, 3, 5], times: ["18:30"], platforms: ["tiktok", "instagram", "youtube"],
-  uploadUser: "", voiceId: "", voiceName: "", speed: 1.1, aiLabel: true, promo: true, disabled: [],
+  uploadUser: "", voiceId: "", voiceName: "", speed: 1.1, aiLabel: true, promo: true, repeat: true, disabled: [],
 };
 
 export const socialDir = () => path.join(serverConfig.storageDir, "social");

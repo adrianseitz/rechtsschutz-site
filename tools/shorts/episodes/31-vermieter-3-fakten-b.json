@@ -1,0 +1,66 @@
+{
+  "id": "31-vermieter-3-fakten-b",
+  "order": 31,
+  "topic": "vermieter",
+  "style": "cartoon",
+  "title": "3 Fakten, die jeder Vermieter kennen sollte",
+  "caption": "3 Fakten für Vermieter: 1. Privatrechtsschutz deckt die Vermietung meist nicht. 2. Jede Wohnung muss im Vertrag stehen. 3. Die Beiträge sind in der Regel als Werbungskosten absetzbar (verbindlich klärt das deine Steuerberatung). Bonus: Mietausfallschutz ersetzt ausfallende Miete. Kostenloser Check über den Link in der Bio.\n\n#vermieter #immobilien #kapitalanlage #mietausfall #rechtsschutz",
+  "youtube": {
+    "title": "3 Fakten, die jeder Vermieter kennen sollte #shorts",
+    "description": "Privatrechtsschutz deckt Vermietung meist nicht, jede Wohnung gehört in den Vertrag, Beiträge sind in der Regel Werbungskosten. Bonus: Mietausfallschutz der ARAG (je nach Tarif).",
+    "tags": [
+      "Vermieter",
+      "Immobilien",
+      "Kapitalanlage",
+      "Mietausfallschutz",
+      "Werbungskosten"
+    ]
+  },
+  "fine": "* je nach Tarif. Mietausfallschutz als Zusatzbaustein in ausgewählten Tarifen; Leerstand und bestehende Rückstände sind nicht versichert. Steuerliche Fragen klärt deine Steuerberatung. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+  "beats": [
+    {
+      "type": "hook",
+      "tag": "Für Vermieter",
+      "say": "Du vermietest? Dann prüf diese drei Punkte.",
+      "lines": [
+        "Du vermietest?",
+        "[3 Punkte] prüfen."
+      ],
+      "icon": "contract"
+    },
+    {
+      "type": "list",
+      "say": "Erstens: Dein privater Rechtsschutz deckt die Vermietung meist nicht. Zweitens: Jede Wohnung muss im Vertrag stehen. Drittens: Die Beiträge sind in der Regel als Werbungskosten absetzbar.",
+      "title": [
+        "Gut zu wissen:"
+      ],
+      "items": [
+        "Privatschutz reicht nicht",
+        "Jede Wohnung in den Vertrag",
+        "Beiträge meist absetzbar"
+      ],
+      "mark": "num"
+    },
+    {
+      "type": "fact",
+      "say": "Und als Bonus: Der Mietausfallschutz der ARAG ersetzt ausfallende Miete, je nach Vereinbarung bis zu zwölf Monate.",
+      "kicker": [
+        "Bonus:"
+      ],
+      "big": "Mietausfallschutz",
+      "lines": [
+        "ersetzt ausfallende Miete –",
+        "bis zu 12 Monate.*"
+      ],
+      "icon": "money"
+    },
+    {
+      "type": "cta",
+      "say": "Lass deine Immobilien kostenlos checken. Link in der Bio.",
+      "question": [
+        "Lass deine Immobilien",
+        "[kostenlos checken]"
+      ]
+    }
+  ]
+}

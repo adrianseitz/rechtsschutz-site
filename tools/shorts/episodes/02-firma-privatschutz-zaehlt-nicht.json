@@ -20,7 +20,8 @@
   "beats": [
     {
       "type": "hook",
-      "say": "Du bist selbstständig? Dann Achtung: Dein privater Rechtsschutz gilt in der Regel nicht für deine Firma.",
+      "tag": "Für Selbstständige",
+      "say": "Du bist selbstständig? Dann gilt dein privater Rechtsschutz in der Regel nicht für deine Firma.",
       "lines": [
         "Selbstständig?",
         "Privatschutz zählt",

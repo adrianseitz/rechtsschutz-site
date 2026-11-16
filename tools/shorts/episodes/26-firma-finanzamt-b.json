@@ -1,0 +1,78 @@
+{
+  "id": "26-firma-finanzamt-b",
+  "order": 26,
+  "topic": "firma",
+  "style": "whiteboard",
+  "title": "Streit mit dem Finanzamt? Das musst du wissen",
+  "caption": "Streit mit dem Finanzamt? Steuer-Rechtsschutz greift meist erst vor dem Finanzgericht, nicht schon beim Einspruch. Typisch: zu hoher Steuerbescheid, Streit um Betriebsausgaben, Ärger nach der Betriebsprüfung. Im Firmenrechtsschutz je nach Tarif als Baustein. Kostenloser Check über den Link in der Bio.\n\n#selbstständig #steuern #finanzamt #unternehmer #rechtsschutz",
+  "youtube": {
+    "title": "Streit mit dem Finanzamt? Wann Rechtsschutz wirklich zahlt #shorts",
+    "description": "Steuer-Rechtsschutz greift meist erst vor dem Finanzgericht, nicht beim Einspruch. Im Firmenrechtsschutz je nach Tarif als Baustein.",
+    "tags": [
+      "Finanzamt",
+      "Steuern",
+      "Selbstständig",
+      "Firmenrechtsschutz",
+      "Finanzgericht"
+    ]
+  },
+  "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+  "beats": [
+    {
+      "type": "hook",
+      "tag": "Für Selbstständige",
+      "say": "Der Steuerbescheid für deine Firma ist zu hoch? Das solltest du vorher wissen.",
+      "lines": [
+        "Steuerbescheid",
+        "[zu hoch?]"
+      ],
+      "icon": "bill"
+    },
+    {
+      "type": "fact",
+      "say": "Gut zu wissen: Steuer-Rechtsschutz greift meistens erst, wenn es vor das Finanzgericht geht, nicht schon beim Einspruch.",
+      "kicker": [
+        "Gut zu wissen:"
+      ],
+      "big": "Erst vor Gericht",
+      "lines": [
+        "Steuer-Rechtsschutz greift",
+        "meist erst beim Finanzgericht."
+      ],
+      "icon": "gavel"
+    },
+    {
+      "type": "list",
+      "say": "Typische Fälle: ein zu hoher Steuerbescheid, Streit um Betriebsausgaben oder Ärger nach einer Betriebsprüfung.",
+      "title": [
+        "Typische Fälle:"
+      ],
+      "items": [
+        "Steuerbescheid zu hoch",
+        "Streit um Betriebsausgaben",
+        "Ärger nach Betriebsprüfung"
+      ],
+      "mark": "num"
+    },
+    {
+      "type": "solution",
+      "say": "Im Firmenrechtsschutz ist Steuer-Rechtsschutz vor Gericht je nach Tarif als Baustein mit drin.",
+      "product": [
+        "Firmen-",
+        "rechtsschutz"
+      ],
+      "lines": [
+        "mit Steuer-Rechtsschutz",
+        "vor Gericht.*"
+      ]
+    },
+    {
+      "type": "cta",
+      "say": "Ist dein Betrieb hier abgesichert? Kostenloser Check, Link in der Bio.",
+      "question": [
+        "Ist dein Betrieb",
+        "[hier abgesichert?]"
+      ]
+    }
+  ]
+}

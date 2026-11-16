@@ -12,7 +12,7 @@ const key = z.union([z.string().trim().max(2000).regex(/^[A-Za-z0-9_\-.:]*$/, "U
 const schema = z.object({
   enabled: z.boolean(),
   days: z.array(z.number().int().min(0).max(6)).max(7),
-  times: z.array(z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, "Ungültige Uhrzeit")).min(1).max(3),
+  times: z.array(z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, "Ungültige Uhrzeit")).min(1).max(6),
   platforms: z.array(z.enum(PLATFORMS)).max(3),
   uploadUser: z.string().trim().max(80).regex(/^[A-Za-z0-9_.\- ]*$/, "Profilname: nur Buchstaben, Zahlen, Punkt, Bindestrich"),
   voiceId: z.string().trim().max(60).regex(/^[A-Za-z0-9]*$/, "Ungültige Stimme"),
@@ -20,6 +20,7 @@ const schema = z.object({
   speed: z.number().min(0.8).max(1.2),
   aiLabel: z.boolean(),
   promo: z.boolean(),
+  repeat: z.boolean(),
   keys: z.object({ elevenlabs: key, uploadpost: key }).optional(),
 });
 

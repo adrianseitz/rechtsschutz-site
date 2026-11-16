@@ -20,7 +20,8 @@
   "beats": [
     {
       "type": "hook",
-      "say": "Streit mit dem Finanzamt?",
+      "tag": "Für Selbstständige",
+      "say": "Selbstständig und Streit mit dem Finanzamt?",
       "lines": [
         "Streit mit dem",
         "[Finanzamt?]"

@@ -13,6 +13,16 @@ Breite bis y ≈ 1060) und links unten.
 **Schwerpunkt Vermieter + Firma:** In `episodes/` liegt nur, was gepostet werden soll. Themen zu Arbeit, Privat und
 Verkehr liegen in `episodes/reserve/` – zum Aktivieren mit Nummer und `order` zurück nach `episodes/` verschieben.
 
+**Hooks für die Zielgruppe:** Jeder `hook` hat ein `tag` („Für Vermieter“, „Für Selbstständige“, „Für Arbeitgeber“),
+das ab dem ersten Bild steht, und einen Sprechertext, der die Gruppe direkt anspricht. Jedes Thema gibt es zweimal:
+Fassung A und Fassung B (`…-b`) mit anderem Hook und im anderen Stil. Oben läuft ein Fortschrittsbalken mit.
+
+**Dauerbetrieb:** Im CRM lassen sich mehrere Uhrzeiten pro Tag einstellen. Sind alle Videos gepostet, beginnt die
+Reihe von vorn – in jeder zweiten Runde im jeweils anderen Stil (Stimme wird wiederverwendet).
+
+**Prüfung:** `node lib/validate.mjs` prüft alle Episoden (Aufbau, Pflichtangaben, „je nach Tarif“ bei Leistungen,
+unzulässige Werbeaussagen). Der Server-Dienst überspringt alles, was durchfällt.
+
 ## Ein neues Video = eine Datei in `episodes/`
 
 ```jsonc
@@ -23,7 +33,7 @@ Verkehr liegen in `episodes/reserve/` – zum Aktivieren mit Nummer und `order` 
   "youtube": { "title": "… #shorts", "description": "…", "tags": ["…"] },
   "fine": "* je nach Tarif … Pflichtangaben",                         // erscheint im Video
   "beats": [                                                           // Abschnitte; jeder hat einen Sprechertext "say"
-    { "type": "hook",     "say": "…", "lines": ["Erste Zeile", "[betont]"], "icon": "house", "items": ["März"], "mark": "cross" },
+    { "type": "hook",     "tag": "Für Vermieter", "say": "Vermieter aufgepasst: …", "lines": ["Erste Zeile", "[betont]"], "icon": "house" },
     { "type": "cost",     "say": "…", "title": "…", "big": "– 5.700 €", "note": "…", "itemsTitle": "Dazu kommen:", "items": ["Anwalt"] },
     { "type": "fact",     "say": "…", "kicker": ["…"], "big": "3 Wochen", "lines": ["…"], "icon": "calendar", "note": "…" },
     { "type": "list",     "say": "…", "title": ["…"], "items": ["…"], "mark": "check" },          // check | cross | num

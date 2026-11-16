@@ -20,7 +20,8 @@
   "beats": [
     {
       "type": "hook",
-      "say": "Dein Mieter zieht einfach nicht aus?",
+      "tag": "Für Vermieter",
+      "say": "Vermieter aufgepasst: Dein Mieter ist gekündigt und zieht einfach nicht aus?",
       "lines": [
         "Mieter zieht",
         "[einfach nicht aus?]"

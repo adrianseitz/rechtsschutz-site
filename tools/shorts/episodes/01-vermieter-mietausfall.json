@@ -21,7 +21,8 @@
   "beats": [
     {
       "type": "hook",
-      "say": "Dein Mieter zahlt plötzlich keine Miete mehr?",
+      "tag": "Für Vermieter",
+      "say": "Vermieter aufgepasst: Was, wenn dein Mieter ab morgen nicht mehr zahlt?",
       "lines": [
         "Dein Mieter",
         "zahlt [nicht mehr?]"

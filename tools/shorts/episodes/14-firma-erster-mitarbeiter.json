@@ -20,6 +20,7 @@
   "beats": [
     {
       "type": "hook",
+      "tag": "Für Arbeitgeber",
       "say": "Du hast deinen ersten Mitarbeiter eingestellt? Glückwunsch!",
       "lines": [
         "Ersten Mitarbeiter",

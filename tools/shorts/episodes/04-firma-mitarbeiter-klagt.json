@@ -20,7 +20,8 @@
   "beats": [
     {
       "type": "hook",
-      "say": "Ein Mitarbeiter verklagt dich nach der Kündigung?",
+      "tag": "Für Arbeitgeber",
+      "say": "Du hast Mitarbeiter? Dann solltest du wissen, was passiert, wenn dich einer verklagt.",
       "lines": [
         "Dein Mitarbeiter",
         "[verklagt dich?]"

@@ -20,6 +20,7 @@
   "beats": [
     {
       "type": "hook",
+      "tag": "Für Selbstständige",
       "say": "Drei Fehler, die Selbstständige beim Rechtsschutz machen.",
       "lines": [
         "3 Fehler beim",

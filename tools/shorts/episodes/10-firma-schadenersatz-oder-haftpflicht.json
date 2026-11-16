@@ -20,7 +20,8 @@
   "beats": [
     {
       "type": "hook",
-      "say": "Rechtsschutz oder Haftpflicht? Das verwechseln viele Unternehmer.",
+      "tag": "Für Selbstständige",
+      "say": "Rechtsschutz oder Haftpflicht? Das verwechseln viele Selbstständige.",
       "lines": [
         "Rechtsschutz",
         "oder [Haftpflicht?]"

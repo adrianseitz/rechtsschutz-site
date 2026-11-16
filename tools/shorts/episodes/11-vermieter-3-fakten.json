@@ -20,6 +20,7 @@
   "beats": [
     {
       "type": "hook",
+      "tag": "Für Vermieter",
       "say": "Drei Fakten, die jeder Vermieter kennen sollte.",
       "lines": [
         "3 Fakten, die",

@@ -1,0 +1,79 @@
+{
+  "id": "24-firma-mitarbeiter-klagt-b",
+  "order": 24,
+  "topic": "firma",
+  "style": "whiteboard",
+  "title": "Mitarbeiter verklagt dich? Das zahlst du selbst",
+  "caption": "Ein Mitarbeiter klagt nach der Kündigung? Auch als Arbeitgeber zahlst du deinen Anwalt in der 1. Instanz selbst – selbst wenn du recht bekommst. Arbeitgeber-Rechtsschutz im Firmenrechtsschutz deckt das je nach Tarif ab. Kostenloser Check über den Link in der Bio.\n\n#arbeitgeber #unternehmer #selbstständig #firmenrechtsschutz #arbeitsrecht",
+  "youtube": {
+    "title": "Mitarbeiter klagt? Das zahlst du als Chef selbst #shorts",
+    "description": "Auch als Arbeitgeber trägst du in der 1. Instanz deine Anwaltskosten selbst (§ 12a ArbGG). Arbeitgeber-Rechtsschutz als Baustein im Firmenrechtsschutz (je nach Tarif).",
+    "tags": [
+      "Arbeitgeber",
+      "Firmenrechtsschutz",
+      "Arbeitsrecht",
+      "Unternehmer",
+      "Kündigungsschutzklage"
+    ]
+  },
+  "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+  "beats": [
+    {
+      "type": "hook",
+      "tag": "Für Arbeitgeber",
+      "say": "Als Chef gewinnst du vor dem Arbeitsgericht. Und zahlst trotzdem deinen Anwalt.",
+      "lines": [
+        "Du gewinnst –",
+        "und [zahlst trotzdem?]"
+      ],
+      "icon": "gavel"
+    },
+    {
+      "type": "fact",
+      "say": "Auch als Arbeitgeber gilt: In der ersten Instanz zahlst du deinen Anwalt selbst, selbst wenn du recht bekommst.",
+      "kicker": [
+        "Auch als Chef gilt:"
+      ],
+      "big": "Du zahlst selbst",
+      "lines": [
+        "In der 1. Instanz trägt",
+        "jede Seite ihren Anwalt."
+      ],
+      "icon": "gavel",
+      "note": "§ 12a ArbGG"
+    },
+    {
+      "type": "list",
+      "say": "Typische Fälle: eine Kündigungsschutzklage, Streit ums Arbeitszeugnis oder um Lohn und Überstunden.",
+      "title": [
+        "Typische Fälle:"
+      ],
+      "items": [
+        "Kündigungsschutzklage",
+        "Streit ums Zeugnis",
+        "Lohn & Überstunden"
+      ],
+      "mark": "num"
+    },
+    {
+      "type": "solution",
+      "say": "Mit dem Arbeitgeber-Baustein im Firmenrechtsschutz sind solche Streitigkeiten je nach Tarif abgedeckt.",
+      "product": [
+        "Firmen-",
+        "rechtsschutz"
+      ],
+      "lines": [
+        "mit Arbeitgeber-",
+        "Rechtsschutz.*"
+      ]
+    },
+    {
+      "type": "cta",
+      "say": "Ist dein Betrieb abgesichert? Kostenloser Check, Link in der Bio.",
+      "question": [
+        "Ist dein Betrieb",
+        "[abgesichert?]"
+      ]
+    }
+  ]
+}

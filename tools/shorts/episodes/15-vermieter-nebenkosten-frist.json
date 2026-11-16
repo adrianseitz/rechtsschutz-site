@@ -1,0 +1,79 @@
+{
+  "id": "15-vermieter-nebenkosten-frist",
+  "order": 15,
+  "topic": "vermieter",
+  "style": "whiteboard",
+  "title": "Nebenkostenabrechnung: Diese Frist kostet Vermieter Geld",
+  "caption": "Vermieter aufgepasst: Die Nebenkostenabrechnung muss spätestens 12 Monate nach Ende des Abrechnungszeitraums beim Mieter sein (§ 556 Abs. 3 BGB). Danach ist die Nachforderung in der Regel weg. Kommt es zum Streit, übernimmt der Vermieterrechtsschutz je nach Tarif Anwalt und Gericht. Kostenloser Check über den Link in der Bio.\n\n#vermieter #nebenkosten #nebenkostenabrechnung #mietrecht #immobilien",
+  "youtube": {
+    "title": "Nebenkostenabrechnung zu spät? Das kostet Vermieter Geld #shorts",
+    "description": "Die Betriebskostenabrechnung muss 12 Monate nach Ende des Abrechnungszeitraums zugehen (§ 556 Abs. 3 BGB), sonst ist die Nachforderung in der Regel ausgeschlossen. Vermieterrechtsschutz je nach Tarif.",
+    "tags": [
+      "Vermieter",
+      "Nebenkostenabrechnung",
+      "Nebenkosten",
+      "Mietrecht",
+      "Vermieterrechtsschutz"
+    ]
+  },
+  "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+  "beats": [
+    {
+      "type": "hook",
+      "tag": "Für Vermieter",
+      "say": "Vermieter aufgepasst: Für die Nebenkostenabrechnung hast du nur zwölf Monate Zeit.",
+      "lines": [
+        "Nebenkosten:",
+        "Nur [12 Monate] Zeit!"
+      ],
+      "icon": "calendar"
+    },
+    {
+      "type": "fact",
+      "say": "Die Abrechnung muss spätestens zwölf Monate nach Ende des Abrechnungszeitraums beim Mieter sein. Danach ist die Nachforderung in der Regel ausgeschlossen.",
+      "kicker": [
+        "Abrechnungsfrist:"
+      ],
+      "big": "12 Monate",
+      "lines": [
+        "nach Ende des Abrechnungszeitraums –",
+        "danach ist die Nachzahlung meist weg."
+      ],
+      "icon": "calendar",
+      "note": "§ 556 Abs. 3 BGB"
+    },
+    {
+      "type": "list",
+      "say": "Typischer Streit: Der Mieter zahlt die Nachzahlung nicht, zweifelt einzelne Posten an oder findet Fehler in der Abrechnung.",
+      "title": [
+        "Typischer Streit:"
+      ],
+      "items": [
+        "Mieter zahlt Nachzahlung nicht",
+        "Posten nicht umlagefähig?",
+        "Fehler in der Abrechnung"
+      ],
+      "mark": "num"
+    },
+    {
+      "type": "solution",
+      "say": "Kommt es zum Streit um die Nebenkosten, übernimmt der Vermieterrechtsschutz je nach Tarif Anwalt und Gericht.",
+      "product": [
+        "Vermieter-",
+        "rechtsschutz"
+      ],
+      "lines": [
+        "zahlt Anwalt und Gericht",
+        "im Streit um Nebenkosten.*"
+      ]
+    },
+    {
+      "type": "cta",
+      "say": "Bist du als Vermieter gut abgesichert? Kostenloser Check, Link in der Bio.",
+      "question": [
+        "Bist du als Vermieter",
+        "[gut abgesichert?]"
+      ]
+    }
+  ]
+}

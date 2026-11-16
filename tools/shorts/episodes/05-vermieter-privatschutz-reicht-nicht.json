@@ -20,7 +20,8 @@
   "beats": [
     {
       "type": "hook",
-      "say": "Du hast Rechtsschutz und vermietest eine Wohnung?",
+      "tag": "Für Vermieter",
+      "say": "Du vermietest eine Wohnung und hast schon Rechtsschutz? Dann aufgepasst.",
       "lines": [
         "Du hast Rechtsschutz",
         "und eine [Mietwohnung?]"

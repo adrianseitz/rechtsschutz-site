@@ -1,0 +1,84 @@
+{
+  "id": "17-vermieter-zahlungsverzug",
+  "order": 17,
+  "topic": "vermieter",
+  "style": "whiteboard",
+  "title": "Mieter zahlt ständig zu spät? Ab wann du kündigen darfst",
+  "caption": "Dein Mieter zahlt ständig zu spät oder gar nicht? Ab einem Rückstand von zwei Monatsmieten ist eine fristlose Kündigung in der Regel möglich (§ 543 BGB). Wichtig: Rückstand genau berechnen, schriftlich begründen, Zugang nachweisen. Vermieterrechtsschutz plus Mietausfallschutz (je nach Tarif). Kostenloser Check über den Link in der Bio.\n\n#vermieter #mietrückstand #kündigung #mietrecht #mietausfall",
+  "youtube": {
+    "title": "Mieter zahlt nicht? Ab wann du fristlos kündigen darfst #shorts",
+    "description": "Ab zwei Monatsmieten Rückstand ist die fristlose Kündigung in der Regel möglich (§ 543 Abs. 2 Nr. 3 BGB). Vermieterrechtsschutz und Mietausfallschutz der ARAG je nach Tarif.",
+    "tags": [
+      "Vermieter",
+      "Mietrückstand",
+      "Fristlose Kündigung",
+      "Mietausfall",
+      "Vermieterrechtsschutz"
+    ]
+  },
+  "fine": "* je nach Tarif. Mietausfallschutz als Zusatzbaustein in ausgewählten Tarifen; Leerstand und bestehende Rückstände sind nicht versichert. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+  "beats": [
+    {
+      "type": "hook",
+      "tag": "Für Vermieter",
+      "say": "Vermieter aufgepasst: Dein Mieter zahlt ständig zu spät oder gar nicht?",
+      "lines": [
+        "Mieter zahlt",
+        "[ständig zu spät?]"
+      ],
+      "icon": "clock"
+    },
+    {
+      "type": "fact",
+      "say": "Ab einem Rückstand von zwei Monatsmieten ist eine fristlose Kündigung in der Regel möglich.",
+      "kicker": [
+        "Fristlose Kündigung:"
+      ],
+      "big": "2 Monatsmieten",
+      "lines": [
+        "Rückstand – dann ist sie",
+        "in der Regel möglich."
+      ],
+      "icon": "bill",
+      "note": "§ 543 Abs. 2 Nr. 3 BGB"
+    },
+    {
+      "type": "list",
+      "say": "Darauf kommt es an: den Rückstand genau berechnen, die Kündigung schriftlich begründen und den Zugang nachweisen können.",
+      "title": [
+        "Darauf kommt's an:"
+      ],
+      "items": [
+        "Rückstand genau berechnen",
+        "Schriftlich begründen",
+        "Zugang nachweisen"
+      ],
+      "mark": "num"
+    },
+    {
+      "type": "solution",
+      "say": "Der Vermieterrechtsschutz übernimmt je nach Tarif Anwalt, Gericht und Räumung. Und der Mietausfallschutz der ARAG ersetzt die ausfallende Miete, bis zu zwölf Monate.",
+      "product": [
+        "Vermieter-",
+        "rechtsschutz"
+      ],
+      "lines": [
+        "zahlt Anwalt, Gericht",
+        "und Räumung.*"
+      ],
+      "highlight": "+ Mietausfallschutz",
+      "highlightLines": [
+        "ersetzt die Miete –",
+        "bis zu 12 Monate.*"
+      ]
+    },
+    {
+      "type": "cta",
+      "say": "Ist deine Wohnung abgesichert? Mach den kostenlosen Check, Link in der Bio.",
+      "question": [
+        "Ist deine Wohnung",
+        "[abgesichert?]"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "id": "38-firma-kuendigung-3-wochen-b",
+  "order": 38,
+  "topic": "firma",
+  "style": "whiteboard",
+  "title": "Mitarbeiter gekündigt? Diese Frist läuft jetzt",
+  "caption": "Du musst einem Mitarbeiter kündigen? Danach hat er 3 Wochen Zeit für eine Kündigungsschutzklage (§ 4 KSchG). Häufige Fehler: Kündigung nicht schriftlich, Frist falsch berechnet, Betriebsrat nicht angehört. Arbeitgeber-Rechtsschutz im Firmenrechtsschutz je nach Tarif. Kostenloser Check über den Link in der Bio.\n\n#arbeitgeber #kündigung #arbeitsrecht #unternehmer #firmenrechtsschutz",
+  "youtube": {
+    "title": "Mitarbeiter gekündigt? Diese Frist läuft jetzt für dich #shorts",
+    "description": "Nach Zugang der Kündigung hat der Mitarbeiter 3 Wochen für die Kündigungsschutzklage (§ 4 KSchG). Arbeitgeber-Rechtsschutz im Firmenrechtsschutz je nach Tarif.",
+    "tags": [
+      "Arbeitgeber",
+      "Kündigung",
+      "Kündigungsschutzklage",
+      "Arbeitsrecht",
+      "Firmenrechtsschutz"
+    ]
+  },
+  "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+  "beats": [
+    {
+      "type": "hook",
+      "tag": "Für Arbeitgeber",
+      "say": "Drei Wochen: So lange kann dein Mitarbeiter nach der Kündigung klagen.",
+      "lines": [
+        "[3 Wochen] kann dein",
+        "Mitarbeiter klagen."
+      ],
+      "icon": "calendar"
+    },
+    {
+      "type": "fact",
+      "say": "Nach Zugang der Kündigung hat dein Mitarbeiter drei Wochen Zeit für eine Kündigungsschutzklage.",
+      "kicker": [
+        "Nach der Kündigung:"
+      ],
+      "big": "3 Wochen",
+      "lines": [
+        "hat dein Mitarbeiter Zeit",
+        "für die Kündigungsschutzklage."
+      ],
+      "icon": "calendar",
+      "note": "§ 4 KSchG"
+    },
+    {
+      "type": "list",
+      "say": "Häufige Fehler: Die Kündigung ist nicht schriftlich, die Frist falsch berechnet, oder der Betriebsrat wurde nicht angehört.",
+      "title": [
+        "Häufige Fehler:"
+      ],
+      "items": [
+        "Kündigung nicht schriftlich",
+        "Frist falsch berechnet",
+        "Betriebsrat nicht angehört"
+      ],
+      "mark": "cross"
+    },
+    {
+      "type": "solution",
+      "say": "Kommt die Klage, übernimmt der Arbeitgeber-Baustein im Firmenrechtsschutz je nach Tarif Anwalt und Gericht.",
+      "product": [
+        "Firmen-",
+        "rechtsschutz"
+      ],
+      "lines": [
+        "mit Arbeitgeber-",
+        "Rechtsschutz.*"
+      ]
+    },
+    {
+      "type": "cta",
+      "say": "Ist dein Betrieb abgesichert? Kostenloser Check, Link in der Bio.",
+      "question": [
+        "Ist dein Betrieb",
+        "[abgesichert?]"
+      ]
+    }
+  ]
+}

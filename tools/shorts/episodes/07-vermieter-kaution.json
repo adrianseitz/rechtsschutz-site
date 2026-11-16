@@ -20,7 +20,8 @@
   "beats": [
     {
       "type": "hook",
-      "say": "Dein Mieter zieht aus und will die volle Kaution zurück?",
+      "tag": "Für Vermieter",
+      "say": "Vermieter aufgepasst: Dein Mieter zieht aus und will die volle Kaution zurück?",
       "lines": [
         "Mieter will die",
         "[Kaution] zurück?"

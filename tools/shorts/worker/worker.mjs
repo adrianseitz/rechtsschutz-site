@@ -10,13 +10,14 @@ import { fileURLToPath } from "node:url";
 import { renderEpisode } from "../render.mjs";
 import { P, decrypt, ensureDirs, log, ownFile, readJson, takeJobs, trimLog, writeJson } from "./store.mjs";
 import { elevenlabsUsage, tts, uploadStatus, uploadVideo } from "./services.mjs";
-import { berlin, dueSlot, nextSlotLabel } from "./schedule.mjs";
+import { berlin, dueSlot, nextSlotLabel, normTimes } from "./schedule.mjs";
+import { validateEpisode } from "../lib/validate.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const EPISODES = join(ROOT, "episodes");
 const SITE = (process.env.NEXT_PUBLIC_SITE_URL || "https://www.seitz-rechtsschutz.de").replace(/\/$/, "");
 const TICK = +(process.env.SHORTS_TICK_MS || 60_000);
-const AHEAD = 3;   // so viele Videos liegen fertig bereit
+const AHEAD = 3;   // so viele Videos liegen mindestens fertig bereit (bei mehreren Terminen pro Tag: zwei Tage Vorrat)
 const SLUG = { vermieter: "/vermieterrechtsschutz", firma: "/firmenrechtsschutz", arbeit: "/arbeitsrechtsschutz", privat: "/privatrechtsschutz" };
 const PLATFORMS = ["tiktok", "instagram", "youtube"];
 const sha = (s) => createHash("sha1").update(s).digest("hex");
@@ -24,14 +25,20 @@ const now = () => new Date().toISOString();
 const msg = (e) => (e instanceof Error ? e.message : String(e)).slice(0, 300);
 
 // ---------- Bibliothek ----------
-async function loadLibrary() {
+const reported = new Set();   // jede fehlerhafte Datei nur einmal ins Protokoll
+async function loadLibrary(cycle = 0) {
   const files = (await readdir(EPISODES).catch(() => [])).filter((f) => f.endsWith(".json"));
   const eps = [];
   for (const f of files) {
+    let problem = null;
     try {
       const ep = JSON.parse(await readFile(join(EPISODES, f), "utf8"));
-      if (ep.id && ["whiteboard", "cartoon"].includes(ep.style) && Array.isArray(ep.beats) && ep.beats.length) eps.push(ep);
-    } catch (e) { await log("fehler", `Episode ${f} unlesbar: ${msg(e)}`); }
+      const errors = validateEpisode(ep, f.replace(/\.json$/, ""));
+      if (errors.length) problem = errors.join("; ");
+      // in jeder zweiten Runde im anderen Stil – so ist die Wiederholung ein neues Video (Stimme bleibt, kostet nichts)
+      else eps.push(cycle % 2 ? { ...ep, style: ep.style === "cartoon" ? "whiteboard" : "cartoon" } : ep);
+    } catch (e) { problem = `unlesbar (${msg(e)})`; }
+    if (problem && !reported.has(f + problem)) { reported.add(f + problem); await log("fehler", `Thema ${f} wird übersprungen: ${problem}`); }
   }
   return eps.sort((a, b) => (a.order ?? 999) - (b.order ?? 999) || a.id.localeCompare(b.id));
 }
@@ -154,7 +161,7 @@ async function tick() {
   const keys = keysOf(settings);
   const state = await readJson(P.state, {});
   state.episodes ||= {};
-  const lib = await loadLibrary();
+  const lib = await loadLibrary(state.cycle || 0);
   const byId = new Map(lib.map((ep) => [ep.id, ep]));
   state.library = lib.map((ep) => ({ id: ep.id, order: ep.order, title: ep.title, topic: ep.topic, style: ep.style, caption: ep.caption, beats: ep.beats.length }));
   const disabled = new Set(settings.disabled || []);
@@ -179,9 +186,21 @@ async function tick() {
   for (const [id, e] of Object.entries(state.episodes)) if (e.status === "wird gepostet" && e.requestId) await poll(id, e, keys);
 
   // 3) Warteschlange + vorab erstellen (ein Video pro Durchlauf, damit Aufträge nicht lange warten)
-  const queue = lib.filter((ep) => !disabled.has(ep.id) && !["gepostet", "wird gepostet"].includes(state.episodes[ep.id]?.status));
+  const open = () => lib.filter((ep) => !disabled.has(ep.id) && !["gepostet", "wird gepostet"].includes(state.episodes[ep.id]?.status));
+  let queue = open();
+  // Alles gepostet? Dann beginnt die Reihe von vorn (abschaltbar im CRM) – beim nächsten Durchlauf im anderen Stil
+  const active = lib.filter((ep) => !disabled.has(ep.id));
+  if (!queue.length && active.length && settings.repeat !== false && active.every((ep) => state.episodes[ep.id]?.status === "gepostet")) {
+    state.cycle = (state.cycle || 0) + 1;
+    for (const ep of active) { const e = state.episodes[ep.id]; state.episodes[ep.id] = { lastPostedAt: e.postedAt, timesPosted: (e.timesPosted || 0) + 1, lastPlatforms: e.platforms }; }
+    await log("info", `Alle Videos sind gepostet – Runde ${state.cycle + 1} startet.`);
+    state.heartbeat = now();
+    await writeJson(P.state, state);
+    return;   // nächster Durchlauf lädt die Themen im anderen Stil
+  }
   state.queue = queue.map((ep) => ep.id);
-  for (const ep of queue.slice(0, AHEAD)) {
+  const ahead = Math.max(AHEAD, normTimes(settings).length * 2);
+  for (const ep of queue.slice(0, ahead)) {
     if (needsRender(state.episodes[ep.id], ep, settings, keys)) { await render(ep, settings, keys, state); break; }
   }
 

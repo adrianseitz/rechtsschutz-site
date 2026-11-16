@@ -1,0 +1,79 @@
+{
+  "id": "40-firma-kunde-zahlt-nicht-b",
+  "order": 40,
+  "topic": "firma",
+  "style": "whiteboard",
+  "title": "Kunde zahlt nicht? Was Rechtsschutz wirklich abdeckt",
+  "caption": "Dein Kunde zahlt die Rechnung nicht? Ehrlich gesagt: Vertragsstreit mit Kunden oder Lieferanten ist im Firmenrechtsschutz oft nur als Baustein und eingeschränkt versicherbar. Darum vorher klären, welche Bausteine du brauchst und was dein Tarif ausschließt. Kostenloser Check über den Link in der Bio.\n\n#selbstständig #unternehmer #rechnung #firmenrechtsschutz #gewerbe",
+  "youtube": {
+    "title": "Kunde zahlt nicht? Was dein Rechtsschutz wirklich abdeckt #shorts",
+    "description": "Vertragsstreit mit Kunden oder Lieferanten ist im Firmenrechtsschutz oft nur als Baustein und eingeschränkt versicherbar – vorher klären, was zum Betrieb passt.",
+    "tags": [
+      "Selbstständig",
+      "Firmenrechtsschutz",
+      "Rechnung",
+      "Unternehmer",
+      "Vertragsrecht"
+    ]
+  },
+  "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+  "beats": [
+    {
+      "type": "hook",
+      "tag": "Für Selbstständige",
+      "say": "Viele Selbstständige glauben, ihr Rechtsschutz zahlt jeden Streit mit Kunden. Stimmt so nicht.",
+      "lines": [
+        "Zahlt Rechtsschutz",
+        "[jeden] Kundenstreit?"
+      ],
+      "icon": "contract"
+    },
+    {
+      "type": "fact",
+      "say": "Ehrlich gesagt: Streit um Verträge mit Kunden oder Lieferanten ist im Firmenrechtsschutz oft nur als Baustein und eingeschränkt versicherbar.",
+      "kicker": [
+        "Ehrlich gesagt:"
+      ],
+      "big": "Nur als Baustein",
+      "lines": [
+        "Vertragsstreit ist oft nur",
+        "eingeschränkt versicherbar."
+      ],
+      "icon": "contract"
+    },
+    {
+      "type": "list",
+      "say": "Darum vorher klären: welche Bausteine du brauchst, was dein Tarif ausschließt und ab wann der Schutz gilt.",
+      "title": [
+        "Darum vorher",
+        "klären:"
+      ],
+      "items": [
+        "Welche Bausteine du brauchst",
+        "Was dein Tarif ausschließt",
+        "Ab wann der Schutz gilt"
+      ],
+      "mark": "num"
+    },
+    {
+      "type": "solution",
+      "say": "Ich prüfe mit dir, was für deinen Betrieb versicherbar ist und was je nach Tarif möglich ist.",
+      "product": [
+        "Firmen-",
+        "rechtsschutz"
+      ],
+      "lines": [
+        "passend zu Branche,",
+        "Größe und Rechtsform.*"
+      ]
+    },
+    {
+      "type": "cta",
+      "say": "Was ist bei deinem Betrieb versicherbar? Kostenloser Check, Link in der Bio.",
+      "question": [
+        "Was ist bei dir",
+        "[versicherbar?]"
+      ]
+    }
+  ]
+}

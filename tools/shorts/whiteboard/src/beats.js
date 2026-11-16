@@ -96,7 +96,11 @@
   const LOW = 1060, LEFTW = 470;
   const BEATS = {
     hook(bt, D) {
-      const items = [], size = fit(bt.lines, 116); let y = 400;
+      const items = [], size = fit(bt.lines, 116); let y = bt.tag ? 470 : 400;
+      if (bt.tag) {   // Zielgruppe steht ab dem ersten Bild da (nicht erst geschrieben)
+        const ts = fit([bt.tag], 68, 700), tb = textBox(bt.tag, X0 + 14, 318, { size: ts });
+        items.push({ n: 0, fixed: true, draw: () => { ink(hilite(tb.x - 8, tb.y, tb.w + 16, tb.h, { col: HL.yellow, alpha: .8 })); writeOn(bt.tag, X0 + 14, 318, -2, -1, { size: ts, col: INK.blue }); } });
+      }
       items.push(...lines(bt.lines, X0, y, { size }, size * 1.17)); y += (bt.lines.length - 1) * size * 1.17;
       if (bt.items && bt.items.length) {
         const k = bt.items.length, cw = MAXW / k, ms = Math.min(...bt.items.map(m => fit([m], 88, cw - 95)));
@@ -228,7 +232,8 @@
     if (PLANS[i]) return PLANS[i];
     if (!G) G = OUT;   // Textmaße brauchen den Zeichenkontext (auch vor dem ersten Bild)
     const bt = EP.beats[i], tm = TM.beats[i], D = tm.dur, P = (BEATS[bt.type] || BEATS.fact)(bt, D);
-    schedule(P.items, .15, D - (P.hold || .95));
+    const fixed = P.items.filter(it => it.fixed); fixed.forEach(it => { it.a = -2; it.b = -1; });
+    schedule(P.items.filter(it => !it.fixed), .15, D - (P.hold || .95));
     if (P.after) P.after();
     PLANS[i] = P;
     return P;
@@ -243,7 +248,18 @@
   }]));
   // Das Männchen steht VOR der Tafel: nach Hand und Wischer zeichnen, über allem
   const prevHook = window.overlayHook;
-  window.overlayHook = (c, t) => { G.save(); G.setTransform(1, 0, 0, 1, 0, 0); host(t); G.restore(); if (prevHook) prevHook(c, t); };
+  // Fortschrittsbalken oben: ein Segment je Abschnitt (hält die Leute dran)
+  function progress(c, t) {
+    const x0 = 80, w = 920, gap = 10, y = 206, h = 9, n = TM.beats.length, total = TM.total;
+    let x = x0;
+    TM.beats.forEach((b, i) => {
+      const sw = (w - gap * (n - 1)) * (b.dur / total), k = Math.min(1, Math.max(0, (t - b.start) / b.dur));
+      c.fillStyle = 'rgba(11,11,10,.13)'; c.beginPath(); c.roundRect(x, y, sw, h, 5); c.fill();
+      if (k > 0) { c.fillStyle = '#0B0B0A'; c.beginPath(); c.roundRect(x, y, Math.max(h, sw * k), h, 5); c.fill(); }
+      x += sw + gap;
+    });
+  }
+  window.overlayHook = (c, t) => { G.save(); G.setTransform(1, 0, 0, 1, 0, 0); host(t); G.restore(); progress(c, t); if (prevHook) prevHook(c, t); };
 
   // Geräusche: Marker beim Schreiben, Wischer beim Übergang, „Pop“ beim Jubeln
   window.collectSfx = () => {

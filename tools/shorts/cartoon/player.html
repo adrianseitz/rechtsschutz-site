@@ -275,7 +275,13 @@ function noteActor(root, text, x, y, { size = 54, r = -2, color = "rgba(11,11,10
 const LOW = 1060;
 const BEATS = {
   hook(bt, root) {
-    const A = [], cap = capActor(root, bt.lines, { size: 104 }); A.push(cap);
+    const A = [], off = bt.tag ? 120 : 0;
+    if (bt.tag) {   // Zielgruppe steht ab dem ersten Bild da
+      const tag = $(`<div class="abs" style="left:80px;top:250px;background:${INK};color:${SUN};font-weight:800;font-size:48px;letter-spacing:-0.02em;padding:14px 32px;border-radius:999px;white-space:nowrap;transform-origin:0 50%">${esc(plain(bt.tag))}</div>`);
+      root.appendChild(tag);
+      A.push({ n: 0, free: true, sfx: null, update: (lt) => { const p = spring(win(lt, -0.15, 0.35)); tag.style.transform = `rotate(-2deg) scale(${0.9 + 0.1 * p})`; } });
+    }
+    const cap = capActor(root, bt.lines, { size: 104, top: 230 + off }); cap.height += off; A.push(cap);
     if (bt.items && bt.items.length) {
       const items = bt.items.slice(0, 3), mk = bt.mark === "check" ? ".ok" : ".x";
       const cy = 300 + cap.height + 60;
@@ -434,6 +440,10 @@ function build() {
     if (A.cheerAt != null) SFX.push({ time: TM.beats[i].start + A.cheerAt, kind: "boing", gain: 0.6 });
   });
   HOST = $(mascotSVG()); overlayRoot.appendChild(HOST);
+  // Fortschrittsbalken oben: ein Segment je Abschnitt
+  BAR = $(`<div class="abs" style="left:80px;top:206px;width:920px;height:9px;display:flex;gap:10px"></div>`);
+  TM.beats.forEach((b) => BAR.appendChild($(`<div style="flex:${b.dur} 1 0;background:rgba(11,11,10,.13);border-radius:5px;overflow:hidden"><i style="display:block;height:100%;width:0;background:${INK};border-radius:5px"></i></div>`)));
+  overlayRoot.appendChild(BAR);
   // Markenzeile + Pflichtangaben
   const brand = $(`<div class="abs" style="display:flex;align-items:center;gap:22px;white-space:nowrap">
     <svg width="86" height="86" viewBox="0 0 86 86"><rect width="86" height="86" rx="22" fill="${INK}"/><path d="M43 16 C55 22 64 22 68 22 V44 C68 58 56 67 43 72 C30 67 18 58 18 44 V22 C22 22 31 22 43 16Z" fill="${SUN}"/><path d="M32 44 L40 52 L55 35" stroke="${INK}" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -444,7 +454,7 @@ function build() {
   const sol = EP.beats.findIndex((b) => b.type === "solution" && JSON.stringify(b).includes("*")), cta = EP.beats.findIndex((b) => b.type === "cta");
   OVER = { brand, fine, sol: sol >= 0 ? TM.beats[sol] : null, cta: cta >= 0 ? TM.beats[cta] : null };
 }
-let OVER = null;
+let OVER = null, BAR = null;
 
 function render(t) {
   document.getElementById("turb").setAttribute("seed", String(1 + Math.floor(t * 10) % 5));
@@ -458,6 +468,7 @@ function render(t) {
     P.A.forEach((a) => a.update(lt));
   });
   hostUpdate(t);
+  [...BAR.children].forEach((seg, i) => { const b = TM.beats[i]; seg.firstChild.style.width = clamp((t - b.start) / b.dur) * 100 + "%"; });
   // Pflichtangaben: während der Lösung (wenn Sternchen) und am Schluss
   const inSol = OVER.sol && t > OVER.sol.start + Math.min(3, OVER.sol.dur * 0.45) && t < OVER.sol.start + OVER.sol.dur - 0.3;
   const inCta = OVER.cta && t > OVER.cta.start + 1.6;

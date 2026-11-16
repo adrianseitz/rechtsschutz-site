@@ -1,0 +1,91 @@
+{
+  "id": "16-vermieter-mieterhoehung",
+  "order": 16,
+  "topic": "vermieter",
+  "style": "cartoon",
+  "title": "Mieter lehnt die Mieterhöhung ab? Diese Frist läuft",
+  "caption": "Dein Mieter stimmt der Mieterhöhung nicht zu? Dann musst du auf Zustimmung klagen – innerhalb von 3 Monaten nach Ablauf seiner Überlegungsfrist (§ 558b BGB). Streit gibt es oft um Mietspiegel, Kappungsgrenze und Form. Vermieterrechtsschutz je nach Tarif, vorher abschließen (Wartezeit meist 3 Monate). Kostenloser Check über den Link in der Bio.\n\n#vermieter #mieterhöhung #mietrecht #immobilien #vermieterrechtsschutz",
+  "youtube": {
+    "title": "Mieter lehnt Mieterhöhung ab? Diese Frist musst du kennen #shorts",
+    "description": "Ohne Zustimmung des Mieters bleibt die Klage auf Zustimmung – binnen 3 Monaten nach Ablauf der Überlegungsfrist (§ 558b BGB). Vermieterrechtsschutz je nach Tarif.",
+    "tags": [
+      "Vermieter",
+      "Mieterhöhung",
+      "Mietrecht",
+      "Mietspiegel",
+      "Vermieterrechtsschutz"
+    ]
+  },
+  "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+  "beats": [
+    {
+      "type": "hook",
+      "tag": "Für Vermieter",
+      "say": "Vermieter aufgepasst: Dein Mieter stimmt der Mieterhöhung nicht zu?",
+      "lines": [
+        "Mieter sagt [Nein]",
+        "zur Mieterhöhung?"
+      ],
+      "icon": "letter"
+    },
+    {
+      "type": "fact",
+      "say": "Stimmt der Mieter nicht zu, musst du auf Zustimmung klagen. Dafür hast du nur drei Monate nach Ablauf seiner Überlegungsfrist.",
+      "kicker": [
+        "Keine Zustimmung?"
+      ],
+      "big": "3 Monate",
+      "lines": [
+        "Zeit für die Klage auf Zustimmung –",
+        "nach der Überlegungsfrist des Mieters."
+      ],
+      "icon": "gavel",
+      "note": "§ 558b BGB"
+    },
+    {
+      "type": "list",
+      "say": "Typische Streitpunkte: Ist der Mietspiegel richtig angewendet, die Kappungsgrenze eingehalten, und stimmen Form und Begründung?",
+      "title": [
+        "Typische",
+        "Streitpunkte:"
+      ],
+      "items": [
+        "Mietspiegel richtig angewendet?",
+        "Kappungsgrenze eingehalten?",
+        "Form und Begründung korrekt?"
+      ],
+      "mark": "num"
+    },
+    {
+      "type": "solution",
+      "say": "Der Vermieterrechtsschutz übernimmt je nach Tarif Anwalt und Gericht, wenn es um die Mieterhöhung zum Streit kommt.",
+      "product": [
+        "Vermieter-",
+        "rechtsschutz"
+      ],
+      "lines": [
+        "zahlt Anwalt und Gericht",
+        "im Streit um die Miete.*"
+      ]
+    },
+    {
+      "type": "warning",
+      "say": "Wichtig: Erst absichern, dann erhöhen. Meist gilt eine Wartezeit von drei Monaten.",
+      "title": "Wichtig:",
+      "lines": [
+        "Erst absichern,",
+        "[dann erhöhen.]"
+      ],
+      "note": "Wartezeit meist 3 Monate",
+      "icon": "clock"
+    },
+    {
+      "type": "cta",
+      "say": "Planst du eine Mieterhöhung? Sichere dich vorher ab, Link in der Bio.",
+      "question": [
+        "Mieterhöhung geplant?",
+        "[Vorher absichern.]"
+      ]
+    }
+  ]
+}

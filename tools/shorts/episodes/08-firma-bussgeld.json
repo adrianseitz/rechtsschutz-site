@@ -20,7 +20,8 @@
   "beats": [
     {
       "type": "hook",
-      "say": "Ein Bußgeldbescheid für deinen Betrieb?",
+      "tag": "Für Selbstständige",
+      "say": "Selbstständig? Dann kann ein Bußgeldbescheid schneller kommen, als du denkst.",
       "lines": [
         "Bußgeldbescheid",
         "für deinen [Betrieb?]"

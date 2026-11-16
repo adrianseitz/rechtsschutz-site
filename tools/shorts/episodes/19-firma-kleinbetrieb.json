@@ -1,0 +1,80 @@
+{
+  "id": "19-firma-kleinbetrieb",
+  "order": 19,
+  "topic": "firma",
+  "style": "whiteboard",
+  "title": "Kleinbetrieb = keine Klage? Vorsicht",
+  "caption": "Kleiner Betrieb, kein Kündigungsschutz, also keine Klage? Vorsicht: Das Kündigungsschutzgesetz gilt zwar in der Regel erst bei mehr als 10 Mitarbeitern (§ 23 KSchG). Klagen gibt es trotzdem – wegen Formfehlern, Sonderkündigungsschutz oder um Lohn und Zeugnis. Arbeitgeber-Rechtsschutz je nach Tarif. Kostenloser Check über den Link in der Bio.\n\n#kleinbetrieb #arbeitgeber #selbstständig #arbeitsrecht #firmenrechtsschutz",
+  "youtube": {
+    "title": "Kleinbetrieb = keine Klage? Dieser Irrtum kann teuer werden #shorts",
+    "description": "Das KSchG gilt in der Regel erst bei mehr als 10 Mitarbeitern (§ 23 KSchG) – Klagen wegen Formfehlern, Sonderkündigungsschutz, Lohn oder Zeugnis gibt es trotzdem.",
+    "tags": [
+      "Kleinbetrieb",
+      "Arbeitgeber",
+      "Kündigungsschutz",
+      "Arbeitsrecht",
+      "Firmenrechtsschutz"
+    ]
+  },
+  "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+  "beats": [
+    {
+      "type": "hook",
+      "tag": "Für Arbeitgeber",
+      "say": "Kleiner Betrieb, kein Kündigungsschutz, also auch keine Klage? Vorsicht.",
+      "lines": [
+        "Kleinbetrieb =",
+        "[keine Klage?]"
+      ],
+      "icon": "building"
+    },
+    {
+      "type": "fact",
+      "say": "Das Kündigungsschutzgesetz gilt in der Regel erst bei mehr als zehn Mitarbeitern.",
+      "kicker": [
+        "Kündigungsschutzgesetz:"
+      ],
+      "big": "ab 10+",
+      "lines": [
+        "gilt in der Regel erst bei",
+        "mehr als 10 Mitarbeitern."
+      ],
+      "icon": "person",
+      "note": "§ 23 KSchG"
+    },
+    {
+      "type": "list",
+      "say": "Klagen gibt es trotzdem: wegen Formfehlern, wegen Sonderkündigungsschutz, zum Beispiel bei Schwangeren, oder um Lohn und Zeugnis.",
+      "title": [
+        "Klagen gibt's",
+        "trotzdem:"
+      ],
+      "items": [
+        "Formfehler in der Kündigung",
+        "Sonderschutz, z. B. Schwangere",
+        "Streit um Lohn oder Zeugnis"
+      ],
+      "mark": "num"
+    },
+    {
+      "type": "solution",
+      "say": "Der Arbeitgeber-Baustein im Firmenrechtsschutz deckt solche Streitigkeiten je nach Tarif ab.",
+      "product": [
+        "Firmen-",
+        "rechtsschutz"
+      ],
+      "lines": [
+        "mit Arbeitgeber-",
+        "Rechtsschutz.*"
+      ]
+    },
+    {
+      "type": "cta",
+      "say": "Auch kleine Betriebe brauchen Schutz. Kostenloser Check, Link in der Bio.",
+      "question": [
+        "Auch kleine Betriebe",
+        "brauchen [Schutz.]"
+      ]
+    }
+  ]
+}
