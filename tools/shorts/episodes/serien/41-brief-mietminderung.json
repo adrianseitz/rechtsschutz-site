@@ -1,0 +1,82 @@
+{
+  "id": "41-brief-mietminderung",
+  "order": 41,
+  "topic": "vermieter",
+  "style": "studio3d",
+  "series": "brief",
+  "title": "Der Brief: Dein Mieter kürzt die Miete",
+  "caption": "Dieser Brief kann morgen bei dir liegen: Dein Mieter kürzt die Miete um 30 Prozent. Ob das berechtigt ist, klärt oft erst ein Gutachter – und bis dahin zahlst du Anwalt und Gericht aus eigener Tasche. Mit Vermieterrechtsschutz übernimmt das die Versicherung (je nach Tarif). Wichtig: abschließen, bevor der Streit da ist. Kostenloser Check über den Link in der Bio.\n\n#vermieter #mietminderung #mietrecht #immobilien #rechtsschutz #vermieterrechtsschutz",
+  "youtube": {
+    "title": "Dieser Brief kostet Vermieter Tausende #shorts",
+    "description": "Mietminderung um 30 Prozent: Was der Streit kosten kann und was Vermieterrechtsschutz der ARAG übernimmt (je nach Tarif).",
+    "tags": [
+      "Vermieter",
+      "Mietminderung",
+      "Mietrecht",
+      "Vermieterrechtsschutz",
+      "Immobilien"
+    ]
+  },
+  "fine": "* je nach Tarif und Versicherungsbedingungen; Selbstbeteiligung, Wartezeiten und Ausschlüsse beachten. Beträge sind Beispiele. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+  "beats": [
+    {
+      "type": "letter",
+      "say": "Vermieter, stell dir vor, dieser Brief liegt morgen in deinem Briefkasten: Dein Mieter kürzt die Miete um dreißig Prozent.",
+      "pov": [
+        "Dieser Brief liegt",
+        "[morgen] bei dir."
+      ],
+      "from": "Anwaltskanzlei",
+      "fromSub": "im Auftrag Ihres Mieters",
+      "subject": "Mietminderung um 30 % ab sofort",
+      "body": [
+        "wegen Mängeln in der Wohnung",
+        "kürzt unser Mandant die Miete."
+      ],
+      "stamp": "Frist: 14 Tage"
+    },
+    {
+      "type": "cost",
+      "say": "Ob das berechtigt ist, klärt oft erst ein Gutachter. Mit Anwalt und Gericht kommen schnell mehrere tausend Euro zusammen.",
+      "title": "Bis das geklärt ist:",
+      "big": "– 4.500 €",
+      "note": "Beispiel bei einem Streit vor Gericht",
+      "itemsTitle": "Das zahlst du erst mal selbst:",
+      "items": [
+        "Gutachter",
+        "Anwalt",
+        "Gericht"
+      ]
+    },
+    {
+      "type": "solution",
+      "say": "Mit Vermieterrechtsschutz übernimmt die Versicherung je nach Tarif Anwalt, Gericht und Gutachter. Du musst nicht in Vorkasse gehen.",
+      "product": [
+        "Vermieter-",
+        "rechtsschutz"
+      ],
+      "lines": [
+        "übernimmt Anwalt, Gericht",
+        "und Gutachter.*"
+      ]
+    },
+    {
+      "type": "warning",
+      "say": "Aber Achtung: Läuft der Streit schon, ist es zu spät. Meist gilt eine Wartezeit von drei Monaten.",
+      "lines": [
+        "Erst absichern,",
+        "[dann der Brief.]"
+      ],
+      "note": "Wartezeit meist 3 Monate",
+      "icon": "clock"
+    },
+    {
+      "type": "cta",
+      "say": "Passt das zu deiner Wohnung? Mach den kostenlosen Check, der Link ist in meiner Bio.",
+      "question": [
+        "Passt das zu",
+        "[deiner Wohnung?]"
+      ]
+    }
+  ]
+}

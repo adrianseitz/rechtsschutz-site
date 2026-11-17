@@ -2,7 +2,7 @@
 // Die Bilder passen sich der Stimme an, nicht umgekehrt: Jeder Abschnitt dauert so lange, wie gesprochen wird,
 // plus etwas Vorlauf und Luft für den Übergang.
 
-const MIN = { hook: 3.5, cost: 5.2, fact: 4.6, list: 5.0, solution: 5.8, warning: 4.4, cta: 5.2 };
+const MIN = { hook: 3.5, cost: 5.2, fact: 4.6, list: 5.0, solution: 5.8, warning: 4.4, cta: 5.2, letter: 5.4, versus: 7.2 };
 const LEAD = 0.25;   // Stimme setzt kurz nach dem Schnitt ein
 const TAIL = 0.4;   // Luft nach dem letzten Wort (der Wisch-Übergang beginnt schon während des letzten Worts)
 const END = 1.6;     // am Schluss bleibt das Abschlussbild stehen

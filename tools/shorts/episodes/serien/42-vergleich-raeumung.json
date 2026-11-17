@@ -1,0 +1,89 @@
+{
+  "id": "42-vergleich-raeumung",
+  "order": 42,
+  "topic": "vermieter",
+  "style": "studio3d",
+  "series": "vergleich",
+  "title": "Mit oder ohne: Räumungsklage",
+  "caption": "Gleicher Ärger, zwei Vermieter: Der Mieter zahlt nicht und zieht nicht aus. Ohne Rechtsschutz zahlst du Anwalt, Gericht und Räumung selbst – schnell mehrere tausend Euro. Mit Vermieterrechtsschutz übernimmt das die Versicherung (je nach Tarif), du trägst nur die Selbstbeteiligung. Kostenloser Check über den Link in der Bio.\n\n#vermieter #räumungsklage #mietrecht #immobilien #rechtsschutz #vermieterrechtsschutz",
+  "youtube": {
+    "title": "Räumungsklage: mit oder ohne Rechtsschutz? #shorts",
+    "description": "Was eine Räumungsklage kosten kann und was Vermieterrechtsschutz der ARAG übernimmt (je nach Tarif).",
+    "tags": [
+      "Vermieter",
+      "Räumungsklage",
+      "Mietrecht",
+      "Vermieterrechtsschutz",
+      "Immobilien"
+    ]
+  },
+  "fine": "* je nach Tarif und Versicherungsbedingungen; Selbstbeteiligung, Wartezeiten und Ausschlüsse beachten. Beträge sind Beispiele. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+  "beats": [
+    {
+      "type": "hook",
+      "tag": "Für Vermieter",
+      "say": "Gleicher Ärger, zwei Vermieter: Der Mieter zahlt nicht und zieht nicht aus.",
+      "lines": [
+        "Gleicher Ärger.",
+        "[Zwei Vermieter.]"
+      ],
+      "icon": "house"
+    },
+    {
+      "type": "versus",
+      "say": "Der eine zahlt Anwalt, Gericht und Räumung selbst, in diesem Beispiel über sechstausend Euro. Beim anderen übernimmt das die Versicherung.",
+      "title": [
+        "Räumungsklage:",
+        "[wer zahlt?]"
+      ],
+      "left": {
+        "label": "Ohne Rechtsschutz",
+        "rows": [
+          "Anwalt: 1.800 €",
+          "Gericht: 1.300 €",
+          "Räumung: 3.000 €"
+        ],
+        "total": "– 6.100 €"
+      },
+      "right": {
+        "label": "Mit Rechtsschutz",
+        "rows": [
+          "✓ übernommen*",
+          "✓ übernommen*",
+          "✓ übernommen*"
+        ],
+        "total": "nur Selbstbeteiligung*"
+      }
+    },
+    {
+      "type": "solution",
+      "say": "Der Vermieterrechtsschutz übernimmt je nach Tarif Anwalt, Gericht und die Kosten der Räumung.",
+      "product": [
+        "Vermieter-",
+        "rechtsschutz"
+      ],
+      "lines": [
+        "übernimmt Anwalt, Gericht",
+        "und Räumung.*"
+      ]
+    },
+    {
+      "type": "warning",
+      "say": "Aber Achtung: Das gilt nur, wenn du vorher abgeschlossen hast. Meist gilt eine Wartezeit von drei Monaten.",
+      "lines": [
+        "Erst absichern,",
+        "[dann Ärger.]"
+      ],
+      "note": "Wartezeit meist 3 Monate",
+      "icon": "clock"
+    },
+    {
+      "type": "cta",
+      "say": "Welcher Vermieter willst du sein? Mach den kostenlosen Check, der Link ist in meiner Bio.",
+      "question": [
+        "Welcher Vermieter",
+        "[willst du sein?]"
+      ]
+    }
+  ]
+}

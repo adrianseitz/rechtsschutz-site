@@ -34,6 +34,16 @@
   .badge { flex: none; width: 76px; height: 76px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-weight: 850; font-size: 42px; }
   .sticker { position: absolute; padding: 26px 50px 32px; border-radius: 36px; background: var(--sun); color: #0B0B0A; box-shadow: 0 2px 4px rgba(11,11,10,.05), 0 34px 60px -24px rgba(160,120,0,.6); font-weight: 900; letter-spacing: -0.055em; white-space: nowrap; line-height: 1; }
   .card { width: 920px; padding: 42px 48px; border-radius: 40px; background: var(--sun); color: #0B0B0A; box-shadow: 0 2px 4px rgba(11,11,10,.05), 0 34px 60px -24px rgba(160,120,0,.6); }
+  .paper { background: linear-gradient(180deg, #fff 0%, #FAF9F5 100%); color: #0B0B0A; border-radius: 10px; box-shadow: 0 2px 3px rgba(11,11,10,.08), 0 54px 80px -34px rgba(11,11,10,.55); }
+  .paper .bar { display: block; height: 14px; border-radius: 7px; background: #ECEBE6; }
+  .stamp { position: absolute; right: 40px; bottom: 34px; border: 7px solid #F0442F; color: #F0442F; font-weight: 900; font-size: 46px; letter-spacing: 0.01em; padding: 6px 20px 8px; border-radius: 12px; white-space: nowrap; background: rgba(255,255,255,.7); }
+  .vs { position: absolute; border-radius: 36px; box-sizing: border-box; }
+  .vsL { background: #0B0B0A; color: #fff; box-shadow: 0 40px 70px -30px rgba(11,11,10,.7); }
+  .vsR { background: var(--sun); color: #0B0B0A; box-shadow: 0 2px 4px rgba(11,11,10,.05), 0 34px 60px -24px rgba(160,120,0,.6); }
+  .vsLabel { position: absolute; left: 30px; right: 20px; top: 28px; font-weight: 820; font-size: 40px; letter-spacing: -0.035em; white-space: nowrap; }
+  .vsRow { position: absolute; left: 30px; right: 30px; height: 88px; display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 41px; font-weight: 640; letter-spacing: -0.02em; white-space: nowrap; border-top: 2px solid rgba(255,255,255,.14); }
+  .vsR .vsRow { border-top-color: rgba(11,11,10,.14); justify-content: flex-start; }
+  .vsTotal { position: absolute; left: 30px; right: 24px; bottom: 26px; font-weight: 900; letter-spacing: -0.05em; line-height: 1; white-space: nowrap; }
   .fine { position: absolute; left: 60px; width: 960px; box-sizing: border-box; top: 1610px; padding: 18px 26px 20px; border-radius: 24px; font-size: 23px; line-height: 1.35; background: rgba(255,255,255,.93); color: rgba(11,11,10,.78); box-shadow: 0 20px 50px -20px rgba(0,0,0,.45); }
 </style>
 </head>
@@ -249,6 +259,8 @@ const propKey = (n) => (PROP_SET[n] ? n : { wallet: "money", coin: "money", phon
 /* ---------- Der Moderator ---------- */
 const AS = 0.84, HEAD_Y = 3.0;   // Größe der Figur; Höhe der Kopfmitte über dem unteren Bildrand
 const AV = makeAvatar(T); AV.root.scale.setScalar(AS); AV.root.position.y = HEAD_Y; ST.add(AV.root);
+const PLACEHOLDER = EP.avatar === "placeholder";   // nur die Scheibe mit Umriss zeigen
+if (PLACEHOLDER) { AV.root.visible = false; document.getElementById("sun").innerHTML = `<svg viewBox="0 0 840 840" width="840" height="840"><defs><clipPath id="c"><circle cx="420" cy="420" r="420"/></clipPath></defs><g clip-path="url(#c)" fill="rgba(11,11,10,.16)"><circle cx="420" cy="330" r="150"/><path d="M130 840 C130 620 260 530 420 530 C580 530 710 620 710 840Z"/></g><text x="420" y="705" text-anchor="middle" font-family="Geist" font-weight="700" font-size="40" fill="rgba(11,11,10,.55)">Hier sprichst du</text></svg>`; }
 const HOST = (() => {
   // Was der Moderator zum Zeitpunkt t tut
   function act(t) {
@@ -262,6 +274,8 @@ const HOST = (() => {
       case "list": arms = talking && gst ? "explain" : "point"; break;
       case "solution": { face = "proud"; arms = talking && gst ? "explain" : show; const c = P.A.cheerAt != null ? lt - P.A.cheerAt : -1; if (c > 0 && c < 1.6) arms = "cheer"; break; }
       case "warning": face = "worried"; arms = talking && gst ? "explain" : "up"; break;
+      case "letter": face = lt < 2.2 ? "wow" : "worried"; arms = talking && gst ? "explain" : "point"; break;
+      case "versus": arms = talking && gst ? "explain" : "point"; break;
       case "cta": arms = lt < 2.4 ? "wave" : talking && gst ? "explain" : "point"; break;
     }
     return { face, arms, i, lt, bt, P };
@@ -464,6 +478,39 @@ const BEATS = {
     cap.el.querySelector(".ln").style.color = "var(--red)";
     if (bt.note) { const n = $(`<div class="abs soft" style="padding:22px 36px;border-radius:28px;font-weight:720;font-size:48px;letter-spacing:-0.025em;white-space:nowrap">${esc(plain(bt.note))}</div>`); A.push(popActor(root, n, 80, 250 + cap.height + 50, { r: -1.5, from: 40, n: 0.4 })); }
     A.splice(1, 0, propActor(bt.icon || "clock", { sfx: "whoosh" }));
+    return A;
+  },
+  // Serie „Der Brief": ein Schreiben landet im Bild, der Stempel knallt drauf
+  letter(bt, root) {
+    const A = [], cap = capActor(root, bt.pov, { size: 88 }); A.push(cap);
+    const y = 250 + cap.height + 46;
+    const sheet = $(`<div class="abs paper" style="width:880px;padding:46px 54px 52px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;font-size:25px;line-height:1.3;color:#8a8a82"><div><b style="color:#45453F;font-size:29px">${esc(plain(bt.from || "Anwaltskanzlei"))}</b><br>${esc(plain(bt.fromSub || ""))}</div><div style="text-align:right">Eingang<br><b style="color:#45453F">heute</b></div></div>
+      <div style="height:2px;background:#E6E5DF;margin:24px 0 28px"></div>
+      <div style="font-weight:820;font-size:60px;letter-spacing:-0.035em;line-height:1.05">${rich(bt.subject)}</div>
+      <div style="margin-top:22px;font-size:39px;line-height:1.32;color:#3a3a36">${(bt.body || []).map((l) => `<div>${rich(l)}</div>`).join("")}</div>
+      <div style="margin-top:26px;display:grid;gap:15px;width:${bt.stamp ? 52 : 92}%"><i class="bar"></i><i class="bar" style="width:78%"></i></div>
+      ${bt.stamp ? `<div class="stamp">${esc(plain(bt.stamp))}</div>` : ""}</div>`);
+    A.push(popActor(root, sheet, 84, y, { r: -2.4, from: 560, n: 0.85, sfx: "whoosh", tilt: 55 }));
+    const st = sheet.querySelector(".stamp");
+    if (st) { const P = { n: 0.5, sfx: "stamp" }; P.update = (lt) => { const k = win(lt, P.a, P.a + 0.2); st.style.opacity = k > 0 ? 1 : 0; st.style.transform = `rotate(-8deg) scale(${2.6 - 1.6 * ease(k)})`; }; A.push(P); }
+    if (bt.note) A.push(noteActor(root, bt.note, 100, y + sheet.offsetHeight + 26, { size: 46, maxW: 800 }));
+    return A;
+  },
+  // Serie „Mit oder ohne": derselbe Streit in zwei Spalten
+  versus(bt, root) {
+    const A = [], cap = capActor(root, bt.title, { size: 86 }); A.push(cap);
+    const y = 250 + cap.height + 44, n = Math.max(bt.left.rows.length, bt.right.rows.length), W = 448, RH = 90, H = 104 + n * RH + 170;
+    const cols = ["left", "right"].map((side, c) => {
+      const d = bt[side], el = $(`<div class="abs vs ${c ? "vsR" : "vsL"}" style="width:${W}px;height:${H}px"><div class="vsLabel">${c ? "" : `<span style="color:#FF5A45">✕</span> `}${c ? "✓ " : ""}${esc(plain(d.label))}</div></div>`);
+      const rows = d.rows.map((r, i) => { const [a, b] = String(r).split(/:\s*/), row = $(`<div class="vsRow" style="top:${104 + i * RH}px">${c ? `<span>${esc(plain(r))}</span>` : `<span>${esc(plain(a))}</span><b style="color:#FF5A45;font-weight:800">${esc(plain(b || ""))}</b>`}</div>`); el.appendChild(row); return row; });
+      const total = $(`<div class="vsTotal" style="font-size:${c ? 52 : 84}px;${c ? "" : "color:#FF5A45"}">${esc(plain(d.total))}</div>`); el.appendChild(total);
+      return { el, rows, total, actor: popActor(root, el, 80 + c * (W + 24), y, { from: 90, n: 0.36, r: c ? 0.8 : -0.8 }) };
+    });
+    cols.forEach((c) => { let fs = parseInt(c.total.style.fontSize, 10); while (c.total.scrollWidth > W - 54 && fs > 30) { fs -= 2; c.total.style.fontSize = fs + "px"; } A.push(c.actor); });
+    const fade = (el, dx, n, sfx) => { const P = { n, sfx }; P.update = (lt) => { const k = ease(win(lt, P.a, P.a + 0.3)); el.style.opacity = k; el.style.transform = `translateX(${(1 - k) * dx}px)`; }; return P; };
+    for (let i = 0; i < n; i++) { if (cols[0].rows[i]) A.push(fade(cols[0].rows[i], -28, 0.32, "pop")); if (cols[1].rows[i]) A.push(fade(cols[1].rows[i], 28, 0.26, null)); }
+    cols.forEach((c, i) => { const P = { n: 0.5, sfx: i ? "ching" : "stamp" }; P.update = (lt) => { const k = win(lt, P.a, P.a + 0.3); c.total.style.opacity = k > 0 ? 1 : 0; c.total.style.transform = `scale(${1.5 - 0.5 * ease(k)})`; c.total.style.transformOrigin = "0 100%"; }; A.push(P); });
     return A;
   },
   cta(bt, root) {
