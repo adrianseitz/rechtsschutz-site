@@ -50,6 +50,7 @@
 <body>
 <div id="stage">
   <div class="bg" id="bgA"></div><div class="bg" id="bgS" style="background:#FFD60A"></div><div class="bg" id="bgB"></div><div id="sun"></div>
+  <canvas id="fig" width="1080" height="1920" style="position:absolute;left:0;top:0;width:1080px;height:1920px"></canvas>
   <canvas id="gl" width="1080" height="1920"></canvas>
   <div class="bg" id="vig"></div>
   <div id="ui"><div id="beats"></div><div id="overlay"></div></div>
@@ -57,6 +58,7 @@
 <script src="../vendor/three.iife.js"></script>
 <script src="../shared/talk.js"></script>
 <script src="avatar.js"></script>
+<script src="../figur/kit/kit.js" onerror="window.FIGUR = null"></script>
 <script>
 /* ======================================================================
    3D-Studio-Vorlage. Unten steht der Moderator als 3D-Figur (three.js, siehe avatar.js) vor einer gelben Scheibe,
@@ -259,7 +261,11 @@ const propKey = (n) => (PROP_SET[n] ? n : { wallet: "money", coin: "money", phon
 /* ---------- Der Moderator ---------- */
 const AS = 0.84, HEAD_Y = 3.0;   // Größe der Figur; Höhe der Kopfmitte über dem unteren Bildrand
 const AV = makeAvatar(T); AV.root.scale.setScalar(AS); AV.root.position.y = HEAD_Y; ST.add(AV.root);
-const PLACEHOLDER = EP.avatar === "placeholder";   // nur die Scheibe mit Umriss zeigen
+// Wer moderiert: die Figur aus figur/kit (Bilder von der Bild-KI, siehe figur/vorbereiten.py), sonst ein Platzhalter-Umriss.
+// EP.avatar: "3d" = alte Code-Figur, "placeholder" = Umriss erzwingen
+const USE_FIG = !!window.FIGUR && EP.avatar !== "3d" && EP.avatar !== "placeholder";
+const PLACEHOLDER = !USE_FIG && EP.avatar !== "3d";
+if (USE_FIG) AV.root.visible = false;
 if (PLACEHOLDER) { AV.root.visible = false; document.getElementById("sun").innerHTML = `<svg viewBox="0 0 840 840" width="840" height="840"><defs><clipPath id="c"><circle cx="420" cy="420" r="420"/></clipPath></defs><g clip-path="url(#c)" fill="rgba(11,11,10,.16)"><circle cx="420" cy="330" r="150"/><path d="M130 840 C130 620 260 530 420 530 C580 530 710 620 710 840Z"/></g><text x="420" y="705" text-anchor="middle" font-family="Geist" font-weight="700" font-size="40" fill="rgba(11,11,10,.55)">Hier sprichst du</text></svg>`; }
 const HOST = (() => {
   // Was der Moderator zum Zeitpunkt t tut
@@ -335,12 +341,94 @@ const CONFETTI = (() => {
     const t0 = times.filter((x) => x <= t).pop(), q = t0 == null ? -1 : t - t0;
     parts.forEach((p, i) => {
       if (q < 0 || q > 2.2) { p.visible = false; return; }
-      const vx = (rnd(i) - 0.5) * 5.2, vy = 3.2 + rnd(i + 50) * 3.6, vz = (rnd(i + 100) - 0.3) * 1.2, d = 1 - Math.exp(-q * 1.6);
-      p.visible = true; p.position.set(-0.6 + vx * d * 0.62, 1.9 + vy * d * 0.62 - q * q * 1.5, 1.0 + vz * d * 0.5);
+      // Konfetti fliegt vom Haken nach links oben weg, nie übers Gesicht der Figur
+      const fig = typeof USE_FIG !== "undefined" && USE_FIG, vx = fig ? -0.4 - rnd(i) * 3.4 : (rnd(i) - 0.5) * 5.2, vy = 3.2 + rnd(i + 50) * 3.6, vz = (rnd(i + 100) - 0.3) * 1.2, d = 1 - Math.exp(-q * 1.6);
+      p.visible = true; p.position.set((fig ? PROP_X + 0.3 : -0.6) + vx * d * 0.62, (fig ? 1.4 : 1.9) + vy * d * 0.62 - q * q * 1.5, 1.0 + vz * d * 0.5);
       p.rotation.set(q * (3 + rnd(i) * 6), q * (2 + rnd(i + 7) * 5), i); p.scale.setScalar(spring(win(q, 0, 0.25)) * (1 - easeIn(win(q, 1.5, 2.2))));
     });
   }
   return { update, times, active: (t) => times.some((x) => t >= x && t < x + 2.3) };
+})();
+
+/* ---------- Die Figur (2D-Bilder von der Bild-KI, wie eine Puppe animiert) ----------
+   Grundbild + Ausschnitte für Mund (halb/offen) und Augen (zu); Gesten als ganze Bilder, am Kopf ausgerichtet.
+   Mund folgt der Lautstärke der Stimme, Blinzeln alle paar Sekunden, Gesten kurz pro Abschnitt. */
+const GESTE = { hook: "zeigt", cost: "erschrocken", fact: "nachdenklich", list: "zeigt", solution: "daumen", warning: "nachdenklich", cta: "winkt", letter: "erschrocken", versus: "nachdenklich" };
+const FIG = (() => {
+  const K = window.FIGUR;
+  if (!USE_FIG) return null;
+  const cv = document.getElementById("fig"), g = cv.getContext("2d"), img = {}, shadow = {};
+  const load = (f) => new Promise((res) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = "../figur/kit/" + f; });
+  const ready = Promise.all([
+    ...Object.entries(K.bilder).map(async ([n, f]) => { img[n] = await load(f); }),
+    ...Object.entries(K.ausschnitte).map(async ([n, a]) => { img[n] = await load(a.datei); }),
+  ]).then(() => {
+    // weicher Schatten hinter jeder Pose (einmal berechnet, nicht pro Bild)
+    for (const n of Object.keys(K.bilder)) {
+      if (!img[n]) continue;
+      const c = document.createElement("canvas"); c.width = c.height = K.size; const x = c.getContext("2d");
+      x.filter = "blur(18px) brightness(0)"; x.globalAlpha = 0.28; x.drawImage(img[n], 0, 0); shadow[n] = c;
+    }
+  });
+  // Gesten-Fenster je Abschnitt: am liebsten, wenn gerade nicht gesprochen wird (der Mund bewegt sich in Gesten nicht)
+  const WINS = [];
+  function plan() {
+    EP.beats.forEach((bt, i) => {
+      const b = TM.beats[i], name = GESTE[bt.type] === "zeigt" && !PLANS[i].hasProp ? "erschrocken" : GESTE[bt.type];
+      if (!name || !img[name]) return;
+      let a = b.start + 0.12, e = a + 0.95;
+      if (bt.type === "cta") { a = b.voiceAt + b.speech + 0.05; e = b.start + b.dur + 2; }
+      else if (bt.type === "solution" && PLANS[i].A.cheerAt != null) { a = b.start + PLANS[i].A.cheerAt; e = a + 1.1; }
+      else {   // längste Sprechpause im Abschnitt, wenn sie lang genug ist
+        let best = null, run = null;
+        for (let t = b.start; t <= b.start + b.dur; t += 0.04) {
+          if (!TALK.talking(t)) { run = run ?? t; if (t - run > (best ? best[1] - best[0] : 0)) best = [run, t]; } else run = null;
+        }
+        if (best && best[1] - best[0] >= 0.75 && best[0] - b.start > 0.3) { a = best[0]; e = Math.min(best[1], a + 1.3); }
+      }
+      WINS.push({ name, a, e });
+    });
+  }
+  const FADE = 0.12;
+  function gesture(t) {
+    for (const w of WINS) if (t >= w.a - FADE && t <= w.e + FADE) return { name: w.name, k: Math.min(win(t, w.a - FADE, w.a), 1 - win(t, w.e, w.e + FADE)), since: t - w.a };
+    return null;
+  }
+  // Lage im Bild: Kopfmitte auf (cx, headY), Figur reicht immer bis unter den unteren Bildrand
+  function layout(cx, headY) {
+    const k = K.kopf, sc = Math.max(0.5, (1932 - headY) / Math.max(200, K.unten - k.y));
+    return { sc, x: cx - k.x * sc, y: headY - k.y * sc, r: k.r * sc };
+  }
+  function blit(name, L, alpha = 1) {
+    if (!img[name]) return;
+    g.globalAlpha = alpha;
+    if (shadow[name]) g.drawImage(shadow[name], L.x + 14 * L.sc, L.y + 26 * L.sc, K.size * L.sc, K.size * L.sc);
+    g.drawImage(img[name], L.x, L.y, K.size * L.sc, K.size * L.sc);
+  }
+  function patch(name, L, alpha = 1) {
+    const a = K.ausschnitte[name];
+    if (!a || !img[name] || alpha <= 0) return;
+    g.globalAlpha = alpha; g.drawImage(img[name], L.x + a.x * L.sc, L.y + a.y * L.sc, a.w * L.sc, a.h * L.sc);
+  }
+  function draw(t, cx, headY, enter) {
+    g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, 1080, 1920);
+    const o = TALK.talking(t) ? TALK.open(t) : 0, G = gesture(t);
+    // Bewegung: Atmen, leichtes Wiegen, beim Sprechen ein kleines Nicken, Auftritt von unten, kurzer Puls bei einer Geste
+    const pop = G ? 1 + 0.025 * Math.sin(Math.PI * clamp(G.since / 0.35)) * (G.since > 0 ? 1 : 0) : 1;
+    const L = layout(cx, headY + (1 - enter) * 700 - o * 5 + Math.sin(t * 2.1) * 2);
+    const pivotX = cx, pivotY = 1920, rot = (Math.sin(t * 0.85) * 0.55 + Math.sin(t * 2.3) * o * 0.35) * Math.PI / 180, br = 1 + Math.sin(t * 2.1) * 0.004;
+    g.translate(pivotX, pivotY); g.rotate(rot); g.scale(pop, pop * br); g.translate(-pivotX, -pivotY);
+    const gk = G ? G.k : 0;
+    if (gk < 1) {
+      blit("basis", L, 1);
+      const lvl = o < 0.2 ? null : o < 0.55 || !img["mund-offen"] ? "mund-halb" : "mund-offen";
+      if (lvl) patch(lvl, L, 1);
+      if ((t + 0.9) % 3.7 < 0.13 || (t > 1.2 && (t + 2.3) % 7.9 < 0.11)) patch("augen-zu", L, 1);
+    }
+    if (G && gk > 0) blit(G.name, L, gk);
+    g.globalAlpha = 1;
+  }
+  return { ready, draw, plan, layout, wins: WINS };
 })();
 
 /* ====================== Typografie-Ebene ====================== */
@@ -578,7 +666,7 @@ function render(t) {
   let from = P.dark, to = P.dark, k = 1;
   if (N && N.dark !== P.dark && lt > P.D - 0.4) { to = N.dark; k = win(lt, P.D - 0.4, P.D + 0.15); }
   else if (cur > 0 && Q.dark !== P.dark && lt < 0.15) { from = Q.dark; k = win(lt, -0.4, 0.15); }
-  const cx = 540 + hx * PPU, headY = 1920 - zoom * (1920 - 1161), cy = headY + 60 * zoom;
+  const cx = 540 + hx * PPU, headY = 1920 - zoom * (1920 - 1161), cy = FIG ? headY : headY + 60 * zoom;
   const r1 = smooth(win(k, 0, 0.88)) * 1850, r2 = smooth(win(k, 0.12, 1)) * 1850, dd = lerp(from, to, smooth(k));
   bgA.className = "bg " + (from ? "bgD" : "bgL"); bgB.className = "bg " + (to ? "bgD" : "bgL");
   bgB.style.clipPath = k >= 1 ? "none" : `circle(${r2}px at ${cx}px ${cy}px)`; bgS.style.clipPath = `circle(${k >= 1 ? 0 : r1}px at ${cx}px ${cy}px)`;
@@ -590,7 +678,8 @@ function render(t) {
   sun.style.transform = `translate(${cx}px, ${cy}px) scale(${Math.max(0.001, zoom * intro * pulse)})`;
   const enter = spring(win(t, 0.08, 0.9));
   ST.position.set(hx, PIVOT_Y - (1 - enter) * 3.4, 0); ST.scale.setScalar(zoom);
-  HOST.update(t);
+  if (AV.root.visible) HOST.update(t);
+  if (FIG) FIG.draw(t, cx, headY, spring(win(t, 0.08, 0.9)));
   CONFETTI.update(t);
   // Kamera: fast frontal, mit ruhiger Seitwärtsfahrt und einem kleinen Schub nach vorn bei jedem Abschnitt
   const push = 1 - ease(win(lt, 0, 0.8)), az = Math.sin(t * 0.24) * 0.045, D = 15.8 - smooth(lt / P.D) * 0.35 + push * 0.3;
@@ -605,7 +694,7 @@ function render(t) {
 }
 window.render = render;
 window.collectSfx = () => SFX;
-Promise.all(["840 60px Geist", "400 60px Geist", "italic 60px Serif", "600 60px Hand"].map((f) => document.fonts.load(f))).then(() => document.fonts.ready).then(() => { build(); render(0); window.ready = true; });
+Promise.all([FIG ? FIG.ready : null, ...["840 60px Geist", "400 60px Geist", "italic 60px Serif", "600 60px Hand"].map((f) => document.fonts.load(f))]).then(() => document.fonts.ready).then(() => { build(); if (FIG) FIG.plan(); render(0); window.ready = true; });
 </script>
 </body>
 </html>

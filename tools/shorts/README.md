@@ -67,6 +67,10 @@ Voraussetzungen: Node 22, Chrome/Chromium (`--chrome=` oder `CHROME_PATH`), Pyth
 - `whiteboard/` – Zeichen-Engine aus ReelMimic (MIT, siehe `LICENSE-ReelMimic.txt`), Vorlagen in `src/beats.js`, Maskottchen in `src/brand.js`
 - `cartoon/player.html` – Cartoon-Vorlagen (eigene Zeichnungen)
 - `studio3d/player.html` – 3D-Vorlagen: echte 3D-Bühne mit three.js (MIT, gebündelt in `vendor/three.iife.js`, neu bauen mit `npm run build:three`). Läuft ohne Grafikkarte über den Software-Renderer von Chrome; ein Video braucht dadurch etwa 10–20 Minuten Rechenzeit.
+- `figur/` – die Moderator-Figur im 3D-Stil: Bilder von einer Bild-KI (Grundbild, Mund halb/offen, Augen zu, fünf Gesten,
+  grüner Hintergrund) → `python3 figur/vorbereiten.py <ordner> --vorschau vorschau.jpg` stellt frei, richtet aus und schreibt
+  `figur/kit/`. Im Video bewegt sich der Mund zur Stimme, die Figur blinzelt und zeigt pro Abschnitt eine Geste.
+  Ohne `figur/kit/` zeigt das Video einen Platzhalter-Umriss.
 - `render.mjs` – Bild für Bild in Chrome → ffmpeg, Tonspur aus `audio.py`, Lautheit −14 LUFS
 - `worker/` – Server-Dienst: Warteschlange, Stimme, Upload-Post, Zeitplan (`Dockerfile` für den Service `shorts`)
 - `worker/ownvoice.mjs` – eigene Stimme: Pocket TTS (Programm MIT, Modell CC BY 4.0, Freischaltung bei HuggingFace). Aus der
