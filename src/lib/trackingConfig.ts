@@ -14,10 +14,13 @@ export type TrackingConfig = {
 
 const v = (s: string | undefined) => (s ?? "").trim();
 
+/** Google-Tag aus dem Google-Ads-Konto (Konto von Adrian Seitz). Geladen wird er nur nach Einwilligung im Cookie-Banner. */
+export const DEFAULT_ADS_ID = "AW-18538408624";
+
 export const ENV_TRACKING: TrackingConfig = {
   gtmId: v(process.env.NEXT_PUBLIC_GTM_ID),
   ga4Id: v(process.env.NEXT_PUBLIC_GA4_ID),
-  adsId: v(process.env.NEXT_PUBLIC_GOOGLE_ADS_ID),
+  adsId: v(process.env.NEXT_PUBLIC_GOOGLE_ADS_ID) || DEFAULT_ADS_ID,
   adsLeadLabel: v(process.env.NEXT_PUBLIC_GOOGLE_ADS_LEAD_LABEL),
   adsContactLabel: v(process.env.NEXT_PUBLIC_GOOGLE_ADS_CONTACT_LABEL),
   adsAppointmentLabel: v(process.env.NEXT_PUBLIC_GOOGLE_ADS_APPOINTMENT_LABEL),

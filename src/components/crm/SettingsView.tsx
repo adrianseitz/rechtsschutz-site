@@ -213,7 +213,8 @@ function AdsSettings() {
       const j = await res.json().catch(() => ({}));
       if (!res.ok) { setMsg({ ok: false, text: j.error || "Speichern fehlgeschlagen." }); return; }
       setSaved({ adsId: adsId.trim(), label: label.trim() });
-      setMsg({ ok: true, text: adsId.trim() ? "Gespeichert. Das Conversion-Tracking ist sofort aktiv – Besucher sehen ab jetzt die Cookie-Abfrage." : "Gespeichert. Das Conversion-Tracking ist ausgeschaltet, die Cookie-Abfrage entfällt." });
+      setMsg({ ok: true, text: label.trim() ? "Gespeichert. Der Google-Tag und das Zählen der Anfragen sind sofort aktiv." : "Gespeichert. Der Google-Tag ist aktiv. Anfragen zählt Google erst, wenn du auch das Conversion-Label einträgst." });
+      fetch("/api/admin/settings/tracking").then((r) => r.json()).then((j) => { const t = j.tracking as { adsId?: string; adsLeadLabel?: string } | undefined; if (t) { setAdsId(t.adsId ?? ""); setLabel(t.adsLeadLabel ?? ""); setSaved({ adsId: t.adsId ?? "", label: t.adsLeadLabel ?? "" }); } }).catch(() => undefined);
     } catch {
       setMsg({ ok: false, text: "Keine Verbindung." });
     } finally {
@@ -221,7 +222,7 @@ function AdsSettings() {
     }
   }
 
-  const active = Boolean(saved?.adsId && saved.label);
+  const active = Boolean(saved?.adsId && saved.label), tagOnly = Boolean(saved?.adsId && !saved.label);
   const changed = !saved || saved.adsId !== adsId.trim() || saved.label !== label.trim();
 
   return (
@@ -231,7 +232,7 @@ function AdsSettings() {
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <h2 className="text-lg font-semibold tracking-[-0.02em]">Google Ads: Anfragen messen</h2>
-            <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${active ? "bg-emerald-100 text-emerald-900" : "bg-paper text-ink-muted"}`}>{active ? "Aktiv" : "Aus"}</span>
+            <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${active ? "bg-emerald-100 text-emerald-900" : tagOnly ? "bg-amber-100 text-amber-900" : "bg-paper text-ink-muted"}`}>{active ? "Aktiv" : tagOnly ? "Google-Tag aktiv · Label fehlt" : "Aus"}</span>
           </div>
           <p className="mt-1 text-sm text-ink-soft">Damit erfährt Google, welche Klicks zu einer Anfrage geführt haben – die Voraussetzung dafür, dass der Algorithmus lernt. Gemessen wird nur bei Besuchern, die zugestimmt haben.</p>
         </div>

@@ -23,7 +23,9 @@ async function readStored(): Promise<Stored | null> {
 export async function effectiveTracking(): Promise<{ tracking: TrackingConfig; source: "crm" | "env"; updatedAt: string }> {
   const s = await readStored().catch(() => null);
   if (!s) return { tracking: envClean(), source: "env", updatedAt: "" };
-  return { tracking: { ...envClean(), ...cleanTracking(s) } as TrackingConfig, source: "crm", updatedAt: s.updatedAt };
+  // Leere Felder im CRM heißen „nicht eingetragen“: dann gilt der Standard (z. B. der fest hinterlegte Google-Tag).
+  const set = Object.fromEntries(Object.entries(cleanTracking(s)).filter(([, val]) => val));
+  return { tracking: { ...envClean(), ...set } as TrackingConfig, source: "crm", updatedAt: s.updatedAt };
 }
 
 export async function saveTracking(input: Partial<TrackingConfig>) {

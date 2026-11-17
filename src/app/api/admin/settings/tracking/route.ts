@@ -33,7 +33,7 @@ export async function POST(req: Request) {
   const parsed = schema.safeParse(body);
   if (!parsed.success) return jsonError(422, parsed.error.issues[0]?.message ?? "Ungültige Angaben.");
   const { adsId, adsLeadLabel } = parsed.data;
-  if (Boolean(adsId) !== Boolean(adsLeadLabel)) return jsonError(422, "Bitte Conversion-ID und Conversion-Label zusammen eintragen (oder beide leer lassen).");
+  if (adsLeadLabel && !adsId) return jsonError(422, "Zum Conversion-Label gehört auch die Conversion-ID (AW-…).");
   // Ein Label für alle Anfrage-Arten (Check, Kontaktformular, Terminwunsch).
   await saveTracking({ adsId, adsLeadLabel, adsContactLabel: adsLeadLabel, adsAppointmentLabel: adsLeadLabel });
   return NextResponse.json({ ok: true, ...(await effectiveTracking()) }, { headers: { "Cache-Control": "no-store" } });
