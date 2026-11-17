@@ -11,8 +11,9 @@
   html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: var(--paper); }
   #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; font-family: Geist, sans-serif; color: var(--ink); }
   .bg { position: absolute; inset: 0; }
-  .bgL { background: radial-gradient(1500px 620px at 46% 1560px, rgba(255,214,10,.62) 0%, rgba(255,214,10,.22) 45%, rgba(255,214,10,0) 72%), radial-gradient(620px 520px at 60% 1120px, rgba(255,255,255,.9) 0%, rgba(255,255,255,0) 70%), linear-gradient(180deg, #FBFAF6 0%, #F4F3EE 55%, #EFEBDD 100%); }
-  .bgD { background: radial-gradient(860px 580px at 46% 1380px, rgba(255,214,10,.30) 0%, rgba(255,214,10,.07) 46%, rgba(255,214,10,0) 74%), linear-gradient(180deg, #0B0B0A 0%, #12110E 50%, #1B1911 100%); }
+  .bgL { background: linear-gradient(180deg, #FBFAF6 0%, #F4F3EE 60%, #EBE8DC 100%); }
+  .bgD { background: radial-gradient(1000px 1000px at 58% 1240px, #2A271C 0%, rgba(42,39,28,0) 70%), linear-gradient(180deg, #0B0B0A 0%, #100F0C 100%); }
+  #sun { position: absolute; left: 0; top: 0; width: 840px; height: 840px; margin: -420px 0 0 -420px; border-radius: 50%; background: radial-gradient(circle at 34% 26%, #FFE873 0%, #FFD60A 50%, #F0C200 100%); box-shadow: 0 50px 140px -20px rgba(255,200,0,.45); will-change: transform; }
   #vig { background: radial-gradient(1500px 1500px at 50% 46%, rgba(0,0,0,0) 55%, rgba(0,0,0,.13) 100%); }
   #gl { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
   #ui { position: absolute; inset: 0; --fg: #0B0B0A; --bgc: #fff; }
@@ -33,22 +34,23 @@
   .badge { flex: none; width: 76px; height: 76px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-weight: 850; font-size: 42px; }
   .sticker { position: absolute; padding: 26px 50px 32px; border-radius: 36px; background: var(--sun); color: #0B0B0A; box-shadow: 0 2px 4px rgba(11,11,10,.05), 0 34px 60px -24px rgba(160,120,0,.6); font-weight: 900; letter-spacing: -0.055em; white-space: nowrap; line-height: 1; }
   .card { width: 920px; padding: 42px 48px; border-radius: 40px; background: var(--sun); color: #0B0B0A; box-shadow: 0 2px 4px rgba(11,11,10,.05), 0 34px 60px -24px rgba(160,120,0,.6); }
-  .fine { position: absolute; left: 80px; width: 820px; top: 1604px; font-size: 25px; line-height: 1.35; }
+  .fine { position: absolute; left: 60px; width: 960px; box-sizing: border-box; top: 1610px; padding: 18px 26px 20px; border-radius: 24px; font-size: 23px; line-height: 1.35; background: rgba(255,255,255,.93); color: rgba(11,11,10,.78); box-shadow: 0 20px 50px -20px rgba(0,0,0,.45); }
 </style>
 </head>
 <body>
 <div id="stage">
-  <div class="bg" id="bgA"></div><div class="bg" id="bgS" style="background:#FFD60A"></div><div class="bg" id="bgB"></div>
+  <div class="bg" id="bgA"></div><div class="bg" id="bgS" style="background:#FFD60A"></div><div class="bg" id="bgB"></div><div id="sun"></div>
   <canvas id="gl" width="1080" height="1920"></canvas>
   <div class="bg" id="vig"></div>
   <div id="ui"><div id="beats"></div><div id="overlay"></div></div>
 </div>
 <script src="../vendor/three.iife.js"></script>
 <script src="../shared/talk.js"></script>
+<script src="avatar.js"></script>
 <script>
 /* ======================================================================
-   3D-Studio-Vorlage. Unten steht eine echte 3D-Bühne (three.js): das Schild-Männchen und Objekte auf einem Podest,
-   mit Studio-Licht, Glanz und weichen Schatten. Darüber liegt die Typografie (wie auf der Website).
+   3D-Studio-Vorlage. Unten steht der Moderator als 3D-Figur (three.js, siehe avatar.js) vor einer gelben Scheibe,
+   daneben schweben 3D-Objekte zum Thema. Darüber liegt die Typografie (wie auf der Website).
    Ein Abschnitt (beat) = eine Szene; Typen: hook, cost, fact, list, solution, warning, cta.
    Problem-Szenen (cost, warning) spielen im dunklen Studio, alles andere im hellen.
    render(t) ist deterministisch – jedes Einzelbild lässt sich exakt erzeugen.
@@ -68,7 +70,7 @@ const rnd = (i) => { const x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return 
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 const set = (el, { x = 0, y = 0, s = 1, r = 0, o = 1, tilt = 0 }) => { el.style.transform = `translate(${x}px, ${y}px) perspective(1500px) rotateX(${tilt}deg) rotate(${r}deg) scale(${s})`; el.style.opacity = o; el.style.visibility = o <= 0.001 ? "hidden" : "visible"; };
 window.SFX = [];
-const FLOOR = 1412;   // Bildzeile, auf der das Podest steht
+
 
 function parse(s) {
   const out = []; let cur = "", mode = null;
@@ -86,21 +88,18 @@ const rich = (s) => parse(s).map((p) => p.m === "em" ? `<em style="font-family:S
 /* ====================== 3D-Bühne ====================== */
 const renderer = new T.WebGLRenderer({ canvas: document.getElementById("gl"), antialias: false, alpha: true, preserveDrawingBuffer: true });
 renderer.setPixelRatio(1); renderer.setSize(1080, 1920, false);
-renderer.shadowMap.enabled = true; renderer.shadowMap.type = T.PCFShadowMap;
 renderer.toneMapping = T.NeutralToneMapping; renderer.toneMappingExposure = 1.08;
 const scene = new T.Scene();
 // Spiegelungen der Studio-Umgebung: nur auf den Hochglanz-Teilen (Männchen, Münzen, Plaketten) – auf allem wäre es ohne Grafikkarte viel zu langsam
 const ENV = new T.PMREMGenerator(renderer).fromScene(new T.RoomEnvironment(), 0.03).texture, SHINY = [];
 const cam = new T.PerspectiveCamera(27, 1080 / 1920, 0.1, 100);
-cam.setViewOffset(1080, 1920, 0, -(FLOOR - 960 - 237), 1080, 1920);   // Bühne nach unten ins Bild schieben, ohne die Perspektive zu kippen
-const key = new T.DirectionalLight(0xfff1d6, 2.6); key.position.set(-3.5, 10, 6.5); key.castShadow = true;
-key.shadow.mapSize.set(1024, 1024); key.shadow.radius = 3; key.shadow.bias = -0.0008; key.shadow.normalBias = 0.04;
-Object.assign(key.shadow.camera, { left: -3, right: 3, top: 3.5, bottom: -2.5, near: 1, far: 30 });
-const hemi = new T.HemisphereLight(0xffffff, 0xf0dca0, 0.9);
-const rim = new T.DirectionalLight(0xffdf80, 1.3); rim.position.set(6, 4, -7);
-const fill = new T.DirectionalLight(0xdfe9ff, 0.5); fill.position.set(6, 3, 6);
+const key = new T.DirectionalLight(0xfff4e0, 2.3); key.position.set(-4, 5, 9);
+const hemi = new T.HemisphereLight(0xffffff, 0xd9cdb8, 1.25);
+const rim = new T.DirectionalLight(0xffe9a8, 1.6); rim.position.set(5, 5, -7);
+const fill = new T.DirectionalLight(0xdfe9ff, 0.6); fill.position.set(7, 1, 5);
 scene.add(key, hemi, rim, fill);
-const ST = new T.Group(); ST.position.x = -0.16; scene.add(ST);   // alles, was auf der Bühne steht
+const PPU = 253, PIVOT_Y = -960 / PPU;   // Bildpunkte je Einheit; Drehpunkt der Bühne = unterer Bildrand
+const ST = new T.Group(); scene.add(ST);   // Moderator und Objekte; wird als Ganzes verschoben und skaliert
 // Kantenglättung als Nachbearbeitung (FXAA): die eingebaute Glättung (MSAA) kostet ohne Grafikkarte die doppelte Rechenzeit
 const RT = new T.WebGLRenderTarget(1080, 1920, { type: T.HalfFloatType });
 const POST = new T.Mesh(new T.PlaneGeometry(2, 2), new T.ShaderMaterial({
@@ -151,14 +150,6 @@ function disc(r, h, bevel, m) {
 // weicher Kontaktschatten direkt unter einem Objekt
 const blobTex = (() => { const c = document.createElement("canvas"); c.width = c.height = 128; const x = c.getContext("2d"), g = x.createRadialGradient(64, 64, 0, 64, 64, 64); g.addColorStop(0, "rgba(40,28,0,.55)"); g.addColorStop(0.55, "rgba(40,28,0,.2)"); g.addColorStop(1, "rgba(40,28,0,0)"); x.fillStyle = g; x.fillRect(0, 0, 128, 128); return new T.CanvasTexture(c); })();
 function blob(r) { const m = new T.Mesh(new T.PlaneGeometry(2, 2), new T.MeshBasicMaterial({ map: blobTex, transparent: true, depthWrite: false })); m.rotation.x = -Math.PI / 2; m.position.y = 0.006; m.scale.setScalar(r); return m; }
-
-// Podest und Boden
-const podTop = gloss(0xffffff, { roughness: 0.4 });
-const podBase = shiny(0x141412, { roughness: 0.3 });
-const pod1 = disc(1.72, 0.13, 0.05, podTop), pod2 = disc(1.86, 0.12, 0.05, podBase); pod2.position.y = -0.13;
-const floor = blob(3.1); floor.position.set(0.25, -0.25, -0.1); floor.scale.set(3.1, 2.3, 1);   // weicher Schatten des Podests auf dem Boden
-pod1.receiveShadow = true; pod1.castShadow = pod2.castShadow = false;   // echte Schatten fallen nur aufs Podest – das spart den Großteil der Rechenzeit
-ST.add(pod1, pod2, floor);
 
 /* ---------- Objekte (Fuß bei y = 0, ca. 2 Einheiten hoch) ---------- */
 const COIN = T.mergeGeometries([disc(0.3, 0.09, 0.03, null).geometry, disc(0.2, 0.02, 0.008, null).geometry.translate(0, 0.008, 0)]);
@@ -255,117 +246,56 @@ function bake(src) {
 const PROP_SET = { house: [0.56, 0], building: [0.56, 0], money: [0.78, 0], calendar: [0.66, 0.16], contract: [0.66, 0.14], bill: [0.66, 0.14], letter: [0.62, 0.2], gavel: [0.62, 0], person: [0.56, 0], clock: [0.62, 0.14], check: [0.66, 0.16] };
 const propKey = (n) => (PROP_SET[n] ? n : { wallet: "money", coin: "money", phone: "contract", wrench: "gavel", car: "building", fire: "clock", mail: "letter" }[n] || "contract");
 
-/* ---------- Das Erklär-Männchen in 3D ---------- */
-const HS = 0.66;   // Grundgröße des Männchens
+/* ---------- Der Moderator ---------- */
+const AS = 0.84, HEAD_Y = 3.0;   // Größe der Figur; Höhe der Kopfmitte über dem unteren Bildrand
+const AV = makeAvatar(T); AV.root.scale.setScalar(AS); AV.root.position.y = HEAD_Y; ST.add(AV.root);
 const HOST = (() => {
-  const k = 1 / 140, s = new T.Shape();
-  s.moveTo(0, 126 * k); s.bezierCurveTo(34 * k, 108 * k, 64 * k, 103 * k, 82 * k, 103 * k); s.quadraticCurveTo(94 * k, 103 * k, 94 * k, 91 * k); s.lineTo(94 * k, 0);
-  s.bezierCurveTo(94 * k, -62 * k, 46 * k, -104 * k, 0, -130 * k); s.bezierCurveTo(-46 * k, -104 * k, -94 * k, -62 * k, -94 * k, 0);
-  s.lineTo(-94 * k, 91 * k); s.quadraticCurveTo(-94 * k, 103 * k, -82 * k, 103 * k); s.bezierCurveTo(-64 * k, 103 * k, -34 * k, 108 * k, 0, 126 * k);
-  let geo = new T.ExtrudeGeometry(s, { depth: 0.14, bevelEnabled: true, bevelThickness: 0.3, bevelSize: 0.26, bevelSegments: 18, curveSegments: 48 });
-  geo.translate(0, 0, -0.07); geo.deleteAttribute("uv"); geo.deleteAttribute("normal"); geo = T.mergeVertices(geo, 1e-4); geo.computeVertexNormals();
-  const bodyM = shiny(0xffd60a, { roughness: 0.22, emissive: 0xffa800, emissiveIntensity: 0.1 });
-  const limbM = shiny(0xf2b100, { roughness: 0.3, emissive: 0xff9500, emissiveIntensity: 0.08 });
-  const body = mesh(geo, bodyM), Z = 0.372, root = new T.Group(), g = new T.Group(); root.add(g); g.add(body);
-  const eyeW = gloss(0xffffff, { roughness: 0.12, emissive: 0xffffff, emissiveIntensity: 0.38 }), pupilM = gloss(0x0b0b0a, { roughness: 0.1 });
-  const glint = new T.MeshBasicMaterial({ color: 0xffffff });
-  const eyes = [-1, 1].map((sx) => {
-    const e = new T.Group(); e.position.set(sx * 0.33, 0.34, Z);
-    const w = ball(1, eyeW); w.scale.set(0.22, 0.27, 0.08); w.castShadow = false;
-    const p = ball(1, pupilM, 0, 0, 0.055); p.scale.set(0.125, 0.15, 0.045); p.castShadow = false;
-    const h = new T.Mesh(new T.SphereGeometry(0.028, 16, 12), glint); h.position.set(0.035, 0.06, 0.1);
-    e.add(w, p, h); e.userData = { p, h }; g.add(e); return e;
-  });
-  const brows = [-1, 1].map((sx) => { const b = mesh(new T.CapsuleGeometry(0.036, 0.2, 4, 10), M.ink, sx * 0.33, 0.76, Z + 0.02); b.castShadow = false; g.add(b); return b; });
-  const smile = mesh(new T.TorusGeometry(0.2, 0.036, 12, 32, Math.PI), M.ink, 0, -0.1, Z + 0.01); smile.rotation.z = Math.PI; smile.castShadow = false; g.add(smile);
-  const frown = mesh(new T.TorusGeometry(0.15, 0.036, 12, 32, Math.PI), M.ink, 0, -0.32, Z + 0.01); frown.castShadow = false; g.add(frown);
-  const mouth = ball(1, mat(0x6e1818, { roughness: 0.35 }), 0, -0.2, Z); mouth.castShadow = false; g.add(mouth);
-  const teeth = ball(1, mat(0xffffff, { roughness: 0.3, emissive: 0xffffff, emissiveIntensity: 0.3 }), 0, -0.13, Z + 0.02); teeth.castShadow = false; g.add(teeth);
-  const tongue = ball(1, mat(0xf0736a), 0, -0.27, Z + 0.02); tongue.castShadow = false; g.add(tongue);
-  [-1, 1].forEach((sx) => { const c = new T.Mesh(new T.CircleGeometry(0.11, 28), new T.MeshBasicMaterial({ color: 0xff7a4d, transparent: true, opacity: 0.42 })); c.position.set(sx * 0.56, 0.02, Z + 0.004); g.add(c); });
-  const hands = [-1, 1].map((sx) => { const h = group(ball(0.2, M.glove), ball(0.085, M.glove, -sx * 0.13, 0.13, 0.05)); h.children[0].scale.set(1, 1, 0.9); const b = bake(h); g.add(b); return b; });
-  const arms = [null, null];
-  const feet = group();
-  [-1, 1].forEach((sx) => {
-    const leg = mesh(new T.CapsuleGeometry(0.078, 0.6, 4, 14), limbM, sx * 0.34, -1.42, 0); leg.rotation.z = sx * 0.05;
-    const shoe = ball(1, M.ink, sx * 0.38, -1.8, 0.13); shoe.scale.set(0.23, 0.12, 0.34); feet.add(leg, shoe);
-  });
-  root.add(bake(feet));
-  const shadow = blob(0.95); ST.add(shadow);
-  const POSE = {   // Hände [links, rechts] relativ zum Körper
-    down: [[-1.22, -0.5, 0.2], [1.22, -0.5, 0.2]], point: [[-1.55, 0.85, 0.5], [1.22, -0.5, 0.2]], explain: [[-1.1, -0.02, 0.85], [1.22, 0.05, 0.8]],
-    cheer: [[-1.25, 1.4, 0.2], [1.25, 1.4, 0.2]], up: [[-1.22, -0.45, 0.2], [0.98, 1.28, 0.35]], wave: [[-1.22, -0.5, 0.2], [1.42, 1.12, 0.25]],
-  };
-  const FACE = { happy: { brow: 0.1, by: 0, mouth: "smile", look: [0, 0] }, proud: { brow: 0.22, by: 0.04, mouth: "smile", look: [-0.03, 0.01] }, worried: { brow: -0.38, by: 0.02, mouth: "frown", look: [-0.06, -0.03] }, wow: { brow: 0.15, by: 0.1, mouth: "o", look: [-0.05, 0.04] } };
-  // Was das Männchen zum Zeitpunkt t tut
+  // Was der Moderator zum Zeitpunkt t tut
   function act(t) {
     t = clamp(t, 0, TM.total - 0.001);
-    const i = TALK.beatAt(t), bt = EP.beats[i], P = PLANS[i], lt = t - TM.beats[i].start, talking = TALK.talking(t), gst = Math.floor(t * 0.75) % 2;
-    let face = "happy", arms = "down";
+    const i = TALK.beatAt(t), bt = EP.beats[i], P = PLANS[i], lt = t - TM.beats[i].start, talking = TALK.talking(t), gst = Math.floor(t * 0.7) % 2, show = !P.hasProp ? "point" : lt > P.propAt - 0.25 ? "present" : "rest";
+    let face = "happy", arms = "rest";
     switch (bt.type) {
-      case "hook": face = lt < 1.3 ? "wow" : "happy"; arms = talking && gst ? "explain" : "point"; break;
-      case "cost": face = "worried"; arms = lt < 1.5 ? "up" : talking && gst ? "explain" : "point"; break;
-      case "fact": arms = talking && gst ? "explain" : "point"; break;
+      case "hook": face = lt < 1.2 ? "wow" : "happy"; arms = talking && gst ? "explain" : show; break;
+      case "cost": face = "worried"; arms = lt < 1.4 ? "up" : talking && gst ? "explain" : show; break;
+      case "fact": arms = talking && gst ? "explain" : show; break;
       case "list": arms = talking && gst ? "explain" : "point"; break;
-      case "solution": { face = "proud"; arms = talking && gst ? "explain" : "point"; const c = P.A.cheerAt != null ? lt - P.A.cheerAt : -1; if (c > 0 && c < 1.7) arms = "cheer"; break; }
+      case "solution": { face = "proud"; arms = talking && gst ? "explain" : show; const c = P.A.cheerAt != null ? lt - P.A.cheerAt : -1; if (c > 0 && c < 1.6) arms = "cheer"; break; }
       case "warning": face = "worried"; arms = talking && gst ? "explain" : "up"; break;
-      case "cta": arms = "wave"; break;
+      case "cta": arms = lt < 2.4 ? "wave" : talking && gst ? "explain" : "point"; break;
     }
     return { face, arms, i, lt, bt, P };
   }
-  function update(t, hx, zoomIn) {
-    // weich zwischen Gesten: die letzten 0,3 s mitteln
-    const N = 6, hl = new T.Vector3(), hr = new T.Vector3(); let brow = 0, by = 0, lx = 0, ly = 0;
-    for (let n = 0; n < N; n++) { const a = act(t - n * 0.055), p = POSE[a.arms], f = FACE[a.face]; hl.add(new T.Vector3(...p[0])); hr.add(new T.Vector3(...p[1])); brow += f.brow; by += f.by; lx += f.look[0] + (a.arms === "point" ? -0.03 : 0); ly += f.look[1] + (a.arms === "point" ? 0.04 : 0); }
-    hl.multiplyScalar(1 / N); hr.multiplyScalar(1 / N); brow /= N; by /= N; lx /= N; ly /= N;
+  function update(t) {
+    // weich zwischen Gesten: die letzten 0,4 s mitteln
+    const N = 7, hl = new T.Vector3(), hr = new T.Vector3(); let brow = 0, by = 0, turn = 0;
+    for (let n = 0; n < N; n++) { const a = act(t - n * 0.055), p = AV.POSE[a.arms], f = AV.FACE[a.face]; hl.add(AV.v3(p[0])); hr.add(AV.v3(p[1])); brow += f.brow; by += f.by; turn += a.arms === "present" ? -0.22 : a.arms === "point" ? -0.1 : a.arms === "wave" ? 0.08 : 0; }
+    hl.multiplyScalar(1 / N); hr.multiplyScalar(1 / N); brow /= N; by /= N; turn /= N;
     const a = act(t), o = TALK.talking(t) ? TALK.open(t) : 0;
-    if (a.arms === "wave") hr.x += Math.sin(t * 9) * 0.22;
-    if (a.arms === "cheer") { hl.y += Math.sin(t * 12) * 0.08; hr.y -= Math.sin(t * 12) * 0.08; }
-    if (a.arms === "explain") { hl.y += Math.sin(t * 3.6) * 0.1; hr.y -= Math.sin(t * 3.6) * 0.1; }
-    if (a.arms === "point") { hl.x += Math.sin(t * 5) * 0.03; hl.y += Math.cos(t * 5) * 0.03; }
-    [hl, hr].forEach((h, n) => {
-      const sx = n ? 1 : -1, sh = new T.Vector3(sx * 0.84, 0.02, 0.05), mid = sh.clone().lerp(h, 0.5).add(new T.Vector3(sx * 0.14, -0.24, 0.12));
-      if (arms[n]) { g.remove(arms[n]); arms[n].geometry.dispose(); }
-      arms[n] = mesh(new T.TubeGeometry(new T.QuadraticBezierCurve3(sh, mid, h), 18, 0.074, 12), limbM); g.add(arms[n]);
-      hands[n].position.copy(h);
-    });
-    brows.forEach((b, n) => { const sx = n ? 1 : -1; b.rotation.z = Math.PI / 2 + sx * brow; b.position.y = 0.76 + by; });
-    const blink = t % 3.4 < 0.11 ? 0.1 : 1;
-    eyes.forEach((e) => { e.scale.y = blink * (a.face === "wow" ? 1.12 : 1); e.userData.p.position.set(lx, ly, 0.055); e.userData.h.position.set(lx + 0.04, ly + 0.065, 0.1); });
-    const type = FACE[a.face].mouth, open = o > 0.06;
-    smile.visible = !open && type === "smile"; frown.visible = !open && type === "frown";
-    mouth.visible = open || type === "o"; tongue.visible = open && o > 0.5; teeth.visible = open && o > 0.3;
-    const oo = open ? o : 0.5, mw = open ? 0.17 + o * 0.03 : 0.11, mh = 0.04 + oo * 0.16;
-    mouth.scale.set(mw, mh, 0.045); teeth.scale.set(mw * 0.72, 0.035, 0.03); teeth.position.y = -0.2 + mh * 0.62; tongue.scale.set(mw * 0.55, 0.045, 0.03); tongue.position.y = -0.2 - mh * 0.5;
-    // Hüpfer, Atmen, Wippen
-    let hop = Math.sin(t * 2.3) * 0.012 + o * 0.02;
-    if (a.lt < 0.45 && a.i > 0) hop += Math.sin((a.lt / 0.45) * Math.PI) * 0.12;
-    const c = a.bt.type === "solution" && a.P.A.cheerAt != null ? a.lt - a.P.A.cheerAt : -1;
-    if (c > 0 && c < 1.7) hop += Math.max(0, Math.sin(c * 9)) * 0.34 * Math.exp(-c * 2);
-    if (a.bt.type === "cta") hop += Math.abs(Math.sin(a.lt * 4)) * 0.06;
-    const sq = 1 + o * 0.025 + (a.lt < 0.45 && a.i > 0 ? Math.sin((a.lt / 0.45) * Math.PI * 2) * 0.03 : 0);
-    g.position.y = hop; g.scale.set(1 / sq, sq, 1); g.rotation.z = Math.sin(t * 1.7) * 0.02 + (a.arms === "wave" ? 0.05 : 0);
-    g.rotation.x = a.face === "worried" ? 0.07 : -0.02;
-    const enter = spring(win(t, 0.02, 0.75));
-    root.position.set(hx, 1.92 * HS * enter, 0.15); root.rotation.y = lerp(-0.34, -0.1, zoomIn) + Math.sin(t * 0.8) * 0.05; root.scale.setScalar(HS * Math.max(0.001, enter));
-    shadow.position.set(hx, 0.006, 0.2); shadow.scale.setScalar(0.62 * enter * (1 - hop * 0.8)); shadow.material.opacity = 0.9;
+    if (a.arms === "wave") hr.x += Math.sin(t * 9) * 0.26;
+    if (a.arms === "cheer") { hl.y += Math.sin(t * 12) * 0.1; hr.y -= Math.sin(t * 12) * 0.1; }
+    if (a.arms === "explain") { hl.y += Math.sin(t * 3.4) * 0.16; hr.y += Math.sin(t * 3.4 + 1.3) * 0.16; hl.x -= Math.cos(t * 3.4) * 0.1; hr.x += Math.cos(t * 3.4 + 1.3) * 0.1; }
+    if (a.arms === "present") hl.y += Math.sin(t * 2.2) * 0.05;
+    if (a.arms === "up" || a.arms === "point") { hr.y += Math.sin(t * 6) * 0.04; hl.y += Math.sin(t * 6) * 0.04; }
+    const hop = a.lt < 0.4 && a.i > 0 ? Math.sin((a.lt / 0.4) * Math.PI) : 0;
+    AV.update({ t, hands: [hl, hr], brow, by, lid: AV.FACE[a.face].lid, mouthType: AV.FACE[a.face].mouth, open: o, look: [-turn * 0.14, a.face === "worried" ? -0.008 : 0.004],
+      nod: 0.02 + o * 0.05 + Math.sin(t * 1.3) * 0.02 + hop * 0.09 + (a.face === "worried" ? 0.05 : 0), tilt: Math.sin(t * 0.9) * 0.035 + (a.arms === "wave" ? 0.06 : 0), turn: turn + Math.sin(t * 0.6) * 0.05, blink: t % 3.7 < 0.12 });
   }
-  ST.add(root);
   return { update };
 })();
 
-/* ---------- Objekt links auf dem Podest ---------- */
+/* ---------- Objekt neben dem Moderator (schwebt links auf Schulterhöhe) ---------- */
+const PROP_X = -1.74, PROP_Y = HEAD_Y - 1.0, PS = 0.9;
 function propActor(name, { n = 0.6, sfx = "pop" } = {}) {
-  const kind = propKey(name), [s, lift] = PROP_SET[kind], obj = bake(PROPS[kind]()), sh = blob(0.7); obj.visible = sh.visible = false; ST.add(obj, sh);
+  const kind = propKey(name), [s] = PROP_SET[kind], obj = bake(PROPS[kind]()); obj.visible = false; ST.add(obj);
   const coins = []; for (let i = 0; i < 8; i++) { const c = obj.getObjectByName("coin" + i); if (c) coins.push(c); }
   const A = { n, sfx, obj, prop: true, drain: null };
   A.update = (lt, vis, out) => {
-    const k = win(lt, A.a, A.a + 0.6), p = spring(k), sc = s * Math.max(0.001, p) * (1 - out);
-    obj.visible = sh.visible = vis && k > 0;
+    const k = win(lt, A.a, A.a + 0.6), p = spring(k), sc = s * PS * Math.max(0.001, p) * (1 - out);
+    obj.visible = vis && k > 0;
     obj.scale.setScalar(sc);
-    obj.position.set(-0.86, lift * p + (lift ? Math.sin(lt * 1.7) * 0.035 : 0), 0.25);
-    obj.rotation.y = 0.42 + (1 - ease(k)) * -2.6 + Math.sin(lt * 0.9) * 0.12;
-    sh.position.set(-0.86, 0.006, 0.3); sh.scale.setScalar(0.85 * sc / s * (kind === "money" ? 0.9 : 0.72)); sh.material.opacity = lift ? 0.6 : 0.95;
+    obj.position.set(PROP_X, PROP_Y + Math.sin(lt * 1.7) * 0.04 - (1 - p) * 0.3 + (kind === "money" ? 0.25 : 0), 0.5);
+    obj.rotation.y = 0.38 + (1 - ease(k)) * -2.6 + Math.sin(lt * 0.9) * 0.14; obj.rotation.x = (kind === "money" ? 0.32 : 0.06);
     const h = obj.getObjectByName("hour"), m = obj.getObjectByName("minute"), ham = obj.getObjectByName("hammer");
     if (h) { h.rotation.z = -lt * 0.6 - 0.9; m.rotation.z = -lt * 7; obj.rotation.z = Math.sin(lt * 22) * 0.025 * (1 - win(lt, A.a + 0.6, A.a + 1.6)); }
     if (ham) { const q = (lt - A.a - 0.7) % 1.6; ham.rotation.z = -0.75 - (q > 0 && q < 0.3 ? Math.sin((q / 0.3) * Math.PI) * 0.55 : 0); }
@@ -386,13 +316,13 @@ function propActor(name, { n = 0.6, sfx = "pop" } = {}) {
 /* ---------- Konfetti, wenn die Lösung kommt ---------- */
 const CONFETTI = (() => {
   const cols = [M.sun, M.white, M.mint, M.blue, M.sun, M.red], parts = [], times = [];
-  for (let i = 0; i < 46; i++) { const p = i % 3 ? box(0.11, 0.11, 0.03, cols[i % cols.length], 0, 0, 0, 0.012) : ball(0.05, cols[i % cols.length]); p.visible = false; p.castShadow = false; ST.add(p); parts.push(p); }
+  for (let i = 0; i < 46; i++) { const p = i % 3 ? box(0.13, 0.13, 0.035, cols[i % cols.length], 0, 0, 0, 0.014) : ball(0.06, cols[i % cols.length]); p.visible = false; ST.add(p); parts.push(p); }
   function update(t) {
     const t0 = times.filter((x) => x <= t).pop(), q = t0 == null ? -1 : t - t0;
     parts.forEach((p, i) => {
       if (q < 0 || q > 2.2) { p.visible = false; return; }
-      const vx = (rnd(i) - 0.5) * 3.6, vy = 3.4 + rnd(i + 50) * 3.4, vz = (rnd(i + 100) - 0.3) * 1.6, d = 1 - Math.exp(-q * 1.6);
-      p.visible = true; p.position.set(-0.3 + vx * d * 0.62, 0.9 + vy * d * 0.62 - q * q * 1.5, 0.3 + vz * d * 0.62);
+      const vx = (rnd(i) - 0.5) * 5.2, vy = 3.2 + rnd(i + 50) * 3.6, vz = (rnd(i + 100) - 0.3) * 1.2, d = 1 - Math.exp(-q * 1.6);
+      p.visible = true; p.position.set(-0.6 + vx * d * 0.62, 1.9 + vy * d * 0.62 - q * q * 1.5, 1.0 + vz * d * 0.5);
       p.rotation.set(q * (3 + rnd(i) * 6), q * (2 + rnd(i + 7) * 5), i); p.scale.setScalar(spring(win(q, 0, 0.25)) * (1 - easeIn(win(q, 1.5, 2.2))));
     });
   }
@@ -566,9 +496,9 @@ function build() {
     if (A.after) A.after();
     // Platz für die Bühne: so groß, wie unter dem Text frei bleibt
     A.forEach((a) => !a.prop && a.update(999));
-    let bottom = 0; for (const el of root.children) { const r = el.getBoundingClientRect(); if (r.right > 600 && r.width > 0) bottom = Math.max(bottom, r.bottom); }
+    let bottom = 0; for (const el of root.children) { const r = el.getBoundingClientRect(); if (r.width > 0) bottom = Math.max(bottom, r.bottom); }
     const hasProp = A.some((a) => a.prop);
-    PLANS.push({ root, A, D, start: TM.beats[i].start, dark: DARK[bt.type] ? 1 : 0, zoom: clamp((FLOOR - bottom - 30) / 520, 0.6, 1), hostX: hasProp || bt.type === "cta" ? 0.82 : 0.1 });
+    PLANS.push({ root, A, D, start: TM.beats[i].start, dark: DARK[bt.type] ? 1 : 0, hasProp, propAt: hasProp ? A.find((a) => a.prop).a : 0, zoom: clamp((1920 - bottom - 30) / 1085, 0.7, 1), hostX: hasProp || bt.type === "cta" ? 0.44 : 0 });
     if (i > 0) SFX.push({ time: TM.beats[i].start, kind: "whoosh", gain: 0.7 });
     A.forEach((a) => { if (a.sfx) SFX.push({ time: TM.beats[i].start + a.a, kind: a.sfx, gain: a.sfx === "coin" ? 0.7 : 0.9 }); });
     if (A.cheerAt != null) { SFX.push({ time: TM.beats[i].start + A.cheerAt, kind: "boing", gain: 0.6 }); CONFETTI.times.push(TM.beats[i].start + A.cheerAt); }
@@ -576,16 +506,16 @@ function build() {
   BAR = $(`<div class="abs" style="left:80px;top:206px;width:920px;height:8px;display:flex;gap:10px"></div>`);
   TM.beats.forEach((b) => BAR.appendChild($(`<div style="flex:${b.dur} 1 0;background:color-mix(in srgb, var(--fg) 14%, transparent);border-radius:4px;overflow:hidden"><i style="display:block;height:100%;width:0;background:var(--fg);border-radius:4px"></i></div>`)));
   const brand = $(`<div class="abs" style="white-space:nowrap;color:var(--fg)">
-    <svg width="104" height="104" viewBox="0 0 86 86" style="display:block;filter:drop-shadow(0 16px 20px rgba(160,120,0,.4))"><path d="M43 6 C58 14 70 14 76 14 V44 C76 62 60 74 43 81 C26 74 10 62 10 44 V14 C16 14 28 14 43 6Z" fill="${SUN}"/><path d="M29 43 L39 53 L58 32" stroke="${INK}" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    <div style="margin-top:22px;font-weight:840;font-size:78px;letter-spacing:-0.05em;line-height:.95">Seitz</div>
-    <div style="font-family:Serif;font-style:italic;font-size:78px;letter-spacing:-0.02em;line-height:1">Rechtsschutz</div></div>`);
-  const fine = $(`<div class="fine" style="color:color-mix(in srgb, var(--fg) 62%, transparent)">${esc(EP.fine || "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.")}</div>`);
+    <svg width="92" height="92" viewBox="0 0 86 86" style="display:block;filter:drop-shadow(0 16px 20px rgba(160,120,0,.4))"><path d="M43 6 C58 14 70 14 76 14 V44 C76 62 60 74 43 81 C26 74 10 62 10 44 V14 C16 14 28 14 43 6Z" fill="${SUN}"/><path d="M29 43 L39 53 L58 32" stroke="${INK}" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div style="margin-top:20px;font-weight:840;font-size:62px;letter-spacing:-0.05em;line-height:.95">Seitz</div>
+    <div style="font-family:Serif;font-style:italic;font-size:62px;letter-spacing:-0.02em;line-height:1">Rechtsschutz</div></div>`);
+  const fine = $(`<div class="fine">${esc(EP.fine || "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.")}</div>`);
   overlayRoot.append(BAR, brand, fine);
   const sol = EP.beats.findIndex((b) => b.type === "solution" && JSON.stringify(b).includes("*")), cta = EP.beats.findIndex((b) => b.type === "cta");
   OVER = { brand, fine, sol: sol >= 0 ? TM.beats[sol] : null, cta: cta >= 0 ? TM.beats[cta] : null };
 }
 
-const ui = document.getElementById("ui"), bgA = document.getElementById("bgA"), bgB = document.getElementById("bgB"), bgS = document.getElementById("bgS"), cTop = new T.Color(), cA = new T.Color(0xffffff), cB = new T.Color(0x35332b), cC = new T.Color(0x141412), cD = new T.Color(0xffd60a), vig = document.getElementById("vig");
+const ui = document.getElementById("ui"), bgA = document.getElementById("bgA"), bgB = document.getElementById("bgB"), bgS = document.getElementById("bgS"), sun = document.getElementById("sun"), vig = document.getElementById("vig");
 function render(t) {
   let cur = 0; while (cur + 1 < PLANS.length && t >= PLANS[cur + 1].start) cur++;
   PLANS.forEach((P, i) => {
@@ -597,30 +527,34 @@ function render(t) {
   // weiche Übergänge zwischen den Abschnitten: Helligkeit des Studios, Größe der Bühne, Platz des Männchens
   const P = PLANS[cur], N = PLANS[cur + 1], Q = PLANS[cur - 1] || P, lt = t - P.start;
   const kin = smooth(win(lt, 0, 0.55)), zoom = lerp(Q.zoom, P.zoom, kin), hx = lerp(Q.hostX, P.hostX, kin);
-  // Wechsel hell/dunkel: der neue Raum öffnet sich als Kreis vom Podest aus, mit gelbem Rand
+  // Wechsel hell/dunkel: der neue Raum öffnet sich als Kreis hinter dem Moderator, mit gelbem Rand
   let from = P.dark, to = P.dark, k = 1;
   if (N && N.dark !== P.dark && lt > P.D - 0.4) { to = N.dark; k = win(lt, P.D - 0.4, P.D + 0.15); }
   else if (cur > 0 && Q.dark !== P.dark && lt < 0.15) { from = Q.dark; k = win(lt, -0.4, 0.15); }
-  const r1 = smooth(win(k, 0, 0.88)) * 1650, r2 = smooth(win(k, 0.12, 1)) * 1650, dd = lerp(from, to, smooth(k));
+  const cx = 540 + hx * PPU, headY = 1920 - zoom * (1920 - 1161), cy = headY + 60 * zoom;
+  const r1 = smooth(win(k, 0, 0.88)) * 1850, r2 = smooth(win(k, 0.12, 1)) * 1850, dd = lerp(from, to, smooth(k));
   bgA.className = "bg " + (from ? "bgD" : "bgL"); bgB.className = "bg " + (to ? "bgD" : "bgL");
-  bgB.style.clipPath = k >= 1 ? "none" : `circle(${r2}px at 497px 1380px)`; bgS.style.clipPath = `circle(${k >= 1 ? 0 : r1}px at 497px 1380px)`;
-  const fg = (r2 > 1250 || k >= 1 ? to : from) ? 255 : 11; ui.style.setProperty("--fg", `rgb(${fg},${fg},${fg === 11 ? 10 : 255})`);
-  hemi.intensity = lerp(1.5, 0.62, dd); key.intensity = lerp(2.6, 2.3, dd); rim.intensity = lerp(1.3, 3.4, dd); fill.intensity = lerp(0.5, 0.15, dd);
-  const ei = lerp(0.6, 0.38, dd); for (const m of SHINY) m.envMapIntensity = ei; floor.material.opacity = lerp(0.7, 0.9, dd); podTop.color.copy(cTop.lerpColors(cA, cB, dd)); podBase.color.copy(cTop.lerpColors(cC, cD, dd)); vig.style.opacity = lerp(0.35, 1, dd);
-  ST.scale.setScalar(zoom);
-  HOST.update(t, hx, 1 - win(hx, 0.1, 0.82));
+  bgB.style.clipPath = k >= 1 ? "none" : `circle(${r2}px at ${cx}px ${cy}px)`; bgS.style.clipPath = `circle(${k >= 1 ? 0 : r1}px at ${cx}px ${cy}px)`;
+  const fg = (r2 > 1350 || k >= 1 ? to : from) ? 255 : 11; ui.style.setProperty("--fg", `rgb(${fg},${fg},${fg === 11 ? 10 : 255})`);
+  hemi.intensity = lerp(1.25, 1.0, dd); key.intensity = lerp(2.3, 2.4, dd); rim.intensity = lerp(1.6, 3.0, dd); fill.intensity = lerp(0.6, 0.4, dd);
+  const ei = lerp(0.6, 0.4, dd); for (const m of SHINY) m.envMapIntensity = ei; vig.style.opacity = lerp(0.3, 1, dd);
+  // gelbe Scheibe hinter dem Moderator: wächst zu Beginn auf, pulsiert leicht bei jedem neuen Abschnitt
+  const intro = spring(win(t, 0, 0.75)), pulse = 1 + (cur > 0 ? 0.045 * (1 - ease(win(lt, 0, 0.55))) : 0);
+  sun.style.transform = `translate(${cx}px, ${cy}px) scale(${Math.max(0.001, zoom * intro * pulse)})`;
+  const enter = spring(win(t, 0.08, 0.9));
+  ST.position.set(hx, PIVOT_Y - (1 - enter) * 3.4, 0); ST.scale.setScalar(zoom);
+  HOST.update(t);
   CONFETTI.update(t);
-  // Kamera: ruhige Fahrt um die Bühne, bei jedem Abschnitt ein kleiner Schub nach vorn
-  const push = 1 - ease(win(lt, 0, 0.8)), az = Math.sin(t * 0.24) * 0.075 + push * 0.05, D = 15.8 - smooth(lt / P.D) * 0.55 + push * 0.5, pitch = 0.157;
-  cam.position.set(-0.16 + Math.sin(az) * Math.cos(pitch) * D, 0.95 + Math.sin(pitch) * D, Math.cos(az) * Math.cos(pitch) * D);
-  cam.lookAt(-0.16, 0.95, 0);
+  // Kamera: fast frontal, mit ruhiger Seitwärtsfahrt und einem kleinen Schub nach vorn bei jedem Abschnitt
+  const push = 1 - ease(win(lt, 0, 0.8)), az = Math.sin(t * 0.24) * 0.045, D = 15.8 - smooth(lt / P.D) * 0.35 + push * 0.3;
+  cam.position.set(Math.sin(az) * D, 0.2, Math.cos(az) * D); cam.lookAt(0, 0, 0);
   renderer.setRenderTarget(RT); renderer.setClearColor(0x000000, 0); renderer.clear(); renderer.render(scene, cam);
-  renderer.setRenderTarget(null); renderer.setScissorTest(false); renderer.clear(); { const top = Math.max(0, Math.round(CONFETTI.active(t) ? 420 : FLOOR - zoom * 650 - 40)), bottom = FLOOR + 200; renderer.setScissor(0, 1920 - bottom, 1080, bottom - top); } renderer.setScissorTest(true); renderer.render(POST, POST_CAM); renderer.setScissorTest(false);
+  renderer.setRenderTarget(null); renderer.setScissorTest(false); renderer.clear(); { const top = Math.max(0, Math.round(CONFETTI.active(t) ? 360 : 1920 - zoom * 1180 - 40)); renderer.setScissor(0, 0, 1080, 1920 - top); } renderer.setScissorTest(true); renderer.render(POST, POST_CAM); renderer.setScissorTest(false);
   [...BAR.children].forEach((seg, i) => { const b = TM.beats[i]; seg.firstChild.style.width = clamp((t - b.start) / b.dur) * 100 + "%"; });
   const inSol = OVER.sol && t > OVER.sol.start + Math.min(3, OVER.sol.dur * 0.45) && t < OVER.sol.start + OVER.sol.dur - 0.3, inCta = OVER.cta && t > OVER.cta.start + 1.6;
   set(OVER.fine, { o: inSol || inCta ? 1 : 0 });
   const bk = OVER.cta ? ease(win(t, OVER.cta.start + 1.2, OVER.cta.start + 1.7)) : 0;
-  set(OVER.brand, { x: 84, y: 1130 + (1 - bk) * 24, o: bk });
+  set(OVER.brand, { x: 84, y: 1150 + (1 - bk) * 24, o: bk });
 }
 window.render = render;
 window.collectSfx = () => SFX;
