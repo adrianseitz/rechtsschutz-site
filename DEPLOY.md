@@ -66,7 +66,13 @@ zum Termin. Alles Weitere im CRM unter **Videos**:
 
 1. Konto bei [Upload-Post](https://www.upload-post.com) anlegen (Basic-Tarif, sonst fehlt TikTok), Profil anlegen,
    TikTok, Instagram (Business/Creator) und YouTube verbinden, API-Schlüssel + Profilname im CRM eintragen.
-2. Konto bei [ElevenLabs](https://elevenlabs.io) (Starter reicht), API-Schlüssel eintragen, Stimme wählen, Probe hören.
+2. Stimme: **Deine eigene Stimme (kostenlos)**. Läuft mit Kyutai Pocket TTS direkt auf dem Server, ohne Abo.
+   Einmalig: kostenloses Konto bei [HuggingFace](https://huggingface.co), auf
+   [huggingface.co/kyutai/pocket-tts](https://huggingface.co/kyutai/pocket-tts) den Bedingungen zustimmen, unter
+   Settings → Access Tokens einen „Read“-Token erstellen und im CRM eintragen. Dann im CRM den Text vorlesen
+   (Aufnahme im Browser oder Datei hochladen) und „Probe mit meiner Stimme erstellen“. Beim ersten Mal lädt der Server
+   das Sprachmodell (ca. 400 MB, Ordner `data/social/hf`, nicht in der Datensicherung).
+   Alternativ: Konto bei [ElevenLabs](https://elevenlabs.io), API-Schlüssel eintragen, Stimme wählen.
 3. Zeitplan wählen und **Automatik starten**. Pausieren geht jederzeit mit einem Klick.
 
 Die Schlüssel werden verschlüsselt gespeichert (`LEAD_ENCRYPTION_KEY`). Logs: `docker compose logs -f shorts`.

@@ -1,16 +1,20 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { CheckCircle2, CircleAlert, Clapperboard, Copy, ExternalLink, Loader2, Mic, Pause, Play, RefreshCw, Send, Undo2, Volume2, X } from "lucide-react";
+import { CheckCircle2, CircleAlert, Clapperboard, Copy, ExternalLink, Loader2, Mic, Pause, Play, RefreshCw, Send, Square, Trash2, Undo2, Upload, Volume2, X } from "lucide-react";
 
 /* Video-Automatik: TikTok, Instagram Reels, YouTube Shorts.
    Der Worker auf dem Server erstellt die Videos und postet sie zum Termin; hier wird eingerichtet und überwacht. */
 
 type Platform = "tiktok" | "instagram" | "youtube";
+type VoiceSample = { file: string; at: string; seconds: number; bytes: number };
 type Settings = {
-  enabled: boolean; days: number[]; times: string[]; platforms: Platform[]; uploadUser: string; voiceId: string; voiceName: string;
-  speed: number; aiLabel: boolean; promo: boolean; repeat: boolean; disabled: string[]; hasElevenlabs: boolean; hasUploadpost: boolean; updatedAt?: string;
+  enabled: boolean; days: number[]; times: string[]; platforms: Platform[]; uploadUser: string; voiceEngine: "own" | "elevenlabs"; voiceSample?: VoiceSample;
+  voiceId: string; voiceName: string; speed: number; aiLabel: boolean; promo: boolean; repeat: boolean; disabled: string[];
+  hasElevenlabs: boolean; hasUploadpost: boolean; hasHuggingface: boolean; updatedAt?: string;
 };
+type Keys = { elevenlabs?: string; uploadpost?: string; huggingface?: string };
+type VoiceTest = { status: "läuft" | "fertig" | "fehler"; at: string; error?: string; file?: string; took?: number };
 type Ep = { id: string; order: number; title: string; topic: string; style: "whiteboard" | "cartoon"; caption: string; beats: number };
 type EpState = {
   status?: string; video?: string; thumb?: string; duration?: number; voiced?: boolean; renderedAt?: string; postedAt?: string; error?: string | null;
@@ -19,6 +23,7 @@ type EpState = {
 type State = {
   heartbeat?: string; busy?: string | null; library?: Ep[]; episodes?: Record<string, EpState>; queue?: string[];
   nextSlot?: { key: string; label: string } | null; cycle?: number; credits?: { used?: number | null; limit?: number | null; error?: string };
+  voiceTest?: VoiceTest; voiceBlocked?: { at: string; error: string };
 };
 type LogEntry = { at: string; kind: string; text: string };
 
@@ -55,8 +60,8 @@ export function SocialView() {
     return () => clearInterval(t);
   }, [load]);
 
-  async function saveAll(next: Settings, keys?: { elevenlabs?: string; uploadpost?: string }) {
-    const { hasElevenlabs, hasUploadpost, updatedAt, disabled, ...rest } = next; void hasElevenlabs; void hasUploadpost; void updatedAt; void disabled;
+  async function saveAll(next: Settings, keys?: Keys) {
+    const { hasElevenlabs, hasUploadpost, hasHuggingface, voiceSample, updatedAt, disabled, ...rest } = next; void hasElevenlabs; void hasUploadpost; void hasHuggingface; void voiceSample; void updatedAt; void disabled;
     const j = await post("/api/admin/social", { ...rest, keys });
     setSettings(j.settings);
     return j.settings as Settings;
@@ -79,7 +84,7 @@ export function SocialView() {
   const online = state.heartbeat ? Date.now() - Date.parse(state.heartbeat) < 4 * 60_000 : false;
   const steps = [
     { done: settings.hasUploadpost && !!settings.uploadUser, text: "Upload-Post verbinden (postet auf TikTok, Instagram und YouTube)" },
-    { done: settings.hasElevenlabs && !!settings.voiceId, text: "ElevenLabs-Stimme wählen" },
+    { done: settings.voiceEngine === "elevenlabs" ? settings.hasElevenlabs && !!settings.voiceId : settings.hasHuggingface && !!settings.voiceSample, text: settings.voiceEngine === "elevenlabs" ? "ElevenLabs-Stimme wählen" : "Deine Stimme einrichten (kostenlos)" },
     { done: settings.platforms.length > 0 && settings.days.length > 0, text: "Zeitplan festlegen" },
     { done: settings.enabled, text: "Automatik einschalten" },
   ];
@@ -122,13 +127,14 @@ export function SocialView() {
           <div className="mt-4 flex flex-wrap gap-x-5 gap-y-1 text-xs text-ink-muted">
             <span className="inline-flex items-center gap-1.5"><span className={`h-2 w-2 rounded-full ${online ? "bg-emerald-500" : "bg-rose-500"}`} />{online ? "Server-Dienst läuft" : "Server-Dienst meldet sich nicht – nach dem nächsten Update läuft er automatisch"}</span>
             {state.busy && <span className="inline-flex items-center gap-1.5"><Loader2 className="h-3 w-3 animate-spin" aria-hidden />{state.busy}</span>}
-            {state.credits?.limit ? <span>Stimme: {(state.credits.used ?? 0).toLocaleString("de-DE")} von {state.credits.limit.toLocaleString("de-DE")} Zeichen diesen Monat</span> : null}
+            {state.voiceBlocked && <span className="inline-flex items-center gap-1.5 text-rose-700"><CircleAlert className="h-3 w-3" aria-hidden />Stimme pausiert: {state.voiceBlocked.error}</span>}
+            {settings.voiceEngine === "elevenlabs" && state.credits?.limit ? <span>Stimme: {(state.credits.used ?? 0).toLocaleString("de-DE")} von {state.credits.limit.toLocaleString("de-DE")} Zeichen diesen Monat</span> : null}
           </div>
           {note && <p role="status" className={`mt-4 rounded-lg px-3 py-2.5 text-sm ${note.ok ? "bg-emerald-50 text-emerald-900" : "bg-rose-50 text-rose-900"}`}>{note.text}</p>}
         </section>
 
         <Queue settings={settings} state={state} onPreview={setPreview} onAction={action} />
-        <Setup settings={settings} onSave={saveAll} />
+        <Setup settings={settings} onSave={saveAll} voiceTest={state.voiceTest} onSettings={setSettings} onRefresh={load} />
         <Log entries={log} />
       </div>
       {preview && <Preview ep={preview.ep} e={preview.e} onClose={() => setPreview(null)} />}
@@ -217,22 +223,26 @@ const Small = ({ children, onClick }: { children: React.ReactNode; onClick: () =
 );
 
 /* ---------- Einrichtung ---------- */
-function Setup({ settings, onSave }: { settings: Settings; onSave: (s: Settings, keys?: { elevenlabs?: string; uploadpost?: string }) => Promise<Settings> }) {
+function Setup({ settings, onSave, voiceTest, onSettings, onRefresh }: {
+  settings: Settings; onSave: (s: Settings, keys?: Keys) => Promise<Settings>; voiceTest?: VoiceTest; onSettings: (s: Settings) => void; onRefresh: () => void;
+}) {
   const [s, setS] = useState<Settings>(settings);
   const [upKey, setUpKey] = useState("");
   const [elKey, setElKey] = useState("");
+  const [hfKey, setHfKey] = useState("");
+  const [testAsked, setTestAsked] = useState("");
   const [voices, setVoices] = useState<{ id: string; name: string; info: string; category: string }[]>([]);
   const [busy, setBusy] = useState<"" | "save" | "voices" | "test">("");
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const audio = useRef<HTMLAudioElement | null>(null);
-  useEffect(() => { setS((cur) => ({ ...cur, hasElevenlabs: settings.hasElevenlabs, hasUploadpost: settings.hasUploadpost, enabled: settings.enabled, disabled: settings.disabled })); }, [settings]);
+  useEffect(() => { setS((cur) => ({ ...cur, hasElevenlabs: settings.hasElevenlabs, hasUploadpost: settings.hasUploadpost, hasHuggingface: settings.hasHuggingface, voiceSample: settings.voiceSample, enabled: settings.enabled, disabled: settings.disabled })); }, [settings]);
   const set = <K extends keyof Settings>(k: K, v: Settings[K]) => setS((x) => ({ ...x, [k]: v }));
 
   async function save() {
     setBusy("save"); setMsg(null);
     try {
-      const next = await onSave(s, { uploadpost: upKey.trim() || undefined, elevenlabs: elKey.trim() || undefined });
-      setS(next); setUpKey(""); setElKey("");
+      const next = await onSave(s.voiceEngine === "own" ? { ...s, aiLabel: true } : s, { uploadpost: upKey.trim() || undefined, elevenlabs: elKey.trim() || undefined, huggingface: hfKey.trim() || undefined });
+      setS(next); setUpKey(""); setElKey(""); setHfKey("");
       setMsg({ ok: true, text: "Gespeichert. Der Server-Dienst übernimmt die Änderungen in der nächsten Minute." });
       return true;
     } catch (e) { setMsg({ ok: false, text: e instanceof Error ? e.message : "Speichern fehlgeschlagen." }); return false; }
@@ -258,6 +268,16 @@ function Setup({ settings, onSave }: { settings: Settings; onSave: (s: Settings,
     } catch (e) { setMsg({ ok: false, text: e instanceof Error ? e.message : "Hörprobe fehlgeschlagen." }); }
     finally { setBusy(""); }
   }
+  async function ownTest() {
+    if ((hfKey.trim() || s.voiceEngine !== settings.voiceEngine || s.speed !== settings.speed) && !(await save())) return;
+    setMsg(null);
+    try {
+      await post("/api/admin/social/action", { type: "voicetest" });
+      setTestAsked(new Date().toISOString());
+      setTimeout(onRefresh, 1500);
+    } catch (e) { setMsg({ ok: false, text: e instanceof Error ? e.message : "Auftrag fehlgeschlagen." }); }
+  }
+  const own = s.voiceEngine === "own";
   const toggleDay = (d: number) => set("days", s.days.includes(d) ? s.days.filter((x) => x !== d) : [...s.days, d].sort());
   const togglePl = (p: Platform) => set("platforms", s.platforms.includes(p) ? s.platforms.filter((x) => x !== p) : [...s.platforms, p]);
 
@@ -285,34 +305,78 @@ function Setup({ settings, onSave }: { settings: Settings; onSave: (s: Settings,
         </div>
 
         <div className="border-t border-line pt-5">
-          <h3 className="text-sm font-semibold">2. Stimme von ElevenLabs {settings.hasElevenlabs && <span className="ml-1 rounded-full bg-emerald-100 px-2 py-0.5 text-xs text-emerald-900">Schlüssel gespeichert</span>}</h3>
-          <p className="mt-1 text-sm leading-6 text-ink-soft">
-            Konto bei <a href="https://elevenlabs.io" target="_blank" rel="noopener noreferrer" className="underline">elevenlabs.io</a> anlegen (der Starter-Tarif reicht für rund 50 Videos im Monat), unter „Developers → API Keys“ einen Schlüssel erstellen und hier eintragen.
-            Ohne Stimme werden die Videos nur mit Musik erstellt.
-          </p>
-          <div className="mt-3">
-            <label htmlFor="elkey" className="label">API-Schlüssel</label>
-            <input id="elkey" type="password" autoComplete="new-password" className="input" value={elKey} onChange={(e) => setElKey(e.target.value)} placeholder={settings.hasElevenlabs ? "•••••••• (nur zum Ändern ausfüllen)" : "sk_…"} />
+          <h3 className="text-sm font-semibold">2. Stimme</h3>
+          <div role="radiogroup" aria-label="Stimme" className="mt-3 grid gap-2 sm:grid-cols-2">
+            {([["own", "Deine eigene Stimme", "Kostenlos. Läuft auf deinem Server, kein Abo."], ["elevenlabs", "ElevenLabs", "Kostenpflichtig, ab ca. 6 $ im Monat."]] as const).map(([v, t, d]) => (
+              <button key={v} type="button" role="radio" aria-checked={s.voiceEngine === v} onClick={() => set("voiceEngine", v)}
+                className={`rounded-xl border p-3.5 text-left transition ${s.voiceEngine === v ? "border-navy bg-sun/30 ring-1 ring-navy" : "border-line hover:border-navy/40"}`}>
+                <span className="block text-sm font-semibold">{t}</span><span className="mt-0.5 block text-xs text-ink-muted">{d}</span>
+              </button>
+            ))}
           </div>
-          <div className="mt-3 flex flex-wrap items-end gap-2">
-            <div className="min-w-[14rem] flex-1">
-              <label htmlFor="voice" className="label">Stimme</label>
-              {voices.length ? (
-                <select id="voice" className="input" value={s.voiceId} onChange={(e) => { const v = voices.find((x) => x.id === e.target.value); setS((x) => ({ ...x, voiceId: e.target.value, voiceName: v?.name ?? "" })); }}>
-                  <option value="">– Stimme wählen –</option>
-                  {voices.map((v) => <option key={v.id} value={v.id}>{v.name}{v.info ? ` (${v.info})` : ""}</option>)}
-                </select>
-              ) : (
-                <div className="input flex items-center gap-2 text-ink-soft"><Mic className="h-4 w-4" aria-hidden />{s.voiceName || "noch keine gewählt"}</div>
-              )}
+
+          {own ? (
+            <div className="mt-4 space-y-5">
+              <div>
+                <h4 className="text-sm font-semibold">a) Zugang zum Stimm-Modell {settings.hasHuggingface && <span className="ml-1 rounded-full bg-emerald-100 px-2 py-0.5 text-xs text-emerald-900">Token gespeichert</span>}</h4>
+                <p className="mt-1 text-sm leading-6 text-ink-soft">Deine Stimme entsteht mit Kyutai Pocket TTS, einem freien Sprachmodell. Es ist kostenlos, Kyutai verlangt nur einmal eine Zustimmung:</p>
+                <ol className="mt-2 list-decimal space-y-1 pl-5 text-sm leading-6 text-ink-soft">
+                  <li>Kostenloses Konto bei <a href="https://huggingface.co/join" target="_blank" rel="noopener noreferrer" className="underline">huggingface.co</a> anlegen.</li>
+                  <li><a href="https://huggingface.co/kyutai/pocket-tts" target="_blank" rel="noopener noreferrer" className="underline">huggingface.co/kyutai/pocket-tts</a> öffnen und den Bedingungen zustimmen. Darin sagst du zu, nur deine eigene Stimme zu klonen.</li>
+                  <li>Unter <b>Settings → Access Tokens</b> einen Token mit der Berechtigung <b>Read</b> erstellen und hier einfügen.</li>
+                </ol>
+                <div className="mt-3">
+                  <label htmlFor="hfkey" className="label">HuggingFace-Token</label>
+                  <input id="hfkey" type="password" autoComplete="new-password" className="input" value={hfKey} onChange={(e) => setHfKey(e.target.value)} placeholder={settings.hasHuggingface ? "•••••••• (nur zum Ändern ausfüllen)" : "hf_…"} />
+                </div>
+              </div>
+
+              <div>
+                <h4 className="text-sm font-semibold">b) Deine Aufnahme</h4>
+                <Recorder sample={settings.voiceSample} onSaved={onSettings} />
+              </div>
+
+              <div>
+                <h4 className="text-sm font-semibold">c) Probe hören</h4>
+                <p className="mt-1 text-sm leading-6 text-ink-soft">Der Server spricht einen Beispielsatz mit deiner Stimme. Beim ersten Mal lädt er das Sprachmodell (ca. 400 MB), das dauert ein paar Minuten.</p>
+                <button type="button" onClick={ownTest} disabled={!!busy || (!settings.hasHuggingface && !hfKey.trim()) || !settings.voiceSample || (voiceTest?.status === "läuft") || (!!testAsked && (!voiceTest || voiceTest.at < testAsked))}
+                  className="mt-3 inline-flex items-center gap-2 rounded-full border border-line px-4 py-3 text-sm font-semibold hover:border-navy disabled:opacity-40">
+                  <Volume2 className="h-4 w-4" aria-hidden /> Probe mit meiner Stimme erstellen
+                </button>
+                <VoiceTestStatus test={voiceTest} asked={testAsked} />
+              </div>
             </div>
-            <button type="button" onClick={loadVoices} disabled={!!busy || (!settings.hasElevenlabs && !elKey.trim())} className="inline-flex items-center gap-2 rounded-full border border-line px-4 py-3 text-sm font-semibold hover:border-navy disabled:opacity-40">
-              {busy === "voices" ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : <RefreshCw className="h-4 w-4" aria-hidden />} Stimmen laden
-            </button>
-            <button type="button" onClick={test} disabled={!!busy || !s.voiceId || !settings.hasElevenlabs} className="inline-flex items-center gap-2 rounded-full border border-line px-4 py-3 text-sm font-semibold hover:border-navy disabled:opacity-40">
-              {busy === "test" ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : <Volume2 className="h-4 w-4" aria-hidden />} Probe hören
-            </button>
-          </div>
+          ) : (
+            <div className="mt-4">
+          <p className="mt-1 text-sm leading-6 text-ink-soft">
+              Konto bei <a href="https://elevenlabs.io" target="_blank" rel="noopener noreferrer" className="underline">elevenlabs.io</a> anlegen (der Starter-Tarif reicht für rund 50 Videos im Monat), unter „Developers → API Keys“ einen Schlüssel erstellen und hier eintragen.
+              Ohne Stimme werden die Videos nur mit Musik erstellt.
+            </p>
+            <div className="mt-3">
+              <label htmlFor="elkey" className="label">API-Schlüssel</label>
+              <input id="elkey" type="password" autoComplete="new-password" className="input" value={elKey} onChange={(e) => setElKey(e.target.value)} placeholder={settings.hasElevenlabs ? "•••••••• (nur zum Ändern ausfüllen)" : "sk_…"} />
+            </div>
+            <div className="mt-3 flex flex-wrap items-end gap-2">
+              <div className="min-w-[14rem] flex-1">
+                <label htmlFor="voice" className="label">Stimme</label>
+                {voices.length ? (
+                  <select id="voice" className="input" value={s.voiceId} onChange={(e) => { const v = voices.find((x) => x.id === e.target.value); setS((x) => ({ ...x, voiceId: e.target.value, voiceName: v?.name ?? "" })); }}>
+                    <option value="">– Stimme wählen –</option>
+                    {voices.map((v) => <option key={v.id} value={v.id}>{v.name}{v.info ? ` (${v.info})` : ""}</option>)}
+                  </select>
+                ) : (
+                  <div className="input flex items-center gap-2 text-ink-soft"><Mic className="h-4 w-4" aria-hidden />{s.voiceName || "noch keine gewählt"}</div>
+                )}
+              </div>
+              <button type="button" onClick={loadVoices} disabled={!!busy || (!settings.hasElevenlabs && !elKey.trim())} className="inline-flex items-center gap-2 rounded-full border border-line px-4 py-3 text-sm font-semibold hover:border-navy disabled:opacity-40">
+                {busy === "voices" ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : <RefreshCw className="h-4 w-4" aria-hidden />} Stimmen laden
+              </button>
+              <button type="button" onClick={test} disabled={!!busy || !s.voiceId || !settings.hasElevenlabs} className="inline-flex items-center gap-2 rounded-full border border-line px-4 py-3 text-sm font-semibold hover:border-navy disabled:opacity-40">
+                {busy === "test" ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : <Volume2 className="h-4 w-4" aria-hidden />} Probe hören
+              </button>
+            </div>
+            </div>
+          )}
           <div className="mt-3">
             <label htmlFor="speed" className="label">Sprechtempo: {s.speed.toFixed(2).replace(".", ",")}×</label>
             <input id="speed" type="range" min={0.9} max={1.2} step={0.05} value={s.speed} onChange={(e) => set("speed", Number(e.target.value))} className="w-full accent-navy" />
@@ -350,8 +414,8 @@ function Setup({ settings, onSave }: { settings: Settings; onSave: (s: Settings,
           </div>
           <div className="mt-4 space-y-3">
             <label className="flex cursor-pointer items-start gap-3 text-sm">
-              <input type="checkbox" className="mt-0.5 h-5 w-5 shrink-0 accent-navy" checked={s.aiLabel} onChange={(e) => set("aiLabel", e.target.checked)} />
-              <span>Als KI-erstellt kennzeichnen<span className="mt-0.5 block text-xs text-ink-muted">Die Stimme ist künstlich erzeugt. TikTok und Instagram verlangen dafür die Kennzeichnung – ohne riskierst du gesperrte Videos.</span></span>
+              <input type="checkbox" className="mt-0.5 h-5 w-5 shrink-0 accent-navy" checked={own || s.aiLabel} disabled={own} onChange={(e) => set("aiLabel", e.target.checked)} />
+              <span>Als KI-erstellt kennzeichnen<span className="mt-0.5 block text-xs text-ink-muted">{own ? "Bei deiner geklonten Stimme immer an: Kyutai erlaubt das Klonen nur mit Kennzeichnung, TikTok und Instagram verlangen sie ebenfalls." : "Die Stimme ist künstlich erzeugt. TikTok und Instagram verlangen dafür die Kennzeichnung – ohne riskierst du gesperrte Videos."}</span></span>
             </label>
             <label className="flex cursor-pointer items-start gap-3 text-sm">
               <input type="checkbox" className="mt-0.5 h-5 w-5 shrink-0 accent-navy" checked={s.promo} onChange={(e) => set("promo", e.target.checked)} />
@@ -366,6 +430,162 @@ function Setup({ settings, onSave }: { settings: Settings; onSave: (s: Settings,
         {busy === "save" && <Loader2 className="h-4 w-4 animate-spin" aria-hidden />} Einstellungen speichern
       </button>
     </section>
+  );
+}
+
+/* ---------- Eigene Stimme: Aufnahme ---------- */
+const READ_TEXT = "Hallo, ich bin Adrian Seitz. Ich berate Vermieter, Selbstständige und Familien rund um den Rechtsschutz. Viele merken erst im Streit, was ein Anwalt wirklich kostet: ein Brief vom Mieter, eine Kündigung oder eine Rechnung, die einfach nicht bezahlt wird. Genau dafür gibt es den Rechtsschutz. Ich erkläre dir in einfachen Worten, worauf es ankommt, und zeige dir, wie du dich absicherst, bevor der Ärger da ist.";
+const EXT_TYPE: Record<string, string> = { m4a: "audio/mp4", mp4: "audio/mp4", mp3: "audio/mpeg", wav: "audio/wav", webm: "audio/webm", ogg: "audio/ogg", aac: "audio/aac" };
+const mmss = (sec: number) => `${Math.floor(sec / 60)}:${String(Math.floor(sec % 60)).padStart(2, "0")}`;
+
+function Recorder({ sample, onSaved }: { sample?: VoiceSample; onSaved: (s: Settings) => void }) {
+  const [phase, setPhase] = useState<"idle" | "rec" | "done" | "upload">("idle");
+  const [sec, setSec] = useState(0);
+  const [take, setTake] = useState<{ blob: Blob; url: string; seconds: number } | null>(null);
+  const [err, setErr] = useState("");
+  const rec = useRef<MediaRecorder | null>(null);
+  const stream = useRef<MediaStream | null>(null);
+  const timer = useRef<number | undefined>(undefined);
+  const t0 = useRef(0);
+  const fileInput = useRef<HTMLInputElement | null>(null);
+  useEffect(() => () => { stream.current?.getTracks().forEach((t) => t.stop()); window.clearInterval(timer.current); }, []);
+  useEffect(() => () => { if (take) URL.revokeObjectURL(take.url); }, [take]);
+
+  function stop() {
+    window.clearInterval(timer.current);
+    if (rec.current?.state === "recording") rec.current.stop();
+  }
+  async function start() {
+    setErr("");
+    if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === "undefined") {
+      setErr("Dieser Browser kann hier nicht aufnehmen. Nimm den Text mit der Sprachmemo-App auf und lade die Datei hoch.");
+      return;
+    }
+    try {
+      const st = await navigator.mediaDevices.getUserMedia({ audio: { channelCount: 1, echoCancellation: false, noiseSuppression: true, autoGainControl: true } });
+      stream.current = st;
+      const type = ["audio/webm;codecs=opus", "audio/mp4", "audio/ogg;codecs=opus", "audio/webm"].find((t) => MediaRecorder.isTypeSupported(t));
+      const r = new MediaRecorder(st, type ? { mimeType: type, audioBitsPerSecond: 128000 } : undefined);
+      const chunks: Blob[] = [];
+      r.ondataavailable = (e) => { if (e.data.size) chunks.push(e.data); };
+      r.onstop = () => {
+        st.getTracks().forEach((t) => t.stop());
+        const blob = new Blob(chunks, { type: (r.mimeType || type || "audio/webm").split(";")[0] });
+        setTake({ blob, url: URL.createObjectURL(blob), seconds: (Date.now() - t0.current) / 1000 });
+        setPhase("done");
+      };
+      rec.current = r;
+      r.start(250);
+      t0.current = Date.now(); setSec(0); setTake(null); setPhase("rec");
+      timer.current = window.setInterval(() => { const x = (Date.now() - t0.current) / 1000; setSec(x); if (x >= 60) stop(); }, 200);
+    } catch {
+      setErr("Kein Zugriff aufs Mikrofon. Erlaube den Zugriff (Symbol in der Adressleiste) und versuche es noch einmal.");
+    }
+  }
+  async function upload(blob: Blob, seconds: number, name: string) {
+    setErr("");
+    if (seconds && seconds < 12) { setErr("Die Aufnahme ist zu kurz. Bitte den ganzen Text vorlesen (mindestens 15 Sekunden)."); return; }
+    setPhase("upload");
+    try {
+      const f = new FormData();
+      f.append("audio", blob, name);
+      f.append("seconds", String(Math.round(seconds)));
+      const res = await fetch("/api/admin/social/voice-sample", { method: "POST", body: f });
+      const j = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(j.error || "Hochladen fehlgeschlagen.");
+      onSaved(j.settings);
+      setTake(null); setPhase("idle");
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Hochladen fehlgeschlagen.");
+      setPhase(take ? "done" : "idle");
+    }
+  }
+  async function pickFile(file: File) {
+    const ext = (file.name.split(".").pop() || "").toLowerCase();
+    const typed = file.type ? file : new File([file], file.name, { type: EXT_TYPE[ext] || "" });
+    const url = URL.createObjectURL(typed);
+    const seconds = await new Promise<number>((resolve) => {
+      const a = new Audio(); a.preload = "metadata";
+      a.onloadedmetadata = () => resolve(Number.isFinite(a.duration) ? a.duration : 0);
+      a.onerror = () => resolve(0);
+      a.src = url;
+    });
+    URL.revokeObjectURL(url);
+    await upload(typed, seconds, file.name);
+  }
+  async function remove() {
+    try {
+      const res = await fetch("/api/admin/social/voice-sample", { method: "DELETE" });
+      const j = await res.json().catch(() => ({}));
+      if (res.ok) onSaved(j.settings);
+    } catch { /* bleibt */ }
+  }
+
+  const goal = Math.min(1, sec / 30);
+  return (
+    <div className="mt-2">
+      {sample && phase === "idle" && (
+        <div className="mb-3 flex flex-wrap items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2.5 text-sm text-emerald-900">
+          <CheckCircle2 className="h-4 w-4 shrink-0" aria-hidden />
+          <span className="flex-1">Aufnahme gespeichert{sample.seconds ? ` · ${sample.seconds} s` : ""} · {fmt(sample.at)}</span>
+          <button type="button" onClick={remove} className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold hover:bg-emerald-100"><Trash2 className="h-3.5 w-3.5" aria-hidden /> Löschen</button>
+        </div>
+      )}
+      <p className="text-sm leading-6 text-ink-soft">Lies diesen Text ruhig und natürlich vor, so wie du mit einem Kunden sprichst. Ruhiger Raum, keine Musik, Handy etwa eine Handbreit vor dem Mund. Gebraucht werden die ersten 20 Sekunden.</p>
+      <blockquote className="mt-3 rounded-xl border border-line bg-paper px-4 py-3.5 text-[15px] leading-7">{READ_TEXT}</blockquote>
+      <div className="mt-3 flex flex-wrap items-center gap-3">
+        {phase === "rec" ? (
+          <button type="button" onClick={stop} className="inline-flex items-center gap-2 rounded-full bg-rose-600 px-5 py-3 text-sm font-semibold text-white hover:bg-rose-700">
+            <Square className="h-4 w-4" aria-hidden /> Stopp
+          </button>
+        ) : (
+          <button type="button" onClick={start} disabled={phase === "upload"} className="inline-flex items-center gap-2 rounded-full bg-navy px-5 py-3 text-sm font-semibold text-white hover:bg-navy-800 disabled:opacity-40">
+            <Mic className="h-4 w-4" aria-hidden /> {take || sample ? "Neu aufnehmen" : "Aufnahme starten"}
+          </button>
+        )}
+        {phase === "rec" && (
+          <div className="flex min-w-[10rem] flex-1 items-center gap-3" aria-live="polite">
+            <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-rose-600" aria-hidden />
+            <span className="font-mono text-sm tabular-nums">{mmss(sec)}</span>
+            <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-paper"><span className={`block h-full rounded-full ${sec >= 20 ? "bg-emerald-500" : "bg-navy"}`} style={{ width: `${goal * 100}%` }} /></span>
+          </div>
+        )}
+        {phase !== "rec" && (
+          <>
+            <button type="button" onClick={() => fileInput.current?.click()} disabled={phase === "upload"} className="inline-flex items-center gap-2 rounded-full border border-line px-4 py-3 text-sm font-semibold hover:border-navy disabled:opacity-40">
+              <Upload className="h-4 w-4" aria-hidden /> Datei hochladen
+            </button>
+            <input ref={fileInput} type="file" accept="audio/*,.m4a,.mp3,.wav" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ""; if (f) pickFile(f); }} />
+          </>
+        )}
+      </div>
+      {take && phase !== "rec" && (
+        <div className="mt-3 rounded-xl border border-line p-3">
+          <p className="text-sm font-medium">Anhören und prüfen ({Math.round(take.seconds)} s):</p>
+          <audio controls src={take.url} className="mt-2 w-full" />
+          <button type="button" onClick={() => upload(take.blob, take.seconds, `aufnahme.${take.blob.type.includes("mp4") ? "m4a" : take.blob.type.includes("ogg") ? "ogg" : "webm"}`)} disabled={phase === "upload"}
+            className="mt-3 inline-flex items-center gap-2 rounded-full bg-navy px-5 py-3 text-sm font-semibold text-white hover:bg-navy-800 disabled:opacity-40">
+            {phase === "upload" ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : <CheckCircle2 className="h-4 w-4" aria-hidden />} Diese Aufnahme verwenden
+          </button>
+        </div>
+      )}
+      {phase === "upload" && !take && <p className="mt-3 inline-flex items-center gap-2 text-sm text-ink-soft"><Loader2 className="h-4 w-4 animate-spin" aria-hidden /> Wird hochgeladen …</p>}
+      {err && <p role="alert" className="mt-3 rounded-lg bg-rose-50 px-3 py-2.5 text-sm text-rose-900">{err}</p>}
+    </div>
+  );
+}
+
+function VoiceTestStatus({ test, asked }: { test?: VoiceTest; asked: string }) {
+  if (asked && (!test || test.at < asked)) return <p className="mt-3 inline-flex items-center gap-2 text-sm text-ink-soft"><Loader2 className="h-4 w-4 animate-spin" aria-hidden /> Auftrag ist beim Server – er startet in der nächsten Minute.</p>;
+  if (!test) return null;
+  if (test.status === "läuft") return <p className="mt-3 inline-flex items-center gap-2 text-sm text-ink-soft"><Loader2 className="h-4 w-4 animate-spin" aria-hidden /> Deine Stimme spricht gerade … (beim ersten Mal lädt der Server das Sprachmodell)</p>;
+  if (test.status === "fehler") return <p role="alert" className="mt-3 rounded-lg bg-rose-50 px-3 py-2.5 text-sm text-rose-900">Hörprobe fehlgeschlagen: {test.error}</p>;
+  return (
+    <div className="mt-3 rounded-xl border border-line p-3">
+      <p className="text-sm font-medium">Hörprobe vom {fmt(test.at)}{test.took ? ` · ${test.took} s Rechenzeit` : ""}</p>
+      <audio controls src={`/api/admin/social/media/voice-test.mp3?v=${encodeURIComponent(test.at)}`} className="mt-2 w-full" />
+      <p className="mt-2 text-xs text-ink-muted">Klingt es nicht nach dir? Meist hilft eine neue Aufnahme in einem ruhigeren Raum. Das Tempo stellst du unten ein.</p>
+    </div>
   );
 }
 

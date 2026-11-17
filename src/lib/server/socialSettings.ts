@@ -1,5 +1,5 @@
 import "server-only";
-import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
+import { mkdir, readFile, readdir, rename, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { serverConfig } from "./config";
 import { decrypt, encrypt, encryptionEnabled } from "./crypto";
@@ -18,6 +18,8 @@ export type SocialSettings = {
   times: string[];         // "18:30"
   platforms: Platform[];
   uploadUser: string;      // Profilname bei Upload-Post
+  voiceEngine: VoiceEngine; // eigene Stimme (kostenlos, auf dem Server) oder ElevenLabs
+  voiceSample?: VoiceSample;
   voiceId: string;
   voiceName: string;
   speed: number;           // Sprechtempo 0,9–1,2
@@ -26,11 +28,14 @@ export type SocialSettings = {
   repeat: boolean;         // wenn alle Videos gepostet sind: von vorn beginnen (im anderen Stil)
   disabled: string[];      // Videos, die nicht gepostet werden
 };
-type Stored = SocialSettings & { keys?: { elevenlabs?: string; uploadpost?: string }; updatedAt?: string };
+export type VoiceEngine = "own" | "elevenlabs";
+export type VoiceSample = { file: string; at: string; seconds: number; bytes: number };
+type KeyName = "elevenlabs" | "uploadpost" | "huggingface";
+type Stored = SocialSettings & { keys?: Partial<Record<KeyName, string>>; updatedAt?: string };
 
 export const SOCIAL_DEFAULTS: SocialSettings = {
   enabled: false, days: [1, 3, 5], times: ["18:30"], platforms: ["tiktok", "instagram", "youtube"],
-  uploadUser: "", voiceId: "", voiceName: "", speed: 1.1, aiLabel: true, promo: true, repeat: true, disabled: [],
+  uploadUser: "", voiceEngine: "own", voiceId: "", voiceName: "", speed: 1.1, aiLabel: true, promo: true, repeat: true, disabled: [],
 };
 
 export const socialDir = () => path.join(serverConfig.storageDir, "social");
@@ -54,14 +59,14 @@ async function writeStored(data: Stored) {
 /** Für die Oberfläche – ohne Schlüssel */
 export async function publicSocialSettings() {
   const { keys, ...rest } = await readStored();
-  return { ...rest, hasElevenlabs: Boolean(keys?.elevenlabs), hasUploadpost: Boolean(keys?.uploadpost) };
+  return { ...rest, hasElevenlabs: Boolean(keys?.elevenlabs), hasUploadpost: Boolean(keys?.uploadpost), hasHuggingface: Boolean(keys?.huggingface) };
 }
 
 /** Speichern. Schlüssel: leer/undefined = behalten, null = löschen, Text = neu (verschlüsselt). */
-export async function saveSocialSettings(input: Partial<SocialSettings>, keys: { elevenlabs?: string | null; uploadpost?: string | null } = {}) {
+export async function saveSocialSettings(input: Partial<SocialSettings>, keys: Partial<Record<KeyName, string | null>> = {}) {
   const prev = await readStored();
   const next: Stored = { ...prev, ...input, keys: { ...prev.keys }, updatedAt: new Date().toISOString() };
-  for (const k of ["elevenlabs", "uploadpost"] as const) {
+  for (const k of ["elevenlabs", "uploadpost", "huggingface"] as const) {
     const v = keys[k];
     if (v === null) delete next.keys![k];
     else if (v) {
@@ -70,6 +75,28 @@ export async function saveSocialSettings(input: Partial<SocialSettings>, keys: {
     }
   }
   await writeStored(next);
+  return publicSocialSettings();
+}
+
+/** Eigene Sprachaufnahme speichern (ersetzt die vorige). Der Worker macht daraus den Stimmabdruck. */
+export const SAMPLE_TYPES: Record<string, string> = {
+  "audio/webm": "webm", "video/webm": "webm", "audio/ogg": "ogg", "audio/mp4": "m4a", "audio/x-m4a": "m4a", "audio/m4a": "m4a",
+  "video/mp4": "mp4", "audio/mpeg": "mp3", "audio/mp3": "mp3", "audio/wav": "wav", "audio/x-wav": "wav", "audio/wave": "wav", "audio/aac": "aac",
+};
+const sampleDir = () => path.join(socialDir(), "voice-sample");
+export async function saveVoiceSample(data: Buffer, ext: string, seconds: number) {
+  await mkdir(sampleDir(), { recursive: true, mode: 0o750 });
+  const file = `sample-${Date.now().toString(36)}.${ext}`;
+  await writeFile(path.join(sampleDir(), file), data, { mode: 0o640 });
+  for (const f of await readdir(sampleDir()).catch(() => [] as string[])) if (f !== file) await rm(path.join(sampleDir(), f), { force: true });
+  const s = await readStored();
+  await writeStored({ ...s, voiceSample: { file, at: new Date().toISOString(), seconds: Math.round(seconds), bytes: data.length } });
+  return publicSocialSettings();
+}
+export async function deleteVoiceSample() {
+  await rm(sampleDir(), { recursive: true, force: true });
+  const { voiceSample, ...s } = await readStored(); void voiceSample;
+  await writeStored(s);
   return publicSocialSettings();
 }
 
@@ -103,7 +130,7 @@ export async function readSocialLog(limit = 40): Promise<{ at: string; kind: str
   }
 }
 
-export const JOB_TYPES = ["render", "post", "reset", "usage"] as const;
+export const JOB_TYPES = ["render", "post", "reset", "usage", "voicetest"] as const;
 export async function addSocialJob(type: (typeof JOB_TYPES)[number], id = "") {
   const dir = file("jobs");
   await mkdir(dir, { recursive: true, mode: 0o750 });
@@ -111,8 +138,8 @@ export async function addSocialJob(type: (typeof JOB_TYPES)[number], id = "") {
   await writeFile(path.join(dir, name), JSON.stringify({ type, id, at: new Date().toISOString() }), { mode: 0o640 });
 }
 
-/** Pfad zu einem fertigen Video/Vorschaubild – nur einfache Dateinamen */
+/** Pfad zu einem fertigen Video/Vorschaubild/der Hörprobe – nur einfache Dateinamen */
 export function socialMediaPath(name: string): string | null {
-  if (!/^[a-z0-9][a-z0-9-]{0,80}\.(mp4|jpg)$/.test(name)) return null;
+  if (!/^[a-z0-9][a-z0-9-]{0,80}\.(mp4|jpg)$/.test(name) && name !== "voice-test.mp3") return null;
   return path.join(socialDir(), "videos", name);
 }

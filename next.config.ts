@@ -17,6 +17,9 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },
+      // Im CRM darf das Mikrofon an (eigene Sprachaufnahme für die Videos). Spätere Regel überschreibt die frühere.
+      { source: "/admin", headers: [{ key: "Permissions-Policy", value: "camera=(), microphone=(self), geolocation=()" }] },
+      { source: "/admin/:path*", headers: [{ key: "Permissions-Policy", value: "camera=(), microphone=(self), geolocation=()" }] },
       { source: "/api/:path*", headers: [{ key: "Cache-Control", value: "no-store" }] },
     ];
   },

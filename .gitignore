@@ -4,6 +4,8 @@ node_modules
 .env.local
 data/*.ndjson
 data/*.json
+# Video-Automatik: Sprachaufnahmen, Stimmabdruck, Modell-Cache, Videos – bleiben auf dem Server, nie ins Repo
+data/social/
 !data/.gitkeep
 deploy/backups
 tools/shorts/out

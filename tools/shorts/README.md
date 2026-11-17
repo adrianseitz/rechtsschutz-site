@@ -1,7 +1,7 @@
 # Video-Automatik (TikTok, Instagram Reels, YouTube Shorts)
 
 Erklärvideos im Hochformat (1080×1920) in zwei Stilen – **Whiteboard** (Marker und Hand zeichnen live) und
-**Cartoon** (flach, mit Schild-Maskottchen) – mit KI-Stimme von ElevenLabs, eigener Musik und Geräuschen
+**Cartoon** (flach, mit Schild-Maskottchen) – mit der eigenen Stimme (Kyutai Pocket TTS auf dem Server, kostenlos) oder ElevenLabs, eigener Musik und Geräuschen
 (keine fremden Musikrechte). Auf dem Server läuft der Docker-Service `shorts`: Er erstellt die nächsten Videos vorab
 und postet sie zum Termin über Upload-Post. Eingerichtet und überwacht wird alles im CRM unter **Videos**.
 
@@ -68,5 +68,9 @@ Voraussetzungen: Node 22, Chrome/Chromium (`--chrome=` oder `CHROME_PATH`), Pyth
 - `cartoon/player.html` – Cartoon-Vorlagen (eigene Zeichnungen)
 - `studio3d/player.html` – 3D-Vorlagen: echte 3D-Bühne mit three.js (MIT, gebündelt in `vendor/three.iife.js`, neu bauen mit `npm run build:three`). Läuft ohne Grafikkarte über den Software-Renderer von Chrome; ein Video braucht dadurch etwa 10–20 Minuten Rechenzeit.
 - `render.mjs` – Bild für Bild in Chrome → ffmpeg, Tonspur aus `audio.py`, Lautheit −14 LUFS
-- `worker/` – Server-Dienst: Warteschlange, ElevenLabs, Upload-Post, Zeitplan (`Dockerfile` für den Service `shorts`)
+- `worker/` – Server-Dienst: Warteschlange, Stimme, Upload-Post, Zeitplan (`Dockerfile` für den Service `shorts`)
+- `worker/ownvoice.mjs` – eigene Stimme: Pocket TTS (Programm MIT, Modell CC BY 4.0, Freischaltung bei HuggingFace). Aus der
+  Aufnahme im CRM (`data/social/voice-sample/`) entsteht einmal ein Stimmabdruck (`data/social/ownvoice/`), damit wird jeder
+  Satz gesprochen. Die Aufnahme bleibt auf dem Server und gehört nie ins Git-Repository.
+- `lib/sprechtext.mjs` – schreibt Zahlen, €, %, § und Abkürzungen für die Stimme aus („5.700 €“ → „fünftausendsiebenhundert Euro“)
 - `fonts/` – Geist, Instrument-Serif-Kursiv, Caveat, Kalam (OFL)

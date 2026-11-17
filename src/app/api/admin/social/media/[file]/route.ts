@@ -16,7 +16,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ file: st
   if (!p) return jsonError(400, "bad_request");
   const s = await stat(p).catch(() => null);
   if (!s?.isFile()) return jsonError(404, "not_found");
-  const type = file.endsWith(".mp4") ? "video/mp4" : "image/jpeg";
+  const type = file.endsWith(".mp4") ? "video/mp4" : file.endsWith(".mp3") ? "audio/mpeg" : "image/jpeg";
   const base = { "Content-Type": type, "Accept-Ranges": "bytes", "Cache-Control": "private, no-cache", "Last-Modified": s.mtime.toUTCString() };
   const m = /^bytes=(\d*)-(\d*)$/.exec(req.headers.get("range") || "");
   if (m && (m[1] || m[2])) {

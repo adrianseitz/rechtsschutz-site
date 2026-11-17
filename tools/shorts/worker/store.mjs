@@ -3,6 +3,8 @@
 //   state.json     – schreibt nur dieser Worker (Status je Video, nächster Termin, Herzschlag)
 //   jobs/*.json    – Aufträge aus dem CRM (jetzt rendern, jetzt posten, …), werden nach Erledigung gelöscht
 //   videos/, voice/ – fertige Videos + Vorschaubilder, zwischengespeicherte Sprachaufnahmen
+//   voice-sample/  – die eigene Sprachaufnahme aus dem CRM, ownvoice/ – daraus berechneter Stimmabdruck
+//   hf/            – Sprachmodell-Cache (HF_HOME, wird nicht gesichert)
 import { createDecipheriv } from "node:crypto";
 import { appendFile, chown, mkdir, readFile, readdir, rename, stat, unlink, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
@@ -14,6 +16,8 @@ export const P = {
   jobs: join(DIR, "jobs"),
   videos: join(DIR, "videos"),
   voice: join(DIR, "voice"),
+  sample: join(DIR, "voice-sample"),
+  own: join(DIR, "ownvoice"),
   log: join(DIR, "log.ndjson"),
 };
 
@@ -26,7 +30,7 @@ async function own(path) {
 }
 
 export async function ensureDirs() {
-  for (const d of [DIR, P.jobs, P.videos, P.voice]) { await mkdir(d, { recursive: true, mode: 0o750 }); await own(d); }
+  for (const d of [DIR, P.jobs, P.videos, P.voice, P.own]) { await mkdir(d, { recursive: true, mode: 0o750 }); await own(d); }
 }
 export async function ownFile(path) { await own(path); }
 
