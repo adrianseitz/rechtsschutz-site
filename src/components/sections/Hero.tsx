@@ -92,9 +92,9 @@ function Floater({ card, mx, my, delay }: { card: FloatCard; mx: MotionValue<num
   );
 }
 
-export function Hero({ eyebrow, title, emphasis, subtitle, chipsLabel, chips, secondary, cards, bullets = ["Kostenlos & unverbindlich", "Ca. 60 Sekunden", "Persönlicher Ansprechpartner"] }: {
+export function Hero({ eyebrow, title, emphasis, subtitle, chipsLabel, chips, chipsNote = "Kostenlos & unverbindlich · dauert ca. 60 Sekunden", secondary, cards, bullets = ["Kostenlos & unverbindlich", "Ca. 60 Sekunden", "Persönlicher Ansprechpartner"] }: {
   eyebrow?: string; title: string; emphasis?: string; subtitle: string;
-  chipsLabel: string; chips: HeroChip[]; secondary?: { href: string; label: string }; cards: FloatCard[]; bullets?: string[];
+  chipsLabel: string; chips: HeroChip[]; chipsNote?: string; secondary?: { href: string; label: string }; cards: FloatCard[]; bullets?: string[];
 }) {
   const ref = useRef<HTMLElement>(null);
   const reduce = useReducedMotion();
@@ -147,7 +147,7 @@ export function Hero({ eyebrow, title, emphasis, subtitle, chipsLabel, chips, se
                 </Link>
               ))}
             </div>
-            <p className="mt-2.5 text-[13px] text-ink-muted sm:hidden">Kostenlos &amp; unverbindlich · dauert ca. 60 Sekunden</p>
+            {chipsNote && <p className="mt-2.5 text-[13px] text-ink-muted sm:hidden">{chipsNote}</p>}
           </div>
           </div>
 

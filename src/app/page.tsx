@@ -21,14 +21,16 @@ export default function HomePage() {
         eyebrow="Persönliche Rechtsschutz-Beratung · ARAG-Vertriebspartner"
         title="Rechtsschutz, der zu deinem Leben passt."
         emphasis="Leben"
-        subtitle="Ob im Beruf, als Vermieter oder im Unternehmen: Finde in 60 Sekunden heraus, welche Rechtsschutzversicherung zu deiner Situation passt – mit persönlicher Beratung statt Callcenter."
-        chipsLabel="Was möchtest du absichern?"
+        subtitle="Ob privat, im Beruf, als Vermieter oder im Unternehmen: Lies in Ruhe nach, was der jeweilige Rechtsschutz abdeckt und was ein Streit ohne ihn kosten kann – mit persönlicher Beratung statt Callcenter."
+        chipsLabel="Welcher Bereich interessiert dich?"
         chips={[
-          { label: "Beruf", href: "/rechtsschutz-check?bereich=arbeit", icon: "briefcase" },
-          { label: "Privatleben", href: "/rechtsschutz-check?bereich=privat", icon: "shield" },
-          { label: "Vermietung", href: "/rechtsschutz-check?bereich=vermieter", icon: "house" },
-          { label: "Unternehmen", href: "/rechtsschutz-check?bereich=firma", icon: "office" },
+          { label: "Privatrechtsschutz", href: "/privatrechtsschutz", icon: "shield" },
+          { label: "Arbeitsrechtsschutz", href: "/arbeitsrechtsschutz", icon: "briefcase" },
+          { label: "Vermieterrechtsschutz", href: "/vermieterrechtsschutz", icon: "house" },
+          { label: "Firmenrechtsschutz", href: "/firmenrechtsschutz", icon: "office" },
         ]}
+        chipsNote="Leistungen, Kosten und Beispiele – in Ruhe zum Nachlesen"
+        bullets={["Kostenlos & unverbindlich", "Persönlicher Ansprechpartner", "Ohne Callcenter"]}
         secondary={{ href: "/kontakt?anliegen=rueckruf", label: "Rückruf anfordern" }}
         cards={[
           { type: "receipt", title: "Kostenrisiko¹", rows: [["Eigene Anwältin", "1.078 €"], ["Gegnerische Seite", "1.078 €"], ["Gericht", "512 €"]], total: ["Gesamt", "2.668 €"], foot: "Beispiel: Streitwert 5.000 €", pos: "-left-2 top-[6%] sm:left-0", depth: 1.1, rotate: -5 },
