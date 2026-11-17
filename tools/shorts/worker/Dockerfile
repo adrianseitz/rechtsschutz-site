@@ -1,8 +1,9 @@
 # Video-Automatik: erstellt die Shorts (Chromium + ffmpeg), spricht sie mit der eigenen Stimme (Kyutai Pocket TTS)
-# und postet sie zum Termin. Build-Kontext ist tools/shorts (siehe docker-compose.yml).
+# und postet sie zum Termin. Die Moderator-Figur entsteht über Cloudflare (worker/figur.mjs), freigestellt mit
+# figur/vorbereiten.py (numpy, scipy, Pillow). Build-Kontext ist tools/shorts (siehe docker-compose.yml).
 FROM node:22-bookworm-slim
 RUN apt-get update \
- && apt-get install -y --no-install-recommends chromium ffmpeg python3 python3-numpy python3-scipy ca-certificates curl libssl3 tini fonts-dejavu-core \
+ && apt-get install -y --no-install-recommends chromium ffmpeg python3 python3-numpy python3-scipy python3-pil ca-certificates curl libssl3 tini fonts-dejavu-core \
  && rm -rf /var/lib/apt/lists/*
 
 # Eigene Stimme: Pocket TTS als fertiges Programm (MIT, ohne Python), Prüfsumme aus SHA256SUMS des Releases.

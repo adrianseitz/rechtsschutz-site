@@ -16,16 +16,17 @@ Was passiert:
   3. Aus den Varianten nur den Bereich ausschneiden, der sich wirklich ändert (Mund, Augen), mit weichem Rand.
      So zittert die Figur beim Sprechen nicht, auch wenn die KI sonst minimal anders gezeichnet hat.
   4. Gesten am Kopf ausrichten, damit die Figur beim Wechsel nicht springt.
-  5. kit.js schreiben: Bildnamen, Lage der Ausschnitte, Kopfmitte und -größe.
+  5. kit.js und kit.json schreiben: Bildnamen, Lage der Ausschnitte, Kopfmitte und -größe.
+
+Braucht nur numpy, scipy und Pillow (auf dem Server: python3-numpy, python3-scipy, python3-pil).
 """
 import argparse
 import json
 import sys
 from pathlib import Path
 
-import cv2
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageDraw
 from scipy import ndimage as ndi
 
 SIZE = 1024
@@ -47,17 +48,24 @@ def load(folder: Path):
     return found
 
 
+def ycc(rgb):
+    """RGB → (Y, Cr, Cb) wie in der Videotechnik"""
+    y = rgb[..., 0] * 0.299 + rgb[..., 1] * 0.587 + rgb[..., 2] * 0.114
+    return np.stack([y, (rgb[..., 0] - y) * 0.713 + 128, (rgb[..., 2] - y) * 0.564 + 128], axis=-1)
+
+
 def key_green(rgb):
     """Grünen Hintergrund entfernen → (RGB ohne Grünstich, Alpha 0..1)"""
     h, w, _ = rgb.shape
     b = max(4, h // 50)
     border = np.concatenate([rgb[:b].reshape(-1, 3), rgb[-b:].reshape(-1, 3), rgb[:, :b].reshape(-1, 3), rgb[:, -b:].reshape(-1, 3)])
     bg = np.median(border, axis=0)
-    ycc = cv2.cvtColor(rgb.astype(np.uint8), cv2.COLOR_RGB2YCrCb).astype(np.float32)
-    bg_ycc = cv2.cvtColor(bg.reshape(1, 1, 3).astype(np.uint8), cv2.COLOR_RGB2YCrCb).astype(np.float32)[0, 0]
-    dist = np.hypot(ycc[..., 1] - bg_ycc[1], ycc[..., 2] - bg_ycc[2])          # Farbabstand ohne Helligkeit
+    bg_ycc = ycc(bg.reshape(1, 3))[0]
+    c = ycc(rgb)
+    dist = np.hypot(c[..., 1] - bg_ycc[1], c[..., 2] - bg_ycc[2])          # Farbabstand ohne Helligkeit
     # Streuung des Hintergrunds nur aus Randpixeln, die wirklich Hintergrund sind (die Figur berührt meist den unteren Rand)
-    bd = np.hypot(*(cv2.cvtColor(border.reshape(-1, 1, 3).astype(np.uint8), cv2.COLOR_RGB2YCrCb).astype(np.float32)[:, 0, 1:] - bg_ycc[1:]).T)
+    bc = ycc(border)
+    bd = np.hypot(bc[:, 1] - bg_ycc[1], bc[:, 2] - bg_ycc[2])
     near = bd[bd < 30]
     spread = float(np.percentile(near, 99)) if near.size else 8.0
     t0, t1 = spread + 6, spread + 30
@@ -76,7 +84,7 @@ def key_green(rgb):
             hs = ndi.sum(holes, hl, range(1, hn + 1))
             small = np.isin(hl, [i + 1 for i, s in enumerate(hs) if s < SIZE * SIZE * 0.002])
             alpha = np.maximum(alpha, small.astype(np.float32))
-    alpha = cv2.GaussianBlur(alpha, (0, 0), 0.7)
+    alpha = ndi.gaussian_filter(alpha, 0.7)
     # Grünstich entfernen (Haut, Anzug und Hemd haben kein dominantes Grün)
     out = rgb.copy()
     lim = np.maximum(out[..., 0], out[..., 2])
@@ -84,27 +92,60 @@ def key_green(rgb):
     return out, np.clip(alpha, 0, 1)
 
 
-def align(ref_gray, img_gray, region=None, motion=cv2.MOTION_AFFINE):
-    """Verschiebung/Skalierung von img auf ref schätzen (ECC), Rückgabe 2x3-Matrix"""
-    scale = 0.5
-    r = cv2.resize(ref_gray, None, fx=scale, fy=scale)
-    i = cv2.resize(img_gray, None, fx=scale, fy=scale)
-    mask = None
+def head_width(alpha):
+    """Oberkante und Kopfbreite (Mittel der Zeilen 8–20 % unter dem Scheitel) – unabhängig vom Mund"""
+    solid = alpha > 0.5
+    rows = np.where(solid.any(axis=1))[0]
+    top, span = rows[0], rows[-1] - rows[0]
+    return int(top), float(np.median(solid.sum(axis=1)[top + int(span * 0.08): top + int(span * 0.2)]))
+
+
+def phase_shift(a, b, window=None):
+    """Verschiebung d (dy, dx), um die b gegenüber a verschoben ist (Phasenkorrelation, auf Subpixel genau)"""
+    h, w = a.shape
+    win = np.outer(np.hanning(h), np.hanning(w)) if window is None else window
+    A, B = np.fft.fft2((a - a.mean()) * win), np.fft.fft2((b - b.mean()) * win)
+    R = np.conj(A) * B
+    r = np.fft.ifft2(R / (np.abs(R) + 1e-9)).real
+    py, px = np.unravel_index(np.argmax(r), r.shape)
+    def sub(c, l, rr):
+        d = l - 2 * c + rr
+        return 0.0 if abs(d) < 1e-12 else 0.5 * (l - rr) / d
+    dy = py + sub(r[py, px], r[py - 1, px], r[(py + 1) % h, px])
+    dx = px + sub(r[py, px], r[py, px - 1], r[py, (px + 1) % w])
+    if dy > h / 2: dy -= h
+    if dx > w / 2: dx -= w
+    return float(dy), float(dx)
+
+
+def align(base_gray, base_a, img_gray, img_a, region=None, scale=True):
+    """Ausrichtung (Maßstab aus der Kopfbreite, Verschiebung per Phasenkorrelation) → (s, dy, dx)"""
+    s = 1.0
+    if scale:
+        _, wb = head_width(base_a)
+        _, wi = head_width(img_a)
+        s = float(np.clip(wb / max(wi, 1), 0.9, 1.1))
+        if abs(s - 1) < 0.006:
+            s = 1.0
+    g = warp_img(img_gray, (s, 0.0, 0.0))
+    f = 0.5                                          # auf halber Größe rechnen
+    small = lambda x: ndi.zoom(x, f, order=1)
+    win = None
     if region is not None:
-        mask = cv2.resize(region.astype(np.uint8), None, fx=scale, fy=scale, interpolation=cv2.INTER_NEAREST)
-    warp = np.eye(2, 3, dtype=np.float32)
-    try:
-        _, warp = cv2.findTransformECC(r, i, warp, motion, (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 200, 1e-6), mask, 5)
-    except cv2.error:
-        (dx, dy), _ = cv2.phaseCorrelate(r, i)
-        warp = np.array([[1, 0, dx], [0, 1, dy]], np.float32)
-    warp[:, 2] /= scale
-    return warp
+        win = ndi.gaussian_filter(small(region.astype(np.float32)), 6)
+    dy, dx = phase_shift(small(base_gray), small(g), win)
+    return s, dy / f, dx / f
 
 
-def warp_img(arr, warp):
-    flags = cv2.INTER_LINEAR | cv2.WARP_INVERSE_MAP
-    return cv2.warpAffine(arr, warp, (SIZE, SIZE), flags=flags, borderMode=cv2.BORDER_REPLICATE)
+def warp_img(arr, t):
+    """Bild so verschieben/skalieren, dass es aufs Grundbild passt: aligned(out) = img(c + (out + d − c) / s)"""
+    s, dy, dx = t
+    c = SIZE / 2
+    off = [c * (1 - 1 / s) + dy / s, c * (1 - 1 / s) + dx / s]
+    one = lambda ch: ndi.affine_transform(ch, [1 / s, 1 / s], offset=off, order=1, mode="nearest")
+    if arr.ndim == 2:
+        return one(arr)
+    return np.stack([one(arr[..., i]) for i in range(arr.shape[2])], axis=-1)
 
 
 def head_of(alpha):
@@ -139,7 +180,7 @@ def patch(base_rgb, base_a, var_rgb, var_a, head, kind):
     sizes = ndi.sum(m, lab, range(1, n + 1))
     m = np.isin(lab, [i + 1 for i, s in enumerate(sizes) if s >= max(40, sizes.max() * 0.05)])
     soft = ndi.binary_dilation(m, iterations=10).astype(np.float32)
-    soft = cv2.GaussianBlur(soft, (0, 0), 6)
+    soft = ndi.gaussian_filter(soft, 6)
     soft = np.clip(soft * 1.4, 0, 1)
     ys, xs = np.where(soft > 0.01)
     x0, x1, y0, y1 = xs.min(), xs.max() + 1, ys.min(), ys.max() + 1
@@ -170,7 +211,7 @@ def main():
     keyed = {n: key_green(rgb) for n, rgb in imgs.items()}
     base_rgb, base_a = keyed["basis"]
     head = head_of(base_a)
-    gray = lambda rgb, a: (cv2.cvtColor(rgb.astype(np.uint8), cv2.COLOR_RGB2GRAY).astype(np.float32) / 255) * a + (1 - a) * 0.5
+    gray = lambda rgb, a: ((rgb[..., 0] * 0.299 + rgb[..., 1] * 0.587 + rgb[..., 2] * 0.114) / 255) * a + (1 - a) * 0.5
     base_gray = gray(base_rgb, base_a)
     kit = {"size": SIZE, "kopf": head, "bilder": {}, "ausschnitte": {}, "hinweise": []}
     save_rgba(args.out / "basis.png", base_rgb, base_a)
@@ -182,28 +223,29 @@ def main():
         if name not in keyed:
             continue
         rgb, a = keyed[name]
-        warp = align(base_gray, gray(rgb, a))
-        rgb_w, a_w = warp_img(rgb, warp), warp_img(a, warp)
+        warp = align(base_gray, base_a, gray(rgb, a), a)
+        rgb_w, a_w = warp_img(rgb, warp), np.clip(warp_img(a, warp), 0, 1)
         res = patch(base_rgb, base_a, rgb_w, a_w, head, kind)
         if res is None:
             kit["hinweise"].append(f"{name}: kein Unterschied zum Grundbild gefunden")
             continue
         rgba, box = res
         Image.fromarray(rgba, "RGBA").save(args.out / f"{name}.png", optimize=True)
-        kit["ausschnitte"][name] = {"datei": f"{name}.png", **box, "verschiebung": [round(float(warp[0, 2]), 1), round(float(warp[1, 2]), 1)]}
+        kit["ausschnitte"][name] = {"datei": f"{name}.png", **box, "ausrichtung": {"massstab": round(warp[0], 4), "dy": round(warp[1], 1), "dx": round(warp[2], 1)}}
         if box["anteil"] > 0.08:
             kit["hinweise"].append(f"{name}: die KI hat mehr als Mund/Augen geändert ({box['anteil']:.0%} der Figur) – Bild evtl. neu erzeugen")
 
-    head_zone = np.zeros((SIZE, SIZE), np.uint8)
+    head_zone = np.zeros((SIZE, SIZE), np.float32)
     head_zone[max(0, head["top"] - 20):head["kinn"] + 10, max(0, head["x"] - head["r"] * 2):min(SIZE, head["x"] + head["r"] * 2)] = 1
     for name in POSES:
         if name not in keyed:
             continue
         rgb, a = keyed[name]
-        warp = align(base_gray, gray(rgb, a), region=head_zone, motion=cv2.MOTION_TRANSLATION)
+        warp = align(base_gray, base_a, gray(rgb, a), a, region=head_zone)
         save_rgba(args.out / f"{name}.png", warp_img(rgb, warp), np.clip(warp_img(a, warp), 0, 1))
         kit["bilder"][name] = f"{name}.png"
 
+    (args.out / "kit.json").write_text(json.dumps(kit, ensure_ascii=False, indent=1), encoding="utf-8")
     (args.out / "kit.js").write_text("// erzeugt von figur/vorbereiten.py – nicht von Hand ändern\nwindow.FIGUR = " + json.dumps(kit, ensure_ascii=False, indent=1) + ";\n", encoding="utf-8")
     print(json.dumps({k: v for k, v in kit.items() if k != "bilder"} | {"bilder": list(kit["bilder"])}, ensure_ascii=False, indent=1))
 
@@ -211,22 +253,29 @@ def main():
         tiles = []
         check = ((np.indices((SIZE, SIZE)).sum(axis=0) // 32) % 2 * 40 + 200).astype(np.float32)[..., None].repeat(3, axis=2)
         for name in ["basis", *VARIANTS, *POSES]:
+            box = None
             if name in kit["bilder"]:
                 im = np.asarray(Image.open(args.out / kit["bilder"][name]).convert("RGBA")).astype(np.float32)
             elif name in kit["ausschnitte"]:
-                b = kit["ausschnitte"][name]
+                box = kit["ausschnitte"][name]
                 im = np.dstack([base_rgb, base_a * 255]).astype(np.float32)
-                p = np.asarray(Image.open(args.out / b["datei"])).astype(np.float32)
+                p = np.asarray(Image.open(args.out / box["datei"])).astype(np.float32)
                 al = p[..., 3:] / 255
-                im[b["y"]:b["y"] + b["h"], b["x"]:b["x"] + b["w"], :3] = im[b["y"]:b["y"] + b["h"], b["x"]:b["x"] + b["w"], :3] * (1 - al) + p[..., :3] * al
-                cv2.rectangle(im, (b["x"], b["y"]), (b["x"] + b["w"], b["y"] + b["h"]), (255, 0, 0, 255), 3)
+                sl = (slice(box["y"], box["y"] + box["h"]), slice(box["x"], box["x"] + box["w"]))
+                im[sl][..., :3] = im[sl][..., :3] * (1 - al) + p[..., :3] * al
             else:
                 continue
             a = im[..., 3:] / 255
-            comp = check * (1 - a) + im[..., :3] * a
-            cv2.circle(comp, (head["x"], head["y"]), head["r"], (0, 120, 255), 2)
-            tiles.append(cv2.resize(comp, (320, 320)))
-        Image.fromarray(np.hstack(tiles).clip(0, 255).astype(np.uint8)).save(args.vorschau, quality=88)
+            tile = Image.fromarray((check * (1 - a) + im[..., :3] * a).clip(0, 255).astype(np.uint8))
+            d = ImageDraw.Draw(tile)
+            if box:
+                d.rectangle([box["x"], box["y"], box["x"] + box["w"], box["y"] + box["h"]], outline=(255, 0, 0), width=3)
+            d.ellipse([head["x"] - head["r"], head["y"] - head["r"], head["x"] + head["r"], head["y"] + head["r"]], outline=(0, 120, 255), width=2)
+            tiles.append(tile.resize((320, 320), Image.LANCZOS))
+        sheet = Image.new("RGB", (320 * len(tiles), 320))
+        for i, t in enumerate(tiles):
+            sheet.paste(t, (i * 320, 0))
+        sheet.save(args.vorschau, quality=88)
 
 
 if __name__ == "__main__":

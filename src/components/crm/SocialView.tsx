@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { CheckCircle2, CircleAlert, Clapperboard, Copy, ExternalLink, Loader2, Mic, Pause, Play, RefreshCw, Send, Square, Trash2, Undo2, Upload, Volume2, X } from "lucide-react";
+import { CheckCircle2, CircleAlert, Clapperboard, Copy, ExternalLink, Loader2, Mic, Pause, Play, RefreshCw, Send, Sparkles, Square, Trash2, Undo2, Upload, Volume2, X } from "lucide-react";
 
 /* Video-Automatik: TikTok, Instagram Reels, YouTube Shorts.
    Der Worker auf dem Server erstellt die Videos und postet sie zum Termin; hier wird eingerichtet und überwacht. */
@@ -12,8 +12,11 @@ type Settings = {
   enabled: boolean; days: number[]; times: string[]; platforms: Platform[]; uploadUser: string; voiceEngine: "own" | "elevenlabs"; voiceSample?: VoiceSample;
   voiceId: string; voiceName: string; speed: number; aiLabel: boolean; promo: boolean; repeat: boolean; disabled: string[];
   hasElevenlabs: boolean; hasUploadpost: boolean; hasHuggingface: boolean; updatedAt?: string;
+  cfAccount: string; hasCloudflare: boolean; figurFoto?: { file: string; at: string; bytes: number };
 };
-type Keys = { elevenlabs?: string; uploadpost?: string; huggingface?: string };
+type FigurState = { status: "läuft" | "auswahl" | "wartet" | "fertig" | "fehler"; phase?: string; schritt?: string | null; fertig?: string[]; at: string; error?: string | null; weiterAb?: string | null; hinweise?: string[]; nutzbar?: boolean; version?: number };
+type ProbeState = { status: "läuft" | "fertig" | "fehler"; at: string; error?: string; file?: string; voiced?: boolean; figur?: boolean; duration?: number; took?: number };
+type Keys = { elevenlabs?: string; uploadpost?: string; huggingface?: string; cloudflare?: string };
 type VoiceTest = { status: "läuft" | "fertig" | "fehler"; at: string; error?: string; file?: string; took?: number };
 type Ep = { id: string; order: number; title: string; topic: string; style: "whiteboard" | "cartoon"; caption: string; beats: number };
 type EpState = {
@@ -23,7 +26,7 @@ type EpState = {
 type State = {
   heartbeat?: string; busy?: string | null; library?: Ep[]; episodes?: Record<string, EpState>; queue?: string[];
   nextSlot?: { key: string; label: string } | null; cycle?: number; credits?: { used?: number | null; limit?: number | null; error?: string };
-  voiceTest?: VoiceTest; voiceBlocked?: { at: string; error: string };
+  voiceTest?: VoiceTest; voiceBlocked?: { at: string; error: string }; figur?: FigurState; probe?: ProbeState;
 };
 type LogEntry = { at: string; kind: string; text: string };
 
@@ -61,7 +64,7 @@ export function SocialView() {
   }, [load]);
 
   async function saveAll(next: Settings, keys?: Keys) {
-    const { hasElevenlabs, hasUploadpost, hasHuggingface, voiceSample, updatedAt, disabled, ...rest } = next; void hasElevenlabs; void hasUploadpost; void hasHuggingface; void voiceSample; void updatedAt; void disabled;
+    const { hasElevenlabs, hasUploadpost, hasHuggingface, hasCloudflare, voiceSample, figurFoto, updatedAt, disabled, ...rest } = next; void hasElevenlabs; void hasUploadpost; void hasHuggingface; void hasCloudflare; void voiceSample; void figurFoto; void updatedAt; void disabled;
     const j = await post("/api/admin/social", { ...rest, keys });
     setSettings(j.settings);
     return j.settings as Settings;
@@ -135,6 +138,7 @@ export function SocialView() {
 
         <Queue settings={settings} state={state} onPreview={setPreview} onAction={action} />
         <Setup settings={settings} onSave={saveAll} voiceTest={state.voiceTest} onSettings={setSettings} onRefresh={load} />
+        <FigurPanel settings={settings} figur={state.figur} probe={state.probe} onSave={saveAll} onSettings={setSettings} onRefresh={load} />
         <Log entries={log} />
       </div>
       {preview && <Preview ep={preview.ep} e={preview.e} onClose={() => setPreview(null)} />}
@@ -235,7 +239,7 @@ function Setup({ settings, onSave, voiceTest, onSettings, onRefresh }: {
   const [busy, setBusy] = useState<"" | "save" | "voices" | "test">("");
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const audio = useRef<HTMLAudioElement | null>(null);
-  useEffect(() => { setS((cur) => ({ ...cur, hasElevenlabs: settings.hasElevenlabs, hasUploadpost: settings.hasUploadpost, hasHuggingface: settings.hasHuggingface, voiceSample: settings.voiceSample, enabled: settings.enabled, disabled: settings.disabled })); }, [settings]);
+  useEffect(() => { setS((cur) => ({ ...cur, hasElevenlabs: settings.hasElevenlabs, hasUploadpost: settings.hasUploadpost, hasHuggingface: settings.hasHuggingface, hasCloudflare: settings.hasCloudflare, cfAccount: settings.cfAccount, figurFoto: settings.figurFoto, voiceSample: settings.voiceSample, enabled: settings.enabled, disabled: settings.disabled })); }, [settings]);
   const set = <K extends keyof Settings>(k: K, v: Settings[K]) => setS((x) => ({ ...x, [k]: v }));
 
   async function save() {
@@ -429,6 +433,166 @@ function Setup({ settings, onSave, voiceTest, onSettings, onRefresh }: {
       <button type="button" onClick={save} disabled={!!busy} className="mt-6 inline-flex items-center gap-2 rounded-full bg-navy px-5 py-3 text-sm font-semibold text-white transition hover:bg-navy-800 disabled:opacity-40">
         {busy === "save" && <Loader2 className="h-4 w-4 animate-spin" aria-hidden />} Einstellungen speichern
       </button>
+    </section>
+  );
+}
+
+/* ---------- Deine Figur: aus dem Foto mit Cloudflare (FLUX.2), kostenlos im Tageskontingent ---------- */
+const FIG_NAMES: [string, string][] = [["basis", "Grundbild"], ["mund-halb", "Mund halb"], ["mund-offen", "Mund offen"], ["augen-zu", "Augen zu"], ["zeigt", "zeigt"], ["daumen", "Daumen hoch"], ["erschrocken", "erschrocken"], ["nachdenklich", "nachdenklich"], ["winkt", "winkt"]];
+const media = (name: string, v?: number | string) => `/api/admin/social/media/${name}${v ? `?v=${encodeURIComponent(String(v))}` : ""}`;
+
+function FigurPanel({ settings, figur, probe, onSave, onSettings, onRefresh }: {
+  settings: Settings; figur?: FigurState; probe?: ProbeState; onSave: (s: Settings, keys?: Keys) => Promise<Settings>; onSettings: (s: Settings) => void; onRefresh: () => void;
+}) {
+  const [account, setAccount] = useState(settings.cfAccount || "");
+  const [token, setToken] = useState("");
+  const [busy, setBusy] = useState("");
+  const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const [asked, setAsked] = useState<{ what: "figur" | "probe"; at: string } | null>(null);
+  const fileRef = useRef<HTMLInputElement | null>(null);
+  useEffect(() => { setAccount((a) => a || settings.cfAccount || ""); }, [settings.cfAccount]);
+
+  const access = settings.hasCloudflare && !!settings.cfAccount;
+  async function saveAccess() {
+    setBusy("zugang"); setMsg(null);
+    try {
+      const next = await onSave({ ...settings, cfAccount: account.trim().toLowerCase() }, { cloudflare: token.trim() || undefined });
+      setToken(""); onSettings(next);
+      setMsg({ ok: true, text: "Cloudflare-Zugang gespeichert." });
+      return true;
+    } catch (e) { setMsg({ ok: false, text: e instanceof Error ? e.message : "Speichern fehlgeschlagen." }); return false; }
+    finally { setBusy(""); }
+  }
+  async function upload(file: File) {
+    setBusy("foto"); setMsg(null);
+    try {
+      const f = new FormData(); f.append("foto", file, file.name);
+      const res = await fetch("/api/admin/social/figur-foto", { method: "POST", body: f });
+      const j = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(j.error || "Hochladen fehlgeschlagen.");
+      onSettings(j.settings); setMsg({ ok: true, text: "Foto gespeichert." });
+    } catch (e) { setMsg({ ok: false, text: e instanceof Error ? e.message : "Hochladen fehlgeschlagen." }); }
+    finally { setBusy(""); }
+  }
+  async function job(type: "figur" | "probe", id?: "neu" | "weiter") {
+    if (type === "figur" && (token.trim() || account.trim().toLowerCase() !== (settings.cfAccount || "")) && !(await saveAccess())) return;
+    if (type === "figur" && id === "neu" && figur?.status === "fertig" && !confirm("Neue Figur erstellen? Die bisherige wird ersetzt, sobald die neue fertig ist.")) return;
+    setBusy(type); setMsg(null);
+    try {
+      await post("/api/admin/social/action", { type, ...(id ? { id } : {}) });
+      setAsked({ what: type, at: new Date().toISOString() });
+      setTimeout(onRefresh, 1500);
+    } catch (e) { setMsg({ ok: false, text: e instanceof Error ? e.message : "Auftrag fehlgeschlagen." }); }
+    finally { setBusy(""); }
+  }
+  const waitingFigur = asked?.what === "figur" && (!figur || figur.at < asked.at);
+  const waitingProbe = asked?.what === "probe" && (!probe || probe.at < asked.at);
+  const running = waitingFigur || figur?.status === "läuft";
+  const done = new Set(figur?.fertig || []);
+  const v = figur?.version;
+
+  return (
+    <section aria-labelledby="figur-h" className="rounded-xl border border-line bg-white p-5 sm:p-7">
+      <h2 id="figur-h" className="flex items-center gap-2 text-lg font-semibold tracking-[-0.02em]"><Sparkles className="h-5 w-5" aria-hidden /> Deine Figur</h2>
+      <p className="mt-1 text-sm leading-6 text-ink-soft">
+        Aus deinem Foto entsteht eine 3D-Figur, die in den Videos mit deiner Stimme spricht. Das erledigt das Bildmodell FLUX.2 bei Cloudflare,
+        kostenlos im Rahmen von etwa 6 Bildern pro Tag. Die ganze Figur hat 9 Bilder; nach dem 4. ist sie schon nutzbar, der Rest kommt am nächsten Tag von selbst.
+      </p>
+
+      <div className="mt-5 grid gap-6 lg:grid-cols-2">
+        <div>
+          <h3 className="text-sm font-semibold">1. Zugang zu Cloudflare {access && <span className="ml-1 rounded-full bg-emerald-100 px-2 py-0.5 text-xs text-emerald-900">gespeichert</span>}</h3>
+          <ol className="mt-2 list-decimal space-y-1 pl-5 text-sm leading-6 text-ink-soft">
+            <li>Kostenloses Konto bei <a href="https://dash.cloudflare.com/sign-up" target="_blank" rel="noopener noreferrer" className="underline">dash.cloudflare.com</a> anlegen und die E-Mail bestätigen.</li>
+            <li><b>Account-ID</b>: die 32-stellige Zeichenfolge in der Adresszeile direkt nach <i>dash.cloudflare.com/</i> (steht auch unter „Workers &amp; Pages“ rechts).</li>
+            <li><b>API-Token</b>: oben rechts Profil → API-Token → Token erstellen → Vorlage „Workers AI“ → Token erstellen → kopieren.</li>
+          </ol>
+          <div className="mt-3 grid gap-3 sm:grid-cols-2">
+            <div><label htmlFor="cfacc" className="label">Account-ID</label><input id="cfacc" className="input font-mono" value={account} onChange={(e) => setAccount(e.target.value)} placeholder="32 Zeichen" spellCheck={false} /></div>
+            <div><label htmlFor="cftok" className="label">API-Token</label><input id="cftok" type="password" autoComplete="new-password" className="input" value={token} onChange={(e) => setToken(e.target.value)} placeholder={settings.hasCloudflare ? "•••••••• (nur zum Ändern)" : "Token einfügen"} /></div>
+          </div>
+          <button type="button" onClick={saveAccess} disabled={!!busy || (!token.trim() && account.trim().toLowerCase() === (settings.cfAccount || ""))} className="mt-3 inline-flex items-center gap-2 rounded-full border border-line px-4 py-2.5 text-sm font-semibold hover:border-navy disabled:opacity-40">
+            {busy === "zugang" && <Loader2 className="h-4 w-4 animate-spin" aria-hidden />} Zugang speichern
+          </button>
+        </div>
+
+        <div>
+          <h3 className="text-sm font-semibold">2. Dein Foto</h3>
+          <p className="mt-1 text-sm leading-6 text-ink-soft">Ein scharfes Porträt von vorn, gut ausgeleuchtet, wie ein Bewerbungsfoto. Es bleibt auf deinem Server; nur eine verkleinerte Kopie geht zum Erstellen an Cloudflare.</p>
+          <div className="mt-3 flex flex-wrap items-center gap-3">
+            {settings.figurFoto && <span className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-900"><CheckCircle2 className="h-4 w-4" aria-hidden /> Foto vom {fmt(settings.figurFoto.at)}</span>}
+            <button type="button" onClick={() => fileRef.current?.click()} disabled={!!busy} className="inline-flex items-center gap-2 rounded-full border border-line px-4 py-2.5 text-sm font-semibold hover:border-navy disabled:opacity-40">
+              {busy === "foto" ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : <Upload className="h-4 w-4" aria-hidden />} {settings.figurFoto ? "Anderes Foto" : "Foto hochladen"}
+            </button>
+            <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ""; if (f) upload(f); }} />
+          </div>
+          <h3 className="mt-5 text-sm font-semibold">3. Figur erstellen</h3>
+          <button type="button" onClick={() => job("figur", "neu")} disabled={!!busy || running || !settings.figurFoto || (!access && !(token.trim() && account.trim()))}
+            className="mt-2 inline-flex items-center gap-2 rounded-full bg-navy px-5 py-3 text-sm font-semibold text-white hover:bg-navy-800 disabled:opacity-40">
+            <Sparkles className="h-4 w-4" aria-hidden /> {figur ? "Neues Grundbild erstellen" : "Figur erstellen"}
+          </button>
+        </div>
+      </div>
+
+      {(waitingFigur || figur) && (
+        <div className="mt-6 border-t border-line pt-5" aria-live="polite">
+          {waitingFigur ? <p className="inline-flex items-center gap-2 text-sm text-ink-soft"><Loader2 className="h-4 w-4 animate-spin" aria-hidden /> Auftrag ist beim Server – er startet in der nächsten Minute.</p>
+            : figur?.status === "läuft" ? <p className="inline-flex items-center gap-2 text-sm text-ink-soft"><Loader2 className="h-4 w-4 animate-spin" aria-hidden /> Erstellt gerade: {figur.schritt || "…"} ({done.size} von 9 Bildern fertig)</p>
+            : figur?.status === "wartet" ? <p className="rounded-lg bg-amber-50 px-3 py-2.5 text-sm text-amber-900">{figur.error} Geht weiter ab {fmt(figur.weiterAb || undefined)} Uhr. ({done.size} von 9 Bildern fertig)</p>
+            : figur?.status === "fehler" ? (
+              <div className="flex flex-wrap items-center gap-3 rounded-lg bg-rose-50 px-3 py-2.5 text-sm text-rose-900"><CircleAlert className="h-4 w-4" aria-hidden /><span className="flex-1">{figur.error}</span>
+                <button type="button" onClick={() => job("figur", figur.phase === "weiter" ? "weiter" : "neu")} className="inline-flex items-center gap-1.5 rounded-full border border-rose-200 bg-white px-3 py-1.5 text-xs font-semibold"><RefreshCw className="h-3.5 w-3.5" aria-hidden /> Nochmal versuchen</button>
+              </div>)
+            : null}
+
+          {figur?.status === "auswahl" && !waitingFigur && (
+            <div className="mt-2 flex flex-wrap items-end gap-5">
+              <img src={media("figur-basis.jpg", v)} alt="Grundbild deiner Figur" width={240} height={240} className="rounded-xl border border-line bg-paper" />
+              <div className="max-w-sm">
+                <p className="text-sm font-semibold">Gefällt dir die Figur?</p>
+                <p className="mt-1 text-sm leading-6 text-ink-soft">Wenn ja, erstellt der Server die Varianten zum Sprechen und die Gesten. Wenn nicht, erzeugt er ein neues Grundbild (kostet ein Bild vom Tageskontingent).</p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <button type="button" onClick={() => job("figur", "weiter")} disabled={!!busy} className="inline-flex items-center gap-2 rounded-full bg-navy px-5 py-3 text-sm font-semibold text-white hover:bg-navy-800 disabled:opacity-40"><CheckCircle2 className="h-4 w-4" aria-hidden /> Gefällt mir – weiter</button>
+                  <button type="button" onClick={() => job("figur", "neu")} disabled={!!busy} className="inline-flex items-center gap-2 rounded-full border border-line px-4 py-3 text-sm font-semibold hover:border-navy disabled:opacity-40"><RefreshCw className="h-4 w-4" aria-hidden /> Neues Grundbild</button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {figur && figur.status !== "auswahl" && done.size > 0 && (
+            <ul className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-5 lg:grid-cols-9">
+              {FIG_NAMES.map(([n, label]) => (
+                <li key={n} className="text-center">
+                  {done.has(n) ? <img src={media(`figur-${n}.jpg`, v)} alt={label} width={120} height={120} loading="lazy" className="aspect-square w-full rounded-lg border border-line bg-paper object-cover" />
+                    : <span className="grid aspect-square w-full place-items-center rounded-lg border border-dashed border-line text-xs text-ink-muted">offen</span>}
+                  <span className="mt-1 block text-xs text-ink-muted">{label}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+          {!!figur?.hinweise?.length && <ul className="mt-3 space-y-1 text-sm text-amber-900">{figur.hinweise.map((h) => <li key={h}>Hinweis: {h}</li>)}</ul>}
+
+          {figur?.nutzbar && (
+            <div className="mt-5">
+              <h3 className="text-sm font-semibold">4. Probevideo</h3>
+              <p className="mt-1 text-sm leading-6 text-ink-soft">Ein Video mit deiner Figur{settings.voiceSample && settings.hasHuggingface ? " und deiner Stimme" : " (ohne Stimme, bis du sie oben eingerichtet hast)"}. Das dauert auf dem Server etwa 15 bis 25 Minuten.</p>
+              <button type="button" onClick={() => job("probe")} disabled={!!busy || waitingProbe || probe?.status === "läuft"} className="mt-3 inline-flex items-center gap-2 rounded-full border border-line px-4 py-3 text-sm font-semibold hover:border-navy disabled:opacity-40">
+                <Clapperboard className="h-4 w-4" aria-hidden /> Probevideo erstellen
+              </button>
+              {waitingProbe ? <p className="mt-3 inline-flex items-center gap-2 text-sm text-ink-soft"><Loader2 className="h-4 w-4 animate-spin" aria-hidden /> Auftrag ist beim Server – er startet, sobald das aktuelle Video fertig ist.</p>
+                : probe?.status === "läuft" ? <p className="mt-3 inline-flex items-center gap-2 text-sm text-ink-soft"><Loader2 className="h-4 w-4 animate-spin" aria-hidden /> Probevideo wird erstellt …</p>
+                : probe?.status === "fehler" ? <p role="alert" className="mt-3 rounded-lg bg-rose-50 px-3 py-2.5 text-sm text-rose-900">Probevideo fehlgeschlagen: {probe.error}</p>
+                : probe?.status === "fertig" ? (
+                  <div className="mt-3 max-w-xs">
+                    <video controls playsInline preload="metadata" src={media("probe-3d.mp4", probe.at)} className="aspect-[9/16] w-full rounded-xl bg-black" />
+                    <p className="mt-1 text-xs text-ink-muted">vom {fmt(probe.at)} · {probe.voiced ? "mit deiner Stimme" : "ohne Stimme"}</p>
+                  </div>)
+                : null}
+            </div>
+          )}
+        </div>
+      )}
+      {msg && <p role={msg.ok ? "status" : "alert"} className={`mt-4 rounded-lg px-3 py-2.5 text-sm ${msg.ok ? "bg-emerald-50 text-emerald-900" : "bg-rose-50 text-rose-900"}`}>{msg.text}</p>}
     </section>
   );
 }

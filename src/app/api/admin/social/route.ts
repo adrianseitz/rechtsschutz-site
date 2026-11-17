@@ -16,13 +16,14 @@ const schema = z.object({
   platforms: z.array(z.enum(PLATFORMS)).max(3),
   uploadUser: z.string().trim().max(80).regex(/^[A-Za-z0-9_.\- ]*$/, "Profilname: nur Buchstaben, Zahlen, Punkt, Bindestrich"),
   voiceEngine: z.enum(["own", "elevenlabs"]),
+  cfAccount: z.string().trim().toLowerCase().regex(/^([a-f0-9]{32})?$/, "Die Cloudflare-Account-ID hat 32 Zeichen (0–9, a–f)."),
   voiceId: z.string().trim().max(60).regex(/^[A-Za-z0-9]*$/, "Ungültige Stimme"),
   voiceName: z.string().trim().max(80),
   speed: z.number().min(0.85).max(1.25),
   aiLabel: z.boolean(),
   promo: z.boolean(),
   repeat: z.boolean(),
-  keys: z.object({ elevenlabs: key, uploadpost: key, huggingface: key }).optional(),
+  keys: z.object({ elevenlabs: key, uploadpost: key, huggingface: key, cloudflare: key }).optional(),
 });
 
 export async function GET() {

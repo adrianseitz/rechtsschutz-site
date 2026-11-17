@@ -73,6 +73,9 @@ zum Termin. Alles Weitere im CRM unter **Videos**:
    (Aufnahme im Browser oder Datei hochladen) und „Probe mit meiner Stimme erstellen“. Beim ersten Mal lädt der Server
    das Sprachmodell (ca. 400 MB, Ordner `data/social/hf`, nicht in der Datensicherung).
    Alternativ: Konto bei [ElevenLabs](https://elevenlabs.io), API-Schlüssel eintragen, Stimme wählen.
+   **Figur** (CRM → Videos → „Deine Figur“): kostenloses Konto bei [Cloudflare](https://dash.cloudflare.com/sign-up),
+   Account-ID und einen API-Token mit der Vorlage „Workers AI“ eintragen, Foto hochladen, „Figur erstellen“.
+   Das Grundbild freigeben; die übrigen 8 Bilder kommen im kostenlosen Tageskontingent (Rest am nächsten Tag automatisch).
 3. Zeitplan wählen und **Automatik starten**. Pausieren geht jederzeit mit einem Klick.
 
 Die Schlüssel werden verschlüsselt gespeichert (`LEAD_ENCRYPTION_KEY`). Logs: `docker compose logs -f shorts`.

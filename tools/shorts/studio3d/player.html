@@ -263,7 +263,9 @@ const AS = 0.84, HEAD_Y = 3.0;   // Größe der Figur; Höhe der Kopfmitte über
 const AV = makeAvatar(T); AV.root.scale.setScalar(AS); AV.root.position.y = HEAD_Y; ST.add(AV.root);
 // Wer moderiert: die Figur aus figur/kit (Bilder von der Bild-KI, siehe figur/vorbereiten.py), sonst ein Platzhalter-Umriss.
 // EP.avatar: "3d" = alte Code-Figur, "placeholder" = Umriss erzwingen
-const USE_FIG = !!window.FIGUR && EP.avatar !== "3d" && EP.avatar !== "placeholder";
+// Figur vom Server (render.mjs --figur / Worker) geht vor der Figur im Repo (figur/kit)
+const FIG_KIT = window.EP_FIGUR || window.FIGUR, FIG_BASE = window.EP_FIGUR_BASE || "../figur/kit/";
+const USE_FIG = !!FIG_KIT && EP.avatar !== "3d" && EP.avatar !== "placeholder";
 const PLACEHOLDER = !USE_FIG && EP.avatar !== "3d";
 if (USE_FIG) AV.root.visible = false;
 if (PLACEHOLDER) { AV.root.visible = false; document.getElementById("sun").innerHTML = `<svg viewBox="0 0 840 840" width="840" height="840"><defs><clipPath id="c"><circle cx="420" cy="420" r="420"/></clipPath></defs><g clip-path="url(#c)" fill="rgba(11,11,10,.16)"><circle cx="420" cy="330" r="150"/><path d="M130 840 C130 620 260 530 420 530 C580 530 710 620 710 840Z"/></g><text x="420" y="705" text-anchor="middle" font-family="Geist" font-weight="700" font-size="40" fill="rgba(11,11,10,.55)">Hier sprichst du</text></svg>`; }
@@ -355,10 +357,10 @@ const CONFETTI = (() => {
    Mund folgt der Lautstärke der Stimme, Blinzeln alle paar Sekunden, Gesten kurz pro Abschnitt. */
 const GESTE = { hook: "zeigt", cost: "erschrocken", fact: "nachdenklich", list: "zeigt", solution: "daumen", warning: "nachdenklich", cta: "winkt", letter: "erschrocken", versus: "nachdenklich" };
 const FIG = (() => {
-  const K = window.FIGUR;
+  const K = FIG_KIT;
   if (!USE_FIG) return null;
   const cv = document.getElementById("fig"), g = cv.getContext("2d"), img = {}, shadow = {};
-  const load = (f) => new Promise((res) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = "../figur/kit/" + f; });
+  const load = (f) => new Promise((res) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = FIG_BASE + f; });
   const ready = Promise.all([
     ...Object.entries(K.bilder).map(async ([n, f]) => { img[n] = await load(f); }),
     ...Object.entries(K.ausschnitte).map(async ([n, a]) => { img[n] = await load(a.datei); }),

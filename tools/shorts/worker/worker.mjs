@@ -11,6 +11,7 @@ import { renderEpisode } from "../render.mjs";
 import { P, decrypt, ensureDirs, log, ownFile, readJson, takeJobs, trimLog, writeJson } from "./store.mjs";
 import { elevenlabsUsage, tts, uploadStatus, uploadVideo } from "./services.mjs";
 import { CREDIT, ENGINE, VoiceError, prepareVoice, speak } from "./ownvoice.mjs";
+import { figurSchritt, kitDir } from "./figur.mjs";
 import { berlin, dueSlot, nextSlotLabel, normTimes } from "./schedule.mjs";
 import { validateEpisode } from "../lib/validate.mjs";
 
@@ -44,7 +45,9 @@ async function loadLibrary(cycle = 0) {
   return eps.sort((a, b) => (a.order ?? 999) - (b.order ?? 999) || a.id.localeCompare(b.id));
 }
 // nur was im Video zu sehen/hören ist – eine geänderte Bildunterschrift erzeugt kein neues Video
-const epHash = (ep) => sha(JSON.stringify({ style: ep.style, beats: ep.beats, fine: ep.fine })).slice(0, 12);
+// 3D-Videos zeigen die Figur: ist eine neue Figur fertig, werden sie neu erstellt
+let FIG_V = 0;
+const epHash = (ep) => sha(JSON.stringify({ style: ep.style, beats: ep.beats, fine: ep.fine, ...(ep.style === "studio3d" ? { figur: FIG_V } : {}) })).slice(0, 12);
 const sayHash = (ep) => sha(JSON.stringify(ep.beats.map((b) => b.say))).slice(0, 10);
 // Welche Stimme: die eigene (kostenlos, läuft auf dem Server) oder ElevenLabs
 const engineOf = (s) => (s.voiceEngine === "elevenlabs" ? "elevenlabs" : "own");
@@ -68,7 +71,7 @@ const voiceSig = (s) => engineOf(s) === "own"
 function keysOf(settings) {
   const k = settings.keys || {};
   const get = (v) => { try { return decrypt(v || ""); } catch { return ""; } };
-  return { el: get(k.elevenlabs), up: get(k.uploadpost), hf: get(k.huggingface) };
+  return { el: get(k.elevenlabs), up: get(k.uploadpost), hf: get(k.huggingface), cf: get(k.cloudflare) };
 }
 
 // ---------- Stimme ----------
@@ -86,6 +89,44 @@ async function makeVoice(ep, settings, keys) {
     await ownFile(f); chars += b.say.length;
   }
   return { dir, chars };
+}
+
+/** Figur aus dem Foto erstellen lassen (Cloudflare FLUX.2), siehe figur.mjs */
+const fotoFile = (s) => (typeof s.figurFoto?.file === "string" && /^foto-[a-z0-9]{1,20}\.(jpg|png|webp)$/.test(s.figurFoto.file) ? join(P.figur, s.figurFoto.file) : null);
+async function figur(phase, settings, keys, state) {
+  state.busy = phase === "neu" ? "Erstellt das Grundbild deiner Figur" : "Erstellt die Varianten deiner Figur";
+  await writeJson(P.state, state);
+  await figurSchritt(phase, {
+    dir: P.figur, videos: P.videos, account: String(settings.cfAccount || ""), token: keys.cf, foto: fotoFile(settings),
+    state, save: () => writeJson(P.state, state), log, own: ownFile,
+  });
+  state.busy = null;
+}
+
+/** Probevideo im 3D-Stil mit Figur und (falls eingerichtet) eigener Stimme → videos/probe-3d.mp4 */
+async function probe(lib, settings, keys, state) {
+  const base = lib.find((e) => e.id === "01-vermieter-mietausfall") || lib[0];
+  state.probe = { status: "läuft", at: now() };
+  state.busy = "Erstellt ein Probevideo mit deiner Figur";
+  await writeJson(P.state, state);
+  try {
+    const ep = { ...base, style: "studio3d" };
+    let voiceDir = null;
+    if (voiceUsable(settings, keys, state)) {
+      try { voiceDir = (await makeVoice(ep, settings, keys)).dir; } catch (err) { await log("fehler", `Probevideo ohne Stimme: ${msg(err)}`); }
+    }
+    const tmp = join(P.videos, "probe-3d.tmp.mp4"), out = join(P.videos, "probe-3d.mp4");
+    const t0 = Date.now();
+    const r = await renderEpisode({ episode: ep, out: tmp, voiceDir, figur: kitDir(P.figur), workers: +process.env.SHORTS_WORKERS || 1, log: () => {} });
+    await rename(tmp, out); await ownFile(out);
+    state.probe = { status: "fertig", at: now(), file: "probe-3d.mp4", voiced: Boolean(voiceDir), figur: Boolean(kitDir(P.figur)), duration: Math.round(r.duration), took: Math.round((Date.now() - t0) / 1000) };
+    await log("video", `Probevideo im 3D-Stil fertig (${state.probe.duration} s, ${voiceDir ? "mit" : "ohne"} Stimme).`);
+  } catch (err) {
+    state.probe = { status: "fehler", at: now(), error: msg(err) };
+    await log("fehler", `Probevideo: ${msg(err)}`);
+  } finally {
+    state.busy = null;
+  }
 }
 
 /** Hörprobe mit der eigenen Stimme für das CRM (videos/voice-test.mp3) */
@@ -134,7 +175,7 @@ async function render(ep, settings, keys, state) {
       state.busy = `Erstellt gerade: ${ep.title}`; await writeJson(P.state, state);
     }
     const out = join(P.videos, `${ep.id}.mp4`), tmp = join(P.videos, `${ep.id}.tmp.mp4`), thumb = join(P.videos, `${ep.id}.jpg`);
-    const opts = { out: tmp, voiceDir, workers: +process.env.SHORTS_WORKERS || 1, log: () => {} };
+    const opts = { out: tmp, voiceDir, figur: kitDir(P.figur), workers: +process.env.SHORTS_WORKERS || 1, log: () => {} };
     let r;
     try { r = await renderEpisode({ episode: ep, ...opts }); }
     catch (err) {
@@ -225,6 +266,7 @@ async function tick() {
   state.episodes ||= {};
   const lib = await loadLibrary(state.cycle || 0);
   const byId = new Map(lib.map((ep) => [ep.id, ep]));
+  FIG_V = state.figur?.nutzbar && kitDir(P.figur) ? state.figur.version || 0 : 0;
   state.library = lib.map((ep) => ({ id: ep.id, order: ep.order, title: ep.title, topic: ep.topic, style: ep.style, caption: ep.caption, beats: ep.beats.length }));
   const disabled = new Set(settings.disabled || []);
 
@@ -233,6 +275,8 @@ async function tick() {
     const ep = byId.get(job.id);
     if (job.type === "usage") { lastUsage = 0; continue; }
     if (job.type === "voicetest") { await voiceTest(settings, keys, state); await writeJson(P.state, state); continue; }
+    if (job.type === "figur" && (job.id === "neu" || job.id === "weiter")) { await figur(job.id, settings, keys, state); await writeJson(P.state, state); continue; }
+    if (job.type === "probe") { await probe(lib, settings, keys, state); await writeJson(P.state, state); continue; }
     if (!ep) continue;
     if (job.type === "render") { delete state.episodes[ep.id]?.error; await render(ep, settings, keys, state); }
     else if (job.type === "reset") { delete state.episodes[ep.id]; await log("info", `Wieder eingereiht: ${ep.title}`); }
@@ -242,6 +286,12 @@ async function tick() {
       if (!e || needsRender(e, ep, settings, keys, state) || e.status === "fehler" && !existsSync(join(P.videos, e.video || "-"))) await render(ep, settings, keys, state);
       if (state.episodes[ep.id]?.video) await post(ep, settings, keys, state, "manuell");
     }
+    await writeJson(P.state, state);
+  }
+
+  // Figur: nach Ende des Tageskontingents (oder Netzfehler) von selbst weitermachen
+  if (state.figur?.status === "wartet" && state.figur.weiterAb && Date.now() >= Date.parse(state.figur.weiterAb)) {
+    await figur(state.figur.phase === "neu" ? "neu" : "weiter", settings, keys, state);
     await writeJson(P.state, state);
   }
 
@@ -289,6 +339,7 @@ async function tick() {
   // Aufnahmen und Videos von Episoden, die es nicht mehr gibt (umbenannt, in die Reserve verschoben), aufräumen
   for (const d of await readdir(P.voice).catch(() => [])) if (![...byId.keys()].some((id) => d.startsWith(id + "-"))) await rm(join(P.voice, d), { recursive: true, force: true });
   for (const f of await readdir(P.videos).catch(() => [])) {
+    if (/^(figur-|probe-|voice-test)/.test(f)) continue;   // Figur-Vorschauen, Probevideo und Hörprobe gehören keiner Episode
     const id = f.replace(/(\.tmp)?\.(mp4|jpg)$/, "");
     if (!byId.has(id) && state.episodes[id]?.status !== "gepostet") { await rm(join(P.videos, f), { force: true }); if (state.episodes[id]) delete state.episodes[id]; }
   }

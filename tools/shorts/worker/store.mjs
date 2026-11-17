@@ -18,6 +18,7 @@ export const P = {
   voice: join(DIR, "voice"),
   sample: join(DIR, "voice-sample"),
   own: join(DIR, "ownvoice"),
+  figur: join(DIR, "figur"),
   log: join(DIR, "log.ndjson"),
 };
 
@@ -30,7 +31,7 @@ async function own(path) {
 }
 
 export async function ensureDirs() {
-  for (const d of [DIR, P.jobs, P.videos, P.voice, P.own]) { await mkdir(d, { recursive: true, mode: 0o750 }); await own(d); }
+  for (const d of [DIR, P.jobs, P.videos, P.voice, P.own, P.figur]) { await mkdir(d, { recursive: true, mode: 0o750 }); await own(d); }
 }
 export async function ownFile(path) { await own(path); }
 

@@ -22,6 +22,8 @@ export type SocialSettings = {
   voiceSample?: VoiceSample;
   voiceId: string;
   voiceName: string;
+  cfAccount: string;        // Cloudflare-Account-ID für die Figur (kein Geheimnis)
+  figurFoto?: FigurFoto;
   speed: number;           // Sprechtempo 0,9–1,2
   aiLabel: boolean;        // als KI-erstellt kennzeichnen
   promo: boolean;          // TikTok: Werbung für das eigene Unternehmen kennzeichnen
@@ -30,12 +32,13 @@ export type SocialSettings = {
 };
 export type VoiceEngine = "own" | "elevenlabs";
 export type VoiceSample = { file: string; at: string; seconds: number; bytes: number };
-type KeyName = "elevenlabs" | "uploadpost" | "huggingface";
+export type FigurFoto = { file: string; at: string; bytes: number };
+type KeyName = "elevenlabs" | "uploadpost" | "huggingface" | "cloudflare";
 type Stored = SocialSettings & { keys?: Partial<Record<KeyName, string>>; updatedAt?: string };
 
 export const SOCIAL_DEFAULTS: SocialSettings = {
   enabled: false, days: [1, 3, 5], times: ["18:30"], platforms: ["tiktok", "instagram", "youtube"],
-  uploadUser: "", voiceEngine: "own", voiceId: "", voiceName: "", speed: 1.1, aiLabel: true, promo: true, repeat: true, disabled: [],
+  uploadUser: "", voiceEngine: "own", voiceId: "", voiceName: "", cfAccount: "", speed: 1.1, aiLabel: true, promo: true, repeat: true, disabled: [],
 };
 
 export const socialDir = () => path.join(serverConfig.storageDir, "social");
@@ -59,14 +62,14 @@ async function writeStored(data: Stored) {
 /** Für die Oberfläche – ohne Schlüssel */
 export async function publicSocialSettings() {
   const { keys, ...rest } = await readStored();
-  return { ...rest, hasElevenlabs: Boolean(keys?.elevenlabs), hasUploadpost: Boolean(keys?.uploadpost), hasHuggingface: Boolean(keys?.huggingface) };
+  return { ...rest, hasElevenlabs: Boolean(keys?.elevenlabs), hasUploadpost: Boolean(keys?.uploadpost), hasHuggingface: Boolean(keys?.huggingface), hasCloudflare: Boolean(keys?.cloudflare) };
 }
 
 /** Speichern. Schlüssel: leer/undefined = behalten, null = löschen, Text = neu (verschlüsselt). */
 export async function saveSocialSettings(input: Partial<SocialSettings>, keys: Partial<Record<KeyName, string | null>> = {}) {
   const prev = await readStored();
   const next: Stored = { ...prev, ...input, keys: { ...prev.keys }, updatedAt: new Date().toISOString() };
-  for (const k of ["elevenlabs", "uploadpost", "huggingface"] as const) {
+  for (const k of ["elevenlabs", "uploadpost", "huggingface", "cloudflare"] as const) {
     const v = keys[k];
     if (v === null) delete next.keys![k];
     else if (v) {
@@ -100,6 +103,19 @@ export async function deleteVoiceSample() {
   return publicSocialSettings();
 }
 
+/** Foto für die Figur speichern (ersetzt das vorige). Der Worker erzeugt daraus mit Cloudflare die Figur. */
+export const FOTO_TYPES: Record<string, string> = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp" };
+export async function saveFigurFoto(data: Buffer, ext: string) {
+  const dir = path.join(socialDir(), "figur");
+  await mkdir(dir, { recursive: true, mode: 0o750 });
+  const file = `foto-${Date.now().toString(36)}.${ext}`;
+  await writeFile(path.join(dir, file), data, { mode: 0o640 });
+  for (const f of await readdir(dir).catch(() => [] as string[])) if (f.startsWith("foto-") && f !== file) await rm(path.join(dir, f), { force: true });
+  const s = await readStored();
+  await writeStored({ ...s, figurFoto: { file, at: new Date().toISOString(), bytes: data.length } });
+  return publicSocialSettings();
+}
+
 export async function toggleEpisode(id: string, on: boolean) {
   const s = await readStored();
   const set = new Set(s.disabled);
@@ -130,7 +146,7 @@ export async function readSocialLog(limit = 40): Promise<{ at: string; kind: str
   }
 }
 
-export const JOB_TYPES = ["render", "post", "reset", "usage", "voicetest"] as const;
+export const JOB_TYPES = ["render", "post", "reset", "usage", "voicetest", "figur", "probe"] as const;
 export async function addSocialJob(type: (typeof JOB_TYPES)[number], id = "") {
   const dir = file("jobs");
   await mkdir(dir, { recursive: true, mode: 0o750 });

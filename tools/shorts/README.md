@@ -76,5 +76,9 @@ Voraussetzungen: Node 22, Chrome/Chromium (`--chrome=` oder `CHROME_PATH`), Pyth
 - `worker/ownvoice.mjs` – eigene Stimme: Pocket TTS (Programm MIT, Modell CC BY 4.0, Freischaltung bei HuggingFace). Aus der
   Aufnahme im CRM (`data/social/voice-sample/`) entsteht einmal ein Stimmabdruck (`data/social/ownvoice/`), damit wird jeder
   Satz gesprochen. Die Aufnahme bleibt auf dem Server und gehört nie ins Git-Repository.
+- `worker/figur.mjs` – die Moderator-Figur aus Adrians Foto: CRM → Videos → „Deine Figur“. Der Server erzeugt mit FLUX.2
+  (Cloudflare Workers AI, kostenloses Tageskontingent von etwa 6 Bildern) erst das Grundbild, nach Freigabe 3 Sprech-Varianten
+  und 5 Gesten, stellt sie mit `figur/vorbereiten.py` frei (`data/social/figur/kit/`) und macht nach dem Tageslimit nachts
+  von selbst weiter. 3D-Videos nutzen diese Figur; „Probevideo erstellen“ zeigt sie im Video.
 - `lib/sprechtext.mjs` – schreibt Zahlen, €, %, § und Abkürzungen für die Stimme aus („5.700 €“ → „fünftausendsiebenhundert Euro“)
 - `fonts/` – Geist, Instrument-Serif-Kursiv, Caveat, Kalam (OFL)
