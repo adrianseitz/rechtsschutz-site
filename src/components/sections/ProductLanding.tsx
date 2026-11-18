@@ -4,7 +4,7 @@ import { SITUATION } from "@/lib/funnel";
 import { generalFaq } from "@/lib/faq";
 import { site } from "@/lib/site";
 import { Hero, type FloatCard } from "./Hero";
-import { InlineCta } from "./InlineCta";
+import { QuickCallback } from "./QuickCallback";
 import { Leistungen } from "./Leistungen";
 import { AboutAdvisor } from "./AboutAdvisor";
 import { HowItWorks } from "./HowItWorks";
@@ -31,7 +31,7 @@ const WAIT_AREA: Record<Product["key"], string> = {
   vermieter: "u. a. in Miet- und Grundstücksangelegenheiten",
   firma: "z. B. im Arbeitsrecht",
 };
-const EMPHASIS: Record<Product["key"], string> = { privat: "Alltag", arbeit: "bevor", vermieter: "Immobilien", firma: "Betrieb" };
+const EMPHASIS: Record<Product["key"], string> = { privat: "Alltag", arbeit: "bevor", vermieter: "bevor", firma: "Betrieb" };
 const HERO_ICON: Record<Product["key"], string> = { privat: "package", arbeit: "briefcase", vermieter: "house", firma: "office" };
 const NOTES: Record<Product["key"], string> = {
   privat: "Auch Partner & Kinder lassen sich oft mitversichern.",
@@ -67,7 +67,9 @@ export function ProductLanding({ product }: { product: Product }) {
         subtitle={product.hero.subtitle}
         chipsLabel={situation.title}
         chips={situation.options.map((o) => ({ label: o.label, href: `${checkHref}&situation=${o.value}`, icon: o.icon ?? HERO_ICON[product.key] }))}
-        secondary={{ href: `/kontakt?anliegen=rueckruf&thema=${product.key}`, label: "Rückruf anfordern" }}
+        chipsNote="Kostenlos & unverbindlich · ca. 60 Sekunden"
+        advisorNote="Adrian Seitz · persönlich statt Callcenter"
+        secondary={{ href: "#rueckruf", label: "Rückruf anfordern" }}
         cards={CARDS(product.key)}
       />
       <Marquee items={product.cardTopics.concat(["Persönliche Beratung", "Kostenlos & unverbindlich"])} />
@@ -95,7 +97,7 @@ export function ProductLanding({ product }: { product: Product }) {
         </div>
       </section>
 
-      <InlineCta href={checkHref} label={product.hero.cta} text="Betrifft dich eines dieser Themen?" />
+      <QuickCallback topic={product.key} checkHref={checkHref} checkLabel={product.hero.cta} text="Betrifft dich eines dieser Themen?" />
 
       <Ernstfall product={product.key} />
 

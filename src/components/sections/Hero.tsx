@@ -92,9 +92,9 @@ function Floater({ card, mx, my, delay }: { card: FloatCard; mx: MotionValue<num
   );
 }
 
-export function Hero({ eyebrow, title, emphasis, subtitle, chipsLabel, chips, chipsNote = "Kostenlos & unverbindlich · dauert ca. 60 Sekunden", secondary, cards, bullets = ["Kostenlos & unverbindlich", "Ca. 60 Sekunden", "Persönlicher Ansprechpartner"] }: {
+export function Hero({ eyebrow, title, emphasis, subtitle, chipsLabel, chips, chipsNote = "Kostenlos & unverbindlich · dauert ca. 60 Sekunden", advisorNote, secondary, cards, bullets = ["Kostenlos & unverbindlich", "Ca. 60 Sekunden", "Persönlicher Ansprechpartner"] }: {
   eyebrow?: string; title: string; emphasis?: string; subtitle: string;
-  chipsLabel: string; chips: HeroChip[]; chipsNote?: string; secondary?: { href: string; label: string }; cards: FloatCard[]; bullets?: string[];
+  chipsLabel: string; chips: HeroChip[]; chipsNote?: string; advisorNote?: string; secondary?: { href: string; label: string }; cards: FloatCard[]; bullets?: string[];
 }) {
   const ref = useRef<HTMLElement>(null);
   const reduce = useReducedMotion();
@@ -147,7 +147,13 @@ export function Hero({ eyebrow, title, emphasis, subtitle, chipsLabel, chips, ch
                 </Link>
               ))}
             </div>
-            {chipsNote && <p className="mt-2.5 text-[13px] text-ink-muted sm:hidden">{chipsNote}</p>}
+            {advisorNote ? (
+              // Handy: ein Mensch im ersten Bildschirm – wichtig für Besucher aus Anzeigen.
+              <div className="mt-3.5 flex items-center gap-3 sm:hidden">
+                <span aria-hidden className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-navy bg-sun font-serif text-[17px] italic text-navy">AS</span>
+                <p className="text-[13px] leading-[1.35] text-ink-muted"><span className="font-semibold text-navy">{advisorNote}</span>{chipsNote && <><br />{chipsNote}</>}</p>
+              </div>
+            ) : chipsNote && <p className="mt-2.5 text-[13px] text-ink-muted sm:hidden">{chipsNote}</p>}
           </div>
           </div>
 

@@ -101,7 +101,8 @@ export const contactFormSchema = z
     requestType: z.enum(["termin", "rueckruf", "frage"]),
     topic: z.enum(["privat", "arbeit", "vermieter", "firma", "allgemein"]),
     name: trimmed(120).min(2, "Bitte gib deinen Namen an."),
-    email: trimmed(160).email("Bitte gib eine gültige E-Mail-Adresse an."),
+    // Beim Rückruf reicht die Telefonnummer – weniger Felder, mehr Anfragen.
+    email: trimmed(160).email("Bitte gib eine gültige E-Mail-Adresse an.").or(z.literal("")),
     phone: trimmed(30).optional().or(z.literal("")),
     preferredTime: trimmed(120).optional().or(z.literal("")),
     message: trimmed(2000).optional().or(z.literal("")),
@@ -109,6 +110,9 @@ export const contactFormSchema = z
   })
   .superRefine((d, ctx) => {
     const phone = d.phone?.trim() ?? "";
+    if (d.requestType !== "rueckruf" && !d.email) {
+      ctx.addIssue({ code: "custom", path: ["email"], message: "Bitte gib eine gültige E-Mail-Adresse an." });
+    }
     if (d.requestType === "rueckruf" && phone.length === 0) {
       ctx.addIssue({ code: "custom", path: ["phone"], message: "Für einen Rückruf benötigen wir deine Telefonnummer." });
     }

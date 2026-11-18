@@ -432,7 +432,11 @@ function Drawer({ lead: l, onClose, onStatus, onMeta, onDelete }: { lead: CrmLea
             ) : (
               <span className="flex items-center justify-center gap-2 rounded-lg bg-paper py-3 text-sm text-ink-muted">Keine Telefonnummer</span>
             )}
-            <a href={mailHref(l, "first")} className="flex items-center justify-center gap-2 rounded-lg border border-line py-3 text-sm font-semibold hover:border-navy"><Mail className="h-4 w-4" aria-hidden />E-Mail</a>
+            {l.email ? (
+              <a href={mailHref(l, "first")} className="flex items-center justify-center gap-2 rounded-lg border border-line py-3 text-sm font-semibold hover:border-navy"><Mail className="h-4 w-4" aria-hidden />E-Mail</a>
+            ) : (
+              <span className="flex items-center justify-center gap-2 rounded-lg bg-paper py-3 text-sm text-ink-muted">Keine E-Mail</span>
+            )}
           </div>
           {l.reachable && l.phone && <p className="px-5 pt-2 text-xs text-ink-muted">Am besten erreichbar: <b className="text-navy">{l.reachable.toLowerCase()}</b></p>}
 
@@ -443,7 +447,7 @@ function Drawer({ lead: l, onClose, onStatus, onMeta, onDelete }: { lead: CrmLea
                 <button onClick={() => onMeta({ action: "attempt" }, "Kontaktversuch notiert")} className="flex items-center justify-center gap-1.5 rounded-lg border border-line px-2 py-2.5 text-[13px] font-medium hover:border-navy">
                   <PhoneMissed className="h-4 w-4 shrink-0" aria-hidden />Nicht erreicht{attempts > 0 ? ` (${attempts})` : ""}
                 </button>
-                <a href={mailHref(l, "missed")} className="flex items-center justify-center gap-1.5 rounded-lg border border-line px-2 py-2.5 text-[13px] font-medium hover:border-navy"><Mail className="h-4 w-4 shrink-0" aria-hidden />Nachfass-Mail</a>
+                {l.email && <a href={mailHref(l, "missed")} className="flex items-center justify-center gap-1.5 rounded-lg border border-line px-2 py-2.5 text-[13px] font-medium hover:border-navy"><Mail className="h-4 w-4 shrink-0" aria-hidden />Nachfass-Mail</a>}
                 {l.phone && l.contactMethod !== "email" && <a href={smsHref(l)} className="flex items-center justify-center gap-1.5 rounded-lg border border-line px-2 py-2.5 text-[13px] font-medium hover:border-navy"><MessageSquare className="h-4 w-4 shrink-0" aria-hidden />SMS</a>}
               </div>
               <div className="mt-3 rounded-xl border border-line p-3">

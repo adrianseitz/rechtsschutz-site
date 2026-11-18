@@ -93,7 +93,7 @@ export function ContactForm() {
           {errors.name && <p className="field-error">{errors.name.message}</p>}
         </div>
         <div>
-          <label htmlFor="c-email" className="label">E-Mail-Adresse</label>
+          <label htmlFor="c-email" className="label">E-Mail-Adresse {type === "rueckruf" && <span className="font-normal text-ink-muted">(optional)</span>}</label>
           <input id="c-email" type="email" inputMode="email" autoComplete="email" className="input" aria-invalid={!!errors.email} {...register("email")} />
           {errors.email && <p className="field-error">{errors.email.message}</p>}
         </div>

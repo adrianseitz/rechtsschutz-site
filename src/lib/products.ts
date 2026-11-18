@@ -117,9 +117,9 @@ export const products: Record<ProductKey, Product> = {
     },
     hero: {
       eyebrow: "Vermieterrechtsschutz",
-      title: "Vermieterrechtsschutz, der zu deinen Immobilien passt.",
+      title: "Vermieterrechtsschutz – bevor der Mieter nicht mehr zahlt.",
       subtitle:
-        "Mietrückstand, Nebenkosten, Räumung: Ein Rechtsstreit mit Mietern wird schnell teuer. Finde in 60 Sekunden heraus, welcher Schutz zu deiner Wohnung oder deinem Haus passt – auf Wunsch mit Mietausfallschutz. Versichert sind künftige Streitfälle.",
+        "Mietrückstand, Räumungsklage, Streit um die Nebenkosten: Der Vermieterrechtsschutz übernimmt im Rahmen deines Tarifs Anwalts- und Gerichtskosten – auf Wunsch mit Mietausfallschutz, der die ausfallende Miete ersetzt. Versichert sind künftige Streitfälle.",
       cta: "Vermieterrechtsschutz prüfen",
     },
     topicsTitle: "Typische Themen für Vermieter",
@@ -161,9 +161,9 @@ export const products: Record<ProductKey, Product> = {
     },
     hero: {
       eyebrow: "Firmenrechtsschutz",
-      title: "Firmenrechtsschutz, der zu deinem Betrieb passt.",
+      title: "Firmenrechtsschutz – damit ein Streit nicht deinen Betrieb ausbremst.",
       subtitle:
-        "Streit mit Mitarbeitern, Behörden oder Vertragspartnern kostet Zeit und Geld. Finde in 60 Sekunden heraus, welche Absicherung für dein Unternehmen infrage kommt – ich berate dich persönlich. Versichert sind künftige Streitfälle.",
+        "Kündigungsschutzklage eines Mitarbeiters, Verfahren vor dem Finanzgericht, Bußgeldbescheid: Der Firmenrechtsschutz übernimmt im Rahmen deines Tarifs Anwalts- und Gerichtskosten – ich berate dich persönlich, welche Bausteine du brauchst. Versichert sind künftige Streitfälle.",
       cta: "Firmenrechtsschutz prüfen",
     },
     topicsTitle: "Typische Bereiche im Firmenrechtsschutz",

@@ -97,7 +97,7 @@ export function buildContactRecord(form: ContactFormInput, attribution: Attribut
     product: form.topic,
     productLabel: PRODUCT_LABEL[form.topic] ?? form.topic,
     answers: {},
-    contact: { name: form.name, email: form.email.toLowerCase(), phone: form.phone || undefined },
+    contact: { name: form.name, email: (form.email || "").toLowerCase(), phone: form.phone || undefined },
     request: { requestType: form.requestType, preferredTime: form.preferredTime || undefined, message: form.message || undefined },
     attribution: { ...attribution, channel: deriveChannel(attribution) },
     consents: { contact: { granted: true, text: CONSENT_TEXTS.contact, version: CONSENT_VERSION, at: now }, tracking },

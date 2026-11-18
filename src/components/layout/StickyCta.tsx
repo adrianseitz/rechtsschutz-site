@@ -17,10 +17,17 @@ export function StickyCta() {
   const product = productList.find((p) => p.slug === pathname);
 
   useEffect(() => {
-    const onScroll = () => setVisible(window.scrollY > 520);
+    // Ausblenden, solange das Rückruf-Formular zu sehen ist – sonst liegt die Leiste über den Eingabefeldern.
+    let formInView = false;
+    const onScroll = () => setVisible(window.scrollY > 520 && !formInView);
+    const form = document.getElementById("rueckruf");
+    const io = form && "IntersectionObserver" in window
+      ? new IntersectionObserver(([e]) => { formInView = e.isIntersecting; onScroll(); }, { threshold: 0.15 })
+      : null;
+    if (form && io) io.observe(form);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => { window.removeEventListener("scroll", onScroll); io?.disconnect(); };
   }, [pathname]);
 
   if (HIDDEN.includes(pathname)) return null;
