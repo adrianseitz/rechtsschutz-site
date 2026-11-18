@@ -5,6 +5,8 @@ import { generalFaq } from "@/lib/faq";
 import { site } from "@/lib/site";
 import { Hero, type FloatCard } from "./Hero";
 import { QuickCallback } from "./QuickCallback";
+import { InlineCta } from "./InlineCta";
+import { Vorteile, Preise } from "./Vorteile";
 import { Leistungen } from "./Leistungen";
 import { AboutAdvisor } from "./AboutAdvisor";
 import { HowItWorks } from "./HowItWorks";
@@ -36,8 +38,8 @@ const HERO_ICON: Record<Product["key"], string> = { privat: "package", arbeit: "
 const NOTES: Record<Product["key"], string> = {
   privat: "Auch Partner & Kinder lassen sich oft mitversichern.",
   arbeit: "Kündigung bekommen? Die Klagefrist beträgt nur 3 Wochen!",
-  vermieter: "Jede Wohneinheit zählt – sag mir, wie viele es sind.",
-  firma: "Nicht jedes Risiko ist versicherbar – ich sag dir ehrlich, was geht.",
+  vermieter: "Mieter zahlt nicht? Bis zu 12 Monatsmieten lassen sich absichern.",
+  firma: "Schon Streit im Betrieb? Die Soforthilfe hilft sogar rückwirkend.",
 };
 const CARDS = (k: Product["key"]): FloatCard[] => [
   k === "arbeit"
@@ -46,6 +48,10 @@ const CARDS = (k: Product["key"]): FloatCard[] => [
   { type: "note", text: NOTES[k], sign: "Adrian", pos: "right-0 bottom-[10%] sm:-right-2", depth: -0.9, rotate: 4 },
   { type: "photo", photo: k, caption: PHOTO_CAPTION[k], pos: "right-[2%] top-[0%]", depth: 0.6, rotate: 5, width: 190 },
 ];
+const MARQUEE_EXTRA: Partial<Record<Product["key"], string[]>> = {
+  vermieter: ["Bis zu 12 Monatsmieten Mietausfall", "Unbegrenzte Versicherungssumme"],
+  firma: ["Soforthilfe – sogar rückwirkend", "Unbegrenzte Versicherungssumme"],
+};
 const PHOTO_CAPTION: Record<Product["key"], string> = {
   privat: "„Und jetzt? Der Händler blockt ab.“",
   arbeit: "Plötzlich ging alles ganz schnell …",
@@ -56,7 +62,9 @@ const PHOTO_CAPTION: Record<Product["key"], string> = {
 export function ProductLanding({ product }: { product: Product }) {
   const checkHref = `/rechtsschutz-check?bereich=${product.key}`;
   const situation = SITUATION[product.key];
-  const faq = [...product.faq, ...generalFaq.filter((f) => /kostet|Wartezeit|bestehende|kostenlos|schon eine/i.test(f.q))];
+  // Beim Firmenrechtsschutz gibt es mit der Soforthilfe eine Ausnahme – dort steht eine eigene Antwort zu bestehenden Streitfällen.
+  const general = product.key === "firma" ? /kostet|Wartezeit|kostenlos|schon eine/i : /kostet|Wartezeit|bestehende|kostenlos|schon eine/i;
+  const faq = [...product.faq, ...generalFaq.filter((f) => general.test(f.q))];
 
   return (
     <>
@@ -72,7 +80,13 @@ export function ProductLanding({ product }: { product: Product }) {
         secondary={{ href: "#rueckruf", label: "Rückruf anfordern" }}
         cards={CARDS(product.key)}
       />
-      <Marquee items={product.cardTopics.concat(["Persönliche Beratung", "Kostenlos & unverbindlich"])} />
+      <Marquee items={[...(MARQUEE_EXTRA[product.key] ?? []), ...product.cardTopics, "Persönliche Beratung", "Kostenlos & unverbindlich"]} />
+
+      {product.usp && <Vorteile usp={product.usp} />}
+      {product.prices && <Preise prices={product.prices} />}
+      {product.prices && (
+        <QuickCallback topic={product.key} checkHref={checkHref} checkLabel={product.hero.cta} text="Was würde es für dich genau kosten?" />
+      )}
 
       <section className="py-24 sm:py-32">
         <div className="container">
@@ -97,7 +111,9 @@ export function ProductLanding({ product }: { product: Product }) {
         </div>
       </section>
 
-      <QuickCallback topic={product.key} checkHref={checkHref} checkLabel={product.hero.cta} text="Betrifft dich eines dieser Themen?" />
+      {product.prices
+        ? <InlineCta href={checkHref} label={product.hero.cta} text="Betrifft dich eines dieser Themen?" />
+        : <QuickCallback topic={product.key} checkHref={checkHref} checkLabel={product.hero.cta} text="Betrifft dich eines dieser Themen?" />}
 
       <Ernstfall product={product.key} />
 
@@ -129,7 +145,7 @@ export function ProductLanding({ product }: { product: Product }) {
       <AboutAdvisor />
       <Faq items={faq} title={`Fragen zum ${product.name}`} />
       <CtaBanner title={`${product.name}: Finde heraus, was zu dir passt.`} emphasis="passt." href={checkHref} label={product.hero.cta} />
-      <Footnotes />
+      <Footnotes product={product.key} />
     </>
   );
 }

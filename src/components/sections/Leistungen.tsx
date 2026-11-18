@@ -27,7 +27,9 @@ export function Leistungen({ product }: { product?: ProductKey }) {
   const covered = product === "vermieter" ? [RENT, ...COVERED.slice(0, 4)] : COVERED;
   const notCovered = product === "vermieter"
     ? NOT_COVERED.map((c) => (c.title === "Die Forderung selbst" ? { title: "Leerstand und alte Rückstände", text: "Der Mietausfallschutz gilt nicht für Leerstand ohne Mietverhältnis und nicht für Rückstände, die beim Abschluss schon bestehen." } : c))
-    : NOT_COVERED;
+    : product === "firma"
+      ? NOT_COVERED.map((c) => (c.title === "Laufende und absehbare Streitfälle" ? { ...c, text: "Grundsätzlich nicht. Ausnahme: Mit der Soforthilfe gibt es einmalig außergerichtliche Hilfe für einen zurückliegenden Fall – in begrenzter Höhe." } : c))
+      : NOT_COVERED;
   return (
     <section className="py-16 sm:py-20" id="leistungen">
       <div className="container">

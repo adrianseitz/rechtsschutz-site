@@ -7,7 +7,10 @@ const NOTES = [
   "Bereits bestehende oder absehbare Streitigkeiten sind nicht versicherbar. Maßgeblich sind ausschließlich die Versicherungsbedingungen des jeweiligen Tarifs.",
 ];
 
-export function Footnotes() {
+const SOFORT = "Bereits bestehende oder absehbare Streitigkeiten sind grundsätzlich nicht versicherbar. Ausnahme im Firmenrechtsschutz: Die Soforthilfe bietet einmalig außergerichtliche Hilfe für einen zurückliegenden Fall – in begrenzter Höhe und nur, wenn noch kein Anwalt beauftragt ist. Maßgeblich sind die Versicherungsbedingungen.";
+
+export function Footnotes({ product }: { product?: string } = {}) {
+  const notes = product === "firma" ? [NOTES[0], NOTES[1], SOFORT] : NOTES;
   return (
     <section aria-label="Anmerkungen" className="py-14">
       <div className="container">
@@ -20,7 +23,7 @@ export function Footnotes() {
             </p>
           </div>
           <ol className="grid gap-5 sm:grid-cols-3">
-            {NOTES.map((n, i) => (
+            {notes.map((n, i) => (
               <li key={i} className="text-[13px] leading-6 text-ink-muted">
                 <span className="mb-1 block font-serif text-2xl italic leading-none text-navy">{i + 1}</span>
                 {n}
