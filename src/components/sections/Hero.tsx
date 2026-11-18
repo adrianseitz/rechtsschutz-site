@@ -177,10 +177,11 @@ export function Hero({ eyebrow, title, emphasis, subtitle, chipsLabel, chips, ch
             </div>
             {advisorNote ? (
               // Handy: ein Mensch im ersten Bildschirm – wichtig für Besucher aus Anzeigen.
-              <div className="mt-3.5 flex items-center gap-3 sm:mt-5">
-                <AdvisorAvatar size={44} />
-                <p className="text-[13px] leading-[1.35] text-ink-muted"><span className="font-semibold text-navy">{advisorNote}</span>{chipsNote && <><br />{chipsNote}</>}</p>
-              </div>
+              // Tippen auf Foto oder Namen führt zu „Dein Ansprechpartner“ mit dem großen Bild.
+              <a href="#ansprechpartner" className="group mt-3.5 flex w-fit items-center gap-3 sm:mt-5" aria-label="Mehr über Adrian Seitz">
+                <AdvisorAvatar size={44} className="transition group-hover:border-navy" />
+                <p className="text-[13px] leading-[1.35] text-ink-muted"><span className="font-semibold text-navy underline decoration-navy/25 underline-offset-4 group-hover:decoration-navy">{advisorNote}</span>{chipsNote && <><br />{chipsNote}</>}</p>
+              </a>
             ) : chipsNote && <p className="mt-2.5 text-[13px] text-ink-muted sm:hidden">{chipsNote}</p>}
           </div>
           </div>

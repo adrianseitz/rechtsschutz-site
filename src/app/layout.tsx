@@ -47,7 +47,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="de" suppressHydrationWarning>
+    <html lang="de" data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
         {/* Deckt die Seite vom ersten Bildaufbau an ab, bis das Intro übernimmt – verhindert kurzes Aufblitzen. */}
         <script

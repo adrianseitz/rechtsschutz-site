@@ -19,7 +19,7 @@ const values = [
 
 export function AboutAdvisor() {
   return (
-    <section className="relative overflow-hidden bg-sun py-24 sm:py-32">
+    <section id="ansprechpartner" className="relative scroll-mt-16 overflow-hidden bg-sun py-24 sm:py-32">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-navy/15" aria-hidden />
       <div className="container relative grid items-center gap-14 lg:grid-cols-[1.1fr_0.9fr]">
         <div>
@@ -37,7 +37,7 @@ export function AboutAdvisor() {
           <p className="mt-6 text-[15px] text-navy/75">Oder direkt anrufen: <CallLink className="font-semibold text-navy underline decoration-navy/40 underline-offset-4 hover:decoration-navy" /></p>
         </div>
 
-        <Reveal>
+        <Reveal className="order-first lg:order-none">
           <div className="relative mx-auto max-w-md">
             {hasPortrait ? (
               <div className="relative aspect-[4/5] overflow-hidden rounded-[32px] border-[6px] border-navy bg-navy">

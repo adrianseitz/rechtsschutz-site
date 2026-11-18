@@ -80,7 +80,7 @@ export function QuickCallback({ topic, checkHref, checkLabel, text }: { topic: T
 
           <form onSubmit={handleSubmit(onSubmit)} noValidate className="rounded-[22px] bg-white p-5 shadow-[0_18px_40px_-24px_rgba(11,11,10,0.5)] sm:p-6">
             <p className="flex items-center gap-2 text-[17px] font-semibold tracking-[-0.02em] text-navy">
-              <AdvisorAvatar size={40} />
+              <a href="#ansprechpartner" aria-label="Mehr über Adrian Seitz" className="shrink-0"><AdvisorAvatar size={40} /></a>
               Lieber kurz sprechen? Ich rufe dich an.
             </p>
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
