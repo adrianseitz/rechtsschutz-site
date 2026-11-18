@@ -1,6 +1,5 @@
 import fs from "node:fs";
 import path from "node:path";
-import Image from "next/image";
 import { ButtonLink } from "../ui/Button";
 import { RotatingBadge } from "../ui/RotatingBadge";
 import { StickyNote } from "../ui/StickyNote";
@@ -41,8 +40,16 @@ export function AboutAdvisor() {
         <Reveal>
           <div className="relative mx-auto max-w-md">
             {hasPortrait ? (
-              <div className="relative aspect-[4/5] overflow-hidden rounded-[32px] border-[6px] border-navy">
-                <Image src={PORTRAIT} alt="Adrian Seitz, Versicherungsvermittler" fill sizes="(min-width: 1024px) 28rem, 90vw" className="object-cover" />
+              <div className="relative aspect-[4/5] overflow-hidden rounded-[32px] border-[6px] border-navy bg-navy">
+                <picture>
+                  <source srcSet={PORTRAIT.replace(/\.jpg$/, ".webp")} type="image/webp" />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={PORTRAIT} alt="Adrian Seitz, Vertriebspartner der ARAG" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" />
+                </picture>
+                <div className="absolute inset-x-3 bottom-3 rounded-2xl bg-white/90 px-4 py-3 backdrop-blur">
+                  <p className="text-[17px] font-semibold tracking-[-0.02em] text-navy">Adrian Seitz</p>
+                  <p className="text-[13px] text-navy/65">Vertriebspartner der ARAG · Urmitz bei Koblenz</p>
+                </div>
               </div>
             ) : (
               <div className="relative rounded-[32px] bg-navy p-8 text-white">

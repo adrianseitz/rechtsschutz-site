@@ -30,6 +30,7 @@ export default function HomePage() {
           { label: "Firmenrechtsschutz", href: "/firmenrechtsschutz", icon: "office" },
         ]}
         chipsNote="Leistungen, Kosten und Beispiele – in Ruhe zum Nachlesen"
+        advisorNote="Adrian Seitz · persönlich statt Callcenter"
         bullets={["Kostenlos & unverbindlich", "Persönlicher Ansprechpartner", "Ohne Callcenter"]}
         secondary={{ href: "/kontakt?anliegen=rueckruf", label: "Rückruf anfordern" }}
         cards={[

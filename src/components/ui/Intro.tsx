@@ -80,7 +80,8 @@ export function Intro() {
               <motion.div
                 initial={{ y: "60vh", rotate: 14, opacity: 0 }}
                 animate={{ y: phase >= 3 ? "-8vh" : 0, rotate: phase >= 1 ? -3 : 4, opacity: phase >= 3 ? 0 : 1, scale: phase === 1 ? [1, 0.96, 1] : 1 }}
-                transition={{ type: "spring", stiffness: 120, damping: 18 }}
+                // Federn können nur zwei Werte – das kurze „Zusammenzucken“ (drei Werte) läuft deshalb als normale Animation.
+                transition={{ type: "spring", stiffness: 120, damping: 18, scale: { type: "tween", duration: 0.35, ease: "easeInOut" } }}
                 className="relative w-[78vw] max-w-[380px] rounded-[3px] bg-[#FFFEFA] p-6 shadow-[0_30px_60px_-30px_rgba(11,11,10,0.55)]"
               >
                 <p className="text-[11px] font-bold tracking-[0.08em] text-navy">POST FÜR DICH</p>

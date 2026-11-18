@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AlertCircle, ArrowRight, Loader2, Phone } from "lucide-react";
+import { AlertCircle, ArrowRight, Loader2 } from "lucide-react";
 import { contactFormSchema, type ContactFormInput } from "@/lib/schemas";
 import { REACHABLE } from "@/lib/funnel";
 import { getAttribution } from "@/lib/attribution";
@@ -14,6 +14,7 @@ import { track } from "@/lib/tracking";
 import { ButtonLink } from "../ui/Button";
 import { StampOverlay } from "../ui/StampOverlay";
 import { fireBurst } from "../ui/ClickBurst";
+import { AdvisorAvatar } from "../ui/AdvisorAvatar";
 
 type Topic = ContactFormInput["topic"];
 
@@ -79,7 +80,7 @@ export function QuickCallback({ topic, checkHref, checkLabel, text }: { topic: T
 
           <form onSubmit={handleSubmit(onSubmit)} noValidate className="rounded-[22px] bg-white p-5 shadow-[0_18px_40px_-24px_rgba(11,11,10,0.5)] sm:p-6">
             <p className="flex items-center gap-2 text-[17px] font-semibold tracking-[-0.02em] text-navy">
-              <span className="grid h-8 w-8 place-items-center rounded-full bg-navy text-white"><Phone className="h-4 w-4" aria-hidden /></span>
+              <AdvisorAvatar size={40} />
               Lieber kurz sprechen? Ich rufe dich an.
             </p>
             <div className="mt-4 grid gap-3 sm:grid-cols-2">

@@ -11,6 +11,7 @@ import type { PhotoKey } from "@/lib/photos";
 import { Scribble } from "../ui/Scribble";
 import { CallLink } from "../ui/CallLink";
 import { site } from "@/lib/site";
+import { AdvisorAvatar } from "../ui/AdvisorAvatar";
 
 export type HeroChip = { label: string; href: string; icon: string };
 export type FloatCard =
@@ -154,12 +155,12 @@ export function Hero({ eyebrow, title, emphasis, subtitle, chipsLabel, chips, ch
 
           {/* Handy: Auswahl direkt unter der Überschrift (ohne Scrollen sichtbar), Erklärtext danach. */}
           <div className="flex flex-col">
-          <p className="hero-fade order-2 mt-7 max-w-xl text-[17px] leading-7 text-ink-soft sm:order-1 sm:text-xl sm:leading-9" style={{ animationDelay: "0.25s" }}>
+          <p className={`hero-fade order-2 mt-7 max-w-xl text-[17px] leading-7 text-ink-soft sm:text-xl sm:leading-9 ${quick ? "" : "sm:order-1"}`} style={{ animationDelay: "0.25s" }}>
             {subtitle}
           </p>
 
           {/* Bewusst per CSS eingeblendet: sichtbar und antippbar, bevor das JavaScript geladen ist. */}
-          <div className={`hero-fade order-1 sm:order-2 sm:mt-10 ${quick ? "mt-5" : "mt-6"}`} style={{ animationDelay: "0.3s" }}>
+          <div className={`hero-fade order-1 ${quick ? "mt-5 sm:mt-7" : "mt-6 sm:order-2 sm:mt-10"}`} style={{ animationDelay: "0.3s" }}>
             <div className="flex items-end gap-3">
               <p className="font-hand text-[22px] leading-none text-navy">{chipsLabel}</p>
               <Scribble kind="arrow" className="mb-[-14px] hidden h-10 w-14 sm:block" width={2} delay={1.1} />
@@ -176,8 +177,8 @@ export function Hero({ eyebrow, title, emphasis, subtitle, chipsLabel, chips, ch
             </div>
             {advisorNote ? (
               // Handy: ein Mensch im ersten Bildschirm – wichtig für Besucher aus Anzeigen.
-              <div className="mt-3.5 flex items-center gap-3 sm:hidden">
-                <span aria-hidden className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-navy bg-sun font-serif text-[17px] italic text-navy">AS</span>
+              <div className="mt-3.5 flex items-center gap-3 sm:mt-5">
+                <AdvisorAvatar size={44} />
                 <p className="text-[13px] leading-[1.35] text-ink-muted"><span className="font-semibold text-navy">{advisorNote}</span>{chipsNote && <><br />{chipsNote}</>}</p>
               </div>
             ) : chipsNote && <p className="mt-2.5 text-[13px] text-ink-muted sm:hidden">{chipsNote}</p>}
