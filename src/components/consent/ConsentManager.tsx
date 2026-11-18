@@ -138,17 +138,18 @@ fbq('init','${META_ID}');fbq('track','PageView');`}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 24 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
-            className="fixed inset-x-2 bottom-2 z-[60] mx-auto max-w-xl rounded-2xl border border-line bg-white p-4 shadow-lift sm:inset-x-3 sm:bottom-5 sm:p-6"
+            className="fixed inset-x-2 bottom-2 z-[60] mx-auto max-w-xl rounded-2xl border border-line bg-white p-3.5 shadow-lift sm:inset-x-3 sm:bottom-5 sm:p-6"
           >
             <div className="flex items-start gap-3">
               <span className="mt-0.5 hidden h-9 w-9 shrink-0 place-items-center rounded-xl bg-teal-50 text-teal-700 sm:grid">
                 <Cookie className="h-5 w-5" aria-hidden />
               </span>
               <div className="min-w-0 flex-1">
-                <h2 id="consent-title" className="text-[15px] font-bold sm:text-base">Datenschutz-Einstellungen</h2>
-                <p className="mt-1 text-[13px] leading-5 text-ink-soft sm:text-sm sm:leading-6">
+                {/* Auf dem Handy kompakt, damit der Banner nicht die halbe Seite verdeckt. */}
+                <h2 id="consent-title" className="text-[15px] font-bold max-sm:sr-only sm:text-base">Datenschutz-Einstellungen</h2>
+                <p className="text-[12.5px] leading-[1.45] text-ink-soft sm:mt-1 sm:text-sm sm:leading-6">
                   {TRACKING_CONFIGURED
-                    ? `Notwendige Technologien sind immer aktiv. Mit deiner Einwilligung ${hasStat && hasMkt ? "nutzen wir zusätzlich Statistik und messen den Erfolg unserer Werbung" : hasStat ? "nutzen wir zusätzlich eine Besucherstatistik" : "messen wir zusätzlich den Erfolg unserer Werbung"} (${services}). Jederzeit im Footer änderbar.`
+                    ? `Mit deiner Einwilligung ${hasStat && hasMkt ? "nutzen wir Statistik und messen den Erfolg unserer Werbung" : hasStat ? "nutzen wir eine Besucherstatistik" : "messen wir den Erfolg unserer Werbung"} (${services}). Notwendiges ist immer aktiv; jederzeit im Footer änderbar.`
                     : "Wir verwenden nur notwendige Technologien für den Betrieb der Website. Statistik- und Marketing-Dienste von Drittanbietern sind nicht aktiv."}{" "}
                   {!detailsOpen && TRACKING_CONFIGURED && <><button type="button" onClick={() => setDetailsOpen(true)} className="font-medium text-teal-700 underline underline-offset-2">Einstellungen</button>{" · "}</>}
                   <Link href="/datenschutz" className="font-medium text-teal-700 underline underline-offset-2">Mehr erfahren</Link>
@@ -170,17 +171,17 @@ fbq('init','${META_ID}');fbq('track','PageView');`}
             )}
 
             {TRACKING_CONFIGURED && (
-              <div className="mt-3.5 grid grid-cols-2 gap-2 sm:mt-5 sm:flex sm:justify-end">
+              <div className="mt-3 grid grid-cols-2 gap-2 sm:mt-5 sm:flex sm:justify-end">
                 {detailsOpen ? (
                   <button onClick={() => save(hasStat && stat, hasMkt && mkt)} className="col-span-2 rounded-xl bg-navy px-4 py-3 text-sm font-semibold text-white hover:bg-navy-800">
                     Auswahl speichern
                   </button>
                 ) : (
                   <>
-                    <button onClick={() => save(false, false)} className="rounded-xl border border-navy px-4 py-3 text-sm font-semibold text-navy hover:bg-navy-50">
+                    <button onClick={() => save(false, false)} className="rounded-xl border border-navy px-3 py-2.5 text-sm font-semibold text-navy hover:bg-navy-50 sm:px-4 sm:py-3">
                       Nur notwendige
                     </button>
-                    <button onClick={() => save(hasStat, hasMkt)} className="rounded-xl border border-navy bg-navy px-4 py-3 text-sm font-semibold text-white hover:bg-navy-800">
+                    <button onClick={() => save(hasStat, hasMkt)} className="rounded-xl border border-navy bg-navy px-3 py-2.5 text-sm font-semibold text-white hover:bg-navy-800 sm:px-4 sm:py-3">
                       Alle akzeptieren
                     </button>
                   </>

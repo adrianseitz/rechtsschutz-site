@@ -33,7 +33,7 @@ const WAIT_AREA: Record<Product["key"], string> = {
   vermieter: "u. a. in Miet- und Grundstücksangelegenheiten",
   firma: "z. B. im Arbeitsrecht",
 };
-const EMPHASIS: Record<Product["key"], string> = { privat: "Alltag", arbeit: "bevor", vermieter: "bevor", firma: "Betrieb" };
+const EMPHASIS: Record<Product["key"], string> = { privat: "Alltag", arbeit: "bevor", vermieter: "bevor", firma: "Soforthilfe" };
 const HERO_ICON: Record<Product["key"], string> = { privat: "package", arbeit: "briefcase", vermieter: "house", firma: "office" };
 const NOTES: Record<Product["key"], string> = {
   privat: "Auch Partner & Kinder lassen sich oft mitversichern.",
@@ -59,6 +59,9 @@ const PHOTO_CAPTION: Record<Product["key"], string> = {
   firma: "Eigenes Café – eigene Risiken.",
 };
 
+// Lange Wörter dürfen in den schmalen Handy-Buttons sauber trennen („Eigentums-wohnung“).
+const softHyphen = (t: string) => t.replace("Eigentumswohnung", "Eigentums\u00ADwohnung").replace("Einzelunternehmen", "Einzel\u00ADunternehmen").replace("Mehrfamilienhaus", "Mehrfamilien\u00ADhaus");
+
 export function ProductLanding({ product }: { product: Product }) {
   const checkHref = `/rechtsschutz-check?bereich=${product.key}`;
   const situation = SITUATION[product.key];
@@ -74,9 +77,10 @@ export function ProductLanding({ product }: { product: Product }) {
         emphasis={EMPHASIS[product.key]}
         subtitle={product.hero.subtitle}
         chipsLabel={situation.title}
-        chips={situation.options.map((o) => ({ label: o.label, href: `${checkHref}&situation=${o.value}`, icon: o.icon ?? HERO_ICON[product.key] }))}
+        chips={situation.options.map((o) => ({ label: softHyphen(o.label), href: `${checkHref}&situation=${o.value}`, icon: o.icon ?? HERO_ICON[product.key] }))}
         chipsNote="Kostenlos & unverbindlich · ca. 60 Sekunden"
         advisorNote="Adrian Seitz · persönlich statt Callcenter"
+        quick={product.quick && { ...product.quick, priceHref: "#preise" }}
         secondary={{ href: "#rueckruf", label: "Rückruf anfordern" }}
         cards={CARDS(product.key)}
       />

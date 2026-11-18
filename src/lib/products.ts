@@ -15,6 +15,8 @@ export type Product = {
   facts: { title: string; text: string }[];
   notice: string;
   faq: { q: string; a: string }[];
+  /** Das Wichtigste auf einen Blick – steht direkt unter der Überschrift (für Besucher aus Anzeigen). */
+  quick?: { price: string; points: string[] };
   /** Was den ARAG-Schutz in diesem Bereich besonders macht (nur Vermieter und Firma). */
   usp?: {
     title: string;
@@ -164,6 +166,14 @@ export const products: Record<ProductKey, Product> = {
       { q: "Was passiert bei Mietnomaden?", a: "Je nach Tarif übernimmt die ARAG die Anwalts- und Gerichtskosten, die Kosten der Räumungsvollstreckung und sogar das Ausräumen, den Abtransport und das Einlagern des Inventars. Mit dem Mietausfallschutz wird zusätzlich die ausfallende Miete samt laufender Nebenkosten ersetzt – für 6 oder bis zu 12 Monate." },
       { q: "Kann ich später weitere Wohnungen dazunehmen?", a: "Ja. Nach 6 Monaten Vertragslaufzeit lassen sich weitere Objekte ohne neue Wartezeit nachversichern. Eine Wohneinheit, die du selbst bewohnst, ist beitragsfrei mitversichert." },
     ],
+    quick: {
+      price: "6,45",
+      points: [
+        "Mietausfallschutz: bis zu 12 Monatsmieten (wählbar)",
+        "Anwalt & Gericht bei Räumung, Mietrückstand, Nebenkosten",
+        "Unbegrenzte Versicherungssumme · Anwalt am Telefon 24/7",
+      ],
+    },
     usp: {
       title: "Was den Vermieter\u00ADrechtsschutz der ARAG besonders macht.",
       emphasis: "besonders",
@@ -221,7 +231,7 @@ export const products: Record<ProductKey, Product> = {
     },
     hero: {
       eyebrow: "Firmenrechtsschutz",
-      title: "Firmenrechtsschutz – damit ein Streit nicht deinen Betrieb ausbremst.",
+      title: "Firmenrechtsschutz mit Soforthilfe – sogar rückwirkend.",
       subtitle:
         "Streit mit Mitarbeitern, Finanzgericht, Bußgeldbescheid: Der Firmenrechtsschutz übernimmt im Rahmen deines Tarifs Anwalts- und Gerichtskosten. Und mit der Soforthilfe gibt es sogar für einen Streit, der schon begonnen hat, außergerichtliche Unterstützung.",
       cta: "Firmenrechtsschutz prüfen",
@@ -248,6 +258,14 @@ export const products: Record<ProductKey, Product> = {
       { q: "Ich habe schon einen Streit – kann ich mich jetzt noch absichern?", a: "Ein laufender Streit ist normalerweise nicht versicherbar. Mit dem Firmenrechtsschutz mit Soforthilfe bekommst du aber einmalig außergerichtliche Unterstützung für einen zurückliegenden Fall – ohne Wartezeit, bis 2.000 € im Tarif Komfort oder 3.000 € im Tarif Premium. Voraussetzung: Du hast für diesen Fall noch keinen Anwalt kontaktiert oder beauftragt. Gerichts- und Mahnverfahren, die schon laufen, sind ausgeschlossen. Künftige Streitfälle sind ganz normal im Rahmen deines Tarifs versichert." },
       { q: "Was heißt „außergerichtliche Unterstützung“ bei der Soforthilfe?", a: "Zum Beispiel ein Anwalt, der dich berät und für dich mit der Gegenseite verhandelt, oder eine Wirtschaftsmediation. Ein Gerichtsverfahren ist bei der Soforthilfe nicht eingeschlossen." },
     ],
+    quick: {
+      price: "43,00",
+      points: [
+        "Hilfe auch bei Streit, der schon begonnen hat (außergerichtlich)",
+        "Arbeitgeber-, Steuer- und Straf-Rechtsschutz",
+        "Unbegrenzte Versicherungssumme · Inkasso offener Rechnungen",
+      ],
+    },
     usp: {
       title: "Was den Firmen\u00ADrechtsschutz der ARAG besonders macht.",
       emphasis: "besonders",

@@ -92,9 +92,34 @@ function Floater({ card, mx, my, delay }: { card: FloatCard; mx: MotionValue<num
   );
 }
 
-export function Hero({ eyebrow, title, emphasis, subtitle, chipsLabel, chips, chipsNote = "Kostenlos & unverbindlich · dauert ca. 60 Sekunden", advisorNote, secondary, cards, bullets = ["Kostenlos & unverbindlich", "Ca. 60 Sekunden", "Persönlicher Ansprechpartner"] }: {
+/** Das Wichtigste auf einen Blick: Einstiegspreis und drei Vorteile – direkt unter der Überschrift. */
+function QuickFacts({ price, priceHref, points }: { price: string; priceHref: string; points: string[] }) {
+  return (
+    <div className="hero-fade mt-4 rounded-[22px] border border-navy/15 bg-white/90 px-4 py-3.5 shadow-[0_14px_34px_-26px_rgba(11,11,10,0.55)] sm:mt-7 sm:max-w-xl sm:p-5" style={{ animationDelay: "0.2s" }}>
+      <a href={priceHref} className="group flex items-baseline justify-between gap-3 border-b border-dashed border-navy/20 pb-3">
+        <span className="whitespace-nowrap text-navy">
+          <span className="text-[14px]">ab </span>
+          <span className="text-[1.55rem] font-semibold leading-none tracking-[-0.04em] min-[390px]:text-[1.75rem]">{price} €</span>
+          <span className="text-[14px]"> im Monat</span>
+        </span>
+        <span className="shrink-0 text-[13px] font-medium text-navy underline decoration-navy/30 underline-offset-4 group-hover:decoration-navy">Tarife ansehen</span>
+      </a>
+      <ul className="mt-3 space-y-1.5 sm:space-y-2">
+        {points.map((p) => (
+          <li key={p} className="flex gap-2.5 text-[15px] leading-[1.35] text-navy">
+            <span className="mt-[1px] grid h-5 w-5 shrink-0 place-items-center rounded-full bg-sun"><Check className="h-3 w-3" strokeWidth={3.2} aria-hidden /></span>
+            {p}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export function Hero({ eyebrow, title, emphasis, subtitle, chipsLabel, chips, chipsNote = "Kostenlos & unverbindlich · dauert ca. 60 Sekunden", advisorNote, quick, secondary, cards, bullets = ["Kostenlos & unverbindlich", "Ca. 60 Sekunden", "Persönlicher Ansprechpartner"] }: {
   eyebrow?: string; title: string; emphasis?: string; subtitle: string;
-  chipsLabel: string; chips: HeroChip[]; chipsNote?: string; advisorNote?: string; secondary?: { href: string; label: string }; cards: FloatCard[]; bullets?: string[];
+  chipsLabel: string; chips: HeroChip[]; chipsNote?: string; advisorNote?: string; quick?: { price: string; priceHref: string; points: string[] };
+  secondary?: { href: string; label: string }; cards: FloatCard[]; bullets?: string[];
 }) {
   const ref = useRef<HTMLElement>(null);
   const reduce = useReducedMotion();
@@ -122,9 +147,10 @@ export function Hero({ eyebrow, title, emphasis, subtitle, chipsLabel, chips, ch
       <div className="container relative grid items-center gap-8 lg:grid-cols-[minmax(0,1.12fr)_minmax(0,0.88fr)]">
         <div className="min-w-0">
           {eyebrow && (
-            <span className="hero-fade eyebrow">{eyebrow.split(" · ")[0]}{eyebrow.includes(" · ") && <span className="hidden sm:inline">· {eyebrow.split(" · ").slice(1).join(" · ")}</span>}</span>
+            <span className={`hero-fade eyebrow ${quick ? "max-sm:hidden" : ""}`}>{eyebrow.split(" · ")[0]}{eyebrow.includes(" · ") && <span className="hidden sm:inline">· {eyebrow.split(" · ").slice(1).join(" · ")}</span>}</span>
           )}
-          <div className="mt-4 sm:mt-6"><Headline title={title} emphasis={emphasis} /></div>
+          <div className={quick ? "sm:mt-6" : "mt-4 sm:mt-6"}><Headline title={title} emphasis={emphasis} /></div>
+          {quick && <QuickFacts {...quick} />}
 
           {/* Handy: Auswahl direkt unter der Überschrift (ohne Scrollen sichtbar), Erklärtext danach. */}
           <div className="flex flex-col">
@@ -133,17 +159,18 @@ export function Hero({ eyebrow, title, emphasis, subtitle, chipsLabel, chips, ch
           </p>
 
           {/* Bewusst per CSS eingeblendet: sichtbar und antippbar, bevor das JavaScript geladen ist. */}
-          <div className="hero-fade order-1 mt-6 sm:order-2 sm:mt-10" style={{ animationDelay: "0.3s" }}>
+          <div className={`hero-fade order-1 sm:order-2 sm:mt-10 ${quick ? "mt-5" : "mt-6"}`} style={{ animationDelay: "0.3s" }}>
             <div className="flex items-end gap-3">
               <p className="font-hand text-[22px] leading-none text-navy">{chipsLabel}</p>
               <Scribble kind="arrow" className="mb-[-14px] hidden h-10 w-14 sm:block" width={2} delay={1.1} />
             </div>
-            <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-2.5">
+            {/* Mit Kurzinfos darüber: auf dem Handy zwei Spalten, damit alles in den ersten Bildschirm passt. */}
+            <div className={`mt-3 sm:flex sm:flex-row sm:flex-wrap sm:gap-2.5 ${quick ? "grid grid-cols-2 gap-2" : "flex flex-col gap-2"}`}>
               {chips.map((c) => (
-                <Link key={c.href} href={c.href} className="group relative flex min-h-[48px] items-center gap-3 overflow-hidden rounded-full border border-navy/15 bg-white py-2.5 pl-5 pr-3 text-[16px] font-medium text-navy transition duration-300 hover:border-navy active:bg-sun sm:inline-flex sm:min-h-0 sm:text-[15px]">
+                <Link key={c.href} href={c.href} className={`group relative flex items-center overflow-hidden rounded-full border border-navy/15 bg-white font-medium text-navy transition duration-300 hover:border-navy active:bg-sun sm:inline-flex sm:min-h-0 sm:gap-3 sm:py-2.5 sm:pl-5 sm:pr-3 sm:text-[15px] ${quick ? "min-h-[52px] gap-1.5 py-2 pl-3.5 pr-2 text-[13.5px] leading-tight" : "min-h-[48px] gap-3 py-2.5 pl-5 pr-3 text-[16px]"}`}>
                   <span aria-hidden className="absolute inset-0 -z-0 origin-left scale-x-0 bg-sun transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-x-100" />
-                  <span className="relative flex-1 sm:flex-none">{c.label}</span>
-                  <span className="relative grid h-7 w-7 place-items-center rounded-full bg-navy text-white transition duration-300 group-hover:rotate-45 sm:h-6 sm:w-6"><ArrowUpRight className="h-3.5 w-3.5" aria-hidden /></span>
+                  <span className={`relative min-w-0 flex-1 sm:flex-none ${quick ? "[hyphens:manual]" : ""}`}>{c.label}</span>
+                  <span className={`relative grid shrink-0 place-items-center rounded-full bg-navy text-white transition duration-300 group-hover:rotate-45 sm:h-6 sm:w-6 ${quick ? "h-6 w-6" : "h-7 w-7"}`}><ArrowUpRight className="h-3.5 w-3.5" aria-hidden /></span>
                 </Link>
               ))}
             </div>
