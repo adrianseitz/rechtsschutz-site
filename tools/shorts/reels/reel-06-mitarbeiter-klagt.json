@@ -1,0 +1,46 @@
+{
+ "id": "reel-06-mitarbeiter-klagt",
+ "title": "Mitarbeiter verklagt dich? Das zahlst du selbst",
+ "topic": "firma",
+ "format": "reel-2026",
+ "hinweis": "say = Untertitel, voice = Sprechtext (| Pause, || lange Pause, *Wort* betont), ich = Abschluss in der Ich-Form für Adrians eigene Stimme",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "say": "Du hast Mitarbeiter? Dann solltest du wissen, was passiert, wenn dich einer verklagt.",
+   "voice": "Du hast *Mitarbeiter?* | Dann solltest du wissen, was passiert, | wenn dich einer *verklagt.*"
+  },
+  {
+   "key": "fakt",
+   "mood": "dramatisch",
+   "say": "Im Arbeitsrecht zahlst du in der ersten Instanz deinen Anwalt selbst. Auch wenn du gewinnst.",
+   "voice": "Im Arbeitsrecht zahlst du in der ersten Instanz deinen Anwalt *selbst.* || Auch wenn du *gewinnst.*"
+  },
+  {
+   "key": "faelle",
+   "mood": "ernst",
+   "say": "Typische Fälle: Kündigungsschutzklage, Streit ums Arbeitszeugnis, um Lohn oder Überstunden.",
+   "voice": "Typische Fälle: | Kündigungsschutzklage, | Streit ums Arbeitszeugnis, | um Lohn oder Überstunden."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "say": "Mit dem Arbeitgeber-Baustein im Firmenrechtsschutz sind solche Streitigkeiten je nach Tarif abgesichert.",
+   "voice": "Mit dem *Arbeitgeber-Baustein* im Firmenrechtsschutz | sind solche Streitigkeiten je nach Tarif *abgesichert.*"
+  },
+  {
+   "key": "achtung",
+   "mood": "eindringlich",
+   "say": "Aber: Abschließen, bevor der Streit losgeht. Meist gilt eine Wartezeit von drei Monaten.",
+   "voice": "*Aber:* | Abschließen, *bevor* der Streit losgeht. | Meist gilt eine Wartezeit von drei Monaten."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "say": "Ist dein Betrieb abgesichert? Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!",
+   "voice": "Ist dein Betrieb *abgesichert?* | Adrian Seitz berät dich *kostenlos.* | Der Link ist in der *Bio!*",
+   "ich": "Ist dein Betrieb *abgesichert?* | Ich bin Adrian, dein Ansprechpartner für die ARAG. | Lass dich *kostenlos* beraten, | der Link ist in meiner *Bio!*"
+  }
+ ]
+}

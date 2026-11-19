@@ -1,0 +1,46 @@
+{
+ "id": "reel-03-mit-oder-ohne",
+ "title": "Gleicher Ärger, zwei Vermieter: mit oder ohne Rechtsschutz",
+ "topic": "vermieter",
+ "format": "reel-2026",
+ "hinweis": "say = Untertitel, voice = Sprechtext (| Pause, || lange Pause, *Wort* betont), ich = Abschluss in der Ich-Form für Adrians eigene Stimme",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "say": "Gleicher Ärger, zwei Vermieter. Der Mieter zahlt nicht und zieht nicht aus.",
+   "voice": "Gleicher Ärger, | *zwei* Vermieter. | Der Mieter zahlt nicht | und zieht nicht aus."
+  },
+  {
+   "key": "ohne",
+   "mood": "dramatisch",
+   "say": "Der eine zahlt Anwalt, Gericht und Räumung selbst. In diesem Beispiel über 6.000 Euro.",
+   "voice": "Der eine zahlt Anwalt, Gericht und Räumung *selbst.* || In diesem Beispiel über *6.000 Euro.*"
+  },
+  {
+   "key": "mit",
+   "mood": "begeistert",
+   "say": "Und der andere? Bei ihm übernimmt das die Versicherung.",
+   "voice": "Und der andere? | Bei ihm übernimmt das die *Versicherung.*"
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "say": "Der Vermieterrechtsschutz übernimmt je nach Tarif Anwalt, Gericht und die Kosten der Räumung.",
+   "voice": "Der *Vermieterrechtsschutz* übernimmt je nach Tarif Anwalt, Gericht | und die Kosten der *Räumung.*"
+  },
+  {
+   "key": "achtung",
+   "mood": "eindringlich",
+   "say": "Aber: Das gilt nur, wenn du vorher abgeschlossen hast. Meist gilt eine Wartezeit von drei Monaten.",
+   "voice": "*Aber:* | Das gilt nur, wenn du *vorher* abgeschlossen hast. | Meist gilt eine Wartezeit von drei Monaten."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "say": "Welcher Vermieter willst du sein? Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!",
+   "voice": "*Welcher* Vermieter willst du sein? | Adrian Seitz berät dich *kostenlos.* | Der Link ist in der *Bio!*",
+   "ich": "*Welcher* Vermieter willst du sein? | Ich bin Adrian, dein Ansprechpartner für die ARAG. | Lass dich *kostenlos* beraten, | der Link ist in meiner *Bio!*"
+  }
+ ]
+}

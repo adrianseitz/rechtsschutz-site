@@ -1,0 +1,40 @@
+{
+ "id": "reel-05-firma-soforthilfe",
+ "title": "Schon Streit im Betrieb? Soforthilfe sogar rückwirkend",
+ "topic": "firma",
+ "format": "reel-2026",
+ "hinweis": "say = Untertitel, voice = Sprechtext (| Pause, || lange Pause, *Wort* betont), ich = Abschluss in der Ich-Form für Adrians eigene Stimme",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "say": "Du hast schon Streit mit einem Kunden und denkst, jetzt ist es zu spät für eine Versicherung?",
+   "voice": "Du hast *schon* Streit mit einem Kunden | und denkst, jetzt ist es zu spät für eine Versicherung?"
+  },
+  {
+   "key": "fakt",
+   "mood": "ernst",
+   "say": "Normalerweise stimmt das. Ein Streit, der schon läuft, lässt sich nicht mehr versichern.",
+   "voice": "*Normalerweise* stimmt das. | Ein Streit, der schon läuft, | lässt sich nicht mehr versichern."
+  },
+  {
+   "key": "loesung",
+   "mood": "begeistert",
+   "say": "Aber: Bei der ARAG gibt es den Firmenrechtsschutz mit Soforthilfe. Damit bekommst du je nach Tarif sogar für einen zurückliegenden Fall außergerichtliche Hilfe, bis zu 3.000 Euro.",
+   "voice": "*Aber:* | Bei der ARAG gibt es den Firmenrechtsschutz mit *Soforthilfe.* | Damit bekommst du je nach Tarif sogar für einen *zurückliegenden* Fall außergerichtliche Hilfe, | bis zu *3.000 Euro.*"
+  },
+  {
+   "key": "achtung",
+   "mood": "eindringlich",
+   "say": "Wichtig: Das geht nur, solange noch kein Anwalt eingeschaltet ist.",
+   "voice": "*Wichtig:* | Das geht nur, solange noch *kein* Anwalt eingeschaltet ist."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "say": "Schon Ärger im Betrieb? Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!",
+   "voice": "Schon Ärger im *Betrieb?* | Adrian Seitz berät dich *kostenlos.* | Der Link ist in der *Bio!*",
+   "ich": "Schon Ärger im *Betrieb?* | Ich bin Adrian, dein Ansprechpartner für die ARAG. | Lass dich *kostenlos* beraten, | der Link ist in meiner *Bio!*"
+  }
+ ]
+}

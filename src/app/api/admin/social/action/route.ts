@@ -9,7 +9,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const schema = z.object({
-  type: z.enum(["render", "post", "reset", "usage", "voicetest", "figur", "probe", "on", "off"]),
+  type: z.enum(["render", "post", "reset", "usage", "voicetest", "figur", "probe", "reelstimmen", "on", "off"]),
   id: z.string().regex(/^[a-z0-9][a-z0-9-]{0,80}$/).optional(),
 });
 
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
   let body: unknown;
   try { body = await readJson(req); } catch { return jsonError(400, "bad_request"); }
   const p = schema.safeParse(body);
-  if (!p.success || (!["usage", "voicetest", "probe"].includes(p.data.type) && !p.data.id)) return jsonError(422, "Ungültiger Auftrag.");
+  if (!p.success || (!["usage", "voicetest", "probe", "reelstimmen"].includes(p.data.type) && !p.data.id)) return jsonError(422, "Ungültiger Auftrag.");
   if (p.data.type === "figur" && !["neu", "weiter"].includes(p.data.id ?? "")) return jsonError(422, "Ungültiger Auftrag.");
   const { type, id = "" } = p.data;
   if (type === "on" || type === "off") await toggleEpisode(id, type === "on");

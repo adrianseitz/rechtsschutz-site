@@ -1,0 +1,46 @@
+{
+ "id": "reel-04-zieht-nicht-aus",
+ "title": "Mieter zieht nicht aus: So teuer wird das",
+ "topic": "vermieter",
+ "format": "reel-2026",
+ "hinweis": "say = Untertitel, voice = Sprechtext (| Pause, || lange Pause, *Wort* betont), ich = Abschluss in der Ich-Form für Adrians eigene Stimme",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "say": "Dein Mieter ist gekündigt und zieht einfach nicht aus?",
+   "voice": "Dein Mieter ist *gekündigt* | und zieht einfach *nicht* aus?"
+  },
+  {
+   "key": "zaeh",
+   "mood": "ernst",
+   "say": "Dann wird es zäh: Räumungsklage, Gerichtsvollzieher. Das kann Monate dauern.",
+   "voice": "Dann wird es *zäh:* | Räumungsklage, | Gerichtsvollzieher. | Das kann *Monate* dauern."
+  },
+  {
+   "key": "kosten",
+   "mood": "dramatisch",
+   "say": "Bei 1.100 Euro Miete und acht Monaten fehlen dir 8.800 Euro. Plus Anwalt, Gericht und Räumung.",
+   "voice": "Bei 1.100 Euro Miete und acht Monaten | fehlen dir || *8.800 Euro.* | Plus Anwalt, Gericht und Räumung."
+  },
+  {
+   "key": "loesung",
+   "mood": "begeistert",
+   "say": "Der Vermieterrechtsschutz übernimmt je nach Tarif die Kosten fürs Räumungsverfahren. Und der Mietausfallschutz ersetzt dir sogar die Miete, bis zu zwölf Monate.",
+   "voice": "Der Vermieterrechtsschutz übernimmt je nach Tarif die Kosten fürs *Räumungsverfahren.* | Und der Mietausfallschutz ersetzt dir sogar die *Miete,* | bis zu *zwölf* Monate."
+  },
+  {
+   "key": "achtung",
+   "mood": "eindringlich",
+   "say": "Wichtig: Abschließen, bevor es kracht. Es gilt eine Wartezeit von drei Monaten.",
+   "voice": "*Wichtig:* | Abschließen, *bevor* es kracht. | Es gilt eine Wartezeit von drei Monaten."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "say": "Ist deine Wohnung abgesichert? Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!",
+   "voice": "Ist deine Wohnung *abgesichert?* | Adrian Seitz berät dich *kostenlos.* | Der Link ist in der *Bio!*",
+   "ich": "Ist deine Wohnung *abgesichert?* | Ich bin Adrian, dein Ansprechpartner für die ARAG. | Lass dich *kostenlos* beraten, | der Link ist in meiner *Bio!*"
+  }
+ ]
+}

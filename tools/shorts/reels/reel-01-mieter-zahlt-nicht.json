@@ -1,0 +1,58 @@
+{
+ "id": "reel-01-mieter-zahlt-nicht",
+ "title": "Mieter zahlt nicht mehr: bis zu 12 Monatsmieten absichern",
+ "topic": "vermieter",
+ "format": "reel-2026",
+ "hinweis": "say = Untertitel, voice = Sprechtext (| Pause, || lange Pause, *Wort* betont), ich = Abschluss in der Ich-Form für Adrians eigene Stimme",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "say": "Stell dir vor, dein Mieter schreibt dir das hier.",
+   "voice": "Stell dir vor, | dein Mieter schreibt dir *das* hier."
+  },
+  {
+   "key": "nichts",
+   "mood": "ernst",
+   "say": "Und ab dann? Kommt einfach keine Miete mehr.",
+   "voice": "Und ab dann? | Kommt einfach *keine* Miete mehr."
+  },
+  {
+   "key": "kosten",
+   "mood": "dramatisch",
+   "say": "Bei 950 Euro Miete fehlen dir nach sechs Monaten 5.700 Euro.",
+   "voice": "Bei 950 Euro Miete | fehlen dir nach *sechs* Monaten || *5.700* *Euro.*"
+  },
+  {
+   "key": "dazu",
+   "mood": "eindringlich",
+   "say": "Und dazu kommen noch Anwalt, Gericht und Räumung.",
+   "voice": "Und dazu kommen noch | *Anwalt,* | *Gericht* | und *Räumung.*"
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "say": "Genau dafür gibt es den Vermieterrechtsschutz der ARAG. Er übernimmt je nach Tarif Anwalt, Gericht und Räumung.",
+   "voice": "Genau dafür gibt es den *Vermieterrechtsschutz* der ARAG. | Er übernimmt je nach Tarif Anwalt, Gericht und Räumung."
+  },
+  {
+   "key": "miete",
+   "mood": "begeistert",
+   "say": "Und das Beste: Mit dem Mietausfallschutz bekommst du sogar die Miete ersetzt. Bis zu zwölf Monate lang!",
+   "voice": "Und das *Beste:* | Mit dem Mietausfallschutz bekommst du sogar die *Miete* ersetzt. | Bis zu *zwölf* Monate lang!"
+  },
+  {
+   "key": "achtung",
+   "mood": "eindringlich",
+   "say": "Aber Achtung: Abschließen musst du, bevor der Ärger losgeht. Es gilt eine Wartezeit von drei Monaten.",
+   "voice": "Aber *Achtung:* | Abschließen musst du, *bevor* der Ärger losgeht. | Es gilt eine Wartezeit von drei Monaten."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!",
+   "voice": "Adrian Seitz berät dich *kostenlos.* | Der Link ist in der *Bio!*",
+   "ich": "Ich bin Adrian, dein Ansprechpartner für die ARAG. | Lass dich *kostenlos* beraten, | der Link ist in meiner *Bio!*"
+  }
+ ]
+}

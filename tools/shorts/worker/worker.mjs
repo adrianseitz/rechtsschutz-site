@@ -14,9 +14,11 @@ import { CREDIT, ENGINE, VoiceError, prepareVoice, speak } from "./ownvoice.mjs"
 import { figurSchritt, kitDir } from "./figur.mjs";
 import { berlin, dueSlot, nextSlotLabel, normTimes } from "./schedule.mjs";
 import { validateEpisode } from "../lib/validate.mjs";
+import { zipStore } from "./zip.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const EPISODES = join(ROOT, "episodes");
+const REELS = join(ROOT, "reels");   // Texte der neuen Reels (Design von Claude), siehe reelVoices()
 const SITE = (process.env.NEXT_PUBLIC_SITE_URL || "https://www.seitz-rechtsschutz.de").replace(/\/$/, "");
 const TICK = +(process.env.SHORTS_TICK_MS || 60_000);
 const AHEAD = 3;   // so viele Videos liegen mindestens fertig bereit (bei mehreren Terminen pro Tag: zwei Tage Vorrat)
@@ -156,6 +158,64 @@ async function voiceTest(settings, keys, state) {
   }
 }
 
+// ---------- Reel-Stimmen: die Texte der neuen Reels mit der eingestellten Stimme → videos/reel-stimmen.zip ----------
+// Im Sprechtext steht | für eine kurze Pause, || für eine lange, *Wort* für Betonung; „ich“ ist der Abschluss in der Ich-Form.
+function reelText(b, engine) {
+  const t = String(b.ich || b.voice || b.say || "").replace(/\*/g, "").trim();
+  if (engine === "elevenlabs") return t.replace(/\s*\|\|\s*/g, ' <break time="0.6s" /> ').replace(/\s*\|\s*/g, ' <break time="0.3s" /> ').replace(/\s+/g, " ").trim();
+  return t.replace(/([^\s.,:;!?|])\s*\|\|?\s*/g, "$1, ").replace(/\s*\|\|?\s*/g, " ").replace(/\s+/g, " ").trim();
+}
+async function reelVoices(settings, keys, state) {
+  const t0 = Date.now();
+  state.reelStimmen = { status: "läuft", at: now() };
+  state.busy = "Spricht die Reel-Texte mit deiner Stimme ein";
+  await writeJson(P.state, state);
+  try {
+    const engine = engineOf(settings);
+    if (!voiceReady(settings, keys)) throw new VoiceError(engine === "own" ? "Erst HuggingFace-Token und Sprachaufnahme im CRM speichern." : "Erst den ElevenLabs-Schlüssel speichern und eine Stimme wählen.");
+    const files = (await readdir(REELS).catch(() => [])).filter((f) => /^[a-z0-9-]+\.json$/.test(f)).sort();
+    if (!files.length) throw new VoiceError("Keine Reel-Texte gefunden.");
+    const voice = engine === "own" ? await prepareVoice({ sample: sampleFile(settings), dir: P.own, token: keys.hf }) : null;
+    const base = join(P.voice, "reels", voiceSig(settings));
+    const entries = [];
+    let beats = 0, reels = 0;
+    for (const f of files) {
+      const ep = JSON.parse(await readFile(join(REELS, f), "utf8"));
+      if (!/^[a-z0-9-]{1,60}$/.test(ep.id || "") || !Array.isArray(ep.beats)) continue;
+      const dir = join(base, ep.id);
+      await mkdir(dir, { recursive: true });
+      const texts = ep.beats.map((b) => reelText(b, engine));
+      for (const [i, text] of texts.entries()) {
+        const file = join(dir, `beat-${i}-${sha(text).slice(0, 10)}.mp3`);   // schon gesprochen = nicht noch einmal bezahlen
+        if (!existsSync(file)) {
+          state.busy = `Spricht „${ep.title || ep.id}“ ein (${i + 1}/${texts.length})`;
+          await writeJson(P.state, state);
+          if (engine === "own") await speak({ text, emb: voice.emb, out: file, speed: settings.speed ?? 1.1, token: keys.hf });
+          else await writeFile(file, await tts({ key: keys.el, voiceId: settings.voiceId, text, speed: settings.speed ?? 1.1, model: settings.model || "eleven_multilingual_v2", previous: texts[i - 1], next: texts[i + 1], expressive: true }));
+          await ownFile(file);
+        }
+        entries.push({ name: `${ep.id}/beat-${i}.mp3`, data: await readFile(file) });
+        beats++;
+      }
+      const stimme = engine === "own" ? "eigene Stimme (Kyutai Pocket TTS)" : `ElevenLabs: ${settings.voiceName || settings.voiceId}`;
+      entries.push({ name: `${ep.id}/skript.json`, data: Buffer.from(JSON.stringify({ ...ep, gesprochen: texts, stimme }, null, 1)) });
+      reels++;
+    }
+    const out = join(P.videos, "reel-stimmen.zip");
+    await writeFile(`${out}.tmp`, zipStore(entries));
+    await rename(`${out}.tmp`, out);
+    await ownFile(out);
+    delete state.voiceBlocked;
+    state.reelStimmen = { status: "fertig", at: now(), file: "reel-stimmen.zip", reels, beats, took: Math.round((Date.now() - t0) / 1000) };
+    await log("stimme", `Reel-Stimmen fertig: ${reels} Reels, ${beats} Abschnitte.`);
+  } catch (err) {
+    state.reelStimmen = { status: "fehler", at: now(), error: msg(err) };
+    await log("fehler", `Reel-Stimmen: ${msg(err)}`);
+  } finally {
+    state.busy = null;
+  }
+}
+
 // ---------- Video erstellen ----------
 async function render(ep, settings, keys, state) {
   const e = (state.episodes[ep.id] ||= {});
@@ -275,6 +335,7 @@ async function tick() {
     const ep = byId.get(job.id);
     if (job.type === "usage") { lastUsage = 0; continue; }
     if (job.type === "voicetest") { await voiceTest(settings, keys, state); await writeJson(P.state, state); continue; }
+    if (job.type === "reelstimmen") { await reelVoices(settings, keys, state); await writeJson(P.state, state); continue; }
     if (job.type === "figur" && (job.id === "neu" || job.id === "weiter")) { await figur(job.id, settings, keys, state); await writeJson(P.state, state); continue; }
     if (job.type === "probe") { await probe(lib, settings, keys, state); await writeJson(P.state, state); continue; }
     if (!ep) continue;

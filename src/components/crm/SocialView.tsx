@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { CheckCircle2, CircleAlert, Clapperboard, Copy, ExternalLink, Loader2, Mic, Pause, Play, RefreshCw, Send, Sparkles, Square, Trash2, Undo2, Upload, Volume2, X } from "lucide-react";
+import { CheckCircle2, CircleAlert, Clapperboard, Copy, Download, ExternalLink, Loader2, Mic, Pause, Play, RefreshCw, Send, Sparkles, Square, Trash2, Undo2, Upload, Volume2, X } from "lucide-react";
 
 /* Video-Automatik: TikTok, Instagram Reels, YouTube Shorts.
    Der Worker auf dem Server erstellt die Videos und postet sie zum Termin; hier wird eingerichtet und überwacht. */
@@ -18,6 +18,7 @@ type FigurState = { status: "läuft" | "auswahl" | "wartet" | "fertig" | "fehler
 type ProbeState = { status: "läuft" | "fertig" | "fehler"; at: string; error?: string; file?: string; voiced?: boolean; figur?: boolean; duration?: number; took?: number };
 type Keys = { elevenlabs?: string; uploadpost?: string; huggingface?: string; cloudflare?: string };
 type VoiceTest = { status: "läuft" | "fertig" | "fehler"; at: string; error?: string; file?: string; took?: number };
+type ReelJob = { status: "läuft" | "fertig" | "fehler"; at: string; error?: string; file?: string; reels?: number; beats?: number; took?: number };
 type Ep = { id: string; order: number; title: string; topic: string; style: "whiteboard" | "cartoon"; caption: string; beats: number };
 type EpState = {
   status?: string; video?: string; thumb?: string; duration?: number; voiced?: boolean; renderedAt?: string; postedAt?: string; error?: string | null;
@@ -26,7 +27,7 @@ type EpState = {
 type State = {
   heartbeat?: string; busy?: string | null; library?: Ep[]; episodes?: Record<string, EpState>; queue?: string[];
   nextSlot?: { key: string; label: string } | null; cycle?: number; credits?: { used?: number | null; limit?: number | null; error?: string };
-  voiceTest?: VoiceTest; voiceBlocked?: { at: string; error: string }; figur?: FigurState; probe?: ProbeState;
+  voiceTest?: VoiceTest; voiceBlocked?: { at: string; error: string }; figur?: FigurState; probe?: ProbeState; reelStimmen?: ReelJob;
 };
 type LogEntry = { at: string; kind: string; text: string };
 
@@ -75,7 +76,7 @@ export function SocialView() {
     try {
       await post("/api/admin/social/action", { type, id });
       if (type === "on" || type === "off") setSettings((s) => s && { ...s, disabled: type === "off" ? [...s.disabled, id!] : s.disabled.filter((x) => x !== id) });
-      setNote({ ok: true, text: type === "post" ? "Auftrag erteilt – das Video wird in der nächsten Minute veröffentlicht." : type === "render" ? "Auftrag erteilt – das Video wird neu erstellt (dauert ein paar Minuten)." : type === "reset" ? "Video ist wieder in der Warteschlange." : "Gespeichert." });
+      setNote({ ok: true, text: type === "post" ? "Auftrag erteilt – das Video wird in der nächsten Minute veröffentlicht." : type === "render" ? "Auftrag erteilt – das Video wird neu erstellt (dauert ein paar Minuten)." : type === "reset" ? "Video ist wieder in der Warteschlange." : type === "reelstimmen" ? "Auftrag erteilt – die Reel-Texte werden mit deiner Stimme eingesprochen (dauert ein paar Minuten)." : "Gespeichert." });
       setTimeout(load, 1500);
     } catch (e) {
       setNote({ ok: false, text: e instanceof Error ? e.message : "Fehler" });
@@ -138,6 +139,7 @@ export function SocialView() {
 
         <Queue settings={settings} state={state} onPreview={setPreview} onAction={action} />
         <Setup settings={settings} onSave={saveAll} voiceTest={state.voiceTest} onSettings={setSettings} onRefresh={load} />
+        <ReelVoices settings={settings} job={state.reelStimmen} onAction={action} />
         <FigurPanel settings={settings} figur={state.figur} probe={state.probe} onSave={saveAll} onSettings={setSettings} onRefresh={load} />
         <Log entries={log} />
       </div>
@@ -750,6 +752,40 @@ function VoiceTestStatus({ test, asked }: { test?: VoiceTest; asked: string }) {
       <audio controls src={`/api/admin/social/media/voice-test.mp3?v=${encodeURIComponent(test.at)}`} className="mt-2 w-full" />
       <p className="mt-2 text-xs text-ink-muted">Klingt es nicht nach dir? Meist hilft eine neue Aufnahme in einem ruhigeren Raum. Das Tempo stellst du unten ein.</p>
     </div>
+  );
+}
+
+/* ---------- Stimmen für die neuen Reels ---------- */
+function ReelVoices({ settings, job, onAction }: { settings: Settings; job?: ReelJob; onAction: (type: string) => void | Promise<void> }) {
+  const [asked, setAsked] = useState("");
+  const el = settings.voiceEngine === "elevenlabs";
+  const ready = el ? settings.hasElevenlabs && !!settings.voiceId : settings.hasHuggingface && !!settings.voiceSample;
+  const waiting = !!asked && (!job || job.at < asked);
+  return (
+    <section className="rounded-xl border border-line bg-white p-5 sm:p-7">
+      <h2 className="text-lg font-semibold tracking-[-0.02em]">Stimmen für die neuen Reels</h2>
+      <p className="mt-1 text-sm leading-6 text-ink-soft">
+        Spricht alle Texte der neuen Reels mit deiner eingestellten Stimme ein ({el ? settings.voiceName || "ElevenLabs" : "deine eigene Stimme"}).
+        Die ZIP-Datei lädst du herunter und gibst sie Claude – daraus entstehen die fertigen Videos.
+      </p>
+      {!ready && <p className="mt-3 rounded-lg bg-paper px-3 py-2.5 text-sm text-ink-soft">Richte zuerst oben unter „2. Stimme“ deine Stimme ein.</p>}
+      <button type="button" disabled={!ready || waiting || job?.status === "läuft"} onClick={() => { setAsked(new Date().toISOString()); void onAction("reelstimmen"); }}
+        className="mt-4 inline-flex items-center gap-2 rounded-full bg-navy px-5 py-3 text-sm font-semibold text-white hover:bg-navy-800 disabled:opacity-40">
+        <Mic className="h-4 w-4" aria-hidden /> Reel-Stimmen erzeugen
+      </button>
+      {waiting ? <p className="mt-3 inline-flex items-center gap-2 text-sm text-ink-soft"><Loader2 className="h-4 w-4 animate-spin" aria-hidden /> Auftrag ist beim Server – er startet in der nächsten Minute.</p>
+        : job?.status === "läuft" ? <p className="mt-3 inline-flex items-center gap-2 text-sm text-ink-soft"><Loader2 className="h-4 w-4 animate-spin" aria-hidden /> Wird eingesprochen …</p>
+        : job?.status === "fehler" ? <p role="alert" className="mt-3 rounded-lg bg-rose-50 px-3 py-2.5 text-sm text-rose-900">Hat nicht geklappt: {job.error}</p>
+        : job?.status === "fertig" ? (
+          <div className="mt-3 rounded-xl border border-line p-3">
+            <p className="text-sm font-medium">Fertig am {fmt(job.at)} · {job.reels} Reels, {job.beats} Abschnitte</p>
+            <a href={`/api/admin/social/media/reel-stimmen.zip?v=${encodeURIComponent(job.at)}`} download
+              className="mt-2 inline-flex items-center gap-2 rounded-full border border-line px-4 py-2.5 text-sm font-semibold hover:border-navy">
+              <Download className="h-4 w-4" aria-hidden /> ZIP herunterladen
+            </a>
+          </div>
+        ) : null}
+    </section>
   );
 }
 

@@ -1,0 +1,46 @@
+{
+ "id": "reel-02-der-brief",
+ "title": "Der Brief: Dein Mieter kürzt die Miete",
+ "topic": "vermieter",
+ "format": "reel-2026",
+ "hinweis": "say = Untertitel, voice = Sprechtext (| Pause, || lange Pause, *Wort* betont), ich = Abschluss in der Ich-Form für Adrians eigene Stimme",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "say": "Stell dir vor, dieser Brief liegt morgen in deinem Briefkasten.",
+   "voice": "Stell dir vor, | *dieser* Brief liegt morgen in deinem Briefkasten."
+  },
+  {
+   "key": "brief",
+   "mood": "ernst",
+   "say": "Dein Mieter kürzt die Miete. Um 30 Prozent.",
+   "voice": "Dein Mieter kürzt die Miete. || Um *30* Prozent."
+  },
+  {
+   "key": "kosten",
+   "mood": "dramatisch",
+   "say": "Ob das berechtigt ist, klärt oft erst ein Gutachter. Mit Anwalt und Gericht kommen schnell mehrere tausend Euro zusammen.",
+   "voice": "Ob das berechtigt ist, | klärt oft erst ein *Gutachter.* | Mit Anwalt und Gericht kommen schnell *mehrere tausend Euro* zusammen."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "say": "Mit Vermieterrechtsschutz übernimmt die Versicherung je nach Tarif Anwalt, Gericht und Gutachter. Du musst nicht in Vorkasse gehen.",
+   "voice": "Mit *Vermieterrechtsschutz* übernimmt die Versicherung je nach Tarif Anwalt, Gericht und Gutachter. | Du musst *nicht* in Vorkasse gehen."
+  },
+  {
+   "key": "achtung",
+   "mood": "eindringlich",
+   "say": "Aber Achtung: Läuft der Streit schon, ist es zu spät. Meist gilt eine Wartezeit von drei Monaten.",
+   "voice": "Aber *Achtung:* | Läuft der Streit schon, ist es *zu spät.* | Meist gilt eine Wartezeit von drei Monaten."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "say": "Passt das zu deiner Wohnung? Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!",
+   "voice": "Passt das zu deiner *Wohnung?* | Adrian Seitz berät dich *kostenlos.* | Der Link ist in der *Bio!*",
+   "ich": "Passt das zu deiner *Wohnung?* | Ich bin Adrian, dein Ansprechpartner für die ARAG. | Lass dich *kostenlos* beraten, | der Link ist in meiner *Bio!*"
+  }
+ ]
+}

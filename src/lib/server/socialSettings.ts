@@ -146,7 +146,7 @@ export async function readSocialLog(limit = 40): Promise<{ at: string; kind: str
   }
 }
 
-export const JOB_TYPES = ["render", "post", "reset", "usage", "voicetest", "figur", "probe"] as const;
+export const JOB_TYPES = ["render", "post", "reset", "usage", "voicetest", "figur", "probe", "reelstimmen"] as const;
 export async function addSocialJob(type: (typeof JOB_TYPES)[number], id = "") {
   const dir = file("jobs");
   await mkdir(dir, { recursive: true, mode: 0o750 });
@@ -156,6 +156,6 @@ export async function addSocialJob(type: (typeof JOB_TYPES)[number], id = "") {
 
 /** Pfad zu einem fertigen Video/Vorschaubild/der Hörprobe – nur einfache Dateinamen */
 export function socialMediaPath(name: string): string | null {
-  if (!/^[a-z0-9][a-z0-9-]{0,80}\.(mp4|jpg)$/.test(name) && name !== "voice-test.mp3") return null;
+  if (!/^[a-z0-9][a-z0-9-]{0,80}\.(mp4|jpg)$/.test(name) && name !== "voice-test.mp3" && name !== "reel-stimmen.zip") return null;
   return path.join(socialDir(), "videos", name);
 }

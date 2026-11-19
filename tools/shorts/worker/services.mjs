@@ -12,13 +12,13 @@ async function failText(res) {
 }
 
 /** Sprachaufnahme als MP3 (Buffer) */
-export async function tts({ key, voiceId, text, speed = 1.1, model = "eleven_multilingual_v2", previous, next }) {
+export async function tts({ key, voiceId, text, speed = 1.1, model = "eleven_multilingual_v2", previous, next, expressive = false }) {
   const res = await fetch(`${EL_BASE}/text-to-speech/${encodeURIComponent(voiceId)}?output_format=mp3_44100_128`, {
     method: "POST",
     headers: { "xi-api-key": key, "Content-Type": "application/json", Accept: "audio/mpeg" },
     body: JSON.stringify({
       text, model_id: model,
-      voice_settings: { stability: 0.5, similarity_boost: 0.75, style: 0.15, use_speaker_boost: true, speed: Math.min(1.2, Math.max(0.7, speed)) },
+      voice_settings: { stability: expressive ? 0.35 : 0.5, similarity_boost: 0.8, style: expressive ? 0.45 : 0.15, use_speaker_boost: true, speed: Math.min(1.2, Math.max(0.7, speed)) },
       ...(previous ? { previous_text: previous } : {}), ...(next ? { next_text: next } : {}),
     }),
     signal: AbortSignal.timeout(90_000),
