@@ -10,10 +10,16 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const MAX_BYTES = 250 * 1024 * 1024;   // Instagram nimmt Reels bis 300 MB
+const tiktok = z.object({
+  privacy: z.enum(["PUBLIC_TO_EVERYONE", "MUTUAL_FOLLOW_FRIENDS", "FOLLOWER_OF_CREATOR", "SELF_ONLY"]),
+  comments: z.boolean(), duet: z.boolean(), stitch: z.boolean(), aigc: z.boolean(), ownBrand: z.boolean(),
+});
 const meta = z.object({
   title: z.string().trim().min(1, "Bitte einen kurzen Namen für das Video angeben.").max(120),
   caption: z.string().trim().max(2200, "Der Text darf höchstens 2.200 Zeichen haben (Grenze von Instagram)."),
+  tiktok: tiktok.optional(),
 });
+const parseTiktok = (v: FormDataEntryValue | null) => { try { return typeof v === "string" && v ? JSON.parse(v) : undefined; } catch { return undefined; } };
 
 async function guard(req: Request, write: boolean) {
   if (write && !originAllowed(req)) return jsonError(403, "forbidden");
@@ -41,7 +47,7 @@ export async function POST(req: Request) {
   if (!(file instanceof Blob) || !file.size) return jsonError(422, "Kein Video erhalten.");
   if (file.size > MAX_BYTES) return jsonError(413, "Das Video ist zu groß (höchstens 250 MB).");
   if ((file.type || "").toLowerCase() !== "video/mp4") return jsonError(415, "Bitte ein MP4-Video hochladen (so wie die fertigen Reels).");
-  const m = meta.safeParse({ title: form.get("title") ?? "", caption: form.get("caption") ?? "" });
+  const m = meta.safeParse({ title: form.get("title") ?? "", caption: form.get("caption") ?? "", tiktok: parseTiktok(form.get("tiktok")) });
   if (!m.success) return jsonError(422, m.error.issues[0]?.message ?? "Ungültige Angaben.");
   const data = Buffer.from(await file.arrayBuffer());
   // MP4 erkennen: ab Byte 4 steht „ftyp“

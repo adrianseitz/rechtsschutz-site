@@ -10,6 +10,7 @@ import { fileURLToPath } from "node:url";
 import { renderEpisode } from "../render.mjs";
 import { P, decrypt, encrypt, ensureDirs, log, ownFile, readJson, takeJobs, trimLog, writeJson } from "./store.mjs";
 import { cleanPublic, igPublishReel, igRefresh } from "./instagram.mjs";
+import { ttPost, ttRefresh } from "./tiktok.mjs";
 import { elevenlabsUsage, tts, uploadStatus, uploadVideo, voiceInfo } from "./services.mjs";
 import { CREDIT, ENGINE, VoiceError, prepareVoice, speak } from "./ownvoice.mjs";
 import { figurSchritt, kitDir } from "./figur.mjs";
@@ -53,7 +54,7 @@ async function loadUploads() {
   for (const f of (await readdir(P.uploads).catch(() => [])).filter((x) => /^eigen-[a-z0-9]{6,30}\.json$/.test(x))) {
     const u = await readJson(join(P.uploads, f), null);
     if (!u || u.id !== f.replace(/\.json$/, "") || !existsSync(join(P.videos, `${u.id}.mp4`))) continue;
-    out.push({ id: u.id, order: -1, title: u.title || "Eigenes Video", topic: "eigen", style: "eigen", caption: u.caption || "", beats: [], upload: true, at: u.at || "" });
+    out.push({ id: u.id, order: -1, title: u.title || "Eigenes Video", topic: "eigen", style: "eigen", caption: u.caption || "", beats: [], upload: true, at: u.at || "", tiktok: u.tiktok || null });
   }
   return out.sort((a, b) => a.at.localeCompare(b.at));   // in der Reihenfolge des Hochladens
 }
@@ -97,7 +98,7 @@ const voiceSig = (s) => engineOf(s) === "own"
 function keysOf(settings) {
   const k = settings.keys || {};
   const get = (v) => { try { return decrypt(v || ""); } catch { return ""; } };
-  return { el: get(k.elevenlabs), up: get(k.uploadpost), hf: get(k.huggingface), cf: get(k.cloudflare), ig: get(k.instagram) };
+  return { el: get(k.elevenlabs), up: get(k.uploadpost), hf: get(k.huggingface), cf: get(k.cloudflare), ig: get(k.instagram), tt: get(k.tiktok), ttSecret: get(k.tiktokSecret) };
 }
 
 // ---------- Stimme ----------
@@ -305,34 +306,70 @@ function youtubeDescription(ep, e = {}) {
 
 // ---------- Posten ----------
 const direkt = (settings) => (settings.postVia || "direkt") === "direkt";
+const ttReady = (settings, keys) => Boolean(keys.tt && keys.ttSecret && settings.tiktokClientKey);
 /** Warum gerade nicht gepostet werden kann ("" = alles bereit) */
 function postBlocker(settings, keys) {
-  if (direkt(settings)) return !keys.ig ? "Instagram ist noch nicht verbunden" : (settings.platforms || PLATFORMS).includes("instagram") ? "" : "Instagram ist nicht als Plattform ausgewählt";
+  if (direkt(settings)) {
+    const want = settings.platforms || PLATFORMS;
+    if ((want.includes("instagram") && keys.ig) || (want.includes("tiktok") && ttReady(settings, keys))) return "";
+    return "Weder Instagram noch TikTok ist verbunden und ausgewählt";
+  }
   return keys.up && settings.uploadUser ? "" : "Upload-Post-Schlüssel oder Profilname fehlt";
 }
 
-/** Direkt über die offizielle Instagram-Schnittstelle – ohne Zusatzdienst. YouTube/TikTok folgen. */
+/** TikTok-Zugang (gilt 24 h) – bei Bedarf verlängern und verschlüsselt zurückschreiben */
+async function tiktokToken(settings, keys) {
+  let tokens;
+  try { tokens = JSON.parse(keys.tt); } catch { throw new Error("TikTok-Zugang unlesbar – bitte im CRM neu verbinden"); }
+  const fresh = await ttRefresh({ clientKey: settings.tiktokClientKey, secret: keys.ttSecret, tokens });
+  if (fresh) {
+    const cur = await readJson(P.settings, {});
+    cur.keys = { ...(cur.keys || {}), tiktok: encrypt(JSON.stringify(fresh)) };
+    await writeJson(P.settings, cur);
+    keys.tt = JSON.stringify(fresh);
+    return fresh.access_token;
+  }
+  return tokens.access_token;
+}
+
+const PL_NAME = { instagram: "Instagram", tiktok: "TikTok", youtube: "YouTube" };
+/** Direkt über die offiziellen Schnittstellen – ohne Zusatzdienst: Instagram und TikTok (YouTube folgt) */
 async function postDirect(ep, settings, keys, state, why) {
   const e = (state.episodes[ep.id] ||= {});
   const want = (settings.platforms || PLATFORMS).filter((p) => PLATFORMS.includes(p));
-  const platforms = Object.fromEntries(want.map((p) => [p, p === "instagram" ? { status: "processing" } : { status: "skipped", message: "Direkt bisher nur Instagram" }]));
+  const can = { instagram: Boolean(keys.ig), tiktok: ttReady(settings, keys), youtube: false };
+  const platforms = Object.fromEntries(want.map((p) => [p, can[p] ? { status: "processing" } : { status: "skipped", message: p === "youtube" ? "YouTube direkt folgt" : "nicht verbunden" }]));
   Object.assign(e, { status: "wird gepostet", requestId: null, postStartedAt: now(), platforms, error: null, why });
-  state.busy = `Veröffentlicht „${ep.title}“ auf Instagram`;
   await writeJson(P.state, state);
+  const file = join(P.videos, e.video);
+  const onStep = async (t) => { state.busy = `${t} („${ep.title}“)`; await writeJson(P.state, state); };
   try {
-    const r = await igPublishReel({
-      token: keys.ig, file: join(P.videos, e.video), caption: ep.caption || ep.title, site: SITE, publicDir: P.public,
-      onStep: async (t) => { state.busy = `${t} („${ep.title}“)`; await writeJson(P.state, state); },
-    });
-    e.platforms.instagram = { status: "completed", url: r.url };
-    Object.assign(e, { status: "gepostet", postedAt: now() });
-    await log("post", `Auf Instagram veröffentlicht: ${ep.title}${r.username ? ` (@${r.username})` : ""}`);
-    return true;
-  } catch (err) {
-    e.platforms.instagram = { status: "failed", message: msg(err) };
-    Object.assign(e, { status: "fehler", error: `Posten fehlgeschlagen: ${msg(err)}` });
-    await log("fehler", `Instagram „${ep.title}“: ${msg(err)}`);
-    return false;
+    if (platforms.instagram?.status === "processing") {
+      try {
+        const r = await igPublishReel({ token: keys.ig, file, caption: ep.caption || ep.title, site: SITE, publicDir: P.public, onStep });
+        e.platforms.instagram = { status: "completed", url: r.url };
+        await log("post", `Auf Instagram veröffentlicht: ${ep.title}${r.username ? ` (@${r.username})` : ""}`);
+      } catch (err) {
+        e.platforms.instagram = { status: "failed", message: msg(err) };
+        await log("fehler", `Instagram „${ep.title}“: ${msg(err)}`);
+      }
+      await writeJson(P.state, state);
+    }
+    if (platforms.tiktok?.status === "processing") {
+      try {
+        const token = await tiktokToken(settings, keys);
+        const r = await ttPost({ token, file, caption: ep.caption || ep.title, mode: settings.tiktokMode || "entwurf", opts: ep.tiktok || {}, onStep });
+        e.platforms.tiktok = { status: "completed", url: r.url, inbox: r.status === "inbox", message: r.status === "private" ? "nur privat sichtbar, bis TikTok die App geprüft hat" : undefined };
+        await log("post", r.status === "inbox" ? `Im TikTok-Postfach: ${ep.title} – in der TikTok-App auf „Posten“ tippen` : `Auf TikTok veröffentlicht${r.status === "private" ? " (nur privat)" : ""}: ${ep.title}`);
+      } catch (err) {
+        e.platforms.tiktok = { status: "failed", message: msg(err) };
+        await log("fehler", `TikTok „${ep.title}“: ${msg(err)}`);
+      }
+    }
+    const ok = Object.values(e.platforms).some((p) => p.status === "completed");
+    const failed = Object.entries(e.platforms).filter(([, p]) => p.status === "failed").map(([k, p]) => `${PL_NAME[k] || k}: ${p.message}`);
+    Object.assign(e, ok ? { status: "gepostet", postedAt: now(), error: failed.length ? failed.join(" · ") : null } : { status: "fehler", error: `Posten fehlgeschlagen: ${failed.join(" · ") || "keine Plattform verbunden"}` });
+    return ok;
   } finally {
     state.busy = null;
   }

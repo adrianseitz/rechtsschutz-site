@@ -9,7 +9,7 @@ import { productList } from "@/lib/products";
 import { site } from "@/lib/site";
 import { countEvent } from "@/lib/localEvents";
 
-const HIDDEN = ["/rechtsschutz-check", "/kontakt", "/vielen-dank", "/datenschutz", "/impressum"];
+const HIDDEN = ["/rechtsschutz-check", "/kontakt", "/vielen-dank", "/datenschutz", "/impressum", "/nutzungsbedingungen"];
 
 export function StickyCta() {
   const pathname = usePathname();

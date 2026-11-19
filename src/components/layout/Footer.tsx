@@ -37,6 +37,7 @@ export function Footer() {
                 <li><Link href="/kontakt" className="text-white/80 transition hover:text-sun">Kontakt & Termin</Link></li>
                 <li><Link href="/impressum" className="text-white/80 transition hover:text-sun">Impressum & Vermittlerangaben</Link></li>
                 <li><Link href="/datenschutz" className="text-white/80 transition hover:text-sun">Datenschutz</Link></li>
+                <li><Link href="/nutzungsbedingungen" className="text-white/80 transition hover:text-sun">Nutzungsbedingungen</Link></li>
                 <li><button onClick={openSettings} className="text-left text-white/80 transition hover:text-sun">Cookie-Einstellungen</button></li>
               </ul>
             </div>

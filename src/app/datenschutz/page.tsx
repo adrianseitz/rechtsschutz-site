@@ -70,6 +70,9 @@ export default async function DatenschutzPage() {
         </>
       )}
 
+      <h2>Eigene Videos auf Instagram und TikTok</h2>
+      <p>Ich veröffentliche eigene Erklärvideos auf Instagram und TikTok über deren offizielle Schnittstellen. Dafür sind ausschließlich meine eigenen Konten verbunden; die Zugangsschlüssel werden verschlüsselt auf meinem Server gespeichert. Daten von Besucherinnen und Besuchern dieser Website werden dafür nicht verwendet. Wenn du mir auf diesen Plattformen folgst oder dort mit meinen Beiträgen interagierst, gelten die Datenschutzhinweise der jeweiligen Plattform.</p>
+
       <h2>Schriftarten</h2>
       <p>Die verwendeten Schriftarten werden lokal von dieser Website ausgeliefert. Es findet keine Verbindung zu Servern von Google Fonts statt.</p>
 

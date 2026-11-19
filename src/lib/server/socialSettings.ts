@@ -32,18 +32,23 @@ export type SocialSettings = {
   disabled: string[];      // Videos, die nicht gepostet werden
   postVia: PostVia;        // direkt über die offiziellen Schnittstellen (kostenlos) oder über Upload-Post
   onlyUploads: boolean;    // nur selbst hochgeladene Videos posten (automatisch erstellte bleiben aus)
+  tiktokClientKey: string; // Client Key der eigenen TikTok-App (kein Geheimnis)
+  tiktokMode: TiktokMode;  // als Entwurf ins TikTok-Postfach oder direkt veröffentlichen
 };
 export type PostVia = "direkt" | "uploadpost";
+export type TiktokMode = "entwurf" | "direkt";
+export type TiktokTokens = { access_token: string; refresh_token: string; open_id: string; scope: string; expires_at: number; refresh_expires_at: number };
+export type TiktokUser = { name: string; scope: string; at: string };
 export type VoiceEngine = "own" | "elevenlabs";
 export type VoiceSample = { file: string; at: string; seconds: number; bytes: number };
 export type FigurFoto = { file: string; at: string; bytes: number };
-type KeyName = "elevenlabs" | "uploadpost" | "huggingface" | "cloudflare" | "instagram";
-type Stored = SocialSettings & { keys?: Partial<Record<KeyName, string>>; updatedAt?: string };
+type KeyName = "elevenlabs" | "uploadpost" | "huggingface" | "cloudflare" | "instagram" | "tiktokSecret" | "tiktok";
+type Stored = SocialSettings & { keys?: Partial<Record<KeyName, string>>; updatedAt?: string; tiktokUser?: TiktokUser };
 
 export const SOCIAL_DEFAULTS: SocialSettings = {
   enabled: false, days: [1, 3, 5], times: ["18:30"], platforms: ["tiktok", "instagram", "youtube"],
   uploadUser: "", voiceEngine: "own", voiceId: "", voiceName: "", cfAccount: "", speed: 1.1, aiLabel: true, promo: true, repeat: true, disabled: [],
-  postVia: "direkt", onlyUploads: true,
+  postVia: "direkt", onlyUploads: true, tiktokClientKey: "", tiktokMode: "entwurf",
 };
 
 export const socialDir = () => path.join(serverConfig.storageDir, "social");
@@ -67,14 +72,14 @@ async function writeStored(data: Stored) {
 /** Für die Oberfläche – ohne Schlüssel */
 export async function publicSocialSettings() {
   const { keys, ...rest } = await readStored();
-  return { ...rest, hasElevenlabs: Boolean(keys?.elevenlabs), hasUploadpost: Boolean(keys?.uploadpost), hasHuggingface: Boolean(keys?.huggingface), hasCloudflare: Boolean(keys?.cloudflare), hasInstagram: Boolean(keys?.instagram) };
+  return { ...rest, hasElevenlabs: Boolean(keys?.elevenlabs), hasUploadpost: Boolean(keys?.uploadpost), hasHuggingface: Boolean(keys?.huggingface), hasCloudflare: Boolean(keys?.cloudflare), hasInstagram: Boolean(keys?.instagram), hasTiktokSecret: Boolean(keys?.tiktokSecret), hasTiktok: Boolean(keys?.tiktok) };
 }
 
 /** Speichern. Schlüssel: leer/undefined = behalten, null = löschen, Text = neu (verschlüsselt). */
 export async function saveSocialSettings(input: Partial<SocialSettings>, keys: Partial<Record<KeyName, string | null>> = {}) {
   const prev = await readStored();
   const next: Stored = { ...prev, ...input, keys: { ...prev.keys }, updatedAt: new Date().toISOString() };
-  for (const k of ["elevenlabs", "uploadpost", "huggingface", "cloudflare", "instagram"] as const) {
+  for (const k of ["elevenlabs", "uploadpost", "huggingface", "cloudflare", "instagram", "tiktokSecret"] as const) {
     const v = keys[k];
     if (v === null) delete next.keys![k];
     else if (v) {
@@ -128,13 +133,33 @@ export async function toggleEpisode(id: string, on: boolean) {
   await writeStored({ ...s, disabled: [...set] });
 }
 
+export async function tiktokCreds(): Promise<{ clientKey: string; secret: string; tokens: TiktokTokens | null }> {
+  const s = await readStored();
+  let tokens: TiktokTokens | null = null;
+  try { tokens = s.keys?.tiktok ? JSON.parse(decrypt(s.keys.tiktok)) : null; } catch { tokens = null; }
+  return { clientKey: s.tiktokClientKey || "", secret: s.keys?.tiktokSecret ? decrypt(s.keys.tiktokSecret) : "", tokens };
+}
+/** Neue TikTok-Zugänge speichern (verschlüsselt); user nur beim Verbinden */
+export async function saveTiktokConnection(tokens: TiktokTokens, user?: TiktokUser) {
+  if (!encryptionEnabled()) throw new Error("Auf dem Server fehlt LEAD_ENCRYPTION_KEY – Zugang kann nicht sicher gespeichert werden.");
+  const s = await readStored();
+  await writeStored({ ...s, ...(user ? { tiktokUser: user } : {}), keys: { ...s.keys, tiktok: encrypt(JSON.stringify(tokens)) }, updatedAt: new Date().toISOString() });
+}
+export async function deleteTiktokConnection() {
+  const s = await readStored();
+  const keys = { ...s.keys }; delete keys.tiktok;
+  const { tiktokUser, ...rest } = s; void tiktokUser;
+  await writeStored({ ...rest, keys, updatedAt: new Date().toISOString() });
+}
+
 export async function instagramToken(): Promise<string> {
   const s = await readStored();
   return s.keys?.instagram ? decrypt(s.keys.instagram) : "";
 }
 
 /* ---------- Eigene Videos: im CRM hochgeladen, der Worker postet sie zum Termin ---------- */
-export type Upload = { id: string; title: string; caption: string; at: string; bytes: number };
+export type TiktokPostOptions = { privacy: string; comments: boolean; duet: boolean; stitch: boolean; aigc: boolean; ownBrand: boolean };
+export type Upload = { id: string; title: string; caption: string; at: string; bytes: number; tiktok?: TiktokPostOptions };
 export const UPLOAD_ID = /^eigen-[a-z0-9]{6,30}$/;
 const uploadDir = () => path.join(socialDir(), "uploads");
 const videoFile = (id: string) => path.join(socialDir(), "videos", `${id}.mp4`);
@@ -148,22 +173,22 @@ export async function listUploads(): Promise<Upload[]> {
   return out.sort((a, b) => a.at.localeCompare(b.at));
 }
 
-export async function saveUpload(data: Buffer, meta: { title: string; caption: string }): Promise<Upload> {
+export async function saveUpload(data: Buffer, meta: { title: string; caption: string; tiktok?: TiktokPostOptions }): Promise<Upload> {
   await mkdir(uploadDir(), { recursive: true, mode: 0o750 });
   await mkdir(path.dirname(videoFile("x")), { recursive: true, mode: 0o750 });
   const id = `eigen-${Date.now().toString(36)}${randomBytes(3).toString("hex")}`;
-  const u: Upload = { id, title: meta.title, caption: meta.caption, at: new Date().toISOString(), bytes: data.length };
+  const u: Upload = { id, title: meta.title, caption: meta.caption, at: new Date().toISOString(), bytes: data.length, ...(meta.tiktok ? { tiktok: meta.tiktok } : {}) };
   await writeFile(`${videoFile(id)}.tmp`, data, { mode: 0o640 });
   await rename(`${videoFile(id)}.tmp`, videoFile(id));
   await writeFile(path.join(uploadDir(), `${id}.json`), JSON.stringify(u), { mode: 0o640 });   // erst danach sieht der Worker das Video
   return u;
 }
 
-export async function updateUpload(id: string, meta: { title: string; caption: string }): Promise<Upload | null> {
+export async function updateUpload(id: string, meta: { title: string; caption: string; tiktok?: TiktokPostOptions }): Promise<Upload | null> {
   if (!UPLOAD_ID.test(id)) return null;
   const f = path.join(uploadDir(), `${id}.json`);
   try {
-    const u: Upload = { ...JSON.parse(await readFile(f, "utf8")), title: meta.title, caption: meta.caption };
+    const u: Upload = { ...JSON.parse(await readFile(f, "utf8")), title: meta.title, caption: meta.caption, ...(meta.tiktok ? { tiktok: meta.tiktok } : {}) };
     await writeFile(`${f}.tmp`, JSON.stringify(u), { mode: 0o640 });
     await rename(`${f}.tmp`, f);
     return u;

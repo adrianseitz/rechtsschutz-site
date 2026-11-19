@@ -13,11 +13,12 @@ type Settings = {
   voiceId: string; voiceName: string; speed: number; aiLabel: boolean; promo: boolean; repeat: boolean; disabled: string[];
   hasElevenlabs: boolean; hasUploadpost: boolean; hasHuggingface: boolean; hasInstagram: boolean; updatedAt?: string;
   postVia: "direkt" | "uploadpost"; onlyUploads: boolean;
+  tiktokClientKey: string; tiktokMode: "entwurf" | "direkt"; hasTiktokSecret: boolean; hasTiktok: boolean; tiktokUser?: { name: string; scope: string; at: string };
   cfAccount: string; hasCloudflare: boolean; figurFoto?: { file: string; at: string; bytes: number };
 };
 type FigurState = { status: "läuft" | "auswahl" | "wartet" | "fertig" | "fehler"; phase?: string; schritt?: string | null; fertig?: string[]; at: string; error?: string | null; weiterAb?: string | null; hinweise?: string[]; nutzbar?: boolean; version?: number };
 type ProbeState = { status: "läuft" | "fertig" | "fehler"; at: string; error?: string; file?: string; voiced?: boolean; figur?: boolean; duration?: number; took?: number };
-type Keys = { elevenlabs?: string; uploadpost?: string; huggingface?: string; cloudflare?: string; instagram?: string };
+type Keys = { elevenlabs?: string; uploadpost?: string; huggingface?: string; cloudflare?: string; instagram?: string; tiktokSecret?: string };
 type VoiceTest = { status: "läuft" | "fertig" | "fehler"; at: string; error?: string; file?: string; took?: number };
 type ReelJob = { status: "läuft" | "fertig" | "fehler"; at: string; error?: string; file?: string; reels?: number; beats?: number; took?: number };
 type Ep = { id: string; order: number; title: string; topic: string; style: "whiteboard" | "cartoon" | "studio3d" | "eigen"; caption: string; beats: number };
@@ -37,7 +38,12 @@ const DAYS = [{ d: 1, l: "Mo" }, { d: 2, l: "Di" }, { d: 3, l: "Mi" }, { d: 4, l
 const TOPIC: Record<string, string> = { vermieter: "Vermieter", firma: "Firma", arbeit: "Arbeit", privat: "Privat", allgemein: "Allgemein", eigen: "Eigenes Video" };
 const STYLE: Record<string, string> = { whiteboard: "Whiteboard", cartoon: "Cartoon", studio3d: "3D", eigen: "hochgeladen" };
 /** Kann gerade gepostet werden? (direkt: Instagram verbunden; sonst Upload-Post) */
-const canPostWith = (s: Settings) => (s.postVia === "uploadpost" ? s.hasUploadpost && !!s.uploadUser : s.hasInstagram && s.platforms.includes("instagram"));
+const directTargets = (s: Settings): Platform[] => [...(s.hasInstagram && s.platforms.includes("instagram") ? ["instagram" as const] : []), ...(s.hasTiktok && s.platforms.includes("tiktok") ? ["tiktok" as const] : [])];
+const canPostWith = (s: Settings) => (s.postVia === "uploadpost" ? s.hasUploadpost && !!s.uploadUser : directTargets(s).length > 0);
+const targetNames = (s: Settings) => (s.postVia === "uploadpost" ? s.platforms : directTargets(s)).map((p) => PL[p]).join(", ") || "–";
+const TT_PRIVACY: Record<string, string> = { PUBLIC_TO_EVERYONE: "Öffentlich", MUTUAL_FOLLOW_FRIENDS: "Freunde", FOLLOWER_OF_CREATOR: "Follower", SELF_ONLY: "Nur ich" };
+type TiktokStatus = { ready: boolean; connected: boolean; redirectUri: string; scope?: string; error?: string; creator?: { creator_username?: string; creator_nickname?: string; privacy_level_options: string[]; comment_disabled: boolean; duet_disabled: boolean; stitch_disabled: boolean } };
+type TiktokOpts = { privacy: string; comments: boolean; duet: boolean; stitch: boolean; aigc: boolean; ownBrand: boolean };
 const fmt = (iso?: string) => (iso ? new Date(iso).toLocaleString("de-DE", { timeZone: "Europe/Berlin", day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) : "");
 
 async function post(url: string, body: unknown) {
@@ -69,7 +75,7 @@ export function SocialView() {
   }, [load]);
 
   async function saveAll(next: Settings, keys?: Keys) {
-    const { hasElevenlabs, hasUploadpost, hasHuggingface, hasCloudflare, hasInstagram, voiceSample, figurFoto, updatedAt, disabled, ...rest } = next; void hasElevenlabs; void hasUploadpost; void hasHuggingface; void hasCloudflare; void hasInstagram; void voiceSample; void figurFoto; void updatedAt; void disabled;
+    const { hasElevenlabs, hasUploadpost, hasHuggingface, hasCloudflare, hasInstagram, hasTiktokSecret, hasTiktok, tiktokUser, voiceSample, figurFoto, updatedAt, disabled, ...rest } = next; void hasElevenlabs; void hasUploadpost; void hasHuggingface; void hasCloudflare; void hasInstagram; void hasTiktokSecret; void hasTiktok; void tiktokUser; void voiceSample; void figurFoto; void updatedAt; void disabled;
     const j = await post("/api/admin/social", { ...rest, keys });
     setSettings(j.settings);
     return j.settings as Settings;
@@ -93,7 +99,7 @@ export function SocialView() {
   const steps = [
     settings.postVia === "uploadpost"
       ? { done: settings.hasUploadpost && !!settings.uploadUser, text: "Upload-Post verbinden (postet auf TikTok, Instagram und YouTube)" }
-      : { done: settings.hasInstagram, text: "Instagram verbinden (kostenlos, ohne Zusatzdienst)" },
+      : { done: settings.hasInstagram || settings.hasTiktok, text: "Instagram und/oder TikTok verbinden (kostenlos, ohne Zusatzdienst)" },
     settings.onlyUploads
       ? { done: (state.library ?? []).some((ep) => ep.style === "eigen"), text: "Erstes Video hochladen" }
       : { done: settings.voiceEngine === "elevenlabs" ? settings.hasElevenlabs && !!settings.voiceId : settings.hasHuggingface && !!settings.voiceSample, text: settings.voiceEngine === "elevenlabs" ? "ElevenLabs-Stimme wählen" : "Deine Stimme einrichten (kostenlos)" },
@@ -115,7 +121,7 @@ export function SocialView() {
                 <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${settings.enabled ? "bg-emerald-100 text-emerald-900" : "bg-paper text-ink-muted"}`}>{settings.enabled ? "Postet automatisch" : "Pausiert"}</span>
               </div>
               <p className="mt-1 text-sm text-ink-soft">
-                {settings.enabled ? (state.nextSlot ? <>Nächstes Video: <b>{state.nextSlot.label}</b> auf {settings.postVia === "uploadpost" ? settings.platforms.map((p) => PL[p]).join(", ") : "Instagram"}.</> : "Die Automatik ist an – der nächste Termin erscheint in einer Minute.") : settings.onlyUploads ? "Lade deine Videos hoch. Gepostet wird erst, wenn die Automatik eingeschaltet ist." : "Die Videos werden vorab erstellt. Gepostet wird erst, wenn die Automatik eingeschaltet ist."}
+                {settings.enabled ? (state.nextSlot ? <>Nächstes Video: <b>{state.nextSlot.label}</b> auf {targetNames(settings)}.</> : "Die Automatik ist an – der nächste Termin erscheint in einer Minute.") : settings.onlyUploads ? "Lade deine Videos hoch. Gepostet wird erst, wenn die Automatik eingeschaltet ist." : "Die Videos werden vorab erstellt. Gepostet wird erst, wenn die Automatik eingeschaltet ist."}
               </p>
             </div>
             <button type="button" disabled={!ready && !settings.enabled}
@@ -145,7 +151,7 @@ export function SocialView() {
           {note && <p role="status" className={`mt-4 rounded-lg px-3 py-2.5 text-sm ${note.ok ? "bg-emerald-50 text-emerald-900" : "bg-rose-50 text-rose-900"}`}>{note.text}</p>}
         </section>
 
-        <UploadPanel onDone={(t) => { setNote({ ok: true, text: t }); setTimeout(load, 1500); }} />
+        <UploadPanel settings={settings} onDone={(t) => { setNote({ ok: true, text: t }); setTimeout(load, 1500); }} />
         <Queue settings={settings} state={state} onPreview={setPreview} onAction={action} onChanged={load} />
         <Setup settings={settings} onSave={saveAll} voiceTest={state.voiceTest} onSettings={setSettings} onRefresh={load} />
         {!settings.onlyUploads && <ReelVoices settings={settings} job={state.reelStimmen} onAction={action} />}
@@ -158,8 +164,21 @@ export function SocialView() {
 }
 
 /* ---------- Eigenes Video hochladen ---------- */
-function UploadPanel({ onDone }: { onDone: (text: string) => void }) {
+function UploadPanel({ settings, onDone }: { settings: Settings; onDone: (text: string) => void }) {
   const [file, setFile] = useState<File | null>(null);
+  const ttDirect = settings.postVia === "direkt" && settings.hasTiktok && settings.tiktokMode === "direkt" && settings.platforms.includes("tiktok");
+  const [tt, setTt] = useState<TiktokStatus | null>(null);
+  const [ttOpts, setTtOpts] = useState<TiktokOpts>({ privacy: "PUBLIC_TO_EVERYONE", comments: true, duet: true, stitch: true, aigc: false, ownBrand: true });
+  // TikTok verlangt, dass die Auswahl aus den aktuellen Konto-Einstellungen kommt – beim Öffnen des Formulars abfragen
+  useEffect(() => {
+    if (!ttDirect || !file) return;
+    fetch("/api/admin/social/tiktok", { cache: "no-store" }).then((r) => r.json()).then((j: TiktokStatus) => {
+      setTt(j);
+      const opts = j.creator?.privacy_level_options ?? [];
+      if (opts.length && !opts.includes(ttOpts.privacy)) setTtOpts((o) => ({ ...o, privacy: opts.includes("PUBLIC_TO_EVERYONE") ? "PUBLIC_TO_EVERYONE" : opts[0] }));
+    }).catch(() => setTt(null));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ttDirect, file]);
   const [title, setTitle] = useState("");
   const [caption, setCaption] = useState("");
   const [progress, setProgress] = useState<number | null>(null);
@@ -180,6 +199,7 @@ function UploadPanel({ onDone }: { onDone: (text: string) => void }) {
     setErr(""); setProgress(0);
     const fd = new FormData();
     fd.append("video", file); fd.append("title", title.trim()); fd.append("caption", caption.trim());
+    if (ttDirect) fd.append("tiktok", JSON.stringify(ttOpts));
     const xhr = new XMLHttpRequest();
     xhr.open("POST", "/api/admin/social/uploads");
     xhr.upload.onprogress = (ev) => { if (ev.lengthComputable) setProgress(Math.round((ev.loaded / ev.total) * 100)); };
@@ -219,6 +239,32 @@ function UploadPanel({ onDone }: { onDone: (text: string) => void }) {
                 placeholder={"Dein Mieter zahlt nicht mehr? …\n\nKostenloser Check über den Link in der Bio.\n\n#vermieter #mietausfall #rechtsschutz"} />
               <p className="mt-1 text-xs text-ink-muted">{caption.length} / 2.200 Zeichen</p>
             </div>
+            {ttDirect && (
+              <fieldset className="rounded-xl border border-line p-4">
+                <legend className="px-1 text-sm font-semibold">TikTok{tt?.creator?.creator_nickname ? ` · ${tt.creator.creator_nickname}` : ""}</legend>
+                {tt?.error && <p className="mb-2 text-xs text-rose-800">{tt.error}</p>}
+                <label htmlFor="tt-privacy" className="label">Wer darf das Video sehen?</label>
+                <select id="tt-privacy" className="input" value={ttOpts.privacy} onChange={(e) => setTtOpts((o) => ({ ...o, privacy: e.target.value }))}>
+                  {(tt?.creator?.privacy_level_options ?? ["PUBLIC_TO_EVERYONE", "SELF_ONLY"]).map((v) => <option key={v} value={v}>{TT_PRIVACY[v] ?? v}</option>)}
+                </select>
+                <div className="mt-3 flex flex-wrap gap-4 text-sm">
+                  {([["comments", "Kommentare", tt?.creator?.comment_disabled], ["duet", "Duett", tt?.creator?.duet_disabled], ["stitch", "Stitch", tt?.creator?.stitch_disabled]] as const).map(([k, l, off]) => (
+                    <label key={k} className={`flex items-center gap-2 ${off ? "opacity-40" : "cursor-pointer"}`}>
+                      <input type="checkbox" className="h-5 w-5 accent-navy" disabled={!!off} checked={!off && ttOpts[k]} onChange={(e) => setTtOpts((o) => ({ ...o, [k]: e.target.checked }))} />{l} erlauben
+                    </label>
+                  ))}
+                </div>
+                <label className="mt-3 flex cursor-pointer items-start gap-2 text-sm">
+                  <input type="checkbox" className="mt-0.5 h-5 w-5 shrink-0 accent-navy" checked={ttOpts.ownBrand} onChange={(e) => setTtOpts((o) => ({ ...o, ownBrand: e.target.checked }))} />
+                  <span>Wirbt für mein eigenes Unternehmen<span className="block text-xs text-ink-muted">Pflichtangabe bei TikTok – das Video wird als „Werbeinhalt“ gekennzeichnet.</span></span>
+                </label>
+                <label className="mt-2 flex cursor-pointer items-start gap-2 text-sm">
+                  <input type="checkbox" className="mt-0.5 h-5 w-5 shrink-0 accent-navy" checked={ttOpts.aigc} onChange={(e) => setTtOpts((o) => ({ ...o, aigc: e.target.checked }))} />
+                  <span>Als KI-generiert kennzeichnen<span className="block text-xs text-ink-muted">An, wenn eine künstliche Stimme oder KI-Bilder drin sind.</span></span>
+                </label>
+                <p className="mt-3 text-xs leading-5 text-ink-muted">Mit dem Posten stimmst du der <a href="https://www.tiktok.com/legal/page/global/music-usage-confirmation/en" target="_blank" rel="noopener noreferrer" className="underline">Musiknutzungsbestätigung von TikTok</a> zu. Das Video wird zum nächsten Termin mit diesen Einstellungen veröffentlicht.</p>
+              </fieldset>
+            )}
             <button type="button" onClick={upload} disabled={progress !== null}
               className="inline-flex items-center gap-2 rounded-full bg-navy px-5 py-3 text-sm font-semibold text-white hover:bg-navy-800 disabled:opacity-40">
               {progress !== null ? <><Loader2 className="h-4 w-4 animate-spin" aria-hidden /> Lädt hoch … {progress} %</> : <><Upload className="h-4 w-4" aria-hidden /> Hochladen</>}
@@ -299,7 +345,7 @@ function Queue({ settings, state, onPreview, onAction, onChanged }: { settings: 
                   {e?.video && <Small onClick={() => onPreview({ ep, e })}><Play className="h-3.5 w-3.5" aria-hidden />Ansehen</Small>}
                   {!posted && <Small onClick={() => onAction(off ? "on" : "off", ep.id)}>{off ? "Einschalten" : "Nicht posten"}</Small>}
                   {!posted && !off && canPost && e?.status !== "wird gepostet" && (
-                    <Small onClick={() => { if (window.confirm(`„${ep.title}“ jetzt sofort auf ${settings.postVia === "uploadpost" ? settings.platforms.map((p) => PL[p]).join(", ") : "Instagram"} veröffentlichen?`)) onAction("post", ep.id); }}><Send className="h-3.5 w-3.5" aria-hidden />Jetzt posten</Small>
+                    <Small onClick={() => { if (window.confirm(`„${ep.title}“ jetzt sofort auf ${targetNames(settings)} veröffentlichen?`)) onAction("post", ep.id); }}><Send className="h-3.5 w-3.5" aria-hidden />Jetzt posten</Small>
                   )}
                   {ep.style !== "eigen" && (e?.video || e?.status === "fehler") && e?.status !== "rendert" && e?.status !== "wird gepostet" && <Small onClick={() => onAction("render", ep.id)}><RefreshCw className="h-3.5 w-3.5" aria-hidden />Neu erstellen</Small>}
                   {ep.style === "eigen" && e?.status !== "wird gepostet" && <Small onClick={() => remove(ep)}><Trash2 className="h-3.5 w-3.5" aria-hidden />Löschen</Small>}
@@ -328,23 +374,35 @@ function Setup({ settings, onSave, voiceTest, onSettings, onRefresh }: {
   const [hfKey, setHfKey] = useState("");
   const [igKey, setIgKey] = useState("");
   const [igCheck, setIgCheck] = useState<{ ok: boolean; text: string } | null>(null);
+  const [ttSecret, setTtSecret] = useState("");
+  const [ttStatus, setTtStatus] = useState<TiktokStatus | null>(null);
+  useEffect(() => { fetch("/api/admin/social/tiktok", { cache: "no-store" }).then((r) => r.json()).then(setTtStatus).catch(() => undefined); }, [settings.hasTiktok, settings.hasTiktokSecret, settings.tiktokClientKey]);
   const [testAsked, setTestAsked] = useState("");
   const [voices, setVoices] = useState<{ id: string; name: string; info: string; category: string }[]>([]);
   const [busy, setBusy] = useState<"" | "save" | "voices" | "test">("");
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const audio = useRef<HTMLAudioElement | null>(null);
-  useEffect(() => { setS((cur) => ({ ...cur, hasElevenlabs: settings.hasElevenlabs, hasUploadpost: settings.hasUploadpost, hasHuggingface: settings.hasHuggingface, hasCloudflare: settings.hasCloudflare, hasInstagram: settings.hasInstagram, cfAccount: settings.cfAccount, figurFoto: settings.figurFoto, voiceSample: settings.voiceSample, enabled: settings.enabled, disabled: settings.disabled })); }, [settings]);
+  useEffect(() => { setS((cur) => ({ ...cur, hasElevenlabs: settings.hasElevenlabs, hasUploadpost: settings.hasUploadpost, hasHuggingface: settings.hasHuggingface, hasCloudflare: settings.hasCloudflare, hasInstagram: settings.hasInstagram, hasTiktok: settings.hasTiktok, hasTiktokSecret: settings.hasTiktokSecret, tiktokUser: settings.tiktokUser, cfAccount: settings.cfAccount, figurFoto: settings.figurFoto, voiceSample: settings.voiceSample, enabled: settings.enabled, disabled: settings.disabled })); }, [settings]);
   const set = <K extends keyof Settings>(k: K, v: Settings[K]) => setS((x) => ({ ...x, [k]: v }));
 
   async function save() {
     setBusy("save"); setMsg(null);
     try {
-      const next = await onSave(s.voiceEngine === "own" ? { ...s, aiLabel: true } : s, { uploadpost: upKey.trim() || undefined, elevenlabs: elKey.trim() || undefined, huggingface: hfKey.trim() || undefined, instagram: igKey.replace(/\s+/g, "") || undefined });
-      setS(next); setUpKey(""); setElKey(""); setHfKey(""); setIgKey("");
+      const next = await onSave(s.voiceEngine === "own" ? { ...s, aiLabel: true } : s, { uploadpost: upKey.trim() || undefined, elevenlabs: elKey.trim() || undefined, huggingface: hfKey.trim() || undefined, instagram: igKey.replace(/\s+/g, "") || undefined, tiktokSecret: ttSecret.trim() || undefined });
+      setS(next); setUpKey(""); setElKey(""); setHfKey(""); setIgKey(""); setTtSecret("");
       setMsg({ ok: true, text: "Gespeichert. Der Server-Dienst übernimmt die Änderungen in der nächsten Minute." });
       return true;
     } catch (e) { setMsg({ ok: false, text: e instanceof Error ? e.message : "Speichern fehlgeschlagen." }); return false; }
     finally { setBusy(""); }
+  }
+  async function connectTiktok() {
+    if ((ttSecret.trim() || s.tiktokClientKey !== settings.tiktokClientKey || s.tiktokMode !== settings.tiktokMode) && !(await save())) return;
+    window.location.href = "/api/admin/social/tiktok/connect";
+  }
+  async function disconnectTiktok() {
+    if (!window.confirm("TikTok-Verbindung trennen?")) return;
+    await fetch("/api/admin/social/tiktok", { method: "DELETE" }).catch(() => undefined);
+    onRefresh();
   }
   async function checkInstagram() {
     if (igKey.trim() && !(await save())) return;
@@ -397,7 +455,7 @@ function Setup({ settings, onSave, voiceTest, onSettings, onRefresh }: {
         <div>
           <h3 className="text-sm font-semibold">1. Posten</h3>
           <div role="radiogroup" aria-label="Posten über" className="mt-3 grid gap-2 sm:grid-cols-2">
-            {([["direkt", "Direkt von deinem Server", "Kostenlos, ohne Zusatzdienst. Zuerst Instagram, YouTube folgt."], ["uploadpost", "Über Upload-Post", "Zusatzdienst mit eigenem Konto, TikTok nur im Bezahltarif."]] as const).map(([v, t, d]) => (
+            {([["direkt", "Direkt von deinem Server", "Kostenlos, ohne Zusatzdienst: Instagram und TikTok, YouTube folgt."], ["uploadpost", "Über Upload-Post", "Zusatzdienst mit eigenem Konto, TikTok nur im Bezahltarif."]] as const).map(([v, t, d]) => (
               <button key={v} type="button" role="radio" aria-checked={s.postVia === v} onClick={() => set("postVia", v)}
                 className={`rounded-xl border p-3.5 text-left transition ${s.postVia === v ? "border-navy bg-sun/30 ring-1 ring-navy" : "border-line hover:border-navy/40"}`}>
                 <span className="block text-sm font-semibold">{t}</span><span className="mt-0.5 block text-xs text-ink-muted">{d}</span>
@@ -426,7 +484,48 @@ function Setup({ settings, onSave, voiceTest, onSettings, onRefresh }: {
                 </button>
               </div>
               {igCheck && <p role="status" className={`mt-3 rounded-lg px-3 py-2.5 text-sm ${igCheck.ok ? "bg-emerald-50 text-emerald-900" : "bg-rose-50 text-rose-900"}`}>{igCheck.text}</p>}
-              <p className="mt-3 text-xs leading-5 text-ink-muted">YouTube Shorts kommt als Nächstes dazu. TikTok erlaubt automatisches öffentliches Posten erst, wenn TikTok die App geprüft hat – bis dahin postest du dort von Hand.</p>
+              <div className="mt-6 border-t border-line pt-5">
+                <h4 className="text-sm font-semibold">TikTok verbinden {settings.hasTiktok && <span className="ml-1 rounded-full bg-emerald-100 px-2 py-0.5 text-xs text-emerald-900">verbunden{settings.tiktokUser?.name ? ` als ${settings.tiktokUser.name}` : ""}</span>}</h4>
+                <p className="mt-1 text-sm leading-6 text-ink-soft">Einmalig, kostenlos. TikTok erlaubt Posten nur über eine eigene App im TikTok-Entwicklerportal:</p>
+                <ol className="mt-2 list-decimal space-y-1 pl-5 text-sm leading-6 text-ink-soft">
+                  <li>Auf <a href="https://developers.tiktok.com/apps" target="_blank" rel="noopener noreferrer" className="underline">developers.tiktok.com</a> mit deinem TikTok-Konto anmelden → <b>Manage apps → Connect an app</b>. Als Website, Datenschutz und Nutzungsbedingungen eintragen: <code className="text-xs">seitz-rechtsschutz.de</code>, <code className="text-xs">…/datenschutz</code>, <code className="text-xs">…/nutzungsbedingungen</code>.</li>
+                  <li>Produkte hinzufügen: <b>Login Kit</b> (Plattform Web, Redirect URI siehe unten) und <b>Content Posting API</b> (Upload und Direct Post an). Berechtigungen: <code className="text-xs">user.info.basic</code>, <code className="text-xs">video.upload</code>, <code className="text-xs">video.publish</code>.</li>
+                  <li>Unter <b>Sandbox</b> dein TikTok-Konto als <b>Target user</b> hinzufügen – damit klappt es sofort für dein Konto. Für den Dauerbetrieb die App mit <b>Submit for review</b> zur Prüfung schicken.</li>
+                  <li><b>Client Key</b> und <b>Client Secret</b> hier eintragen, dann <b>Mit TikTok verbinden</b> und bei TikTok erlauben.</li>
+                </ol>
+                {ttStatus?.redirectUri && (
+                  <p className="mt-3 break-all rounded-lg bg-paper px-3 py-2 text-xs">Redirect URI: <code>{ttStatus.redirectUri}</code>{" "}
+                    <button type="button" className="ml-1 underline" onClick={() => navigator.clipboard?.writeText(ttStatus.redirectUri).catch(() => undefined)}>kopieren</button>
+                  </p>
+                )}
+                <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <label htmlFor="ttkey" className="label">Client Key</label>
+                    <input id="ttkey" className="input" value={s.tiktokClientKey} onChange={(e) => set("tiktokClientKey", e.target.value.trim())} autoComplete="off" />
+                  </div>
+                  <div>
+                    <label htmlFor="ttsecret" className="label">Client Secret</label>
+                    <input id="ttsecret" type="password" autoComplete="new-password" className="input" value={ttSecret} onChange={(e) => setTtSecret(e.target.value)} placeholder={settings.hasTiktokSecret ? "•••••••• (nur zum Ändern ausfüllen)" : ""} />
+                  </div>
+                </div>
+                <div role="radiogroup" aria-label="TikTok-Modus" className="mt-3 grid gap-2 sm:grid-cols-2">
+                  {([["entwurf", "Als Entwurf ins TikTok-Postfach", "Du bekommst eine Mitteilung in der TikTok-App und tippst auf „Posten“. Klappt sofort."], ["direkt", "Direkt veröffentlichen", "Voll automatisch – öffentlich erst, wenn TikTok die App geprüft hat (dauert Wochen), vorher nur privat."]] as const).map(([v, t, d]) => (
+                    <button key={v} type="button" role="radio" aria-checked={s.tiktokMode === v} onClick={() => set("tiktokMode", v)}
+                      className={`rounded-xl border p-3.5 text-left transition ${s.tiktokMode === v ? "border-navy bg-sun/30 ring-1 ring-navy" : "border-line hover:border-navy/40"}`}>
+                      <span className="block text-sm font-semibold">{t}</span><span className="mt-0.5 block text-xs text-ink-muted">{d}</span>
+                    </button>
+                  ))}
+                </div>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <button type="button" onClick={connectTiktok} disabled={!!busy || !s.tiktokClientKey || (!ttSecret.trim() && !settings.hasTiktokSecret)}
+                    className="inline-flex items-center gap-2 rounded-full bg-navy px-4 py-3 text-sm font-semibold text-white hover:bg-navy-800 disabled:opacity-40">
+                    <ExternalLink className="h-4 w-4" aria-hidden /> {settings.hasTiktok ? "Neu mit TikTok verbinden" : "Mit TikTok verbinden"}
+                  </button>
+                  {settings.hasTiktok && <button type="button" onClick={disconnectTiktok} className="rounded-full border border-line px-4 py-3 text-sm font-semibold hover:border-navy">Trennen</button>}
+                </div>
+                {ttStatus?.error && <p role="alert" className="mt-3 rounded-lg bg-rose-50 px-3 py-2.5 text-sm text-rose-900">TikTok: {ttStatus.error}</p>}
+              </div>
+              <p className="mt-4 text-xs leading-5 text-ink-muted">YouTube Shorts kommt als Nächstes dazu.</p>
             </div>
           ) : (
             <div className="mt-4">

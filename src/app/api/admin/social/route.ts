@@ -25,7 +25,9 @@ const schema = z.object({
   repeat: z.boolean(),
   postVia: z.enum(["direkt", "uploadpost"]).default("direkt"),
   onlyUploads: z.boolean().default(true),
-  keys: z.object({ elevenlabs: key, uploadpost: key, huggingface: key, cloudflare: key, instagram: key }).optional(),
+  tiktokClientKey: z.string().trim().max(60).regex(/^[A-Za-z0-9]*$/, "Der TikTok Client Key besteht nur aus Buchstaben und Zahlen.").default(""),
+  tiktokMode: z.enum(["entwurf", "direkt"]).default("entwurf"),
+  keys: z.object({ elevenlabs: key, uploadpost: key, huggingface: key, cloudflare: key, instagram: key, tiktokSecret: key }).optional(),
 });
 
 export async function GET() {
