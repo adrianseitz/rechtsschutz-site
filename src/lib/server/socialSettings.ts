@@ -1,5 +1,6 @@
 import "server-only";
-import { mkdir, readFile, readdir, rename, rm, writeFile } from "node:fs/promises";
+import { randomBytes } from "node:crypto";
+import { mkdir, readFile, readdir, rename, rm, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { serverConfig } from "./config";
 import { decrypt, encrypt, encryptionEnabled } from "./crypto";
@@ -29,16 +30,20 @@ export type SocialSettings = {
   promo: boolean;          // TikTok: Werbung für das eigene Unternehmen kennzeichnen
   repeat: boolean;         // wenn alle Videos gepostet sind: von vorn beginnen (im anderen Stil)
   disabled: string[];      // Videos, die nicht gepostet werden
+  postVia: PostVia;        // direkt über die offiziellen Schnittstellen (kostenlos) oder über Upload-Post
+  onlyUploads: boolean;    // nur selbst hochgeladene Videos posten (automatisch erstellte bleiben aus)
 };
+export type PostVia = "direkt" | "uploadpost";
 export type VoiceEngine = "own" | "elevenlabs";
 export type VoiceSample = { file: string; at: string; seconds: number; bytes: number };
 export type FigurFoto = { file: string; at: string; bytes: number };
-type KeyName = "elevenlabs" | "uploadpost" | "huggingface" | "cloudflare";
+type KeyName = "elevenlabs" | "uploadpost" | "huggingface" | "cloudflare" | "instagram";
 type Stored = SocialSettings & { keys?: Partial<Record<KeyName, string>>; updatedAt?: string };
 
 export const SOCIAL_DEFAULTS: SocialSettings = {
   enabled: false, days: [1, 3, 5], times: ["18:30"], platforms: ["tiktok", "instagram", "youtube"],
   uploadUser: "", voiceEngine: "own", voiceId: "", voiceName: "", cfAccount: "", speed: 1.1, aiLabel: true, promo: true, repeat: true, disabled: [],
+  postVia: "direkt", onlyUploads: true,
 };
 
 export const socialDir = () => path.join(serverConfig.storageDir, "social");
@@ -62,14 +67,14 @@ async function writeStored(data: Stored) {
 /** Für die Oberfläche – ohne Schlüssel */
 export async function publicSocialSettings() {
   const { keys, ...rest } = await readStored();
-  return { ...rest, hasElevenlabs: Boolean(keys?.elevenlabs), hasUploadpost: Boolean(keys?.uploadpost), hasHuggingface: Boolean(keys?.huggingface), hasCloudflare: Boolean(keys?.cloudflare) };
+  return { ...rest, hasElevenlabs: Boolean(keys?.elevenlabs), hasUploadpost: Boolean(keys?.uploadpost), hasHuggingface: Boolean(keys?.huggingface), hasCloudflare: Boolean(keys?.cloudflare), hasInstagram: Boolean(keys?.instagram) };
 }
 
 /** Speichern. Schlüssel: leer/undefined = behalten, null = löschen, Text = neu (verschlüsselt). */
 export async function saveSocialSettings(input: Partial<SocialSettings>, keys: Partial<Record<KeyName, string | null>> = {}) {
   const prev = await readStored();
   const next: Stored = { ...prev, ...input, keys: { ...prev.keys }, updatedAt: new Date().toISOString() };
-  for (const k of ["elevenlabs", "uploadpost", "huggingface", "cloudflare"] as const) {
+  for (const k of ["elevenlabs", "uploadpost", "huggingface", "cloudflare", "instagram"] as const) {
     const v = keys[k];
     if (v === null) delete next.keys![k];
     else if (v) {
@@ -121,6 +126,63 @@ export async function toggleEpisode(id: string, on: boolean) {
   const set = new Set(s.disabled);
   if (on) set.delete(id); else set.add(id);
   await writeStored({ ...s, disabled: [...set] });
+}
+
+export async function instagramToken(): Promise<string> {
+  const s = await readStored();
+  return s.keys?.instagram ? decrypt(s.keys.instagram) : "";
+}
+
+/* ---------- Eigene Videos: im CRM hochgeladen, der Worker postet sie zum Termin ---------- */
+export type Upload = { id: string; title: string; caption: string; at: string; bytes: number };
+export const UPLOAD_ID = /^eigen-[a-z0-9]{6,30}$/;
+const uploadDir = () => path.join(socialDir(), "uploads");
+const videoFile = (id: string) => path.join(socialDir(), "videos", `${id}.mp4`);
+
+export async function listUploads(): Promise<Upload[]> {
+  const out: Upload[] = [];
+  for (const f of await readdir(uploadDir()).catch(() => [] as string[])) {
+    if (!f.endsWith(".json") || !UPLOAD_ID.test(f.slice(0, -5))) continue;
+    try { out.push(JSON.parse(await readFile(path.join(uploadDir(), f), "utf8"))); } catch { /* defekt – überspringen */ }
+  }
+  return out.sort((a, b) => a.at.localeCompare(b.at));
+}
+
+export async function saveUpload(data: Buffer, meta: { title: string; caption: string }): Promise<Upload> {
+  await mkdir(uploadDir(), { recursive: true, mode: 0o750 });
+  await mkdir(path.dirname(videoFile("x")), { recursive: true, mode: 0o750 });
+  const id = `eigen-${Date.now().toString(36)}${randomBytes(3).toString("hex")}`;
+  const u: Upload = { id, title: meta.title, caption: meta.caption, at: new Date().toISOString(), bytes: data.length };
+  await writeFile(`${videoFile(id)}.tmp`, data, { mode: 0o640 });
+  await rename(`${videoFile(id)}.tmp`, videoFile(id));
+  await writeFile(path.join(uploadDir(), `${id}.json`), JSON.stringify(u), { mode: 0o640 });   // erst danach sieht der Worker das Video
+  return u;
+}
+
+export async function updateUpload(id: string, meta: { title: string; caption: string }): Promise<Upload | null> {
+  if (!UPLOAD_ID.test(id)) return null;
+  const f = path.join(uploadDir(), `${id}.json`);
+  try {
+    const u: Upload = { ...JSON.parse(await readFile(f, "utf8")), title: meta.title, caption: meta.caption };
+    await writeFile(`${f}.tmp`, JSON.stringify(u), { mode: 0o640 });
+    await rename(`${f}.tmp`, f);
+    return u;
+  } catch { return null; }
+}
+
+export async function deleteUpload(id: string) {
+  if (!UPLOAD_ID.test(id)) return;
+  await rm(path.join(uploadDir(), `${id}.json`), { force: true });
+  await rm(videoFile(id), { force: true });
+  await rm(path.join(socialDir(), "videos", `${id}.jpg`), { force: true });
+}
+
+/** Kurzzeit-Kopie für Instagram (Zufallsname, höchstens 6 Stunden alt) */
+export async function publicClip(name: string): Promise<string | null> {
+  if (!/^[a-f0-9]{32}\.mp4$/.test(name)) return null;
+  const p = path.join(socialDir(), "public", name);
+  const s = await stat(p).catch(() => null);
+  return s?.isFile() && Date.now() - s.mtimeMs < 6 * 3600_000 ? p : null;
 }
 
 export async function elevenlabsKey(): Promise<string> {

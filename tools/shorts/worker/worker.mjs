@@ -8,7 +8,8 @@ import { execFileSync } from "node:child_process";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { renderEpisode } from "../render.mjs";
-import { P, decrypt, ensureDirs, log, ownFile, readJson, takeJobs, trimLog, writeJson } from "./store.mjs";
+import { P, decrypt, encrypt, ensureDirs, log, ownFile, readJson, takeJobs, trimLog, writeJson } from "./store.mjs";
+import { cleanPublic, igPublishReel, igRefresh } from "./instagram.mjs";
 import { elevenlabsUsage, tts, uploadStatus, uploadVideo, voiceInfo } from "./services.mjs";
 import { CREDIT, ENGINE, VoiceError, prepareVoice, speak } from "./ownvoice.mjs";
 import { figurSchritt, kitDir } from "./figur.mjs";
@@ -46,6 +47,29 @@ async function loadLibrary(cycle = 0) {
   }
   return eps.sort((a, b) => (a.order ?? 999) - (b.order ?? 999) || a.id.localeCompare(b.id));
 }
+// ---------- Eigene Videos (im CRM hochgeladen, z. B. fertige Reels) ----------
+async function loadUploads() {
+  const out = [];
+  for (const f of (await readdir(P.uploads).catch(() => [])).filter((x) => /^eigen-[a-z0-9]{6,30}\.json$/.test(x))) {
+    const u = await readJson(join(P.uploads, f), null);
+    if (!u || u.id !== f.replace(/\.json$/, "") || !existsSync(join(P.videos, `${u.id}.mp4`))) continue;
+    out.push({ id: u.id, order: -1, title: u.title || "Eigenes Video", topic: "eigen", style: "eigen", caption: u.caption || "", beats: [], upload: true, at: u.at || "" });
+  }
+  return out.sort((a, b) => a.at.localeCompare(b.at));   // in der Reihenfolge des Hochladens
+}
+/** Ein hochgeladenes Video ist sofort bereit; Vorschaubild und Länge holt ffmpeg/ffprobe */
+function readyUpload(u, state) {
+  const e = (state.episodes[u.id] ||= {});
+  if (e.status && e.status !== "rendert") return;
+  const video = `${u.id}.mp4`, thumb = `${u.id}.jpg`;
+  let duration = null;
+  try { duration = Number(execFileSync("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", join(P.videos, video)], { timeout: 30_000 }).toString().trim()) || null; } catch { /* nur Anzeige */ }
+  if (!existsSync(join(P.videos, thumb))) {
+    try { execFileSync("ffmpeg", ["-y", "-v", "error", "-ss", "1", "-i", join(P.videos, video), "-frames:v", "1", "-vf", "scale=270:-2", join(P.videos, thumb)], { timeout: 60_000 }); } catch { /* ohne Vorschaubild */ }
+  }
+  Object.assign(e, { status: "bereit", video, thumb: existsSync(join(P.videos, thumb)) ? thumb : undefined, renderedAt: u.at, duration, voiced: true, upload: true, error: null });
+}
+
 // nur was im Video zu sehen/hören ist – eine geänderte Bildunterschrift erzeugt kein neues Video
 // 3D-Videos zeigen die Figur: ist eine neue Figur fertig, werden sie neu erstellt
 let FIG_V = 0;
@@ -73,7 +97,7 @@ const voiceSig = (s) => engineOf(s) === "own"
 function keysOf(settings) {
   const k = settings.keys || {};
   const get = (v) => { try { return decrypt(v || ""); } catch { return ""; } };
-  return { el: get(k.elevenlabs), up: get(k.uploadpost), hf: get(k.huggingface), cf: get(k.cloudflare) };
+  return { el: get(k.elevenlabs), up: get(k.uploadpost), hf: get(k.huggingface), cf: get(k.cloudflare), ig: get(k.instagram) };
 }
 
 // ---------- Stimme ----------
@@ -221,6 +245,7 @@ async function reelVoices(settings, keys, state) {
 
 // ---------- Video erstellen ----------
 async function render(ep, settings, keys, state) {
+  if (ep.upload) return;   // eigene Videos werden nicht erstellt
   const e = (state.episodes[ep.id] ||= {});
   const wasPosted = e.status === "gepostet";   // erneut erstellt, aber nicht noch einmal posten
   Object.assign(e, { status: "rendert", error: null });
@@ -261,6 +286,7 @@ async function render(ep, settings, keys, state) {
 }
 
 function needsRender(e, ep, settings, keys, state) {
+  if (ep.upload) return false;
   if (!e || !e.status) return true;
   if (["gepostet", "wird gepostet", "fehler"].includes(e.status)) return false;
   if (!e.video || !existsSync(join(P.videos, e.video))) return true;
@@ -277,7 +303,43 @@ function youtubeDescription(ep, e = {}) {
     ...(e.voiced && e.voiceEngine === "own" ? ["", CREDIT] : [])].join("\n");
 }
 
+// ---------- Posten ----------
+const direkt = (settings) => (settings.postVia || "direkt") === "direkt";
+/** Warum gerade nicht gepostet werden kann ("" = alles bereit) */
+function postBlocker(settings, keys) {
+  if (direkt(settings)) return !keys.ig ? "Instagram ist noch nicht verbunden" : (settings.platforms || PLATFORMS).includes("instagram") ? "" : "Instagram ist nicht als Plattform ausgewählt";
+  return keys.up && settings.uploadUser ? "" : "Upload-Post-Schlüssel oder Profilname fehlt";
+}
+
+/** Direkt über die offizielle Instagram-Schnittstelle – ohne Zusatzdienst. YouTube/TikTok folgen. */
+async function postDirect(ep, settings, keys, state, why) {
+  const e = (state.episodes[ep.id] ||= {});
+  const want = (settings.platforms || PLATFORMS).filter((p) => PLATFORMS.includes(p));
+  const platforms = Object.fromEntries(want.map((p) => [p, p === "instagram" ? { status: "processing" } : { status: "skipped", message: "Direkt bisher nur Instagram" }]));
+  Object.assign(e, { status: "wird gepostet", requestId: null, postStartedAt: now(), platforms, error: null, why });
+  state.busy = `Veröffentlicht „${ep.title}“ auf Instagram`;
+  await writeJson(P.state, state);
+  try {
+    const r = await igPublishReel({
+      token: keys.ig, file: join(P.videos, e.video), caption: ep.caption || ep.title, site: SITE, publicDir: P.public,
+      onStep: async (t) => { state.busy = `${t} („${ep.title}“)`; await writeJson(P.state, state); },
+    });
+    e.platforms.instagram = { status: "completed", url: r.url };
+    Object.assign(e, { status: "gepostet", postedAt: now() });
+    await log("post", `Auf Instagram veröffentlicht: ${ep.title}${r.username ? ` (@${r.username})` : ""}`);
+    return true;
+  } catch (err) {
+    e.platforms.instagram = { status: "failed", message: msg(err) };
+    Object.assign(e, { status: "fehler", error: `Posten fehlgeschlagen: ${msg(err)}` });
+    await log("fehler", `Instagram „${ep.title}“: ${msg(err)}`);
+    return false;
+  } finally {
+    state.busy = null;
+  }
+}
+
 async function post(ep, settings, keys, state, why) {
+  if (direkt(settings)) return postDirect(ep, settings, keys, state, why);
   const e = (state.episodes[ep.id] ||= {});
   const platforms = (settings.platforms || PLATFORMS).filter((p) => PLATFORMS.includes(p));
   if (!platforms.length) { await log("fehler", "Keine Plattform ausgewählt – nichts gepostet."); return false; }
@@ -327,8 +389,12 @@ async function tick() {
   const keys = keysOf(settings);
   const state = await readJson(P.state, {});
   state.episodes ||= {};
-  const lib = await loadLibrary(state.cycle || 0);
-  const byId = new Map(lib.map((ep) => [ep.id, ep]));
+  const library = await loadLibrary(state.cycle || 0);
+  const uploads = await loadUploads();
+  for (const u of uploads) readyUpload(u, state);
+  // Standard: nur eigene (hochgeladene) Videos posten; die automatisch erstellten nur, wenn im CRM eingeschaltet
+  const lib = settings.onlyUploads === false ? [...uploads, ...library] : uploads;
+  const byId = new Map([...library, ...uploads].map((ep) => [ep.id, ep]));
   FIG_V = state.figur?.nutzbar && kitDir(P.figur) ? state.figur.version || 0 : 0;
   state.library = lib.map((ep) => ({ id: ep.id, order: ep.order, title: ep.title, topic: ep.topic, style: ep.style, caption: ep.caption, beats: ep.beats.length }));
   const disabled = new Set(settings.disabled || []);
@@ -340,14 +406,15 @@ async function tick() {
     if (job.type === "voicetest") { await voiceTest(settings, keys, state); await writeJson(P.state, state); continue; }
     if (job.type === "reelstimmen") { await reelVoices(settings, keys, state); await writeJson(P.state, state); continue; }
     if (job.type === "figur" && (job.id === "neu" || job.id === "weiter")) { await figur(job.id, settings, keys, state); await writeJson(P.state, state); continue; }
-    if (job.type === "probe") { await probe(lib, settings, keys, state); await writeJson(P.state, state); continue; }
+    if (job.type === "probe") { await probe(library, settings, keys, state); await writeJson(P.state, state); continue; }
     if (!ep) continue;
     if (job.type === "render") { delete state.episodes[ep.id]?.error; await render(ep, settings, keys, state); }
     else if (job.type === "reset") { delete state.episodes[ep.id]; await log("info", `Wieder eingereiht: ${ep.title}`); }
     else if (job.type === "post") {
-      if (!keys.up || !settings.uploadUser) { await log("fehler", "Posten nicht möglich: Upload-Post-Schlüssel oder Profilname fehlt."); continue; }
+      const block = postBlocker(settings, keys);
+      if (block) { await log("fehler", `Posten nicht möglich: ${block}.`); continue; }
       const e = state.episodes[ep.id];
-      if (!e || needsRender(e, ep, settings, keys, state) || e.status === "fehler" && !existsSync(join(P.videos, e.video || "-"))) await render(ep, settings, keys, state);
+      if (!ep.upload && (!e || needsRender(e, ep, settings, keys, state) || e.status === "fehler" && !existsSync(join(P.videos, e.video || "-")))) await render(ep, settings, keys, state);
       if (state.episodes[ep.id]?.video) await post(ep, settings, keys, state, "manuell");
     }
     await writeJson(P.state, state);
@@ -367,7 +434,8 @@ async function tick() {
   let queue = open();
   // Alles gepostet? Dann beginnt die Reihe von vorn (abschaltbar im CRM) – beim nächsten Durchlauf im anderen Stil
   const active = lib.filter((ep) => !disabled.has(ep.id));
-  if (!queue.length && active.length && settings.repeat !== false && active.every((ep) => state.episodes[ep.id]?.status === "gepostet")) {
+  // (nur für automatisch erstellte Videos – eigene Videos werden nicht von selbst ein zweites Mal gepostet)
+  if (!queue.length && active.length && settings.onlyUploads === false && settings.repeat !== false && active.every((ep) => state.episodes[ep.id]?.status === "gepostet")) {
     state.cycle = (state.cycle || 0) + 1;
     for (const ep of active) { const e = state.episodes[ep.id]; state.episodes[ep.id] = { lastPostedAt: e.postedAt, timesPosted: (e.timesPosted || 0) + 1, lastPlatforms: e.platforms }; }
     await log("info", `Alle Videos sind gepostet – Runde ${state.cycle + 1} startet.`);
@@ -386,8 +454,9 @@ async function tick() {
     const slot = dueSlot(settings, state.lastSlot);
     if (slot) {
       const next = queue.find((ep) => state.episodes[ep.id]?.status === "bereit");
-      if (!keys.up || !settings.uploadUser) await log("fehler", "Termin verpasst: Upload-Post-Schlüssel oder Profilname fehlt.");
-      else if (!next) await log("fehler", "Termin verpasst: kein fertiges Video in der Warteschlange.");
+      const block = postBlocker(settings, keys);
+      if (block) await log("fehler", `Termin verpasst: ${block}.`);
+      else if (!next) await log("fehler", settings.onlyUploads === false ? "Termin verpasst: kein fertiges Video in der Warteschlange." : "Termin verpasst: Alle hochgeladenen Videos sind gepostet – bitte neue hochladen.");
       else await post(next, settings, keys, state, `Termin ${slot}`);
       state.lastSlot = slot;
     }
@@ -401,12 +470,25 @@ async function tick() {
   }
 
   // Aufnahmen und Videos von Episoden, die es nicht mehr gibt (umbenannt, in die Reserve verschoben), aufräumen
-  for (const d of await readdir(P.voice).catch(() => [])) if (![...byId.keys()].some((id) => d.startsWith(id + "-"))) await rm(join(P.voice, d), { recursive: true, force: true });
+  for (const d of await readdir(P.voice).catch(() => [])) if (d !== "reels" && ![...byId.keys()].some((id) => d.startsWith(id + "-"))) await rm(join(P.voice, d), { recursive: true, force: true });
   for (const f of await readdir(P.videos).catch(() => [])) {
-    if (/^(figur-|probe-|voice-test)/.test(f)) continue;   // Figur-Vorschauen, Probevideo und Hörprobe gehören keiner Episode
+    if (/^(figur-|probe-|voice-test)/.test(f) || !/\.(mp4|jpg)$/.test(f)) continue;   // Figur-Vorschauen, Probevideo, Hörprobe, Reel-Stimmen-ZIP gehören keiner Episode
     const id = f.replace(/(\.tmp)?\.(mp4|jpg)$/, "");
     if (!byId.has(id) && state.episodes[id]?.status !== "gepostet") { await rm(join(P.videos, f), { force: true }); if (state.episodes[id]) delete state.episodes[id]; }
   }
+
+  // Instagram-Zugang gilt 60 Tage – alle 5 Tage verlängern, damit er nie abläuft
+  if (keys.ig && Date.now() - Date.parse(state.igRefreshedAt || 0) > 5 * 86400_000) {
+    state.igRefreshedAt = now();
+    try {
+      const r = await igRefresh(keys.ig);
+      const cur = await readJson(P.settings, {});
+      cur.keys = { ...(cur.keys || {}), instagram: encrypt(r.token) };
+      await writeJson(P.settings, cur);
+      await log("info", `Instagram-Zugang verlängert (gültig ${Math.round((r.expiresIn || 0) / 86400)} Tage).`);
+    } catch (err) { await log("fehler", `Instagram-Zugang verlängern: ${msg(err)}`); }
+  }
+  await cleanPublic(P.public);
 
   state.heartbeat = now();
   state.clock = berlin();

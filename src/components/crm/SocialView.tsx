@@ -11,17 +11,18 @@ type VoiceSample = { file: string; at: string; seconds: number; bytes: number };
 type Settings = {
   enabled: boolean; days: number[]; times: string[]; platforms: Platform[]; uploadUser: string; voiceEngine: "own" | "elevenlabs"; voiceSample?: VoiceSample;
   voiceId: string; voiceName: string; speed: number; aiLabel: boolean; promo: boolean; repeat: boolean; disabled: string[];
-  hasElevenlabs: boolean; hasUploadpost: boolean; hasHuggingface: boolean; updatedAt?: string;
+  hasElevenlabs: boolean; hasUploadpost: boolean; hasHuggingface: boolean; hasInstagram: boolean; updatedAt?: string;
+  postVia: "direkt" | "uploadpost"; onlyUploads: boolean;
   cfAccount: string; hasCloudflare: boolean; figurFoto?: { file: string; at: string; bytes: number };
 };
 type FigurState = { status: "läuft" | "auswahl" | "wartet" | "fertig" | "fehler"; phase?: string; schritt?: string | null; fertig?: string[]; at: string; error?: string | null; weiterAb?: string | null; hinweise?: string[]; nutzbar?: boolean; version?: number };
 type ProbeState = { status: "läuft" | "fertig" | "fehler"; at: string; error?: string; file?: string; voiced?: boolean; figur?: boolean; duration?: number; took?: number };
-type Keys = { elevenlabs?: string; uploadpost?: string; huggingface?: string; cloudflare?: string };
+type Keys = { elevenlabs?: string; uploadpost?: string; huggingface?: string; cloudflare?: string; instagram?: string };
 type VoiceTest = { status: "läuft" | "fertig" | "fehler"; at: string; error?: string; file?: string; took?: number };
 type ReelJob = { status: "läuft" | "fertig" | "fehler"; at: string; error?: string; file?: string; reels?: number; beats?: number; took?: number };
-type Ep = { id: string; order: number; title: string; topic: string; style: "whiteboard" | "cartoon"; caption: string; beats: number };
+type Ep = { id: string; order: number; title: string; topic: string; style: "whiteboard" | "cartoon" | "studio3d" | "eigen"; caption: string; beats: number };
 type EpState = {
-  status?: string; video?: string; thumb?: string; duration?: number; voiced?: boolean; renderedAt?: string; postedAt?: string; error?: string | null;
+  status?: string; video?: string; thumb?: string; duration?: number; voiced?: boolean; upload?: boolean; renderedAt?: string; postedAt?: string; error?: string | null;
   platforms?: Record<string, { status: string; url?: string | null; inbox?: boolean; message?: string }>;
 };
 type State = {
@@ -33,7 +34,10 @@ type LogEntry = { at: string; kind: string; text: string };
 
 const PL: Record<Platform, string> = { tiktok: "TikTok", instagram: "Instagram", youtube: "YouTube" };
 const DAYS = [{ d: 1, l: "Mo" }, { d: 2, l: "Di" }, { d: 3, l: "Mi" }, { d: 4, l: "Do" }, { d: 5, l: "Fr" }, { d: 6, l: "Sa" }, { d: 0, l: "So" }];
-const TOPIC: Record<string, string> = { vermieter: "Vermieter", firma: "Firma", arbeit: "Arbeit", privat: "Privat", allgemein: "Allgemein" };
+const TOPIC: Record<string, string> = { vermieter: "Vermieter", firma: "Firma", arbeit: "Arbeit", privat: "Privat", allgemein: "Allgemein", eigen: "Eigenes Video" };
+const STYLE: Record<string, string> = { whiteboard: "Whiteboard", cartoon: "Cartoon", studio3d: "3D", eigen: "hochgeladen" };
+/** Kann gerade gepostet werden? (direkt: Instagram verbunden; sonst Upload-Post) */
+const canPostWith = (s: Settings) => (s.postVia === "uploadpost" ? s.hasUploadpost && !!s.uploadUser : s.hasInstagram && s.platforms.includes("instagram"));
 const fmt = (iso?: string) => (iso ? new Date(iso).toLocaleString("de-DE", { timeZone: "Europe/Berlin", day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) : "");
 
 async function post(url: string, body: unknown) {
@@ -65,7 +69,7 @@ export function SocialView() {
   }, [load]);
 
   async function saveAll(next: Settings, keys?: Keys) {
-    const { hasElevenlabs, hasUploadpost, hasHuggingface, hasCloudflare, voiceSample, figurFoto, updatedAt, disabled, ...rest } = next; void hasElevenlabs; void hasUploadpost; void hasHuggingface; void hasCloudflare; void voiceSample; void figurFoto; void updatedAt; void disabled;
+    const { hasElevenlabs, hasUploadpost, hasHuggingface, hasCloudflare, hasInstagram, voiceSample, figurFoto, updatedAt, disabled, ...rest } = next; void hasElevenlabs; void hasUploadpost; void hasHuggingface; void hasCloudflare; void hasInstagram; void voiceSample; void figurFoto; void updatedAt; void disabled;
     const j = await post("/api/admin/social", { ...rest, keys });
     setSettings(j.settings);
     return j.settings as Settings;
@@ -87,8 +91,12 @@ export function SocialView() {
 
   const online = state.heartbeat ? Date.now() - Date.parse(state.heartbeat) < 4 * 60_000 : false;
   const steps = [
-    { done: settings.hasUploadpost && !!settings.uploadUser, text: "Upload-Post verbinden (postet auf TikTok, Instagram und YouTube)" },
-    { done: settings.voiceEngine === "elevenlabs" ? settings.hasElevenlabs && !!settings.voiceId : settings.hasHuggingface && !!settings.voiceSample, text: settings.voiceEngine === "elevenlabs" ? "ElevenLabs-Stimme wählen" : "Deine Stimme einrichten (kostenlos)" },
+    settings.postVia === "uploadpost"
+      ? { done: settings.hasUploadpost && !!settings.uploadUser, text: "Upload-Post verbinden (postet auf TikTok, Instagram und YouTube)" }
+      : { done: settings.hasInstagram, text: "Instagram verbinden (kostenlos, ohne Zusatzdienst)" },
+    settings.onlyUploads
+      ? { done: (state.library ?? []).some((ep) => ep.style === "eigen"), text: "Erstes Video hochladen" }
+      : { done: settings.voiceEngine === "elevenlabs" ? settings.hasElevenlabs && !!settings.voiceId : settings.hasHuggingface && !!settings.voiceSample, text: settings.voiceEngine === "elevenlabs" ? "ElevenLabs-Stimme wählen" : "Deine Stimme einrichten (kostenlos)" },
     { done: settings.platforms.length > 0 && settings.days.length > 0, text: "Zeitplan festlegen" },
     { done: settings.enabled, text: "Automatik einschalten" },
   ];
@@ -107,7 +115,7 @@ export function SocialView() {
                 <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${settings.enabled ? "bg-emerald-100 text-emerald-900" : "bg-paper text-ink-muted"}`}>{settings.enabled ? "Postet automatisch" : "Pausiert"}</span>
               </div>
               <p className="mt-1 text-sm text-ink-soft">
-                {settings.enabled ? (state.nextSlot ? <>Nächstes Video: <b>{state.nextSlot.label}</b> auf {settings.platforms.map((p) => PL[p]).join(", ")}.</> : "Die Automatik ist an – der nächste Termin erscheint in einer Minute.") : "Die Videos werden vorab erstellt. Gepostet wird erst, wenn die Automatik eingeschaltet ist."}
+                {settings.enabled ? (state.nextSlot ? <>Nächstes Video: <b>{state.nextSlot.label}</b> auf {settings.postVia === "uploadpost" ? settings.platforms.map((p) => PL[p]).join(", ") : "Instagram"}.</> : "Die Automatik ist an – der nächste Termin erscheint in einer Minute.") : settings.onlyUploads ? "Lade deine Videos hoch. Gepostet wird erst, wenn die Automatik eingeschaltet ist." : "Die Videos werden vorab erstellt. Gepostet wird erst, wenn die Automatik eingeschaltet ist."}
               </p>
             </div>
             <button type="button" disabled={!ready && !settings.enabled}
@@ -137,14 +145,89 @@ export function SocialView() {
           {note && <p role="status" className={`mt-4 rounded-lg px-3 py-2.5 text-sm ${note.ok ? "bg-emerald-50 text-emerald-900" : "bg-rose-50 text-rose-900"}`}>{note.text}</p>}
         </section>
 
-        <Queue settings={settings} state={state} onPreview={setPreview} onAction={action} />
+        <UploadPanel onDone={(t) => { setNote({ ok: true, text: t }); setTimeout(load, 1500); }} />
+        <Queue settings={settings} state={state} onPreview={setPreview} onAction={action} onChanged={load} />
         <Setup settings={settings} onSave={saveAll} voiceTest={state.voiceTest} onSettings={setSettings} onRefresh={load} />
-        <ReelVoices settings={settings} job={state.reelStimmen} onAction={action} />
-        <FigurPanel settings={settings} figur={state.figur} probe={state.probe} onSave={saveAll} onSettings={setSettings} onRefresh={load} />
+        {!settings.onlyUploads && <ReelVoices settings={settings} job={state.reelStimmen} onAction={action} />}
+        {!settings.onlyUploads && <FigurPanel settings={settings} figur={state.figur} probe={state.probe} onSave={saveAll} onSettings={setSettings} onRefresh={load} />}
         <Log entries={log} />
       </div>
       {preview && <Preview ep={preview.ep} e={preview.e} onClose={() => setPreview(null)} />}
     </div>
+  );
+}
+
+/* ---------- Eigenes Video hochladen ---------- */
+function UploadPanel({ onDone }: { onDone: (text: string) => void }) {
+  const [file, setFile] = useState<File | null>(null);
+  const [title, setTitle] = useState("");
+  const [caption, setCaption] = useState("");
+  const [progress, setProgress] = useState<number | null>(null);
+  const [err, setErr] = useState("");
+  const input = useRef<HTMLInputElement | null>(null);
+
+  function pick(f: File | null) {
+    setErr("");
+    if (!f) return;
+    if (f.type !== "video/mp4") { setErr("Bitte ein MP4-Video wählen (so wie die fertigen Reels)."); return; }
+    if (f.size > 250 * 1024 * 1024) { setErr("Das Video ist zu groß (höchstens 250 MB)."); return; }
+    setFile(f);
+    if (!title) setTitle(f.name.replace(/\.mp4$/i, "").replace(/[-_]+/g, " ").slice(0, 120));
+  }
+  function upload() {
+    if (!file) return;
+    if (!title.trim()) { setErr("Bitte einen kurzen Namen angeben."); return; }
+    setErr(""); setProgress(0);
+    const fd = new FormData();
+    fd.append("video", file); fd.append("title", title.trim()); fd.append("caption", caption.trim());
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "/api/admin/social/uploads");
+    xhr.upload.onprogress = (ev) => { if (ev.lengthComputable) setProgress(Math.round((ev.loaded / ev.total) * 100)); };
+    xhr.onload = () => {
+      setProgress(null);
+      let j: { ok?: boolean; error?: string } = {};
+      try { j = JSON.parse(xhr.responseText); } catch { /* leer */ }
+      if (xhr.status >= 200 && xhr.status < 300 && j.ok) {
+        setFile(null); setTitle(""); setCaption(""); if (input.current) input.current.value = "";
+        onDone("Hochgeladen – das Video steht in der Warteschlange und wird zum nächsten Termin gepostet.");
+      } else setErr(j.error || "Hochladen fehlgeschlagen.");
+    };
+    xhr.onerror = () => { setProgress(null); setErr("Keine Verbindung – bitte noch einmal versuchen."); };
+    xhr.send(fd);
+  }
+  return (
+    <section className="rounded-xl border border-line bg-white p-5 sm:p-7">
+      <h2 className="text-lg font-semibold tracking-[-0.02em]">Video hochladen</h2>
+      <p className="mt-1 text-sm leading-6 text-ink-soft">Fertiges Reel (MP4, Hochformat) mit dem Text dazu. Es kommt hinten in die Warteschlange und wird zu deinen Zeiten automatisch gepostet.</p>
+      <div className="mt-4 space-y-3">
+        <div>
+          <input ref={input} id="up-file" type="file" accept="video/mp4" className="sr-only" onChange={(e) => pick(e.target.files?.[0] ?? null)} />
+          <label htmlFor="up-file" className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-line px-4 py-3 text-sm font-semibold hover:border-navy">
+            <Upload className="h-4 w-4" aria-hidden /> {file ? "Anderes Video wählen" : "Video wählen"}
+          </label>
+          {file && <span className="ml-3 text-sm text-ink-soft">{file.name} · {(file.size / 1024 / 1024).toFixed(1)} MB</span>}
+        </div>
+        {file && (
+          <>
+            <div>
+              <label htmlFor="up-title" className="label">Name (nur für dich im CRM)</label>
+              <input id="up-title" className="input" value={title} maxLength={120} onChange={(e) => setTitle(e.target.value)} placeholder="z. B. Mieter zahlt nicht" />
+            </div>
+            <div>
+              <label htmlFor="up-caption" className="label">Text zum Video (Bildunterschrift auf Instagram)</label>
+              <textarea id="up-caption" className="input min-h-[140px]" value={caption} maxLength={2200} onChange={(e) => setCaption(e.target.value)}
+                placeholder={"Dein Mieter zahlt nicht mehr? …\n\nKostenloser Check über den Link in der Bio.\n\n#vermieter #mietausfall #rechtsschutz"} />
+              <p className="mt-1 text-xs text-ink-muted">{caption.length} / 2.200 Zeichen</p>
+            </div>
+            <button type="button" onClick={upload} disabled={progress !== null}
+              className="inline-flex items-center gap-2 rounded-full bg-navy px-5 py-3 text-sm font-semibold text-white hover:bg-navy-800 disabled:opacity-40">
+              {progress !== null ? <><Loader2 className="h-4 w-4 animate-spin" aria-hidden /> Lädt hoch … {progress} %</> : <><Upload className="h-4 w-4" aria-hidden /> Hochladen</>}
+            </button>
+          </>
+        )}
+        {err && <p role="alert" className="rounded-lg bg-rose-50 px-3 py-2.5 text-sm text-rose-900">{err}</p>}
+      </div>
+    </section>
   );
 }
 
@@ -153,7 +236,7 @@ function statusOf(e: EpState | undefined, off: boolean) {
   if (off) return { label: "Aus", cls: "bg-paper text-ink-muted" };
   switch (e?.status) {
     case "rendert": return { label: "Wird erstellt", cls: "bg-sky-100 text-sky-900" };
-    case "bereit": return { label: e.voiced ? "Bereit · mit Stimme" : "Bereit · ohne Stimme", cls: "bg-emerald-100 text-emerald-900" };
+    case "bereit": return { label: e.upload ? "Bereit" : e.voiced ? "Bereit · mit Stimme" : "Bereit · ohne Stimme", cls: "bg-emerald-100 text-emerald-900" };
     case "wird gepostet": return { label: "Wird veröffentlicht", cls: "bg-amber-100 text-amber-900" };
     case "gepostet": return { label: `Veröffentlicht ${fmt(e.postedAt)}`, cls: "bg-navy text-white" };
     case "fehler": return { label: "Fehler", cls: "bg-rose-100 text-rose-900" };
@@ -161,19 +244,25 @@ function statusOf(e: EpState | undefined, off: boolean) {
   }
 }
 
-function Queue({ settings, state, onPreview, onAction }: { settings: Settings; state: State; onPreview: (p: { ep: Ep; e: EpState }) => void; onAction: (t: string, id?: string) => void }) {
+function Queue({ settings, state, onPreview, onAction, onChanged }: { settings: Settings; state: State; onPreview: (p: { ep: Ep; e: EpState }) => void; onAction: (t: string, id?: string) => void; onChanged: () => void }) {
   const lib = state.library ?? [];
   const queue = state.queue ?? [];
-  const canPost = settings.hasUploadpost && !!settings.uploadUser && settings.platforms.length > 0;
+  const canPost = canPostWith(settings) && settings.platforms.length > 0;
+  async function remove(ep: Ep) {
+    if (!window.confirm(`„${ep.title}“ löschen? Das Video wird vom Server entfernt.`)) return;
+    await fetch(`/api/admin/social/uploads?id=${encodeURIComponent(ep.id)}`, { method: "DELETE" }).catch(() => undefined);
+    setTimeout(onChanged, 300);
+  }
   const left = queue.length;
   return (
     <section className="rounded-xl border border-line bg-white p-5 sm:p-7">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h2 className="text-lg font-semibold tracking-[-0.02em]">Videos</h2>
-        <span className="text-xs text-ink-muted">{left} in der Warteschlange · {settings.days.length * settings.times.length} pro Woche{settings.repeat ? ` · Runde ${(state.cycle ?? 0) + 1}` : ""}</span>
+        <span className="text-xs text-ink-muted">{left} in der Warteschlange · {settings.days.length * settings.times.length} pro Woche{settings.repeat && !settings.onlyUploads ? ` · Runde ${(state.cycle ?? 0) + 1}` : ""}</span>
       </div>
-      {left > 0 && left <= 3 && !settings.repeat && <p className="mt-3 flex items-start gap-2 rounded-lg bg-amber-50 px-3 py-2.5 text-sm text-amber-950"><CircleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />Nur noch {left} Videos übrig – Zeit für neue Themen.</p>}
-      {!lib.length && <p className="mt-4 text-sm text-ink-muted">Noch keine Videos – der Server-Dienst liest die Themen beim Start ein.</p>}
+      {settings.onlyUploads && left === 0 && lib.length > 0 && <p className="mt-3 flex items-start gap-2 rounded-lg bg-amber-50 px-3 py-2.5 text-sm text-amber-950"><CircleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />Alle Videos sind gepostet – lade neue hoch, sonst fällt der nächste Termin aus.</p>}
+      {left > 0 && left <= 3 && (settings.onlyUploads || !settings.repeat) && <p className="mt-3 flex items-start gap-2 rounded-lg bg-amber-50 px-3 py-2.5 text-sm text-amber-950"><CircleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />Nur noch {left} Videos übrig – Zeit für neue Themen.</p>}
+      {!lib.length && <p className="mt-4 text-sm text-ink-muted">{settings.onlyUploads ? "Noch keine Videos – lade oben dein erstes Video hoch." : "Noch keine Videos – der Server-Dienst liest die Themen beim Start ein."}</p>}
       <ul className="mt-4 divide-y divide-line">
         {lib.map((ep) => {
           const e = state.episodes?.[ep.id];
@@ -195,7 +284,7 @@ function Queue({ settings, state, onPreview, onAction }: { settings: Settings; s
                 </div>
                 <div className="mt-1 flex flex-wrap items-center gap-1.5 text-xs">
                   <span className={`rounded-full px-2 py-0.5 font-semibold ${st.cls}`}>{e?.status === "rendert" && <Loader2 className="mr-1 inline h-3 w-3 animate-spin" aria-hidden />}{st.label}</span>
-                  <span className="text-ink-muted">{TOPIC[ep.topic] ?? ep.topic} · {ep.style === "whiteboard" ? "Whiteboard" : "Cartoon"}{e?.duration ? ` · ${Math.round(e.duration)} s` : ""}</span>
+                  <span className="text-ink-muted">{TOPIC[ep.topic] ?? ep.topic}{ep.style !== "eigen" ? ` · ${STYLE[ep.style] ?? ep.style}` : ""}{e?.duration ? ` · ${Math.round(e.duration)} s` : ""}</span>
                 </div>
                 {e?.error && <p className="mt-1 text-xs text-rose-800">{e.error}</p>}
                 {e?.platforms && (posted || e.status === "wird gepostet" || e.status === "fehler") && (
@@ -210,9 +299,10 @@ function Queue({ settings, state, onPreview, onAction }: { settings: Settings; s
                   {e?.video && <Small onClick={() => onPreview({ ep, e })}><Play className="h-3.5 w-3.5" aria-hidden />Ansehen</Small>}
                   {!posted && <Small onClick={() => onAction(off ? "on" : "off", ep.id)}>{off ? "Einschalten" : "Nicht posten"}</Small>}
                   {!posted && !off && canPost && e?.status !== "wird gepostet" && (
-                    <Small onClick={() => { if (window.confirm(`„${ep.title}“ jetzt sofort auf ${settings.platforms.map((p) => PL[p]).join(", ")} veröffentlichen?`)) onAction("post", ep.id); }}><Send className="h-3.5 w-3.5" aria-hidden />Jetzt posten</Small>
+                    <Small onClick={() => { if (window.confirm(`„${ep.title}“ jetzt sofort auf ${settings.postVia === "uploadpost" ? settings.platforms.map((p) => PL[p]).join(", ") : "Instagram"} veröffentlichen?`)) onAction("post", ep.id); }}><Send className="h-3.5 w-3.5" aria-hidden />Jetzt posten</Small>
                   )}
-                  {(e?.video || e?.status === "fehler") && e?.status !== "rendert" && e?.status !== "wird gepostet" && <Small onClick={() => onAction("render", ep.id)}><RefreshCw className="h-3.5 w-3.5" aria-hidden />Neu erstellen</Small>}
+                  {ep.style !== "eigen" && (e?.video || e?.status === "fehler") && e?.status !== "rendert" && e?.status !== "wird gepostet" && <Small onClick={() => onAction("render", ep.id)}><RefreshCw className="h-3.5 w-3.5" aria-hidden />Neu erstellen</Small>}
+                  {ep.style === "eigen" && e?.status !== "wird gepostet" && <Small onClick={() => remove(ep)}><Trash2 className="h-3.5 w-3.5" aria-hidden />Löschen</Small>}
                   {(posted || e?.status === "fehler") && <Small onClick={() => onAction("reset", ep.id)}><Undo2 className="h-3.5 w-3.5" aria-hidden />Wieder einreihen</Small>}
                 </div>
               </div>
@@ -236,23 +326,35 @@ function Setup({ settings, onSave, voiceTest, onSettings, onRefresh }: {
   const [upKey, setUpKey] = useState("");
   const [elKey, setElKey] = useState("");
   const [hfKey, setHfKey] = useState("");
+  const [igKey, setIgKey] = useState("");
+  const [igCheck, setIgCheck] = useState<{ ok: boolean; text: string } | null>(null);
   const [testAsked, setTestAsked] = useState("");
   const [voices, setVoices] = useState<{ id: string; name: string; info: string; category: string }[]>([]);
   const [busy, setBusy] = useState<"" | "save" | "voices" | "test">("");
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const audio = useRef<HTMLAudioElement | null>(null);
-  useEffect(() => { setS((cur) => ({ ...cur, hasElevenlabs: settings.hasElevenlabs, hasUploadpost: settings.hasUploadpost, hasHuggingface: settings.hasHuggingface, hasCloudflare: settings.hasCloudflare, cfAccount: settings.cfAccount, figurFoto: settings.figurFoto, voiceSample: settings.voiceSample, enabled: settings.enabled, disabled: settings.disabled })); }, [settings]);
+  useEffect(() => { setS((cur) => ({ ...cur, hasElevenlabs: settings.hasElevenlabs, hasUploadpost: settings.hasUploadpost, hasHuggingface: settings.hasHuggingface, hasCloudflare: settings.hasCloudflare, hasInstagram: settings.hasInstagram, cfAccount: settings.cfAccount, figurFoto: settings.figurFoto, voiceSample: settings.voiceSample, enabled: settings.enabled, disabled: settings.disabled })); }, [settings]);
   const set = <K extends keyof Settings>(k: K, v: Settings[K]) => setS((x) => ({ ...x, [k]: v }));
 
   async function save() {
     setBusy("save"); setMsg(null);
     try {
-      const next = await onSave(s.voiceEngine === "own" ? { ...s, aiLabel: true } : s, { uploadpost: upKey.trim() || undefined, elevenlabs: elKey.trim() || undefined, huggingface: hfKey.trim() || undefined });
-      setS(next); setUpKey(""); setElKey(""); setHfKey("");
+      const next = await onSave(s.voiceEngine === "own" ? { ...s, aiLabel: true } : s, { uploadpost: upKey.trim() || undefined, elevenlabs: elKey.trim() || undefined, huggingface: hfKey.trim() || undefined, instagram: igKey.replace(/\s+/g, "") || undefined });
+      setS(next); setUpKey(""); setElKey(""); setHfKey(""); setIgKey("");
       setMsg({ ok: true, text: "Gespeichert. Der Server-Dienst übernimmt die Änderungen in der nächsten Minute." });
       return true;
     } catch (e) { setMsg({ ok: false, text: e instanceof Error ? e.message : "Speichern fehlgeschlagen." }); return false; }
     finally { setBusy(""); }
+  }
+  async function checkInstagram() {
+    if (igKey.trim() && !(await save())) return;
+    setIgCheck(null);
+    try {
+      const r = await fetch("/api/admin/social/instagram", { cache: "no-store" });
+      const j = await r.json();
+      if (!r.ok) throw new Error(j.error || "Prüfen fehlgeschlagen.");
+      setIgCheck({ ok: true, text: `Verbunden mit @${j.username}${j.accountType ? ` (${j.accountType === "BUSINESS" ? "Unternehmenskonto" : j.accountType === "MEDIA_CREATOR" ? "Creator-Konto" : j.accountType})` : ""}.` });
+    } catch (e) { setIgCheck({ ok: false, text: e instanceof Error ? e.message : "Prüfen fehlgeschlagen." }); }
   }
   async function loadVoices() {
     if (elKey.trim() && !(await save())) return;
@@ -293,24 +395,61 @@ function Setup({ settings, onSave, voiceTest, onSettings, onRefresh }: {
 
       <div className="mt-5 space-y-5">
         <div>
-          <h3 className="text-sm font-semibold">1. Posten über Upload-Post {settings.hasUploadpost && <span className="ml-1 rounded-full bg-emerald-100 px-2 py-0.5 text-xs text-emerald-900">Schlüssel gespeichert</span>}</h3>
-          <p className="mt-1 text-sm leading-6 text-ink-soft">
-            Lege ein Konto bei <a href="https://www.upload-post.com" target="_blank" rel="noopener noreferrer" className="underline">upload-post.com</a> an, erstelle ein Profil (z. B. „seitz“) und verbinde dort TikTok, Instagram (Business- oder Creator-Konto) und YouTube.
-            TikTok ist erst ab dem Basic-Tarif dabei. Den API-Schlüssel findest du im Dashboard unter „API Keys“.
-          </p>
-          <div className="mt-3 grid gap-3 sm:grid-cols-2">
-            <div>
-              <label htmlFor="upkey" className="label">API-Schlüssel</label>
-              <input id="upkey" type="password" autoComplete="new-password" className="input" value={upKey} onChange={(e) => setUpKey(e.target.value)} placeholder={settings.hasUploadpost ? "•••••••• (nur zum Ändern ausfüllen)" : ""} />
-            </div>
-            <div>
-              <label htmlFor="upuser" className="label">Profilname bei Upload-Post</label>
-              <input id="upuser" className="input" value={s.uploadUser} onChange={(e) => set("uploadUser", e.target.value)} placeholder="seitz" autoComplete="off" />
-            </div>
+          <h3 className="text-sm font-semibold">1. Posten</h3>
+          <div role="radiogroup" aria-label="Posten über" className="mt-3 grid gap-2 sm:grid-cols-2">
+            {([["direkt", "Direkt von deinem Server", "Kostenlos, ohne Zusatzdienst. Zuerst Instagram, YouTube folgt."], ["uploadpost", "Über Upload-Post", "Zusatzdienst mit eigenem Konto, TikTok nur im Bezahltarif."]] as const).map(([v, t, d]) => (
+              <button key={v} type="button" role="radio" aria-checked={s.postVia === v} onClick={() => set("postVia", v)}
+                className={`rounded-xl border p-3.5 text-left transition ${s.postVia === v ? "border-navy bg-sun/30 ring-1 ring-navy" : "border-line hover:border-navy/40"}`}>
+                <span className="block text-sm font-semibold">{t}</span><span className="mt-0.5 block text-xs text-ink-muted">{d}</span>
+              </button>
+            ))}
           </div>
+
+          {s.postVia === "direkt" ? (
+            <div className="mt-4">
+              <h4 className="text-sm font-semibold">Instagram verbinden {settings.hasInstagram && <span className="ml-1 rounded-full bg-emerald-100 px-2 py-0.5 text-xs text-emerald-900">Zugang gespeichert</span>}</h4>
+              <p className="mt-1 text-sm leading-6 text-ink-soft">Einmalig, kostenlos. Instagram erlaubt automatisches Posten nur über eine eigene App bei Meta – die legst du in ein paar Minuten an, sie bleibt privat und nur für dein Konto:</p>
+              <ol className="mt-2 list-decimal space-y-1 pl-5 text-sm leading-6 text-ink-soft">
+                <li>In der Instagram-App: <b>Einstellungen → Kontoart und Tools → Zu professionellem Konto wechseln</b> (Unternehmen oder Creator). Falls schon erledigt: weiter.</li>
+                <li>Auf <a href="https://developers.facebook.com/apps" target="_blank" rel="noopener noreferrer" className="underline">developers.facebook.com/apps</a> mit Facebook anmelden → <b>App erstellen</b> → Anwendungsfall <b>„Nachrichten und Inhalte auf Instagram verwalten“</b> → Namen eingeben (z. B. „Seitz Reels“) → erstellen.</li>
+                <li>In der App links <b>Instagram → API-Einrichtung mit Instagram-Login</b> → bei <b>„Zugriffsschlüssel generieren“</b> auf <b>„Konto hinzufügen“</b> und mit deinem Instagram-Konto anmelden. Zeigt Instagram eine Tester-Einladung: in der Instagram-App unter <b>Einstellungen → Apps und Websites</b> annehmen.</li>
+                <li>Den angezeigten Zugriffsschlüssel kopieren und hier einfügen, dann <b>Speichern und prüfen</b>. Er wird verschlüsselt gespeichert und vom Server alle paar Tage automatisch verlängert.</li>
+              </ol>
+              <div className="mt-3 flex flex-wrap items-end gap-2">
+                <div className="min-w-[14rem] flex-1">
+                  <label htmlFor="igkey" className="label">Instagram-Zugriffsschlüssel</label>
+                  <input id="igkey" type="password" autoComplete="new-password" className="input" value={igKey} onChange={(e) => setIgKey(e.target.value)} placeholder={settings.hasInstagram ? "•••••••• (nur zum Ändern ausfüllen)" : "IGAA…"} />
+                </div>
+                <button type="button" onClick={checkInstagram} disabled={!!busy || (!igKey.trim() && !settings.hasInstagram)}
+                  className="inline-flex items-center gap-2 rounded-full border border-line px-4 py-3 text-sm font-semibold hover:border-navy disabled:opacity-40">
+                  <CheckCircle2 className="h-4 w-4" aria-hidden /> {igKey.trim() ? "Speichern und prüfen" : "Verbindung prüfen"}
+                </button>
+              </div>
+              {igCheck && <p role="status" className={`mt-3 rounded-lg px-3 py-2.5 text-sm ${igCheck.ok ? "bg-emerald-50 text-emerald-900" : "bg-rose-50 text-rose-900"}`}>{igCheck.text}</p>}
+              <p className="mt-3 text-xs leading-5 text-ink-muted">YouTube Shorts kommt als Nächstes dazu. TikTok erlaubt automatisches öffentliches Posten erst, wenn TikTok die App geprüft hat – bis dahin postest du dort von Hand.</p>
+            </div>
+          ) : (
+            <div className="mt-4">
+              <h4 className="text-sm font-semibold">Upload-Post {settings.hasUploadpost && <span className="ml-1 rounded-full bg-emerald-100 px-2 py-0.5 text-xs text-emerald-900">Schlüssel gespeichert</span>}</h4>
+              <p className="mt-1 text-sm leading-6 text-ink-soft">
+                Lege ein Konto bei <a href="https://www.upload-post.com" target="_blank" rel="noopener noreferrer" className="underline">upload-post.com</a> an, erstelle ein Profil (z. B. „seitz“) und verbinde dort TikTok, Instagram (Business- oder Creator-Konto) und YouTube.
+                TikTok ist erst ab dem Basic-Tarif dabei. Den API-Schlüssel findest du im Dashboard unter „API Keys“.
+              </p>
+              <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                <div>
+                  <label htmlFor="upkey" className="label">API-Schlüssel</label>
+                  <input id="upkey" type="password" autoComplete="new-password" className="input" value={upKey} onChange={(e) => setUpKey(e.target.value)} placeholder={settings.hasUploadpost ? "•••••••• (nur zum Ändern ausfüllen)" : ""} />
+                </div>
+                <div>
+                  <label htmlFor="upuser" className="label">Profilname bei Upload-Post</label>
+                  <input id="upuser" className="input" value={s.uploadUser} onChange={(e) => set("uploadUser", e.target.value)} placeholder="seitz" autoComplete="off" />
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
-        <div className="border-t border-line pt-5">
+        {!s.onlyUploads && <div className="border-t border-line pt-5">
           <h3 className="text-sm font-semibold">2. Stimme</h3>
           <div role="radiogroup" aria-label="Stimme" className="mt-3 grid gap-2 sm:grid-cols-2">
             {([["own", "Deine eigene Stimme", "Kostenlos. Läuft auf deinem Server, kein Abo."], ["elevenlabs", "ElevenLabs", "Kostenpflichtig, ab ca. 6 $ im Monat."]] as const).map(([v, t, d]) => (
@@ -387,10 +526,10 @@ function Setup({ settings, onSave, voiceTest, onSettings, onRefresh }: {
             <label htmlFor="speed" className="label">Sprechtempo: {s.speed.toFixed(2).replace(".", ",")}×</label>
             <input id="speed" type="range" min={0.9} max={1.2} step={0.05} value={s.speed} onChange={(e) => set("speed", Number(e.target.value))} className="w-full accent-navy" />
           </div>
-        </div>
+        </div>}
 
         <div className="border-t border-line pt-5">
-          <h3 className="text-sm font-semibold">3. Zeitplan</h3>
+          <h3 className="text-sm font-semibold">{s.onlyUploads ? "2." : "3."} Zeitplan</h3>
           <div className="mt-3 flex flex-wrap gap-2">
             {DAYS.map(({ d, l }) => (
               <button key={d} type="button" aria-pressed={s.days.includes(d)} onClick={() => toggleDay(d)}
@@ -410,9 +549,15 @@ function Setup({ settings, onSave, voiceTest, onSettings, onRefresh }: {
             {s.days.length * s.times.length} Videos pro Woche. Gute Zeiten: mittags (12–13 Uhr) und abends (18–21 Uhr). Zwei pro Tag sind ein guter Rhythmus – mehr bringt selten mehr, weil sich die Themen dann schneller wiederholen.
           </p>
           <label className="mt-4 flex cursor-pointer items-start gap-3 text-sm">
+            <input type="checkbox" className="mt-0.5 h-5 w-5 shrink-0 accent-navy" checked={s.onlyUploads} onChange={(e) => set("onlyUploads", e.target.checked)} />
+            <span>Nur meine hochgeladenen Videos posten<span className="mt-0.5 block text-xs text-ink-muted">Die automatisch erstellten Videos bleiben aus. Abgehakt: Es werden nur die Videos gepostet, die du oben hochlädst.</span></span>
+          </label>
+{!s.onlyUploads && (
+          <label className="mt-4 flex cursor-pointer items-start gap-3 text-sm">
             <input type="checkbox" className="mt-0.5 h-5 w-5 shrink-0 accent-navy" checked={s.repeat} onChange={(e) => set("repeat", e.target.checked)} />
             <span>Dauerbetrieb: Wenn alle Videos gepostet sind, von vorn beginnen<span className="mt-0.5 block text-xs text-ink-muted">Die nächste Runde läuft im jeweils anderen Stil (Whiteboard ↔ Cartoon), damit es kein Doppel-Post ist. Die Stimme wird wiederverwendet und kostet nichts extra.</span></span>
           </label>
+          )}
           <div className="mt-4 flex flex-wrap gap-4">
             {(Object.keys(PL) as Platform[]).map((p) => (
               <label key={p} className="flex cursor-pointer items-center gap-2 text-sm"><input type="checkbox" className="h-5 w-5 accent-navy" checked={s.platforms.includes(p)} onChange={() => togglePl(p)} />{PL[p]}</label>

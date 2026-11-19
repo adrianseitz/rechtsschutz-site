@@ -23,7 +23,9 @@ const schema = z.object({
   aiLabel: z.boolean(),
   promo: z.boolean(),
   repeat: z.boolean(),
-  keys: z.object({ elevenlabs: key, uploadpost: key, huggingface: key, cloudflare: key }).optional(),
+  postVia: z.enum(["direkt", "uploadpost"]).default("direkt"),
+  onlyUploads: z.boolean().default(true),
+  keys: z.object({ elevenlabs: key, uploadpost: key, huggingface: key, cloudflare: key, instagram: key }).optional(),
 });
 
 export async function GET() {

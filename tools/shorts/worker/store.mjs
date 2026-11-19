@@ -5,7 +5,9 @@
 //   videos/, voice/ – fertige Videos + Vorschaubilder, zwischengespeicherte Sprachaufnahmen
 //   voice-sample/  – die eigene Sprachaufnahme aus dem CRM, ownvoice/ – daraus berechneter Stimmabdruck
 //   hf/            – Sprachmodell-Cache (HF_HOME, wird nicht gesichert)
-import { createDecipheriv } from "node:crypto";
+//   uploads/       – eigene Videos aus dem CRM (je eine .json mit Text; das Video liegt in videos/)
+//   public/        – Kurzzeit-Kopien mit Zufallsnamen, die Instagram zum Veröffentlichen abholt
+import { createCipheriv, createDecipheriv, randomBytes } from "node:crypto";
 import { appendFile, chown, mkdir, readFile, readdir, rename, stat, unlink, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 
@@ -19,6 +21,8 @@ export const P = {
   sample: join(DIR, "voice-sample"),
   own: join(DIR, "ownvoice"),
   figur: join(DIR, "figur"),
+  uploads: join(DIR, "uploads"),
+  public: join(DIR, "public"),
   log: join(DIR, "log.ndjson"),
 };
 
@@ -31,7 +35,7 @@ async function own(path) {
 }
 
 export async function ensureDirs() {
-  for (const d of [DIR, P.jobs, P.videos, P.voice, P.own, P.figur]) { await mkdir(d, { recursive: true, mode: 0o750 }); await own(d); }
+  for (const d of [DIR, P.jobs, P.videos, P.voice, P.own, P.figur, P.uploads, P.public]) { await mkdir(d, { recursive: true, mode: 0o750 }); await own(d); }
 }
 export async function ownFile(path) { await own(path); }
 
@@ -56,6 +60,16 @@ export function decrypt(value) {
   const d = createDecipheriv("aes-256-gcm", k, Buffer.from(iv, "base64"));
   d.setAuthTag(Buffer.from(tag, "base64"));
   return Buffer.concat([d.update(Buffer.from(ct, "base64")), d.final()]).toString("utf8");
+}
+
+/** Gegenstück zu decrypt() – für einen erneuerten Zugang, den der Worker selbst speichert */
+export function encrypt(plain) {
+  const k = Buffer.from(process.env.LEAD_ENCRYPTION_KEY || "", "base64");
+  if (k.length !== 32) throw new Error("LEAD_ENCRYPTION_KEY fehlt oder ist ungültig");
+  const iv = randomBytes(12);
+  const c = createCipheriv("aes-256-gcm", k, iv);
+  const ct = Buffer.concat([c.update(plain, "utf8"), c.final()]);
+  return `enc:v1:${iv.toString("base64")}:${c.getAuthTag().toString("base64")}:${ct.toString("base64")}`;
 }
 
 /** Ereignis ins Protokoll (für die Anzeige im CRM; keine Kundendaten) */
