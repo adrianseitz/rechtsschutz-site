@@ -16,12 +16,17 @@ const v = (s: string | undefined) => (s ?? "").trim();
 
 /** Google-Tag aus dem Google-Ads-Konto (Konto von Adrian Seitz). Geladen wird er nur nach Einwilligung im Cookie-Banner. */
 export const DEFAULT_ADS_ID = "AW-18538408624";
+/** Conversion-Label der Aktion „Seitenaufruf“ in diesem Konto. Gezählt wird jede abgeschickte Anfrage
+ *  (Check, Rückruf, Kontakt, Termin) – erst nach erfolgreichem Absenden, je Anfrage nur einmal. */
+export const DEFAULT_ADS_LEAD_LABEL = "aRmZCI_1uK8dELDV5odF";
+const envAdsId = v(process.env.NEXT_PUBLIC_GOOGLE_ADS_ID);
 
 export const ENV_TRACKING: TrackingConfig = {
   gtmId: v(process.env.NEXT_PUBLIC_GTM_ID),
   ga4Id: v(process.env.NEXT_PUBLIC_GA4_ID),
-  adsId: v(process.env.NEXT_PUBLIC_GOOGLE_ADS_ID) || DEFAULT_ADS_ID,
-  adsLeadLabel: v(process.env.NEXT_PUBLIC_GOOGLE_ADS_LEAD_LABEL),
+  adsId: envAdsId || DEFAULT_ADS_ID,
+  // das Standard-Label gehört nur zur Standard-ID
+  adsLeadLabel: v(process.env.NEXT_PUBLIC_GOOGLE_ADS_LEAD_LABEL) || (!envAdsId || envAdsId === DEFAULT_ADS_ID ? DEFAULT_ADS_LEAD_LABEL : ""),
   adsContactLabel: v(process.env.NEXT_PUBLIC_GOOGLE_ADS_CONTACT_LABEL),
   adsAppointmentLabel: v(process.env.NEXT_PUBLIC_GOOGLE_ADS_APPOINTMENT_LABEL),
   metaPixelId: v(process.env.NEXT_PUBLIC_META_PIXEL_ID),

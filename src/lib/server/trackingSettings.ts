@@ -2,7 +2,7 @@ import "server-only";
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { serverConfig } from "./config";
-import { cleanTracking, ENV_TRACKING, TRACKING_FORMAT, type TrackingConfig } from "../trackingConfig";
+import { cleanTracking, DEFAULT_ADS_ID, DEFAULT_ADS_LEAD_LABEL, ENV_TRACKING, TRACKING_FORMAT, type TrackingConfig } from "../trackingConfig";
 
 /** Im CRM gepflegte Werbe-Kennungen (data/tracking-settings.json). Ohne Datei gilt die .env. */
 type Stored = Partial<TrackingConfig> & { updatedAt: string };
@@ -25,7 +25,10 @@ export async function effectiveTracking(): Promise<{ tracking: TrackingConfig; s
   if (!s) return { tracking: envClean(), source: "env", updatedAt: "" };
   // Leere Felder im CRM heißen „nicht eingetragen“: dann gilt der Standard (z. B. der fest hinterlegte Google-Tag).
   const set = Object.fromEntries(Object.entries(cleanTracking(s)).filter(([, val]) => val));
-  return { tracking: { ...envClean(), ...set } as TrackingConfig, source: "crm", updatedAt: s.updatedAt };
+  const tracking = { ...envClean(), ...set } as TrackingConfig;
+  // Wurde im CRM ein anderes Google-Ads-Konto eingetragen, passt das Standard-Label nicht dazu
+  if (tracking.adsLeadLabel === DEFAULT_ADS_LEAD_LABEL && tracking.adsId !== DEFAULT_ADS_ID) tracking.adsLeadLabel = "";
+  return { tracking, source: "crm", updatedAt: s.updatedAt };
 }
 
 export async function saveTracking(input: Partial<TrackingConfig>) {
