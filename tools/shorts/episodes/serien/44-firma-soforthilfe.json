@@ -1,0 +1,81 @@
+{
+  "id": "44-firma-soforthilfe",
+  "order": 44,
+  "topic": "firma",
+  "style": "studio3d",
+  "series": "adrian",
+  "title": "Schon Streit im Betrieb? Soforthilfe sogar rückwirkend",
+  "caption": "Schon Streit mit einem Kunden oder Lieferanten? Normalerweise ist es dann zu spät für eine Rechtsschutzversicherung. Beim Firmenrechtsschutz der ARAG mit Soforthilfe bekommst du trotzdem außergerichtliche Hilfe für einen zurückliegenden Fall – bis 3.000 € (Premium), solange noch kein Anwalt eingeschaltet ist. Kostenloser Check über den Link in der Bio.\n\n#selbstständig #unternehmer #firmenrechtsschutz #gewerbe #rechtsschutz #handwerk",
+  "youtube": {
+    "title": "Schon Streit im Betrieb? Diese Versicherung hilft sogar rückwirkend #shorts",
+    "description": "Firmenrechtsschutz mit Soforthilfe der ARAG: einmalig außergerichtliche Hilfe für einen zurückliegenden Fall (bis 2.000 € Komfort, 3.000 € Premium), solange noch kein Anwalt beauftragt ist.",
+    "tags": [
+      "Firmenrechtsschutz",
+      "Selbstständig",
+      "Unternehmer",
+      "Soforthilfe",
+      "Rechtsschutz"
+    ]
+  },
+  "fine": "* je nach Tarif und Versicherungsbedingungen. Soforthilfe: einmalig für einen zurückliegenden Rechtsfall, nur außergerichtlich, bis 2.000 € (Komfort) bzw. 3.000 € (Premium), sofern noch kein Anwalt kontaktiert oder beauftragt wurde. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+  "beats": [
+    {
+      "type": "hook",
+      "tag": "Für Selbstständige",
+      "say": "Du hast schon Streit mit einem Kunden oder Lieferanten und denkst, jetzt ist es zu spät für eine Versicherung?",
+      "lines": [
+        "Schon Streit",
+        "[mit einem Kunden?]"
+      ],
+      "icon": "contract"
+    },
+    {
+      "type": "fact",
+      "say": "Normalerweise stimmt das. Ein Streit, der schon läuft, lässt sich nicht mehr versichern.",
+      "kicker": [
+        "Normalerweise gilt:"
+      ],
+      "big": "Zu spät.",
+      "lines": [
+        "Ein laufender Streit",
+        "ist nicht versicherbar."
+      ],
+      "icon": "clock"
+    },
+    {
+      "type": "solution",
+      "say": "Bei der ARAG gibt es den Firmenrechtsschutz mit Soforthilfe. Damit bekommst du je nach Tarif für einen zurückliegenden Fall außergerichtliche Hilfe, bis zu dreitausend Euro.",
+      "product": [
+        "Firmen-",
+        "rechtsschutz"
+      ],
+      "lines": [
+        "mit Soforthilfe –",
+        "sogar rückwirkend.*"
+      ],
+      "highlight": "bis 3.000 €",
+      "highlightLines": [
+        "außergerichtlich für",
+        "einen alten Fall.*"
+      ]
+    },
+    {
+      "type": "warning",
+      "say": "Wichtig: Das geht nur, solange du noch keinen Anwalt eingeschaltet hast.",
+      "lines": [
+        "Nur solange",
+        "[kein Anwalt dran ist.]"
+      ],
+      "note": "einmalig, außergerichtlich",
+      "icon": "gavel"
+    },
+    {
+      "type": "cta",
+      "say": "Schon Ärger im Betrieb? Mach den kostenlosen Check, der Link ist in meiner Bio.",
+      "question": [
+        "Schon Ärger",
+        "[im Betrieb?]"
+      ]
+    }
+  ]
+}

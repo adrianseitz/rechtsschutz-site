@@ -1,0 +1,55 @@
+{
+  "id": "43-adrian-mietausfall",
+  "order": 43,
+  "topic": "vermieter",
+  "style": "studio3d",
+  "series": "adrian",
+  "title": "Mieter zahlt nicht mehr? Bis zu 12 Monatsmieten absichern",
+  "caption": "Dein Mieter zahlt nicht mehr? Dann fehlt dir jeden Monat die Miete – und Anwalt, Gericht und Räumung kommen noch dazu. Mit dem Vermieterrechtsschutz der ARAG ist das je nach Tarif abgesichert, und der Mietausfallschutz ersetzt dir sogar bis zu 12 Monatsmieten. Wichtig: absichern, bevor der Ärger da ist. Kostenloser Check über den Link in der Bio.\n\n#vermieter #mietausfall #mietnomaden #immobilien #mietrecht #vermieterrechtsschutz",
+  "youtube": {
+    "title": "Mieter zahlt nicht? So bekommst du trotzdem deine Miete #shorts",
+    "description": "Was ein Mieter, der nicht zahlt, wirklich kostet – und wie Vermieterrechtsschutz mit Mietausfallschutz der ARAG bis zu 12 Monatsmieten absichert (je nach Tarif).",
+    "tags": ["Vermieter", "Mietausfall", "Mietnomaden", "Vermieterrechtsschutz", "Immobilien"]
+  },
+  "fine": "* je nach Tarif und Versicherungsbedingungen. Mietausfallschutz: Zusatzbaustein in Komfort und Premium, 6 oder 12 Monate je nach Vereinbarung; Wartezeit 3 Monate, bestehende Rückstände nicht versichert. Beträge sind Beispiele. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+  "beats": [
+    {
+      "type": "hook",
+      "tag": "Für Vermieter",
+      "say": "Vermieter aufgepasst: Was machst du, wenn dein Mieter ab morgen nicht mehr zahlt?",
+      "lines": ["Dein Mieter", "zahlt [nicht mehr?]"],
+      "icon": "house",
+      "items": ["März", "April", "Mai"],
+      "mark": "cross"
+    },
+    {
+      "type": "cost",
+      "say": "Bei 950 Euro Kaltmiete fehlen dir nach sechs Monaten 5.700 Euro. Und dazu kommen noch Anwalt, Gericht und Räumung.",
+      "title": "Nach 6 Monaten fehlen dir:",
+      "big": "– 5.700 €",
+      "note": "Beispiel: 950 € Kaltmiete",
+      "itemsTitle": "Dazu kommen:",
+      "items": ["Anwalt", "Gericht", "Räumung"]
+    },
+    {
+      "type": "solution",
+      "say": "Mit dem Vermieterrechtsschutz der ARAG sind Anwalt, Gericht und Räumung je nach Tarif abgesichert. Und der Mietausfallschutz ersetzt dir sogar die Miete, bis zu zwölf Monate lang.",
+      "product": ["Vermieter-", "rechtsschutz"],
+      "lines": ["zahlt Anwalt, Gericht", "und Räumung.*"],
+      "highlight": "+ Mietausfallschutz",
+      "highlightLines": ["bis zu 12", "Monatsmieten.*"]
+    },
+    {
+      "type": "warning",
+      "say": "Aber Achtung: Es gilt eine Wartezeit von drei Monaten. Also erst absichern, dann Ärger.",
+      "lines": ["Erst absichern,", "[dann Ärger.]"],
+      "note": "Wartezeit 3 Monate",
+      "icon": "clock"
+    },
+    {
+      "type": "cta",
+      "say": "Ich bin Adrian, dein Ansprechpartner für die ARAG. Mach den kostenlosen Check, der Link ist in meiner Bio.",
+      "question": ["Passt das zu", "[deiner Immobilie?]"]
+    }
+  ]
+}
