@@ -9,7 +9,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { renderEpisode } from "../render.mjs";
 import { P, decrypt, ensureDirs, log, ownFile, readJson, takeJobs, trimLog, writeJson } from "./store.mjs";
-import { elevenlabsUsage, tts, uploadStatus, uploadVideo } from "./services.mjs";
+import { elevenlabsUsage, tts, uploadStatus, uploadVideo, voiceInfo } from "./services.mjs";
 import { CREDIT, ENGINE, VoiceError, prepareVoice, speak } from "./ownvoice.mjs";
 import { figurSchritt, kitDir } from "./figur.mjs";
 import { berlin, dueSlot, nextSlotLabel, normTimes } from "./schedule.mjs";
@@ -160,8 +160,9 @@ async function voiceTest(settings, keys, state) {
 
 // ---------- Reel-Stimmen: die Texte der neuen Reels mit der eingestellten Stimme → videos/reel-stimmen.zip ----------
 // Im Sprechtext steht | für eine kurze Pause, || für eine lange, *Wort* für Betonung; „ich“ ist der Abschluss in der Ich-Form.
-function reelText(b, engine) {
-  const t = String(b.ich || b.voice || b.say || "").replace(/\*/g, "").trim();
+// Die Ich-Form („Ich bin Adrian …“) nur mit Adrians eigener Stimme – eine fremde Sprecherstimme spricht über ihn.
+function reelText(b, engine, ich) {
+  const t = String((ich && b.ich) || b.voice || b.say || "").replace(/\*/g, "").trim();
   if (engine === "elevenlabs") return t.replace(/\s*\|\|\s*/g, ' <break time="0.6s" /> ').replace(/\s*\|\s*/g, ' <break time="0.3s" /> ').replace(/\s+/g, " ").trim();
   return t.replace(/([^\s.,:;!?|])\s*\|\|?\s*/g, "$1, ").replace(/\s*\|\|?\s*/g, " ").replace(/\s+/g, " ").trim();
 }
@@ -176,6 +177,8 @@ async function reelVoices(settings, keys, state) {
     const files = (await readdir(REELS).catch(() => [])).filter((f) => /^[a-z0-9-]+\.json$/.test(f)).sort();
     if (!files.length) throw new VoiceError("Keine Reel-Texte gefunden.");
     const voice = engine === "own" ? await prepareVoice({ sample: sampleFile(settings), dir: P.own, token: keys.hf }) : null;
+    // eigene Stimme: auf dem Server aus Adrians Aufnahme; bei ElevenLabs nur, wenn es ein selbst geklonter Klon ist
+    const ich = engine === "own" || (await voiceInfo({ key: keys.el, voiceId: settings.voiceId }).catch(() => null))?.category === "cloned";
     const base = join(P.voice, "reels", voiceSig(settings));
     const entries = [];
     let beats = 0, reels = 0;
@@ -184,7 +187,7 @@ async function reelVoices(settings, keys, state) {
       if (!/^[a-z0-9-]{1,60}$/.test(ep.id || "") || !Array.isArray(ep.beats)) continue;
       const dir = join(base, ep.id);
       await mkdir(dir, { recursive: true });
-      const texts = ep.beats.map((b) => reelText(b, engine));
+      const texts = ep.beats.map((b) => reelText(b, engine, ich));
       for (const [i, text] of texts.entries()) {
         const file = join(dir, `beat-${i}-${sha(text).slice(0, 10)}.mp3`);   // schon gesprochen = nicht noch einmal bezahlen
         if (!existsSync(file)) {
@@ -197,7 +200,7 @@ async function reelVoices(settings, keys, state) {
         entries.push({ name: `${ep.id}/beat-${i}.mp3`, data: await readFile(file) });
         beats++;
       }
-      const stimme = engine === "own" ? "eigene Stimme (Kyutai Pocket TTS)" : `ElevenLabs: ${settings.voiceName || settings.voiceId}`;
+      const stimme = engine === "own" ? "eigene Stimme (Kyutai Pocket TTS)" : `ElevenLabs: ${settings.voiceName || settings.voiceId}${ich ? " (Klon)" : " (Sprecherstimme)"}`;
       entries.push({ name: `${ep.id}/skript.json`, data: Buffer.from(JSON.stringify({ ...ep, gesprochen: texts, stimme }, null, 1)) });
       reels++;
     }
@@ -206,7 +209,7 @@ async function reelVoices(settings, keys, state) {
     await rename(`${out}.tmp`, out);
     await ownFile(out);
     delete state.voiceBlocked;
-    state.reelStimmen = { status: "fertig", at: now(), file: "reel-stimmen.zip", reels, beats, took: Math.round((Date.now() - t0) / 1000) };
+    state.reelStimmen = { status: "fertig", at: now(), file: "reel-stimmen.zip", reels, beats, ich, took: Math.round((Date.now() - t0) / 1000) };
     await log("stimme", `Reel-Stimmen fertig: ${reels} Reels, ${beats} Abschnitte.`);
   } catch (err) {
     state.reelStimmen = { status: "fehler", at: now(), error: msg(err) };

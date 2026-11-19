@@ -27,6 +27,13 @@ export async function tts({ key, voiceId, text, speed = 1.1, model = "eleven_mul
   return Buffer.from(await res.arrayBuffer());
 }
 
+/** Angaben zu einer Stimme (u. a. category: "cloned" für einen selbst erstellten Klon) */
+export async function voiceInfo({ key, voiceId }) {
+  const res = await fetch(`${EL_BASE}/voices/${encodeURIComponent(voiceId)}`, { headers: { "xi-api-key": key }, signal: AbortSignal.timeout(15_000) });
+  if (!res.ok) throw new Error(`ElevenLabs ${res.status}: ${await failText(res)}`);
+  return res.json();
+}
+
 /** Verbrauch im laufenden Monat */
 export async function elevenlabsUsage(key) {
   const res = await fetch(`${EL_BASE}/user/subscription`, { headers: { "xi-api-key": key }, signal: AbortSignal.timeout(20_000) });
