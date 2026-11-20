@@ -235,7 +235,7 @@ export async function readSocialLog(limit = 40): Promise<{ at: string; kind: str
   }
 }
 
-export const JOB_TYPES = ["render", "post", "reset", "usage", "voicetest", "figur", "probe", "reelstimmen"] as const;
+export const JOB_TYPES = ["render", "post", "done", "reset", "usage", "voicetest", "figur", "probe", "reelstimmen"] as const;
 export async function addSocialJob(type: (typeof JOB_TYPES)[number], id = "") {
   const dir = file("jobs");
   await mkdir(dir, { recursive: true, mode: 0o750 });

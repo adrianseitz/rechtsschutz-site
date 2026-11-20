@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { CheckCircle2, ChevronLeft, ChevronRight, CircleAlert, Clapperboard, Copy, Download, ExternalLink, Loader2, Mic, Pause, Play, RefreshCw, Send, Sparkles, Square, Trash2, Undo2, Upload, Volume2, X } from "lucide-react";
+import { CheckCircle2, ChevronLeft, ChevronRight, CircleAlert, Clapperboard, Copy, Download, ExternalLink, Loader2, Mic, Pause, Play, RefreshCw, Send, Share2, Sparkles, Square, Trash2, Undo2, Upload, Volume2, X } from "lucide-react";
 
 /* Video-Automatik: TikTok, Instagram Reels, YouTube Shorts.
    Der Worker auf dem Server erstellt die Videos und postet sie zum Termin; hier wird eingerichtet und überwacht. */
@@ -163,7 +163,7 @@ export function SocialView() {
         {!settings.onlyUploads && <FigurPanel settings={settings} figur={state.figur} probe={state.probe} onSave={saveAll} onSettings={setSettings} onRefresh={load} />}
         <Log entries={log} />
       </div>
-      {preview && <Preview ep={preview.ep} e={preview.e} onClose={() => setPreview(null)} />}
+      {preview && <Preview ep={preview.ep} e={preview.e} posted={state.episodes?.[preview.ep.id]?.status === "gepostet"} onDone={() => { action("done", preview.ep.id); setPreview(null); }} onClose={() => setPreview(null)} />}
     </div>
   );
 }
@@ -343,12 +343,12 @@ function Queue({ settings, state, onPreview, onAction, onChanged }: { settings: 
                   <div className="mt-1.5 flex flex-wrap gap-1.5 text-xs">
                     {Object.entries(e.platforms).map(([p, r]) => (
                       r.url ? <a key={p} href={r.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 rounded-full border border-line px-2 py-0.5 hover:border-navy">{PL[p as Platform] ?? p}<ExternalLink className="h-3 w-3" aria-hidden /></a>
-                        : <span key={p} title={r.message} className={`rounded-full px-2 py-0.5 ${r.status === "failed" ? "bg-rose-50 text-rose-900" : r.status === "completed" ? "bg-emerald-50 text-emerald-900" : "bg-paper text-ink-muted"}`}>{PL[p as Platform] ?? p}: {r.status === "completed" ? (r.inbox ? "im Postfach der App" : "online") : r.status === "failed" ? "fehlgeschlagen" : r.status === "skipped" ? "nicht verbunden" : "läuft"}</span>
+                        : <span key={p} title={r.message} className={`rounded-full px-2 py-0.5 ${r.status === "failed" ? "bg-rose-50 text-rose-900" : r.status === "completed" ? "bg-emerald-50 text-emerald-900" : "bg-paper text-ink-muted"}`}>{p === "selbst" ? "Selbst gepostet" : <>{PL[p as Platform] ?? p}: {r.status === "completed" ? (r.inbox ? "im Postfach der App" : "online") : r.status === "failed" ? "fehlgeschlagen" : r.status === "skipped" ? "nicht verbunden" : "läuft"}</>}</span>
                     ))}
                   </div>
                 )}
                 <div className="mt-2 flex flex-wrap gap-1.5">
-                  {e && hasMedia(e) && <Small onClick={() => onPreview({ ep, e })}><Play className="h-3.5 w-3.5" aria-hidden />Ansehen</Small>}
+                  {e && hasMedia(e) && <Small onClick={() => onPreview({ ep, e })}>{posted ? <><Play className="h-3.5 w-3.5" aria-hidden />Ansehen</> : <><Share2 className="h-3.5 w-3.5" aria-hidden />Ansehen &amp; selbst posten</>}</Small>}
                   {!posted && <Small onClick={() => onAction(off ? "on" : "off", ep.id)}>{off ? "Einschalten" : "Nicht posten"}</Small>}
                   {!posted && !off && (isK(ep) ? kTargets(settings).length > 0 : canPost) && e?.status !== "wird gepostet" && (
                     <Small onClick={() => { if (window.confirm(`„${ep.title}“ jetzt sofort auf ${isK(ep) ? kTargets(settings).map((p) => PL[p]).join(", ") : targetNames(settings)} veröffentlichen?`)) onAction("post", ep.id); }}><Send className="h-3.5 w-3.5" aria-hidden />Jetzt posten</Small>
@@ -1069,10 +1069,40 @@ function Log({ entries }: { entries: LogEntry[] }) {
 }
 
 /* ---------- Vorschau ---------- */
-function Preview({ ep, e, onClose }: { ep: Ep; e: EpState; onClose: () => void }) {
+function Preview({ ep, e, posted, onDone, onClose }: { ep: Ep; e: EpState; posted: boolean; onDone: () => void; onClose: () => void }) {
   const [copied, setCopied] = useState(false);
   const [nr, setNr] = useState(0);
   const slides = e.slides ?? [];
+  // Selbst posten ohne Einrichtung: Bilder/Video vorab laden, damit „Teilen“ sofort das Teilen-Menü des Handys öffnet
+  const [files, setFiles] = useState<File[] | null>(null);
+  const [shared, setShared] = useState(false);
+  const names = slides.length ? slides : e.video ? [e.video] : [];
+  const namesKey = names.join("|");
+  useEffect(() => {
+    let off = false;
+    Promise.all(namesKey.split("|").filter(Boolean).map(async (n, i, all) => {
+      const r = await fetch(`/api/admin/social/media/${n}`);
+      if (!r.ok) throw new Error(String(r.status));
+      const b = await r.blob();
+      const isImg = n.endsWith(".jpg");
+      return new File([b], isImg ? `${ep.id}-${String(i + 1).padStart(2, "0")}.jpg` : `${ep.id}.mp4`, { type: b.type || (isImg ? "image/jpeg" : "video/mp4") });
+      void all;
+    })).then((f) => { if (!off) setFiles(f); }).catch(() => { if (!off) setFiles([]); });
+    return () => { off = true; };
+  }, [namesKey, ep.id]);
+  const canShare = !!files?.length && typeof navigator !== "undefined" && typeof navigator.canShare === "function" && navigator.canShare({ files });
+  function download() {
+    (files ?? []).forEach((f, i) => setTimeout(() => {
+      const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 10_000);
+    }, i * 350));
+  }
+  function share() {
+    // Text gleich mitkopieren – in Instagram/TikTok nur noch einfügen
+    navigator.clipboard?.writeText(ep.caption).then(() => setCopied(true)).catch(() => undefined);
+    if (canShare) navigator.share({ files: files! }).then(() => setShared(true)).catch(() => undefined);
+    else { download(); setShared(true); }
+  }
   useEffect(() => { const k = (ev: KeyboardEvent) => ev.key === "Escape" && onClose(); window.addEventListener("keydown", k); return () => window.removeEventListener("keydown", k); }, [onClose]);
   return (
     <div role="dialog" aria-modal="true" aria-label={ep.title} className="fixed inset-0 z-50 grid place-items-center bg-black/60 p-4" onClick={onClose}>
@@ -1101,6 +1131,29 @@ function Preview({ ep, e, onClose }: { ep: Ep; e: EpState; onClose: () => void }
           <p className="mt-1 whitespace-pre-line rounded-lg bg-paper p-3 text-sm leading-6">{ep.caption}</p>
           <button type="button" onClick={() => navigator.clipboard?.writeText(ep.caption).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); }).catch(() => undefined)}
             className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-line px-3 py-1.5 text-xs font-medium hover:border-navy"><Copy className="h-3.5 w-3.5" aria-hidden />{copied ? "Kopiert" : "Text kopieren"}</button>
+          {!posted && (
+            <div className="mt-5 rounded-xl border border-line p-4">
+              <p className="text-sm font-semibold">Selbst posten – ohne Einrichtung</p>
+              <ol className="mt-2 list-decimal space-y-1 pl-5 text-sm leading-6 text-ink-soft">
+                <li>Auf <b>{canShare ? "Teilen" : "Herunterladen"}</b> tippen – der Text wird dabei kopiert.</li>
+                {canShare
+                  ? <li><b>Instagram</b> oder <b>TikTok</b> wählen. Klappt das nicht: <b>{slides.length ? `${slides.length} Bilder sichern` : "Video sichern"}</b> und in der App über <b>+</b> aus den Fotos auswählen{slides.length ? " (bei Instagram mehrere Bilder antippen)" : ""}.</li>
+                  : <li>In Instagram oder TikTok über <b>+</b> {slides.length ? "die Bilder" : "das Video"} auswählen.</li>}
+                <li>Text einfügen, posten – dann hier auf <b>Erledigt</b> tippen.</li>
+              </ol>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <button type="button" onClick={share} disabled={!files?.length}
+                  className="inline-flex items-center gap-2 rounded-full bg-sun px-4 py-2.5 text-sm font-semibold text-navy disabled:opacity-60">
+                  {files === null ? <><Loader2 className="h-4 w-4 animate-spin" aria-hidden /> Lädt …</> : canShare ? <><Share2 className="h-4 w-4" aria-hidden /> Teilen</> : <><Download className="h-4 w-4" aria-hidden /> Herunterladen</>}
+                </button>
+                <button type="button" onClick={() => { if (shared || window.confirm("Als gepostet markieren?")) onDone(); }}
+                  className="inline-flex items-center gap-2 rounded-full border border-navy px-4 py-2.5 text-sm font-semibold text-navy">
+                  <CheckCircle2 className="h-4 w-4" aria-hidden /> Erledigt
+                </button>
+              </div>
+              {files?.length === 0 && <p className="mt-2 text-xs text-rose-800">Die Dateien konnten nicht geladen werden – bitte die Seite neu laden.</p>}
+            </div>
+          )}
         </div>
       </div>
     </div>

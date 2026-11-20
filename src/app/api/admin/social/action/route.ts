@@ -9,7 +9,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const schema = z.object({
-  type: z.enum(["render", "post", "reset", "usage", "voicetest", "figur", "probe", "reelstimmen", "on", "off"]),
+  type: z.enum(["render", "post", "done", "reset", "usage", "voicetest", "figur", "probe", "reelstimmen", "on", "off"]),
   id: z.string().regex(/^[a-z0-9][a-z0-9-]{0,80}$/).optional(),
 });
 

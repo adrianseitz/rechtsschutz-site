@@ -500,6 +500,11 @@ async function tick() {
     if (!ep) continue;
     if (job.type === "render") { delete state.episodes[ep.id]?.error; await render(ep, settings, keys, state); }
     else if (job.type === "reset") { delete state.episodes[ep.id]; await log("info", `Wieder eingereiht: ${ep.title}`); }
+    else if (job.type === "done") {   // im CRM „Selbst posten“ → Erledigt: Adrian hat es selbst in der App gepostet
+      const e = (state.episodes[ep.id] ||= {});
+      Object.assign(e, { status: "gepostet", postedAt: now(), platforms: { selbst: { status: "completed" } }, error: null, why: "selbst gepostet" });
+      await log("post", `Selbst gepostet: ${ep.title}`);
+    }
     else if (job.type === "post") {
       const block = postBlocker(settings, keys, ep);
       if (block) { await log("fehler", `Posten nicht möglich: ${block}.`); continue; }
