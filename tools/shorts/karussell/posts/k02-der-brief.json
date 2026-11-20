@@ -1,0 +1,96 @@
+{
+ "id": "k02-der-brief",
+ "order": 2,
+ "topic": "vermieter",
+ "title": "Der Brief: Dein Mieter kürzt die Miete",
+ "caption": "Stell dir vor, dieser Brief liegt morgen im Briefkasten: Dein Mieter kürzt die Miete um 30 %.\n\nOb das berechtigt ist, klärt oft erst ein Gutachter – mit Anwalt und Gericht kommen schnell mehrere tausend Euro zusammen.\n\nMit dem Vermieterrechtsschutz der ARAG übernimmt die Versicherung je nach Tarif Anwalt, Gericht und Gutachter.\n\nWichtig: Läuft der Streit schon, ist es zu spät. Meist gilt eine Wartezeit von 3 Monaten.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#mietminderung #vermieter #immobilien #mietrecht #vermieterrechtsschutz #vermietung #kapitalanlage",
+ "fine": "* je nach Tarif. Wartezeit meist 3 Monate. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Vermieter",
+   "title": [
+    "Dieser Brief",
+    "liegt [morgen]",
+    "im Kasten."
+   ],
+   "sub": "Und plötzlich fehlt dir ein Drittel der Miete."
+  },
+  {
+   "type": "brief",
+   "title": [
+    "Stell dir vor, du",
+    "[öffnest das hier:]"
+   ],
+   "stamp": "– 30 %",
+   "from": [
+    "Mieter, Wohnung 1. OG",
+    "Einschreiben"
+   ],
+   "subject": "Mietminderung ab sofort",
+   "body": [
+    "Sehr geehrter Vermieter,",
+    "wegen Mängeln in der Wohnung mindere ich die Miete ab sofort um 30 %.",
+    "Mit freundlichen Grüßen"
+   ]
+  },
+  {
+   "type": "text",
+   "kicker": "Ob das berechtigt ist,",
+   "title": [
+    "klärt oft erst",
+    "[ein Gutachter.]"
+   ],
+   "text": "Mit Anwalt und Gericht kommen schnell mehrere tausend Euro zusammen."
+  },
+  {
+   "type": "liste",
+   "title": [
+    "Das kann",
+    "[auf dich zukommen:]"
+   ],
+   "items": [
+    "Anwalt",
+    "Gutachter",
+    "Gericht"
+   ],
+   "mark": "cross"
+  },
+  {
+   "type": "loesung",
+   "kicker": "Mit dem",
+   "product": [
+    "Vermieter-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "übernimmt die Versicherung je nach Tarif:",
+   "items": [
+    "Anwalt*",
+    "Gericht*",
+    "Gutachter*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Läuft der Streit schon,",
+    "[ist es zu spät.]"
+   ],
+   "text": "Abschließen musst du, bevor der Ärger losgeht.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Passt das",
+    "zu deiner",
+    "[Wohnung?]"
+   ]
+  }
+ ]
+}

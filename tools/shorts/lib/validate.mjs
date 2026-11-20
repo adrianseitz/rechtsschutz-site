@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 const TYPES = ["hook", "cost", "fact", "list", "solution", "warning", "cta", "letter", "versus"];
 const ONLY_3D = ["letter", "versus"];   // diese Abschnitte gibt es nur im 3D-Stil
 // Werbeaussagen, die in der Versicherungsvermittlung nichts verloren haben
-const BANNED = /\b(garantiert|garantie|100\s?%|immer versichert|zahlt immer|alles versichert|ohne wartezeit|sofort versichert|beste[rn]? (rechtsschutz|versicherung)|günstigste|testsieger)\b/i;
+export const BANNED = /\b(garantiert|garantie|100\s?%|immer versichert|zahlt immer|alles versichert|ohne wartezeit|sofort versichert|beste[rn]? (rechtsschutz|versicherung)|günstigste|testsieger)\b/i;
 
 /** @returns {string[]} Liste der Fehler (leer = in Ordnung) */
 export function validateEpisode(ep, fileId = null) {

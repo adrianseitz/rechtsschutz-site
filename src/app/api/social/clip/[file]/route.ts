@@ -7,7 +7,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 /**
- * Kurzzeit-Link für Instagram: Beim Veröffentlichen legt der Worker eine Kopie des Videos unter einem zufälligen,
+ * Kurzzeit-Link für Instagram: Beim Veröffentlichen legt der Worker eine Kopie des Videos (oder der Bilder eines Bilder-Posts) unter einem zufälligen,
  * nicht erratbaren Namen ab (32 Hex-Zeichen), Instagram lädt sie von hier, danach wird sie gelöscht (spätestens nach 6 Stunden).
  */
 export async function GET(req: Request, { params }: { params: Promise<{ file: string }> }) {
@@ -16,7 +16,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ file: st
   if (!p) return new Response("not found", { status: 404 });
   const s = await stat(p).catch(() => null);
   if (!s) return new Response("not found", { status: 404 });
-  const base = { "Content-Type": "video/mp4", "Accept-Ranges": "bytes", "Cache-Control": "no-store", "X-Robots-Tag": "noindex" };
+  const base = { "Content-Type": file.endsWith(".jpg") ? "image/jpeg" : "video/mp4", "Accept-Ranges": "bytes", "Cache-Control": "no-store", "X-Robots-Tag": "noindex" };
   const m = /^bytes=(\d*)-(\d*)$/.exec(req.headers.get("range") || "");
   if (m && (m[1] || m[2])) {
     const start = m[1] ? Number(m[1]) : Math.max(0, s.size - Number(m[2]));

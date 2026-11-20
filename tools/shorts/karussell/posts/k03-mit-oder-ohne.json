@@ -1,0 +1,105 @@
+{
+ "id": "k03-mit-oder-ohne",
+ "order": 3,
+ "topic": "vermieter",
+ "title": "Gleicher Ärger, zwei Vermieter: mit oder ohne Rechtsschutz",
+ "caption": "Gleicher Ärger, zwei Vermieter: Der Mieter zahlt nicht und zieht nicht aus.\n\nDer eine zahlt Anwalt, Gericht und Räumung selbst – in diesem Beispiel über 6.000 €. Beim anderen übernimmt das die Versicherung: Der Vermieterrechtsschutz der ARAG zahlt je nach Tarif Anwalt, Gericht und die Kosten der Räumung.\n\nAber: Das gilt nur, wenn du vorher abgeschlossen hast. Meist gilt eine Wartezeit von 3 Monaten.\n\n👉 Welcher Vermieter willst du sein? Kostenlose Beratung über den Link in der Bio.\n\n#räumung #vermieter #immobilien #mietrecht #vermieterrechtsschutz #vermietung #kapitalanlage",
+ "fine": "* je nach Tarif. Wartezeit meist 3 Monate. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG. Kosten: Beispielrechnung, im Einzelfall abweichend.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Vermieter",
+   "title": [
+    "Gleicher Ärger,",
+    "[zwei Vermieter.]"
+   ],
+   "sub": "Der Mieter zahlt nicht – und zieht nicht aus."
+  },
+  {
+   "type": "zahl",
+   "kicker": "Vermieter A – ohne Rechtsschutz:",
+   "big": "über 6.000 €",
+   "minus": true,
+   "note": "zahlt er selbst (Beispielrechnung)",
+   "itemsTitle": "Für:",
+   "items": [
+    "Anwalt",
+    "Gericht",
+    "Räumung"
+   ]
+  },
+  {
+   "type": "text",
+   "kicker": "Vermieter B – mit Rechtsschutz:",
+   "title": [
+    "Bei ihm",
+    "übernimmt das",
+    "[die Versicherung.]*"
+   ],
+   "text": "Er kümmert sich um seinen Mieter – nicht um die Rechnungen."
+  },
+  {
+   "type": "vergleich",
+   "title": [
+    "Wer zahlt",
+    "[den Streit?]"
+   ],
+   "left": {
+    "label": "Ohne Rechtsschutz",
+    "rows": [
+     "Anwalt",
+     "Gericht",
+     "Räumung"
+    ],
+    "total": "über 6.000 €",
+    "totalLabel": "aus eigener Tasche"
+   },
+   "right": {
+    "label": "Mit Rechtsschutz",
+    "rows": [
+     "Anwalt*",
+     "Gericht*",
+     "Räumung*"
+    ],
+    "total": "Versicherung*",
+    "totalLabel": "übernimmt je nach Tarif"
+   }
+  },
+  {
+   "type": "loesung",
+   "kicker": "Der",
+   "product": [
+    "Vermieter-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "übernimmt je nach Tarif:",
+   "items": [
+    "Anwalt*",
+    "Gericht*",
+    "Kosten der Räumung*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber:",
+   "title": [
+    "Gilt nur, wenn du",
+    "[vorher] abschließt."
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Welcher",
+    "Vermieter",
+    "[willst du sein?]"
+   ]
+  }
+ ]
+}

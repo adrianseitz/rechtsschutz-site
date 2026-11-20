@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { CheckCircle2, CircleAlert, Clapperboard, Copy, Download, ExternalLink, Loader2, Mic, Pause, Play, RefreshCw, Send, Sparkles, Square, Trash2, Undo2, Upload, Volume2, X } from "lucide-react";
+import { CheckCircle2, ChevronLeft, ChevronRight, CircleAlert, Clapperboard, Copy, Download, ExternalLink, Loader2, Mic, Pause, Play, RefreshCw, Send, Sparkles, Square, Trash2, Undo2, Upload, Volume2, X } from "lucide-react";
 
 /* Video-Automatik: TikTok, Instagram Reels, YouTube Shorts.
    Der Worker auf dem Server erstellt die Videos und postet sie zum Termin; hier wird eingerichtet und überwacht. */
@@ -12,7 +12,7 @@ type Settings = {
   enabled: boolean; days: number[]; times: string[]; platforms: Platform[]; uploadUser: string; voiceEngine: "own" | "elevenlabs"; voiceSample?: VoiceSample;
   voiceId: string; voiceName: string; speed: number; aiLabel: boolean; promo: boolean; repeat: boolean; disabled: string[];
   hasElevenlabs: boolean; hasUploadpost: boolean; hasHuggingface: boolean; hasInstagram: boolean; updatedAt?: string;
-  postVia: "direkt" | "uploadpost"; onlyUploads: boolean;
+  postVia: "direkt" | "uploadpost"; onlyUploads: boolean; karussell: boolean;
   tiktokClientKey: string; tiktokMode: "entwurf" | "direkt"; hasTiktokSecret: boolean; hasTiktok: boolean; tiktokUser?: { name: string; scope: string; at: string };
   cfAccount: string; hasCloudflare: boolean; figurFoto?: { file: string; at: string; bytes: number };
 };
@@ -21,9 +21,9 @@ type ProbeState = { status: "läuft" | "fertig" | "fehler"; at: string; error?: 
 type Keys = { elevenlabs?: string; uploadpost?: string; huggingface?: string; cloudflare?: string; instagram?: string; tiktokSecret?: string };
 type VoiceTest = { status: "läuft" | "fertig" | "fehler"; at: string; error?: string; file?: string; took?: number };
 type ReelJob = { status: "läuft" | "fertig" | "fehler"; at: string; error?: string; file?: string; reels?: number; beats?: number; took?: number };
-type Ep = { id: string; order: number; title: string; topic: string; style: "whiteboard" | "cartoon" | "studio3d" | "eigen"; caption: string; beats: number };
+type Ep = { id: string; order: number; title: string; topic: string; style: "whiteboard" | "cartoon" | "studio3d" | "eigen" | "bilder"; caption: string; beats: number; kind?: "karussell" };
 type EpState = {
-  status?: string; video?: string; thumb?: string; duration?: number; voiced?: boolean; upload?: boolean; renderedAt?: string; postedAt?: string; error?: string | null;
+  status?: string; video?: string | null; slides?: string[]; hinweis?: string | null; thumb?: string; duration?: number; voiced?: boolean; upload?: boolean; renderedAt?: string; postedAt?: string; error?: string | null;
   platforms?: Record<string, { status: string; url?: string | null; inbox?: boolean; message?: string }>;
 };
 type State = {
@@ -36,7 +36,9 @@ type LogEntry = { at: string; kind: string; text: string };
 const PL: Record<Platform, string> = { tiktok: "TikTok", instagram: "Instagram", youtube: "YouTube" };
 const DAYS = [{ d: 1, l: "Mo" }, { d: 2, l: "Di" }, { d: 3, l: "Mi" }, { d: 4, l: "Do" }, { d: 5, l: "Fr" }, { d: 6, l: "Sa" }, { d: 0, l: "So" }];
 const TOPIC: Record<string, string> = { vermieter: "Vermieter", firma: "Firma", arbeit: "Arbeit", privat: "Privat", allgemein: "Allgemein", eigen: "Eigenes Video" };
-const STYLE: Record<string, string> = { whiteboard: "Whiteboard", cartoon: "Cartoon", studio3d: "3D", eigen: "hochgeladen" };
+const STYLE: Record<string, string> = { whiteboard: "Whiteboard", cartoon: "Cartoon", studio3d: "3D", eigen: "hochgeladen", bilder: "Bilder-Post" };
+const isK = (ep: Ep) => ep.kind === "karussell";
+const hasMedia = (e?: EpState) => Boolean(e?.video || e?.slides?.length);
 /** Kann gerade gepostet werden? (direkt: Instagram verbunden; sonst Upload-Post) */
 const directTargets = (s: Settings): Platform[] => [...(s.hasInstagram && s.platforms.includes("instagram") ? ["instagram" as const] : []), ...(s.hasTiktok && s.platforms.includes("tiktok") ? ["tiktok" as const] : [])];
 const canPostWith = (s: Settings) => (s.postVia === "uploadpost" ? s.hasUploadpost && !!s.uploadUser : directTargets(s).length > 0);
@@ -318,10 +320,10 @@ function Queue({ settings, state, onPreview, onAction, onChanged }: { settings: 
           const posted = e?.status === "gepostet";
           return (
             <li key={ep.id} className="flex gap-3 py-3">
-              <button type="button" onClick={() => e?.video && onPreview({ ep, e })} disabled={!e?.video} aria-label={`Vorschau: ${ep.title}`}
-                className="relative h-[86px] w-[48px] shrink-0 overflow-hidden rounded-md bg-paper ring-1 ring-line disabled:cursor-default">
+              <button type="button" onClick={() => e && hasMedia(e) && onPreview({ ep, e })} disabled={!hasMedia(e)} aria-label={`Vorschau: ${ep.title}`}
+                className={`relative shrink-0 overflow-hidden rounded-md bg-paper ring-1 ring-line disabled:cursor-default ${isK(ep) ? "h-[86px] w-[69px]" : "h-[86px] w-[48px]"}`}>
                 {e?.thumb ? <img src={`/api/admin/social/media/${e.thumb}?v=${encodeURIComponent(e.renderedAt ?? "")}`} alt="" className="h-full w-full object-cover" /> : <Clapperboard className="mx-auto mt-7 h-4 w-4 text-ink-muted" aria-hidden />}
-                {e?.video && <span className="absolute inset-0 grid place-items-center bg-black/0 text-white opacity-0 transition hover:bg-black/30 hover:opacity-100"><Play className="h-4 w-4" aria-hidden /></span>}
+                {hasMedia(e) && <span className="absolute inset-0 grid place-items-center bg-black/0 text-white opacity-0 transition hover:bg-black/30 hover:opacity-100"><Play className="h-4 w-4" aria-hidden /></span>}
               </button>
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-1.5">
@@ -330,9 +332,10 @@ function Queue({ settings, state, onPreview, onAction, onChanged }: { settings: 
                 </div>
                 <div className="mt-1 flex flex-wrap items-center gap-1.5 text-xs">
                   <span className={`rounded-full px-2 py-0.5 font-semibold ${st.cls}`}>{e?.status === "rendert" && <Loader2 className="mr-1 inline h-3 w-3 animate-spin" aria-hidden />}{st.label}</span>
-                  <span className="text-ink-muted">{TOPIC[ep.topic] ?? ep.topic}{ep.style !== "eigen" ? ` · ${STYLE[ep.style] ?? ep.style}` : ""}{e?.duration ? ` · ${Math.round(e.duration)} s` : ""}</span>
+                  <span className="text-ink-muted">{TOPIC[ep.topic] ?? ep.topic}{ep.style !== "eigen" ? ` · ${STYLE[ep.style] ?? ep.style}` : ""}{isK(ep) ? ` · ${ep.beats} Bilder · nur Instagram` : e?.duration ? ` · ${Math.round(e.duration)} s` : ""}</span>
                 </div>
                 {e?.error && <p className="mt-1 text-xs text-rose-800">{e.error}</p>}
+                {e?.hinweis && !e.error && <p className="mt-1 text-xs text-amber-800">{e.hinweis}</p>}
                 {e?.platforms && (posted || e.status === "wird gepostet" || e.status === "fehler") && (
                   <div className="mt-1.5 flex flex-wrap gap-1.5 text-xs">
                     {Object.entries(e.platforms).map(([p, r]) => (
@@ -342,12 +345,12 @@ function Queue({ settings, state, onPreview, onAction, onChanged }: { settings: 
                   </div>
                 )}
                 <div className="mt-2 flex flex-wrap gap-1.5">
-                  {e?.video && <Small onClick={() => onPreview({ ep, e })}><Play className="h-3.5 w-3.5" aria-hidden />Ansehen</Small>}
+                  {e && hasMedia(e) && <Small onClick={() => onPreview({ ep, e })}><Play className="h-3.5 w-3.5" aria-hidden />Ansehen</Small>}
                   {!posted && <Small onClick={() => onAction(off ? "on" : "off", ep.id)}>{off ? "Einschalten" : "Nicht posten"}</Small>}
-                  {!posted && !off && canPost && e?.status !== "wird gepostet" && (
-                    <Small onClick={() => { if (window.confirm(`„${ep.title}“ jetzt sofort auf ${targetNames(settings)} veröffentlichen?`)) onAction("post", ep.id); }}><Send className="h-3.5 w-3.5" aria-hidden />Jetzt posten</Small>
+                  {!posted && !off && (isK(ep) ? settings.hasInstagram && settings.platforms.includes("instagram") : canPost) && e?.status !== "wird gepostet" && (
+                    <Small onClick={() => { if (window.confirm(`„${ep.title}“ jetzt sofort auf ${isK(ep) ? "Instagram" : targetNames(settings)} veröffentlichen?`)) onAction("post", ep.id); }}><Send className="h-3.5 w-3.5" aria-hidden />Jetzt posten</Small>
                   )}
-                  {ep.style !== "eigen" && (e?.video || e?.status === "fehler") && e?.status !== "rendert" && e?.status !== "wird gepostet" && <Small onClick={() => onAction("render", ep.id)}><RefreshCw className="h-3.5 w-3.5" aria-hidden />Neu erstellen</Small>}
+                  {ep.style !== "eigen" && (hasMedia(e) || e?.status === "fehler") && e?.status !== "rendert" && e?.status !== "wird gepostet" && <Small onClick={() => onAction("render", ep.id)}><RefreshCw className="h-3.5 w-3.5" aria-hidden />Neu erstellen</Small>}
                   {ep.style === "eigen" && e?.status !== "wird gepostet" && <Small onClick={() => remove(ep)}><Trash2 className="h-3.5 w-3.5" aria-hidden />Löschen</Small>}
                   {(posted || e?.status === "fehler") && <Small onClick={() => onAction("reset", ep.id)}><Undo2 className="h-3.5 w-3.5" aria-hidden />Wieder einreihen</Small>}
                 </div>
@@ -649,7 +652,11 @@ function Setup({ settings, onSave, voiceTest, onSettings, onRefresh }: {
           </p>
           <label className="mt-4 flex cursor-pointer items-start gap-3 text-sm">
             <input type="checkbox" className="mt-0.5 h-5 w-5 shrink-0 accent-navy" checked={s.onlyUploads} onChange={(e) => set("onlyUploads", e.target.checked)} />
-            <span>Nur meine hochgeladenen Videos posten<span className="mt-0.5 block text-xs text-ink-muted">Die automatisch erstellten Videos bleiben aus. Abgehakt: Es werden nur die Videos gepostet, die du oben hochlädst.</span></span>
+            <span>Nur meine hochgeladenen Videos posten<span className="mt-0.5 block text-xs text-ink-muted">Die automatisch erstellten Videos bleiben aus. Abgehakt: Es werden nur die Videos gepostet, die du oben hochlädst (und die Bilder-Posts, falls unten eingeschaltet).</span></span>
+          </label>
+          <label className="mt-4 flex cursor-pointer items-start gap-3 text-sm">
+            <input type="checkbox" className="mt-0.5 h-5 w-5 shrink-0 accent-navy" checked={s.karussell} onChange={(e) => set("karussell", e.target.checked)} />
+            <span>Bilder-Posts auf Instagram mit posten<span className="mt-0.5 block text-xs text-ink-muted">Karussells zum Durchwischen (1080 × 1350): erste Seite die Frage, dahinter Kosten, Lösung, Wartezeit und Beratung. Laufen in derselben Warteschlange wie die Videos, aber nur auf Instagram – TikTok wird dabei übersprungen.</span></span>
           </label>
 {!s.onlyUploads && (
           <label className="mt-4 flex cursor-pointer items-start gap-3 text-sm">
@@ -1054,18 +1061,33 @@ function Log({ entries }: { entries: LogEntry[] }) {
 /* ---------- Vorschau ---------- */
 function Preview({ ep, e, onClose }: { ep: Ep; e: EpState; onClose: () => void }) {
   const [copied, setCopied] = useState(false);
+  const [nr, setNr] = useState(0);
+  const slides = e.slides ?? [];
   useEffect(() => { const k = (ev: KeyboardEvent) => ev.key === "Escape" && onClose(); window.addEventListener("keydown", k); return () => window.removeEventListener("keydown", k); }, [onClose]);
   return (
     <div role="dialog" aria-modal="true" aria-label={ep.title} className="fixed inset-0 z-50 grid place-items-center bg-black/60 p-4" onClick={onClose}>
       <div className="flex max-h-full w-full max-w-3xl flex-col gap-4 overflow-y-auto rounded-2xl bg-white p-4 sm:flex-row sm:p-5" onClick={(ev) => ev.stopPropagation()}>
-        <video src={`/api/admin/social/media/${e.video}?v=${encodeURIComponent(e.renderedAt ?? "")}`} poster={e.thumb ? `/api/admin/social/media/${e.thumb}?v=${encodeURIComponent(e.renderedAt ?? "")}` : undefined} controls autoPlay playsInline preload="metadata" className="mx-auto aspect-[9/16] max-h-[70vh] w-auto rounded-xl bg-black" />
+        {slides.length ? (
+          <div className="mx-auto w-full max-w-[420px] shrink-0 sm:w-[380px]">
+            <div className="relative">
+              <img src={`/api/admin/social/media/${slides[nr]}?v=${encodeURIComponent(e.renderedAt ?? "")}`} alt={`Bild ${nr + 1} von ${slides.length}`} className="aspect-[4/5] w-full rounded-xl bg-paper object-cover ring-1 ring-line" />
+              {nr > 0 && <button type="button" onClick={() => setNr(nr - 1)} aria-label="Vorheriges Bild" className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-2 shadow"><ChevronLeft className="h-5 w-5" aria-hidden /></button>}
+              {nr < slides.length - 1 && <button type="button" onClick={() => setNr(nr + 1)} aria-label="Nächstes Bild" className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-2 shadow"><ChevronRight className="h-5 w-5" aria-hidden /></button>}
+            </div>
+            <div className="mt-2 flex justify-center gap-1.5">
+              {slides.map((f, i) => <button key={f} type="button" onClick={() => setNr(i)} aria-label={`Bild ${i + 1}`} className={`h-2 rounded-full transition-all ${i === nr ? "w-5 bg-navy" : "w-2 bg-line"}`} />)}
+            </div>
+          </div>
+        ) : (
+          <video src={`/api/admin/social/media/${e.video}?v=${encodeURIComponent(e.renderedAt ?? "")}`} poster={e.thumb ? `/api/admin/social/media/${e.thumb}?v=${encodeURIComponent(e.renderedAt ?? "")}` : undefined} controls autoPlay playsInline preload="metadata" className="mx-auto aspect-[9/16] max-h-[70vh] w-auto rounded-xl bg-black" />
+        )}
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-3">
             <h3 className="font-semibold">{ep.title}</h3>
             <button type="button" onClick={onClose} aria-label="Schließen" className="rounded-full p-1 hover:bg-paper"><X className="h-5 w-5" aria-hidden /></button>
           </div>
-          <p className="mt-1 text-xs text-ink-muted">{e.voiced ? "Mit Stimme" : "Ohne Stimme"} · {e.duration ? `${Math.round(e.duration)} s` : ""} · erstellt {fmt(e.renderedAt)}</p>
-          <p className="mt-4 text-xs font-semibold text-ink-muted">Text zum Video</p>
+          <p className="mt-1 text-xs text-ink-muted">{slides.length ? `Bilder-Post · ${slides.length} Bilder · nur Instagram` : `${e.voiced ? "Mit Stimme" : "Ohne Stimme"} · ${e.duration ? `${Math.round(e.duration)} s` : ""}`} · erstellt {fmt(e.renderedAt)}</p>
+          <p className="mt-4 text-xs font-semibold text-ink-muted">{slides.length ? "Text zum Post" : "Text zum Video"}</p>
           <p className="mt-1 whitespace-pre-line rounded-lg bg-paper p-3 text-sm leading-6">{ep.caption}</p>
           <button type="button" onClick={() => navigator.clipboard?.writeText(ep.caption).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); }).catch(() => undefined)}
             className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-line px-3 py-1.5 text-xs font-medium hover:border-navy"><Copy className="h-3.5 w-3.5" aria-hidden />{copied ? "Kopiert" : "Text kopieren"}</button>

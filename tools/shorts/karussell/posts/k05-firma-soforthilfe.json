@@ -1,0 +1,68 @@
+{
+ "id": "k05-firma-soforthilfe",
+ "order": 5,
+ "topic": "firma",
+ "title": "Schon Streit im Betrieb? Soforthilfe sogar für zurückliegende Fälle",
+ "caption": "Du hast schon Streit mit einem Kunden und denkst, jetzt ist es zu spät für eine Versicherung?\n\nNormalerweise stimmt das: Ein Streit, der schon läuft, lässt sich nicht mehr versichern.\n\nAber: Bei der ARAG gibt es den Firmenrechtsschutz mit Soforthilfe. Damit bekommst du je nach Tarif sogar für einen zurückliegenden Fall außergerichtliche Hilfe – bis zu 3.000 €.\n\nWichtig: Das geht nur, solange noch kein Anwalt eingeschaltet ist.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#selbstständig #unternehmer #firmenrechtsschutz #kleinunternehmen #betrieb #rechtsschutz",
+ "fine": "* je nach Tarif. Soforthilfe: außergerichtliche Hilfe bis 3.000 € auch für einen zurückliegenden Fall, nur solange noch kein Anwalt eingeschaltet ist. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Selbstständige",
+   "title": [
+    "Schon Streit",
+    "mit einem",
+    "[Kunden?]"
+   ],
+   "sub": "Und du denkst, jetzt ist es zu spät für eine Versicherung?"
+  },
+  {
+   "type": "text",
+   "kicker": "Normalerweise stimmt das:",
+   "title": [
+    "Ein Streit, der",
+    "schon läuft, lässt sich",
+    "[nicht mehr versichern.]"
+   ]
+  },
+  {
+   "type": "loesung",
+   "kicker": "Aber: Bei der ARAG gibt es den",
+   "product": [
+    "Firmen-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "mit Soforthilfe, je nach Tarif:",
+   "items": [
+    "Hilfe auch für einen zurückliegenden Fall*",
+    "außergerichtlich*"
+   ]
+  },
+  {
+   "type": "zahl",
+   "kicker": "Soforthilfe für deinen Fall:",
+   "big": "bis 3.000 €*",
+   "note": "außergerichtliche Hilfe, je nach Tarif",
+   "itemsTitle": "Auch wenn der Streit schon da ist."
+  },
+  {
+   "type": "achtung",
+   "kicker": "Wichtig:",
+   "title": [
+    "Nur solange noch",
+    "[kein Anwalt]",
+    "eingeschaltet ist."
+   ],
+   "text": "Also nicht abwarten, sondern früh beraten lassen."
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Schon Ärger",
+    "[im Betrieb?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

@@ -1,0 +1,95 @@
+{
+ "id": "k01-mieter-zahlt-nicht",
+ "order": 1,
+ "topic": "vermieter",
+ "title": "Mieter zahlt nicht mehr: bis zu 12 Monatsmieten absichern",
+ "caption": "Dein Mieter zahlt plötzlich nicht mehr? Dann fehlt dir jeden Monat die Miete – und Anwalt, Gericht und Räumung kommen noch dazu.\n\nDer Vermieterrechtsschutz der ARAG übernimmt je nach Tarif Anwalt, Gericht und Räumung. Mit dem Mietausfallschutz bekommst du je nach Tarif sogar bis zu 12 Monatsmieten ersetzt.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – also absichern, bevor der Ärger losgeht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#vermieter #mietausfall #immobilien #mietrecht #vermieterrechtsschutz #kapitalanlage #vermietung",
+ "fine": "* je nach Tarif. Mietausfallschutz als Zusatzbaustein in ausgewählten Tarifen; Leerstand und bestehende Rückstände sind nicht versichert. Wartezeit meist 3 Monate. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Vermieter",
+   "title": [
+    "Dein Mieter",
+    "zahlt",
+    "[nicht mehr?]"
+   ],
+   "sub": "Was dich das wirklich kostet – und wie du dich absicherst."
+  },
+  {
+   "type": "chat",
+   "title": [
+    "Stell dir vor, du bekommst",
+    "[diese Nachricht:]"
+   ],
+   "sender": "Mieter, Wohnung 2. OG",
+   "status": "zuletzt online vor 2 Min.",
+   "time": "08:14",
+   "messages": [
+    "Hallo, ich kann die Miete diesen Monat leider nicht zahlen.",
+    "Nächsten Monat wird es wohl auch nichts. Sorry."
+   ]
+  },
+  {
+   "type": "zahl",
+   "kicker": "Nach 6 Monaten fehlen dir",
+   "big": "– 5.700 €",
+   "minus": true,
+   "note": "Beispiel: 950 € Kaltmiete × 6 Monate",
+   "itemsTitle": "Und dazu kommen noch:",
+   "items": [
+    "Anwalt",
+    "Gericht",
+    "Räumung"
+   ]
+  },
+  {
+   "type": "loesung",
+   "kicker": "Genau dafür gibt es den",
+   "product": [
+    "Vermieter-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Er übernimmt je nach Tarif:",
+   "items": [
+    "Anwalt*",
+    "Gericht*",
+    "Räumung*"
+   ]
+  },
+  {
+   "type": "text",
+   "theme": "dark",
+   "kicker": "Und das Beste:",
+   "title": [
+    "Mit Mietausfallschutz",
+    "bekommst du sogar",
+    "[die Miete ersetzt.]*"
+   ],
+   "text": "Bis zu 12 Monatsmieten – als Zusatzbaustein, je nach Tarif."
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Abschließen musst du, bevor der Ärger losgeht.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Ist deine",
+    "Wohnung",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

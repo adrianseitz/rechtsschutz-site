@@ -32,6 +32,7 @@ export type SocialSettings = {
   disabled: string[];      // Videos, die nicht gepostet werden
   postVia: PostVia;        // direkt über die offiziellen Schnittstellen (kostenlos) oder über Upload-Post
   onlyUploads: boolean;    // nur selbst hochgeladene Videos posten (automatisch erstellte bleiben aus)
+  karussell: boolean;      // Bilder-Posts (Instagram-Karussell aus tools/shorts/karussell/posts) mit posten
   tiktokClientKey: string; // Client Key der eigenen TikTok-App (kein Geheimnis)
   tiktokMode: TiktokMode;  // als Entwurf ins TikTok-Postfach oder direkt veröffentlichen
 };
@@ -48,7 +49,7 @@ type Stored = SocialSettings & { keys?: Partial<Record<KeyName, string>>; update
 export const SOCIAL_DEFAULTS: SocialSettings = {
   enabled: false, days: [1, 3, 5], times: ["18:30"], platforms: ["tiktok", "instagram", "youtube"],
   uploadUser: "", voiceEngine: "own", voiceId: "", voiceName: "", cfAccount: "", speed: 1.1, aiLabel: true, promo: true, repeat: true, disabled: [],
-  postVia: "direkt", onlyUploads: true, tiktokClientKey: "", tiktokMode: "entwurf",
+  postVia: "direkt", onlyUploads: true, karussell: true, tiktokClientKey: "", tiktokMode: "entwurf",
 };
 
 export const socialDir = () => path.join(serverConfig.storageDir, "social");
@@ -202,9 +203,9 @@ export async function deleteUpload(id: string) {
   await rm(path.join(socialDir(), "videos", `${id}.jpg`), { force: true });
 }
 
-/** Kurzzeit-Kopie für Instagram (Zufallsname, höchstens 6 Stunden alt) */
+/** Kurzzeit-Kopie für Instagram – Video oder Bild eines Bilder-Posts (Zufallsname, höchstens 6 Stunden alt) */
 export async function publicClip(name: string): Promise<string | null> {
-  if (!/^[a-f0-9]{32}\.mp4$/.test(name)) return null;
+  if (!/^[a-f0-9]{32}\.(mp4|jpg)$/.test(name)) return null;
   const p = path.join(socialDir(), "public", name);
   const s = await stat(p).catch(() => null);
   return s?.isFile() && Date.now() - s.mtimeMs < 6 * 3600_000 ? p : null;

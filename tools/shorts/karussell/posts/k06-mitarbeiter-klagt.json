@@ -1,0 +1,77 @@
+{
+ "id": "k06-mitarbeiter-klagt",
+ "order": 6,
+ "topic": "firma",
+ "title": "Mitarbeiter verklagt dich? Das zahlst du selbst",
+ "caption": "Du hast Mitarbeiter? Dann solltest du wissen, was passiert, wenn dich einer verklagt.\n\nIm Arbeitsrecht zahlst du in der ersten Instanz deinen Anwalt selbst – auch wenn du gewinnst.\n\nTypische Fälle: Kündigungsschutzklage, Streit ums Arbeitszeugnis, um Lohn oder Überstunden.\n\nMit dem Arbeitgeber-Baustein im Firmenrechtsschutz der ARAG sind solche Streitigkeiten je nach Tarif abgesichert. Aber: Abschließen, bevor der Streit losgeht – meist gilt eine Wartezeit von 3 Monaten.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#arbeitgeber #arbeitsrecht #selbstständig #unternehmer #firmenrechtsschutz #kleinunternehmen #betrieb #rechtsschutz",
+ "fine": "* je nach Tarif. Wartezeit meist 3 Monate. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Arbeitgeber",
+   "title": [
+    "Ein Mitarbeiter",
+    "[verklagt dich?]"
+   ],
+   "sub": "Das solltest du wissen, bevor es passiert."
+  },
+  {
+   "type": "text",
+   "kicker": "Im Arbeitsrecht gilt:",
+   "title": [
+    "Deinen Anwalt",
+    "[zahlst du selbst.]"
+   ],
+   "text": "In der ersten Instanz – auch dann, wenn du gewinnst."
+  },
+  {
+   "type": "liste",
+   "title": [
+    "Typische",
+    "[Fälle:]"
+   ],
+   "items": [
+    "Kündigungsschutzklage",
+    "Streit ums Arbeitszeugnis",
+    "Lohn oder Überstunden"
+   ],
+   "mark": "num"
+  },
+  {
+   "type": "loesung",
+   "kicker": "Die Lösung:",
+   "product": [
+    "Firmen-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "mit Arbeitgeber-Baustein, je nach Tarif:",
+   "items": [
+    "Anwalt*",
+    "Gericht*",
+    "Streit mit Mitarbeitern*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber:",
+   "title": [
+    "Abschließen, bevor",
+    "[der Streit losgeht.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Ist dein",
+    "Betrieb",
+    "[abgesichert?]"
+   ]
+  }
+ ]
+}

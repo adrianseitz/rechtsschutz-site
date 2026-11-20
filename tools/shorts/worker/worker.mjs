@@ -9,7 +9,9 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { renderEpisode } from "../render.mjs";
 import { P, decrypt, encrypt, ensureDirs, log, ownFile, readJson, takeJobs, trimLog, writeJson } from "./store.mjs";
-import { cleanPublic, igPublishReel, igRefresh } from "./instagram.mjs";
+import { cleanPublic, igPublishCarousel, igPublishReel, igRefresh } from "./instagram.mjs";
+import { POSTS as KARUSSELL, renderKarussell } from "../karussell/render.mjs";
+import { validateKarussell } from "../karussell/validate.mjs";
 import { ttPost, ttRefresh } from "./tiktok.mjs";
 import { elevenlabsUsage, tts, uploadStatus, uploadVideo, voiceInfo } from "./services.mjs";
 import { CREDIT, ENGINE, VoiceError, prepareVoice, speak } from "./ownvoice.mjs";
@@ -48,6 +50,47 @@ async function loadLibrary(cycle = 0) {
   }
   return eps.sort((a, b) => (a.order ?? 999) - (b.order ?? 999) || a.id.localeCompare(b.id));
 }
+// ---------- Bilder-Posts (Instagram-Karussell aus karussell/posts/) ----------
+async function loadKarussell() {
+  const out = [];
+  for (const f of (await readdir(KARUSSELL).catch(() => [])).filter((x) => x.endsWith(".json"))) {
+    let problem = null;
+    try {
+      const p = JSON.parse(await readFile(join(KARUSSELL, f), "utf8"));
+      const errors = validateKarussell(p, f.replace(/\.json$/, ""));
+      if (errors.length) problem = errors.join("; ");
+      else out.push({ ...p, kind: "karussell", style: "bilder", beats: [] });
+    } catch (e) { problem = `unlesbar (${msg(e)})`; }
+    if (problem && !reported.has(f + problem)) { reported.add(f + problem); await log("fehler", `Bilder-Post ${f} wird übersprungen: ${problem}`); }
+  }
+  return out.sort((a, b) => (a.order ?? 999) - (b.order ?? 999) || a.id.localeCompare(b.id));
+}
+const kHash = (p) => sha(JSON.stringify({ slides: p.slides, fine: p.fine, v: 1 })).slice(0, 12);
+const isK = (ep) => ep.kind === "karussell";
+/** Hat dieser Eintrag fertige Dateien zum Posten? (Video oder Bilder) */
+const hasMedia = (e) => Boolean(e?.video || e?.slides?.length);
+
+/** Bilder eines Bilder-Posts erstellen → videos/<id>--s1.jpg … */
+async function renderBilder(ep, state) {
+  const e = (state.episodes[ep.id] ||= {});
+  const wasPosted = e.status === "gepostet";
+  Object.assign(e, { status: "rendert", error: null });
+  state.busy = `Erstellt die Bilder: ${ep.title}`;
+  await writeJson(P.state, state);
+  try {
+    for (const f of await readdir(P.videos).catch(() => [])) if (f.startsWith(`${ep.id}--s`)) await rm(join(P.videos, f), { force: true });
+    const { files, warnings } = await renderKarussell({ post: ep, dir: P.videos });
+    for (const f of files) await ownFile(join(P.videos, f));
+    Object.assign(e, { status: wasPosted ? "gepostet" : "bereit", video: null, slides: files, thumb: files[0], kHash: kHash(ep), renderedAt: now(), voiced: false, error: null, hinweis: warnings.join("; ") || null });
+    await log("video", `Bilder-Post fertig: ${ep.title} (${files.length} Bilder${warnings.length ? `; ${warnings.join("; ")}` : ""})`);
+  } catch (err) {
+    Object.assign(e, { status: "fehler", error: `Bilder erstellen fehlgeschlagen: ${msg(err)}` });
+    await log("fehler", `Bilder-Post „${ep.title}“: ${msg(err)}`);
+  } finally {
+    state.busy = null;
+  }
+}
+
 // ---------- Eigene Videos (im CRM hochgeladen, z. B. fertige Reels) ----------
 async function loadUploads() {
   const out = [];
@@ -247,6 +290,7 @@ async function reelVoices(settings, keys, state) {
 // ---------- Video erstellen ----------
 async function render(ep, settings, keys, state) {
   if (ep.upload) return;   // eigene Videos werden nicht erstellt
+  if (isK(ep)) return renderBilder(ep, state);
   const e = (state.episodes[ep.id] ||= {});
   const wasPosted = e.status === "gepostet";   // erneut erstellt, aber nicht noch einmal posten
   Object.assign(e, { status: "rendert", error: null });
@@ -290,6 +334,7 @@ function needsRender(e, ep, settings, keys, state) {
   if (ep.upload) return false;
   if (!e || !e.status) return true;
   if (["gepostet", "wird gepostet", "fehler"].includes(e.status)) return false;
+  if (isK(ep)) return !e.slides?.length || e.kHash !== kHash(ep) || !e.slides.every((f) => existsSync(join(P.videos, f)));
   if (!e.video || !existsSync(join(P.videos, e.video))) return true;
   if (e.epHash !== epHash(ep)) return true;
   if (voiceUsable(settings, keys, state) && e.voiceSig !== voiceSig(settings)) return true;
@@ -307,8 +352,9 @@ function youtubeDescription(ep, e = {}) {
 // ---------- Posten ----------
 const direkt = (settings) => (settings.postVia || "direkt") === "direkt";
 const ttReady = (settings, keys) => Boolean(keys.tt && keys.ttSecret && settings.tiktokClientKey);
-/** Warum gerade nicht gepostet werden kann ("" = alles bereit) */
-function postBlocker(settings, keys) {
+/** Warum gerade nicht gepostet werden kann ("" = alles bereit) – für einen Eintrag, oder allgemein */
+function postBlocker(settings, keys, ep = null) {
+  if (ep && isK(ep)) return keys.ig && (settings.platforms || PLATFORMS).includes("instagram") ? "" : "Bilder-Posts brauchen Instagram (verbunden und ausgewählt)";
   if (direkt(settings)) {
     const want = settings.platforms || PLATFORMS;
     if ((want.includes("instagram") && keys.ig) || (want.includes("tiktok") && ttReady(settings, keys))) return "";
@@ -337,16 +383,19 @@ const PL_NAME = { instagram: "Instagram", tiktok: "TikTok", youtube: "YouTube" }
 async function postDirect(ep, settings, keys, state, why) {
   const e = (state.episodes[ep.id] ||= {});
   const want = (settings.platforms || PLATFORMS).filter((p) => PLATFORMS.includes(p));
-  const can = { instagram: Boolean(keys.ig), tiktok: ttReady(settings, keys), youtube: false };
-  const platforms = Object.fromEntries(want.map((p) => [p, can[p] ? { status: "processing" } : { status: "skipped", message: p === "youtube" ? "YouTube direkt folgt" : "nicht verbunden" }]));
+  const can = { instagram: Boolean(keys.ig), tiktok: ttReady(settings, keys) && !isK(ep), youtube: false };
+  const why0 = (p) => (isK(ep) && p !== "instagram" ? "Bilder-Posts gehen nur auf Instagram" : p === "youtube" ? "YouTube direkt folgt" : "nicht verbunden");
+  const platforms = Object.fromEntries(want.map((p) => [p, can[p] ? { status: "processing" } : { status: "skipped", message: why0(p) }]));
   Object.assign(e, { status: "wird gepostet", requestId: null, postStartedAt: now(), platforms, error: null, why });
   await writeJson(P.state, state);
-  const file = join(P.videos, e.video);
+  const file = e.video ? join(P.videos, e.video) : null;
   const onStep = async (t) => { state.busy = `${t} („${ep.title}“)`; await writeJson(P.state, state); };
   try {
     if (platforms.instagram?.status === "processing") {
       try {
-        const r = await igPublishReel({ token: keys.ig, file, caption: ep.caption || ep.title, site: SITE, publicDir: P.public, onStep });
+        const r = isK(ep)
+          ? await igPublishCarousel({ token: keys.ig, files: e.slides.map((f) => join(P.videos, f)), caption: ep.caption || ep.title, site: SITE, publicDir: P.public, onStep })
+          : await igPublishReel({ token: keys.ig, file, caption: ep.caption || ep.title, site: SITE, publicDir: P.public, onStep });
         e.platforms.instagram = { status: "completed", url: r.url };
         await log("post", `Auf Instagram veröffentlicht: ${ep.title}${r.username ? ` (@${r.username})` : ""}`);
       } catch (err) {
@@ -376,7 +425,7 @@ async function postDirect(ep, settings, keys, state, why) {
 }
 
 async function post(ep, settings, keys, state, why) {
-  if (direkt(settings)) return postDirect(ep, settings, keys, state, why);
+  if (direkt(settings) || isK(ep)) return postDirect(ep, settings, keys, state, why);   // Bilder-Posts immer direkt (Instagram)
   const e = (state.episodes[ep.id] ||= {});
   const platforms = (settings.platforms || PLATFORMS).filter((p) => PLATFORMS.includes(p));
   if (!platforms.length) { await log("fehler", "Keine Plattform ausgewählt – nichts gepostet."); return false; }
@@ -429,11 +478,12 @@ async function tick() {
   const library = await loadLibrary(state.cycle || 0);
   const uploads = await loadUploads();
   for (const u of uploads) readyUpload(u, state);
-  // Standard: nur eigene (hochgeladene) Videos posten; die automatisch erstellten nur, wenn im CRM eingeschaltet
-  const lib = settings.onlyUploads === false ? [...uploads, ...library] : uploads;
-  const byId = new Map([...library, ...uploads].map((ep) => [ep.id, ep]));
+  const bilder = await loadKarussell();
+  // Standard: eigene (hochgeladene) Videos und Bilder-Posts; die automatisch erstellten Videos nur, wenn im CRM eingeschaltet
+  const lib = [...uploads, ...(settings.karussell === false ? [] : bilder), ...(settings.onlyUploads === false ? library : [])];
+  const byId = new Map([...library, ...uploads, ...bilder].map((ep) => [ep.id, ep]));
   FIG_V = state.figur?.nutzbar && kitDir(P.figur) ? state.figur.version || 0 : 0;
-  state.library = lib.map((ep) => ({ id: ep.id, order: ep.order, title: ep.title, topic: ep.topic, style: ep.style, caption: ep.caption, beats: ep.beats.length }));
+  state.library = lib.map((ep) => ({ id: ep.id, order: ep.order, title: ep.title, topic: ep.topic, style: ep.style, caption: ep.caption, beats: isK(ep) ? ep.slides.length : ep.beats.length, ...(isK(ep) ? { kind: "karussell" } : {}) }));
   const disabled = new Set(settings.disabled || []);
 
   // 1) Aufträge aus dem CRM
@@ -448,11 +498,11 @@ async function tick() {
     if (job.type === "render") { delete state.episodes[ep.id]?.error; await render(ep, settings, keys, state); }
     else if (job.type === "reset") { delete state.episodes[ep.id]; await log("info", `Wieder eingereiht: ${ep.title}`); }
     else if (job.type === "post") {
-      const block = postBlocker(settings, keys);
+      const block = postBlocker(settings, keys, ep);
       if (block) { await log("fehler", `Posten nicht möglich: ${block}.`); continue; }
       const e = state.episodes[ep.id];
-      if (!ep.upload && (!e || needsRender(e, ep, settings, keys, state) || e.status === "fehler" && !existsSync(join(P.videos, e.video || "-")))) await render(ep, settings, keys, state);
-      if (state.episodes[ep.id]?.video) await post(ep, settings, keys, state, "manuell");
+      if (!ep.upload && (!e || needsRender(e, ep, settings, keys, state) || e.status === "fehler" && !hasMedia(e))) await render(ep, settings, keys, state);
+      if (hasMedia(state.episodes[ep.id])) await post(ep, settings, keys, state, "manuell");
     }
     await writeJson(P.state, state);
   }
@@ -470,7 +520,7 @@ async function tick() {
   const open = () => lib.filter((ep) => !disabled.has(ep.id) && !["gepostet", "wird gepostet"].includes(state.episodes[ep.id]?.status));
   let queue = open();
   // Alles gepostet? Dann beginnt die Reihe von vorn (abschaltbar im CRM) – beim nächsten Durchlauf im anderen Stil
-  const active = lib.filter((ep) => !disabled.has(ep.id));
+  const active = lib.filter((ep) => !disabled.has(ep.id) && !isK(ep));   // Bilder-Posts werden nicht von selbst ein zweites Mal gepostet
   // (nur für automatisch erstellte Videos – eigene Videos werden nicht von selbst ein zweites Mal gepostet)
   if (!queue.length && active.length && settings.onlyUploads === false && settings.repeat !== false && active.every((ep) => state.episodes[ep.id]?.status === "gepostet")) {
     state.cycle = (state.cycle || 0) + 1;
@@ -482,7 +532,7 @@ async function tick() {
   }
   state.queue = queue.map((ep) => ep.id);
   const ahead = Math.max(AHEAD, normTimes(settings).length * 2);
-  for (const ep of queue.slice(0, ahead)) {
+  for (const ep of queue.filter((x, i) => i < ahead || isK(x))) {   // Bilder sind in Sekunden fertig – alle vorab, damit die Vorschau im CRM da ist
     if (needsRender(state.episodes[ep.id], ep, settings, keys, state)) { await render(ep, settings, keys, state); break; }
   }
 
@@ -490,7 +540,8 @@ async function tick() {
   if (settings.enabled) {
     const slot = dueSlot(settings, state.lastSlot);
     if (slot) {
-      const next = queue.find((ep) => state.episodes[ep.id]?.status === "bereit");
+      // Bilder-Posts überspringen, solange Instagram nicht verbunden ist (dann kommt das nächste Video dran)
+      const next = queue.find((ep) => state.episodes[ep.id]?.status === "bereit" && !(isK(ep) && postBlocker(settings, keys, ep)));
       const block = postBlocker(settings, keys);
       if (block) await log("fehler", `Termin verpasst: ${block}.`);
       else if (!next) await log("fehler", settings.onlyUploads === false ? "Termin verpasst: kein fertiges Video in der Warteschlange." : "Termin verpasst: Alle hochgeladenen Videos sind gepostet – bitte neue hochladen.");
@@ -510,7 +561,7 @@ async function tick() {
   for (const d of await readdir(P.voice).catch(() => [])) if (d !== "reels" && ![...byId.keys()].some((id) => d.startsWith(id + "-"))) await rm(join(P.voice, d), { recursive: true, force: true });
   for (const f of await readdir(P.videos).catch(() => [])) {
     if (/^(figur-|probe-|voice-test)/.test(f) || !/\.(mp4|jpg)$/.test(f)) continue;   // Figur-Vorschauen, Probevideo, Hörprobe, Reel-Stimmen-ZIP gehören keiner Episode
-    const id = f.replace(/(\.tmp)?\.(mp4|jpg)$/, "");
+    const id = f.replace(/(--s\d+)?(\.tmp)?\.(mp4|jpg)$/, "");
     if (!byId.has(id) && state.episodes[id]?.status !== "gepostet") { await rm(join(P.videos, f), { force: true }); if (state.episodes[id]) delete state.episodes[id]; }
   }
 
