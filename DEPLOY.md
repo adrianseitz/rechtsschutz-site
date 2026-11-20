@@ -20,6 +20,10 @@ Anfragen werden verschlüsselt auf dem Server gespeichert und im **CRM unter `/a
 Vorhandene A-/AAAA-/CNAME-Einträge für `@` und `www` (z. B. von Vercel oder IONOS-Parkseite) vorher löschen.
 Die Umstellung dauert meist 5–30 Minuten.
 
+**Zweite Domain `im-rechtsschutz.de`:** dieselben zwei A-Einträge (`@` und `www` → IP des Servers) bei dieser Domain anlegen,
+alte A-/AAAA-/CNAME-Einträge löschen. Caddy holt dann selbst das Zertifikat; die Domain leitet auf `www.seitz-rechtsschutz.de` weiter
+(Einstellung `DOMAIN2` in `docker-compose.yml`).
+
 ## 3. Auf dem Server einrichten
 
 Am Laptop im Terminal (Windows: „Terminal“ / PowerShell):

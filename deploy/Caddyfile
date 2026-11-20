@@ -7,3 +7,9 @@ www.{$DOMAIN} {
 	encode zstd gzip
 	reverse_proxy app:3000
 }
+
+# Zweite Domain (im-rechtsschutz.de): leitet vorerst auf die Hauptadresse weiter.
+# Vorübergehende Weiterleitung (302), damit ein späterer Umzug auf diese Domain ohne Browser-Altlasten geht.
+{$DOMAIN2:im-rechtsschutz.de}, www.{$DOMAIN2:im-rechtsschutz.de} {
+	redir https://www.{$DOMAIN}{uri} temporary
+}
