@@ -50,6 +50,7 @@ export function buildLeadRecord(input: LeadInput, meta: SubmissionRecord["meta"]
   const now = new Date().toISOString();
   const { answers, contact } = input;
   const multi = SITUATION[answers.bereich]?.multi;
+  const hasSituation = Boolean(SITUATION[answers.bereich]) && answers.situation.length > 0;
   return {
     id: randomUUID(),
     type: "lead",
@@ -58,12 +59,16 @@ export function buildLeadRecord(input: LeadInput, meta: SubmissionRecord["meta"]
     productLabel: PRODUCT_LABEL[answers.bereich] ?? answers.bereich,
     answers: {
       bereich: { value: answers.bereich, label: labelFor("bereich", answers.bereich) },
-      situation: {
-        value: multi ? answers.situation : answers.situation[0],
-        label: multi
-          ? answers.situation.map((s) => MULTI_AREAS.find((m) => m.value === s)?.label ?? s).join(", ")
-          : labelFor("situation", answers.situation[0], answers.bereich),
-      },
+      ...(hasSituation
+        ? {
+            situation: {
+              value: multi ? answers.situation : answers.situation[0],
+              label: multi
+                ? answers.situation.map((s) => MULTI_AREAS.find((m) => m.value === s)?.label ?? s).join(", ")
+                : labelFor("situation", answers.situation[0], answers.bereich),
+            },
+          }
+        : {}),
       ...(answers.bereich === "vermieter" && answers.einheiten !== undefined
         ? { einheiten: { value: String(answers.einheiten), label: einheitenLabel(answers.einheiten) } }
         : {}),

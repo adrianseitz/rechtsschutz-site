@@ -59,12 +59,30 @@ const PHOTO_CAPTION: Record<Product["key"], string> = {
   firma: "Eigenes Café – eigene Risiken.",
 };
 
-// Lange Wörter dürfen in den schmalen Handy-Buttons sauber trennen („Eigentums-wohnung“).
-const softHyphen = (t: string) => t.replace("Eigentumswohnung", "Eigentums\u00ADwohnung").replace("Einzelunternehmen", "Einzel\u00ADunternehmen").replace("Mehrfamilienhaus", "Mehrfamilien\u00ADhaus");
+// Lange Wörter dürfen in den schmalen Handy-Buttons sauber trennen („Einzel-unternehmen“).
+const softHyphen = (t: string) => t.replace("Einzelunternehmen", "Einzel\u00ADunternehmen");
+
+/** Schnellstart im Hero. Vermieter: Zahl der Wohnungen – 1 bis 3 führt direkt zum Formular, ab 4 wird die genaue Zahl abgefragt. */
+function heroChips(key: Product["key"], checkHref: string) {
+  if (key === "vermieter") {
+    return {
+      label: "Wie viele Wohnungen vermietest du?",
+      chips: [
+        ...[1, 2, 3].map((n) => ({ label: n === 1 ? "1 Wohnung" : `${n} Wohnungen`, href: `${checkHref}&einheiten=${n}`, icon: HERO_ICON.vermieter })),
+        { label: "4 oder mehr", href: `${checkHref}&ab=4`, icon: HERO_ICON.vermieter },
+      ],
+    };
+  }
+  const situation = SITUATION[key];
+  return {
+    label: situation.title,
+    chips: situation.options.map((o) => ({ label: softHyphen(o.label), href: `${checkHref}&situation=${o.value}`, icon: o.icon ?? HERO_ICON[key] })),
+  };
+}
 
 export function ProductLanding({ product }: { product: Product }) {
   const checkHref = `/rechtsschutz-check?bereich=${product.key}`;
-  const situation = SITUATION[product.key];
+  const start = heroChips(product.key, checkHref);
   // Beim Firmenrechtsschutz gibt es mit der Soforthilfe eine Ausnahme – dort steht eine eigene Antwort zu bestehenden Streitfällen.
   const general = product.key === "firma" ? /kostet|Wartezeit|kostenlos|schon eine/i : /kostet|Wartezeit|bestehende|kostenlos|schon eine/i;
   const faq = [...product.faq, ...generalFaq.filter((f) => general.test(f.q))];
@@ -76,8 +94,8 @@ export function ProductLanding({ product }: { product: Product }) {
         title={product.hero.title}
         emphasis={EMPHASIS[product.key]}
         subtitle={product.hero.subtitle}
-        chipsLabel={situation.title}
-        chips={situation.options.map((o) => ({ label: softHyphen(o.label), href: `${checkHref}&situation=${o.value}`, icon: o.icon ?? HERO_ICON[product.key] }))}
+        chipsLabel={start.label}
+        chips={start.chips}
         chipsNote="Kostenlos & unverbindlich · ca. 60 Sekunden"
         advisorNote="Adrian Seitz · persönlich statt Callcenter"
         quick={product.quick && { ...product.quick, priceHref: "#preise" }}

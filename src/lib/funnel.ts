@@ -47,16 +47,6 @@ export const SITUATION: Record<string, Question> = {
       { value: "alleinerziehend", label: "Alleinerziehend", icon: "Users" },
     ],
   },
-  vermieter: {
-    id: "situation",
-    title: "Welche Immobilie möchtest du absichern?",
-    options: [
-      { value: "etw", label: "Eigentumswohnung", icon: "Building" },
-      { value: "efh", label: "Einfamilienhaus", icon: "House" },
-      { value: "mfh", label: "Mehrfamilienhaus", icon: "Building2" },
-      { value: "mehrere", label: "Mehrere Immobilien", icon: "Layers" },
-    ],
-  },
   firma: {
     id: "situation",
     title: "Welche Unternehmensform trifft auf dich zu?",
@@ -76,7 +66,7 @@ export const SITUATION: Record<string, Question> = {
   },
 };
 
-/** Nur für Vermieter: Anzahl der vermieteten Wohneinheiten (freie Zahleneingabe). */
+/** Nur für Vermieter: Anzahl der vermieteten Wohneinheiten (freie Zahleneingabe). Ersetzt die Frage nach der Art der Immobilie. */
 export const EINHEITEN_MAX = 999;
 export const einheitenLabel = (n: number) => `${n} ${n === 1 ? "Wohneinheit" : "Wohneinheiten"}`;
 

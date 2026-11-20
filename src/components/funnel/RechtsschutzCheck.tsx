@@ -22,7 +22,8 @@ type Answers = { bereich?: string; situation: string[]; einheiten?: number };
 type StepId = "bereich" | "situation" | "einheiten" | "kontakt";
 // Kurz halten: Die Fragen nach Beginn und bestehendem Vertrag klärt Adrian im Rückruf.
 const BASE_STEPS: StepId[] = ["bereich", "situation", "kontakt"];
-const VERMIETER_STEPS: StepId[] = ["bereich", "situation", "einheiten", "kontakt"];
+// Vermieter: keine Frage nach der Art der Immobilie – die Zahl der Wohneinheiten sagt mehr.
+const VERMIETER_STEPS: StepId[] = ["bereich", "einheiten", "kontakt"];
 
 const BEREICH_Q: Question = { id: "bereich", title: "Welchen Bereich möchtest du absichern?", options: AREAS };
 
@@ -32,15 +33,23 @@ export function RechtsschutzCheck() {
   const reduce = useReducedMotion();
   // Vorauswahl aus Landingpage/Anzeige direkt beim ersten Rendern übernehmen:
   // ?bereich=arbeit&situation=angestellt  bzw.  ?bereich=mehrere&auswahl=privat,verkehr
+  // Vermieter: ?bereich=vermieter&einheiten=2 (direkt zum Formular) bzw. &ab=4 (Zahl noch anpassen).
+  // Alte Links mit &situation=etw landen bei der Frage nach den Wohneinheiten.
   const [preset] = useState(() => {
     const b = params.get("bereich");
-    if (!b || !AREAS.some((a) => a.value === b)) return { answers: { situation: [] } as Answers, step: 0 };
+    if (!b || !AREAS.some((a) => a.value === b)) return { answers: { situation: [] } as Answers, step: 0, einheitenDone: false };
+    if (b === "vermieter") {
+      const num = (k: string) => { const n = Number.parseInt(params.get(k) ?? "", 10); return Number.isInteger(n) && n >= 1 && n <= EINHEITEN_MAX ? n : undefined; };
+      const exact = num("einheiten");
+      const from = num("ab");
+      return { answers: { bereich: b, situation: [], einheiten: exact ?? from } as Answers, step: exact ? 2 : 1, einheitenDone: Boolean(exact) };
+    }
     const q = SITUATION[b];
     const s = params.get("situation");
     const validS = s && q && !q.multi && q.options.some((o) => o.value === s) ? s : null;
     const auswahl = q?.multi ? (params.get("auswahl") || "").split(",").filter((v) => q.options.some((o) => o.value === v)) : [];
     const situation = validS ? [validS] : auswahl;
-    return { answers: { bereich: b, situation } as Answers, step: situation.length > 0 ? 2 : 1 };
+    return { answers: { bereich: b, situation } as Answers, step: situation.length > 0 ? 2 : 1, einheitenDone: false };
   });
   const [answers, setAnswers] = useState<Answers>(preset.answers);
   const [step, setStep] = useState(preset.step);
@@ -57,6 +66,7 @@ export function RechtsschutzCheck() {
     if (preset.answers.bereich) markStarted(preset.answers.bereich);
     // Situation schon auf der Landingpage gewählt: zählt als gewählt, sonst stimmt die Statistik nicht.
     if (preset.answers.situation.length > 0) { counted.current.add("situation"); countEvent("step_situation"); }
+    if (preset.einheitenDone) { counted.current.add("einheiten"); countEvent("step_einheiten"); }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -244,7 +254,7 @@ function EinheitenStep({ initial, onNext, headingRef }: { initial?: number; onNe
   return (
     <form onSubmit={(e) => { e.preventDefault(); if (valid) onNext(n); }} noValidate>
       <h1 ref={headingRef} tabIndex={-1} className="text-[1.7rem] font-semibold leading-[1.08] min-[400px]:text-[2rem] tracking-[-0.04em] outline-none sm:text-[2.75rem]">Wie viele Wohneinheiten vermietest du?</h1>
-      <p className="mt-2 text-ink-soft">Zähle alle vermieteten Wohnungen zusammen – bei einem Mehrfamilienhaus jede Wohnung einzeln.</p>
+      <p className="mt-2 text-ink-soft">Zähle alle vermieteten Wohnungen zusammen – egal ob Eigentumswohnung, Haus oder Mehrfamilienhaus (dort jede Wohnung einzeln).</p>
 
       <div className="card mt-7 p-5 sm:p-6">
         <label htmlFor="einheiten" className="label">Anzahl Wohneinheiten</label>

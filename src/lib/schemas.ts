@@ -91,7 +91,7 @@ export const leadSchema = z
   .object({
     answers: z.object({
       bereich: z.enum(AREA_VALUES),
-      situation: z.array(trimmed(40)).min(1).max(6),
+      situation: z.array(trimmed(40)).max(6).default([]),
       einheiten: z.number().int().min(1).max(EINHEITEN_MAX).optional(),
       // Werden im Check nicht mehr abgefragt; ältere offene Seiten schicken sie evtl. noch mit.
       beginn: z.enum(BEGINN.options.map((o) => o.value) as [string, ...string[]]).optional(),
@@ -103,13 +103,17 @@ export const leadSchema = z
     spam: spamSchema,
   })
   .superRefine((d, ctx) => {
+    if (d.answers.bereich === "vermieter") {
+      // Vermieter: statt der Art der Immobilie zählt nur die Zahl der Wohneinheiten.
+      if (d.answers.einheiten === undefined) {
+        ctx.addIssue({ code: "custom", path: ["answers", "einheiten"], message: "Bitte gib die Anzahl der Wohneinheiten an." });
+      }
+      return;
+    }
     const q = SITUATION[d.answers.bereich];
     const allowed = new Set(q?.options.map((o) => o.value) ?? []);
     if (!q?.multi && d.answers.situation.length !== 1) {
       ctx.addIssue({ code: "custom", path: ["answers", "situation"], message: "Ungültige Auswahl." });
-    }
-    if (d.answers.bereich === "vermieter" && d.answers.einheiten === undefined) {
-      ctx.addIssue({ code: "custom", path: ["answers", "einheiten"], message: "Bitte gib die Anzahl der Wohneinheiten an." });
     }
     if (d.answers.situation.some((s) => !allowed.has(s))) {
       ctx.addIssue({ code: "custom", path: ["answers", "situation"], message: "Ungültige Auswahl." });
