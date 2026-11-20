@@ -1,0 +1,75 @@
+{
+ "id": "k026-priv-handwerker-pfusch",
+ "order": 26,
+ "topic": "privat",
+ "title": "Der Handwerker hat gepfuscht: So gehst du vor",
+ "caption": "Der Handwerker hat gepfuscht: So gehst du vor.\n\nBei Pfusch hat der Handwerker erst einmal das Recht nachzubessern. Dokumentiere alles, setz ihm schriftlich eine Frist und zahl nicht vorschnell die volle Rechnung.\n\nDer Privatrechtsschutz der ARAG übernimmt je nach Tarif Anwalt und Gericht.\n\nWichtig: Versichert sind künftige Fälle; für viele Bereiche gilt eine Wartezeit, häufig 3 Monate.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#deinrecht #verbraucherrecht #rechtsschutz #privatrechtsschutz #rechtstipps #wissen",
+ "fine": "* je nach Tarif. Für viele Bereiche gilt eine Wartezeit, häufig 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Dein Recht",
+   "title": [
+    "Der Handwerker",
+    "[hat gepfuscht?]"
+   ]
+  },
+  {
+   "type": "liste",
+   "title": [
+    "So gehst",
+    "[du vor:]"
+   ],
+   "items": [
+    "Mängel mit Fotos dokumentieren",
+    "Schriftlich Frist zur Nachbesserung setzen",
+    "Nicht vorschnell voll bezahlen"
+   ],
+   "mark": "num"
+  },
+  {
+   "type": "text",
+   "kicker": "Bessert er nicht nach,",
+   "title": [
+    "kannst du",
+    "[weitere Rechte] haben."
+   ],
+   "text": "Etwa Ersatzvornahme, Minderung oder Schadenersatz."
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Privat-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Streit mit Handwerkern? Je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Gericht*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Bist du",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

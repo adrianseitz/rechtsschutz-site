@@ -1,0 +1,73 @@
+{
+ "id": "k045-firm-kunde-zahlt-nicht",
+ "order": 45,
+ "topic": "firma",
+ "title": "Kunde zahlt nicht: Das steht dir zu",
+ "caption": "Kunde zahlt nicht: Das steht dir zu.\n\nUnter Unternehmern ist ein Kunde spätestens 30 Tage nach Rechnung im Verzug. Dann stehen dir Verzugszinsen von 9 Prozentpunkten über dem Basiszins und 40 € Pauschale zu.\n\nDer Firmenrechtsschutz der ARAG übernimmt je nach Tarif Anwalt und Gericht – vom Streit mit Mitarbeitern bis zum Finanzgericht.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – ein Streit, der schon läuft, ist normalerweise nicht versicherbar.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#selbstständig #unternehmer #firmenrechtsschutz #arbeitgeber #kleinunternehmen #handwerk #rechtsschutz",
+ "fine": "* je nach Tarif. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Selbstständige",
+   "title": [
+    "Kunde",
+    "[zahlt nicht?]"
+   ],
+   "sub": "Dann steht dir mehr zu, als du denkst."
+  },
+  {
+   "type": "zahl",
+   "kicker": "Im Verzug ist er spätestens",
+   "big": "30 Tage",
+   "note": "nach Fälligkeit und Rechnung (§ 286 BGB)"
+  },
+  {
+   "type": "liste",
+   "title": [
+    "Dann steht dir",
+    "[zu (B2B):]"
+   ],
+   "items": [
+    "Verzugszinsen: 9 %-Punkte über Basiszins",
+    "40 € Verzugspauschale",
+    "Ersatz weiterer Kosten"
+   ],
+   "mark": "check"
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Firmen-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Je nach Tarif:",
+   "kicker": "Im Firmenrechtsschutz der ARAG:",
+   "items": [
+    "Online-Forderungsmanagement*",
+    "Anwalt & Gericht*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Offene",
+    "[Rechnungen?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

@@ -1,0 +1,80 @@
+{
+ "id": "k099-verm-forderungsmanagement",
+ "order": 99,
+ "topic": "vermieter",
+ "title": "Mietrückstand: Mahnen und Eintreiben muss nicht dein Job sein",
+ "caption": "Mietrückstand: Mahnen und Eintreiben muss nicht dein Job sein.\n\nBei Mietrückständen kümmert sich in den ARAG-Tarifen Komfort und Premium ein Dienstleister um das Forderungsmanagement. Du sparst dir Mahnschreiben, Fristen und Ärger am Telefon.\n\nDer Vermieterrechtsschutz der ARAG übernimmt je nach Tarif Anwalt, Gericht und Räumung – auf Wunsch mit Mietausfallschutz für 6 oder bis zu 12 Monatsmieten.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – ein Streit, der schon läuft, ist nicht versicherbar.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#vermieter #immobilien #mietrecht #vermieterrechtsschutz #vermietung #kapitalanlage #eigentumswohnung",
+ "fine": "* je nach Tarif. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Vermieter",
+   "title": [
+    "Mahnen,",
+    "nachhaken,",
+    "[eintreiben?]"
+   ],
+   "sub": "Bei Mietrückständen muss das nicht dein Job sein."
+  },
+  {
+   "type": "text",
+   "kicker": "Bei der ARAG:",
+   "title": [
+    "Ein Profi kümmert",
+    "sich ums",
+    "[Mahnverfahren.]*"
+   ],
+   "text": "Forderungsmanagement bei Mietrückständen – in den Tarifen Komfort und Premium."
+  },
+  {
+   "type": "liste",
+   "title": [
+    "Du sparst",
+    "[dir:]"
+   ],
+   "items": [
+    "Mahnschreiben",
+    "Fristen im Blick behalten",
+    "Ärger am Telefon"
+   ],
+   "mark": "check"
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Vermieter-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Er übernimmt je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Gericht*",
+    "Räumung*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Ist deine",
+    "Wohnung",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

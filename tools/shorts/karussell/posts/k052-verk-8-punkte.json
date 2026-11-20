@@ -1,0 +1,64 @@
+{
+ "id": "k052-verk-8-punkte",
+ "order": 52,
+ "topic": "verkehr",
+ "title": "8 Punkte in Flensburg – und der Führerschein ist weg",
+ "caption": "8 Punkte in Flensburg – und der Führerschein ist weg.\n\nBei 8 Punkten wird die Fahrerlaubnis entzogen. Jeder Punkt zählt also – und es kann sich lohnen, einen Bescheid prüfen zu lassen.\n\nDer Verkehrsrechtsschutz der ARAG übernimmt je nach Tarif Anwalt und Gericht.\n\nWichtig: Versichert sind Fälle, die nach Vertragsbeginn passieren.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#autofahrer #verkehrsrecht #bußgeld #unfall #verkehrsrechtsschutz #führerschein #rechtsschutz",
+ "fine": "* je nach Tarif. Verkehrsrechtsschutz als Baustein. Halt- und Parkverstöße sind in der Regel nicht versichert. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Autofahrer",
+   "title": [
+    "Wie viele",
+    "[Punkte] hast du?"
+   ]
+  },
+  {
+   "type": "zahl",
+   "kicker": "Führerschein weg bei",
+   "big": "8 Punkten",
+   "note": "Fahreignungsregister in Flensburg"
+  },
+  {
+   "type": "text",
+   "kicker": "Darum:",
+   "title": [
+    "Jeder Punkt",
+    "[zählt.]"
+   ],
+   "text": "Einen Bescheid prüfen zu lassen, kann sich lohnen."
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Verkehrs-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Bei Bußgeld, je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt & Akteneinsicht*",
+    "Gericht*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Wichtig:",
+   "title": [
+    "Absichern, bevor",
+    "[es kracht.]"
+   ],
+   "text": "Versichert sind Fälle, die nach Vertragsbeginn passieren – für einzelne Bereiche gilt eine Wartezeit."
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Bist du als Fahrer",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

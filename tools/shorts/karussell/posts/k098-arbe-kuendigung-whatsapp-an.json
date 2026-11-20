@@ -1,0 +1,75 @@
+{
+ "id": "k098-arbe-kuendigung-whatsapp-an",
+ "order": 98,
+ "topic": "arbeit",
+ "title": "Per WhatsApp gekündigt? Dann ist die Kündigung unwirksam",
+ "caption": "Per WhatsApp gekündigt? Dann ist die Kündigung unwirksam.\n\nEine Kündigung im Arbeitsverhältnis muss schriftlich sein, mit Originalunterschrift. Per WhatsApp, SMS oder E-Mail ist sie unwirksam.\n\nDer Arbeitsrechtsschutz der ARAG (als Baustein zum Privatrechtsschutz) übernimmt je nach Tarif Anwalt und Arbeitsgericht.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – wer erst handelt, wenn es kriselt, ist zu spät dran.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#arbeitsrecht #arbeitnehmer #job #kündigung #arbeitsrechtsschutz #rechtsschutz #deinrecht",
+ "fine": "* je nach Tarif. Arbeitsrechtsschutz als Baustein zum Privatrechtsschutz. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Arbeitnehmer",
+   "title": [
+    "Per WhatsApp",
+    "[gekündigt?]"
+   ]
+  },
+  {
+   "type": "chat",
+   "title": [
+    "Wenn das",
+    "[hier kommt:]"
+   ],
+   "sender": "Chef",
+   "status": "online",
+   "time": "21:03",
+   "messages": [
+    "Hallo, wir beenden das Arbeitsverhältnis zum Monatsende. Danke für alles."
+   ]
+  },
+  {
+   "type": "text",
+   "kicker": "Gut zu wissen:",
+   "title": [
+    "Das ist",
+    "[unwirksam.]"
+   ],
+   "text": "Eine Kündigung muss schriftlich sein – mit Originalunterschrift (§ 623 BGB)."
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Arbeits-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Baustein zum Privatrechtsschutz, je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Arbeitsgericht*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Bist du im Job",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

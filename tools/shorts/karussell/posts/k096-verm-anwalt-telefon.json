@@ -1,0 +1,78 @@
+{
+ "id": "k096-verm-anwalt-telefon",
+ "order": 96,
+ "topic": "vermieter",
+ "title": "Ärger mit dem Mieter um 23 Uhr? Anwalt am Telefon, rund um die Uhr",
+ "caption": "Ärger mit dem Mieter um 23 Uhr? Anwalt am Telefon, rund um die Uhr.\n\nIm Vermieterrechtsschutz der ARAG bekommst du je nach Tarif telefonische Rechtsberatung rund um die Uhr, Mediation und Musterschreiben – ab dem ersten Tag.\n\nDer Vermieterrechtsschutz der ARAG übernimmt je nach Tarif Anwalt, Gericht und Räumung – auf Wunsch mit Mietausfallschutz für 6 oder bis zu 12 Monatsmieten.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – ein Streit, der schon läuft, ist nicht versicherbar.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#vermieter #immobilien #mietrecht #vermieterrechtsschutz #vermietung #kapitalanlage #eigentumswohnung",
+ "fine": "* je nach Tarif. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Vermieter",
+   "title": [
+    "Ärger mit",
+    "dem Mieter",
+    "[um 23 Uhr?]"
+   ]
+  },
+  {
+   "type": "text",
+   "kicker": "Im Vermieterrechtsschutz:",
+   "title": [
+    "Anwalt am Telefon,",
+    "[rund um die Uhr.]*"
+   ],
+   "text": "Telefonische Rechtsberatung, Mediation und Musterschreiben – ab dem ersten Tag, je nach Tarif."
+  },
+  {
+   "type": "liste",
+   "title": [
+    "Typische",
+    "[Fragen:]"
+   ],
+   "items": [
+    "Darf ich das von der Kaution abziehen?",
+    "Wie formuliere ich die Abmahnung?",
+    "Muss ich das reparieren?"
+   ],
+   "mark": "num"
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Vermieter-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Er übernimmt je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt & Gericht*",
+    "Räumung*",
+    "Telefonberatung*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Ist deine",
+    "Wohnung",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

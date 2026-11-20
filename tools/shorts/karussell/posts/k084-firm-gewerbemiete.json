@@ -1,0 +1,77 @@
+{
+ "id": "k084-firm-gewerbemiete",
+ "order": 84,
+ "topic": "firma",
+ "title": "Streit mit dem Vermieter deiner Geschäftsräume?",
+ "caption": "Streit mit dem Vermieter deiner Geschäftsräume?\n\nMieterhöhung, Mängel, Kündigung: Auch bei gewerblichen Mieträumen wird oft gestritten. Im Firmenrechtsschutz der ARAG ist das ab dem Tarif Komfort dabei – je nach Bedingungen.\n\nDer Firmenrechtsschutz der ARAG übernimmt je nach Tarif Anwalt und Gericht – vom Streit mit Mitarbeitern bis zum Finanzgericht.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – ein Streit, der schon läuft, ist normalerweise nicht versicherbar.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#selbstständig #unternehmer #firmenrechtsschutz #arbeitgeber #kleinunternehmen #handwerk #rechtsschutz",
+ "fine": "* je nach Tarif. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Selbstständige",
+   "title": [
+    "Ärger mit dem",
+    "Vermieter",
+    "[deines Ladens?]"
+   ]
+  },
+  {
+   "type": "liste",
+   "title": [
+    "Typischer",
+    "[Streit:]"
+   ],
+   "items": [
+    "Mieterhöhung",
+    "Mängel & Schäden",
+    "Kündigung oder Räumung"
+   ],
+   "mark": "cross"
+  },
+  {
+   "type": "text",
+   "kicker": "Gut zu wissen:",
+   "title": [
+    "Gewerbemiete",
+    "[ist anders.]"
+   ],
+   "text": "Viele Schutzregeln für Wohnungsmieter gelten hier nicht."
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Firmen-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Ab Tarif Komfort, je nach Bedingungen:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Streit um gewerbliche Mieträume*",
+    "Anwalt & Gericht*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Ist dein",
+    "Betrieb",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

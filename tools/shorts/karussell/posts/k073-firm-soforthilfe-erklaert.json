@@ -1,0 +1,66 @@
+{
+ "id": "k073-firm-soforthilfe-erklaert",
+ "order": 73,
+ "topic": "firma",
+ "title": "Soforthilfe: Hilfe auch für einen Streit, der schon begonnen hat",
+ "caption": "Soforthilfe: Hilfe auch für einen Streit, der schon begonnen hat.\n\nNormalerweise lässt sich ein laufender Streit nicht versichern. Mit dem Firmenrechtsschutz mit Soforthilfe der ARAG bekommst du je nach Tarif einmalig außergerichtliche Hilfe für einen zurückliegenden Fall – bis 2.000 € im Tarif Komfort, bis 3.000 € im Tarif Premium. Voraussetzung: Es ist noch kein Anwalt eingeschaltet.\n\nKünftige Streitfälle sind ganz normal im Rahmen deines Tarifs versichert.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#selbstständig #unternehmer #firmenrechtsschutz #arbeitgeber #kleinunternehmen #handwerk #rechtsschutz",
+ "fine": "* je nach Tarif. Soforthilfe einmalig für einen zurückliegenden Fall, nur außergerichtlich, bis 2.000 € (Komfort) bzw. 3.000 € (Premium), nur wenn noch kein Anwalt kontaktiert wurde. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Selbstständige",
+   "title": [
+    "Der Streit",
+    "läuft schon?",
+    "[Es gibt Hilfe.]"
+   ]
+  },
+  {
+   "type": "text",
+   "kicker": "Normalerweise gilt:",
+   "title": [
+    "Laufender Streit",
+    "[= nicht versicherbar.]"
+   ]
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Firmen-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "mit Soforthilfe, einmalig:",
+   "kicker": "Aber: Bei der ARAG gibt es den",
+   "items": [
+    "Hilfe für einen zurückliegenden Fall*",
+    "Anwalt, der berät und verhandelt*",
+    "Oder Wirtschaftsmediation*"
+   ]
+  },
+  {
+   "type": "zahl",
+   "kicker": "Soforthilfe bis",
+   "big": "3.000 €*",
+   "note": "außergerichtlich – 2.000 € in Komfort, 3.000 € in Premium"
+  },
+  {
+   "type": "achtung",
+   "kicker": "Wichtig:",
+   "title": [
+    "Nur solange noch",
+    "[kein Anwalt]",
+    "eingeschaltet ist."
+   ],
+   "text": "Laufende Gerichts- oder Mahnverfahren sind ausgeschlossen."
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Schon Ärger",
+    "[im Betrieb?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

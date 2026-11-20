@@ -1,0 +1,69 @@
+{
+ "id": "k053-firm-mahnbescheid",
+ "order": 53,
+ "topic": "firma",
+ "title": "Mahnbescheid im Briefkasten: Du hast nur 2 Wochen",
+ "caption": "Mahnbescheid im Briefkasten: Du hast nur 2 Wochen.\n\nGegen einen Mahnbescheid kannst du innerhalb von 2 Wochen Widerspruch einlegen. Wer nichts tut, riskiert einen Vollstreckungsbescheid.\n\nDer Firmenrechtsschutz der ARAG übernimmt je nach Tarif Anwalt und Gericht – vom Streit mit Mitarbeitern bis zum Finanzgericht.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – ein Streit, der schon läuft, ist normalerweise nicht versicherbar.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#selbstständig #unternehmer #firmenrechtsschutz #arbeitgeber #kleinunternehmen #handwerk #rechtsschutz",
+ "fine": "* je nach Tarif. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Selbstständige",
+   "title": [
+    "Mahnbescheid",
+    "im [Briefkasten?]"
+   ]
+  },
+  {
+   "type": "zahl",
+   "kicker": "Widerspruch innerhalb von",
+   "big": "2 Wochen",
+   "note": "ab Zustellung (§ 692 ZPO)"
+  },
+  {
+   "type": "text",
+   "kicker": "Wer nichts tut,",
+   "title": [
+    "riskiert die",
+    "[Zwangsvollstreckung.]"
+   ],
+   "text": "Dann folgt der Vollstreckungsbescheid."
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Firmen-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Er übernimmt je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Gericht*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Ist dein",
+    "Betrieb",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

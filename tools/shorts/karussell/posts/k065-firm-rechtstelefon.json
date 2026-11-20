@@ -1,0 +1,78 @@
+{
+ "id": "k065-firm-rechtstelefon",
+ "order": 65,
+ "topic": "firma",
+ "title": "Rechts- und Steuertelefon: Kurz fragen, bevor es teuer wird",
+ "caption": "Rechts- und Steuertelefon: Kurz fragen, bevor es teuer wird.\n\nIm Firmenrechtsschutz der ARAG gibt es je nach Tarif eine juristische Ersteinschätzung am Telefon und ein Steuertelefon – ab dem ersten Tag.\n\nDer Firmenrechtsschutz der ARAG übernimmt je nach Tarif Anwalt und Gericht – vom Streit mit Mitarbeitern bis zum Finanzgericht.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – ein Streit, der schon läuft, ist normalerweise nicht versicherbar.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#selbstständig #unternehmer #firmenrechtsschutz #arbeitgeber #kleinunternehmen #handwerk #rechtsschutz",
+ "fine": "* je nach Tarif. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Selbstständige",
+   "title": [
+    "Kurz fragen,",
+    "bevor es",
+    "[teuer wird.]"
+   ]
+  },
+  {
+   "type": "text",
+   "kicker": "Im Firmenrechtsschutz:",
+   "title": [
+    "Rechts- und",
+    "[Steuertelefon.]*"
+   ],
+   "text": "Juristische Ersteinschätzung am Telefon – ab dem ersten Tag, je nach Tarif."
+  },
+  {
+   "type": "liste",
+   "title": [
+    "Typische",
+    "[Fragen:]"
+   ],
+   "items": [
+    "Darf ich das so abmahnen?",
+    "Ist diese Vertragsklausel okay?",
+    "Wie reagiere ich auf den Bescheid?"
+   ],
+   "mark": "num"
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Firmen-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Er übernimmt je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Gericht*",
+    "Telefonberatung*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Ist dein",
+    "Betrieb",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

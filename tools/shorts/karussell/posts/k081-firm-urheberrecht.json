@@ -1,0 +1,86 @@
+{
+ "id": "k081-firm-urheberrecht",
+ "order": 81,
+ "topic": "firma",
+ "title": "Bild aus dem Internet auf deiner Website? Das kann teuer werden",
+ "caption": "Bild aus dem Internet auf deiner Website? Das kann teuer werden.\n\nFremde Fotos ohne Lizenz auf der Website oder bei Instagram führen schnell zu einer teuren Abmahnung. Im Tarif Premium deckt der Firmenrechtsschutz der ARAG auch Wettbewerbs- und Urheberrecht ab – je nach Bedingungen.\n\nDer Firmenrechtsschutz der ARAG übernimmt je nach Tarif Anwalt und Gericht – vom Streit mit Mitarbeitern bis zum Finanzgericht.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – ein Streit, der schon läuft, ist normalerweise nicht versicherbar.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#selbstständig #unternehmer #firmenrechtsschutz #arbeitgeber #kleinunternehmen #handwerk #rechtsschutz",
+ "fine": "* je nach Tarif. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Selbstständige",
+   "title": [
+    "Nur ein Foto",
+    "aus dem Netz …",
+    "[Abmahnung.]"
+   ]
+  },
+  {
+   "type": "brief",
+   "title": [
+    "Und plötzlich",
+    "[liegt das hier da:]"
+   ],
+   "subject": "Abmahnung wegen Urheberrechtsverletzung",
+   "body": [
+    "Sie nutzen auf Ihrer Website ein Foto unserer Mandantin ohne Lizenz.",
+    "Wir fordern Unterlassung und Schadenersatz."
+   ],
+   "from": [
+    "Kanzlei (Beispiel)",
+    "Einschreiben"
+   ],
+   "stamp": "Frist 7 Tage"
+  },
+  {
+   "type": "liste",
+   "title": [
+    "So vermeidest",
+    "[du das:]"
+   ],
+   "items": [
+    "Nur eigene oder lizenzierte Bilder",
+    "Lizenz & Quelle speichern",
+    "Keine Bilder aus der Google-Suche"
+   ],
+   "mark": "check"
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Firmen-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Im Tarif Premium, je nach Bedingungen:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Wettbewerbsrecht*",
+    "Urheberrecht*",
+    "Anwalt & Gericht*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Ist dein",
+    "Betrieb",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

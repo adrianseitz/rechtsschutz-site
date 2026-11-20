@@ -1,0 +1,72 @@
+{
+ "id": "k063-arbe-diagnose",
+ "order": 63,
+ "topic": "arbeit",
+ "title": "Krankmeldung: Deine Diagnose geht deinen Chef nichts an",
+ "caption": "Krankmeldung: Deine Diagnose geht deinen Chef nichts an.\n\nAuf der Krankmeldung für den Arbeitgeber steht keine Diagnose – und du musst sie auch nicht nennen.\n\nDer Arbeitsrechtsschutz der ARAG (als Baustein zum Privatrechtsschutz) übernimmt je nach Tarif Anwalt und Arbeitsgericht.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – wer erst handelt, wenn es kriselt, ist zu spät dran.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#arbeitsrecht #arbeitnehmer #job #kündigung #arbeitsrechtsschutz #rechtsschutz #deinrecht",
+ "fine": "* je nach Tarif. Arbeitsrechtsschutz als Baustein zum Privatrechtsschutz. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Arbeitnehmer",
+   "title": [
+    "„Was hast",
+    "du denn?“",
+    "[Geht ihn nichts an.]"
+   ]
+  },
+  {
+   "type": "mythos",
+   "myth": "Ich muss meinem Chef sagen, was ich habe.",
+   "fact": "Nein. Die Diagnose musst du nicht nennen."
+  },
+  {
+   "type": "liste",
+   "title": [
+    "Was du",
+    "[musst:]"
+   ],
+   "items": [
+    "Dich sofort krankmelden",
+    "Voraussichtliche Dauer mitteilen",
+    "Arbeitsunfähigkeit ärztlich feststellen lassen"
+   ],
+   "mark": "check"
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Arbeits-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Baustein zum Privatrechtsschutz, je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Arbeitsgericht*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Bist du im Job",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

@@ -124,6 +124,19 @@ sup { font-size: .5em; vertical-align: .75em; margin-left: .04em; font-weight: 6
 .box .n { font-size: 96px; font-weight: 800; letter-spacing: -0.05em; color: var(--sun); line-height: 1; white-space: nowrap; }
 .box .t { font-size: 34px; line-height: 1.3; font-weight: 550; color: rgba(255,255,255,.85); }
 
+/* Mythos / Fakt */
+.myth { margin-top: 52px; display: flex; flex-direction: column; gap: 24px; }
+.mc { border-radius: 36px; padding: 38px 44px 42px; }
+.mc .ml { display: inline-flex; align-items: center; gap: 16px; font-size: 26px; font-weight: 750; text-transform: uppercase; letter-spacing: .08em; }
+.mc .ml .ic { width: 50px; height: 50px; font-size: 24px; }
+.mc p { font-size: 42px; line-height: 1.26; font-weight: 640; letter-spacing: -0.02em; margin-top: 18px; }
+.mc.m { background: #fff; border: 2px solid var(--line); color: var(--ink); }
+.mc.m p { color: #5a5a54; text-decoration: line-through; text-decoration-color: rgba(217,58,43,.75); text-decoration-thickness: 3px; }
+.mc.f { background: var(--ink); color: #fff; }
+.mc.f .ml { color: var(--sun); }
+.mc.f .ic.check { background: var(--sun); color: var(--ink); }
+.dark .mc.f { background: rgba(255,255,255,.1); }
+
 /* Abschluss */
 .t-cta h1 { font-size: 132px; }
 .knopf { align-self: flex-start; display: inline-flex; align-items: center; gap: 22px; margin-top: 64px; background: var(--sun); color: var(--ink); font-size: 44px; font-weight: 720; letter-spacing: -0.025em; padding: 30px 46px; border-radius: 99px; }
@@ -149,7 +162,7 @@ const warnIcon = '<svg class="warn" viewBox="0 0 24 24"><path d="M12 2.6 1.6 20.
 const mark = (m, i) => (m === "cross" ? '<span class="ic cross">✕</span>' : m === "num" ? `<span class="ic num">${i + 1}</span>` : '<span class="ic check">✓</span>');
 
 // Standard-Hintergrund je Folientyp (überschreibbar mit "theme")
-const THEME = { cover: "dark", chat: "light", brief: "light", zahl: "light", text: "light", liste: "light", vergleich: "light", loesung: "sun", achtung: "light", cta: "dark" };
+const THEME = { mythos: "light", cover: "dark", chat: "light", brief: "light", zahl: "light", text: "light", liste: "light", vergleich: "light", loesung: "sun", achtung: "light", cta: "dark" };
 
 const BAU = {
   cover: (s) => `${s.tag ? `<span class="tag">${esc(s.tag)}</span>` : ""}<h1>${lines(s.title)}</h1>${s.sub ? `<p class="sub">${fmt(s.sub)}</p>` : ""}`,
@@ -163,6 +176,7 @@ const BAU = {
     return `${s.kicker ? `<p class="kicker">${fmt(s.kicker)}</p>` : ""}<h3>${lines(s.title)}</h3><div class="vs">${col(s.left, "a", "cross")}${col(s.right, "b", "check")}</div>`;
   },
   loesung: (s) => `${s.kicker ? `<p class="kicker">${fmt(s.kicker)}</p>` : ""}<div class="produkt">${lines(s.product)}</div>${s.itemsTitle ? `<p class="unter">${fmt(s.itemsTitle)}</p>` : ""}${s.items ? `<div class="rows" style="margin-top:28px">${s.items.map((x) => `<div class="row">${mark("check")}<span>${fmt(x)}</span></div>`).join("")}</div>` : ""}${s.highlight ? `<div class="hl">${fmt(s.highlight).replace(/&lt;b&gt;(.*?)&lt;\/b&gt;/g, "<b>$1</b>")}</div>` : ""}`,
+  mythos: (s) => `${s.title ? `<h3>${lines(s.title)}</h3>` : ""}<div class="myth"><div class="mc m"><span class="ml">${mark("cross")}Mythos</span><p>${fmt(s.myth)}</p></div><div class="mc f"><span class="ml">${mark("check")}Fakt</span><p>${fmt(s.fact)}</p></div></div>`,
   achtung: (s) => `${s.icon !== false ? warnIcon : ""}${s.kicker ? `<p class="kicker">${fmt(s.kicker)}</p>` : ""}<h2>${lines(s.title)}</h2>${s.text ? `<p class="txt">${fmt(s.text)}</p>` : ""}${s.box ? `<div class="box"><div class="n">${fmt(s.box.big)}</div><div class="t">${fmt(s.box.text)}</div></div>` : ""}`,
   cta: (s) => `${s.kicker ? `<p class="kicker">${fmt(s.kicker)}</p>` : ""}<h1>${lines(s.title)}</h1><span class="knopf">${fmt(s.button || "Kostenlos beraten lassen")}<b>${arrow}</b></span><div class="person"><img src="adrian.jpg" alt=""><div><div class="pn">Adrian Seitz</div><div class="pt">${fmt(s.person || "ARAG-Vertriebspartner · Link in der Bio")}</div></div></div>`,
 };

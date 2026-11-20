@@ -1,0 +1,70 @@
+{
+ "id": "k069-verk-blitzer",
+ "order": 69,
+ "topic": "verkehr",
+ "title": "Geblitzt? Nicht jede Messung ist fehlerfrei",
+ "caption": "Geblitzt? Nicht jede Messung ist fehlerfrei.\n\nÜber einen Anwalt bekommst du Einsicht in die Akte und die Messdaten. Fehler beim Messgerät oder bei der Auswertung kommen vor.\n\nDer Verkehrsrechtsschutz der ARAG übernimmt je nach Tarif Anwalt und Gericht.\n\nWichtig: Versichert sind Fälle, die nach Vertragsbeginn passieren.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#autofahrer #verkehrsrecht #bußgeld #unfall #verkehrsrechtsschutz #führerschein #rechtsschutz",
+ "fine": "* je nach Tarif. Verkehrsrechtsschutz als Baustein. Halt- und Parkverstöße sind in der Regel nicht versichert. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Autofahrer",
+   "title": [
+    "Geblitzt?",
+    "[Erst prüfen.]"
+   ]
+  },
+  {
+   "type": "liste",
+   "title": [
+    "Was ein Anwalt",
+    "[prüfen kann:]"
+   ],
+   "items": [
+    "Akte & Messdaten",
+    "Ist das Gerät geeicht?",
+    "Bist du klar zu erkennen?"
+   ],
+   "mark": "num"
+  },
+  {
+   "type": "text",
+   "kicker": "Wichtig:",
+   "title": [
+    "Einspruch nur",
+    "[innerhalb von 2 Wochen.]"
+   ]
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Verkehrs-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Bei Bußgeld, je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt & Akteneinsicht*",
+    "Gericht*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Wichtig:",
+   "title": [
+    "Absichern, bevor",
+    "[es kracht.]"
+   ],
+   "text": "Versichert sind Fälle, die nach Vertragsbeginn passieren – für einzelne Bereiche gilt eine Wartezeit."
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Bist du als Fahrer",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

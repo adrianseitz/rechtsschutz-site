@@ -1,0 +1,68 @@
+{
+ "id": "k041-priv-mahnbescheid-privat",
+ "order": 41,
+ "topic": "privat",
+ "title": "Mahnbescheid bekommen? Nicht ignorieren",
+ "caption": "Mahnbescheid bekommen? Nicht ignorieren.\n\nGegen einen Mahnbescheid hast du 2 Wochen Zeit für den Widerspruch – auch wenn die Forderung falsch ist. Wer nichts tut, riskiert die Zwangsvollstreckung.\n\nDer Privatrechtsschutz der ARAG übernimmt je nach Tarif Anwalt und Gericht.\n\nWichtig: Versichert sind künftige Fälle; für viele Bereiche gilt eine Wartezeit, häufig 3 Monate.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#deinrecht #verbraucherrecht #rechtsschutz #privatrechtsschutz #rechtstipps #wissen",
+ "fine": "* je nach Tarif. Für viele Bereiche gilt eine Wartezeit, häufig 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Dein Recht",
+   "title": [
+    "Mahnbescheid?",
+    "[Nicht ignorieren.]"
+   ]
+  },
+  {
+   "type": "zahl",
+   "kicker": "Widerspruch innerhalb von",
+   "big": "2 Wochen",
+   "note": "ab Zustellung (§ 692 ZPO)"
+  },
+  {
+   "type": "text",
+   "kicker": "Auch wenn",
+   "title": [
+    "die Forderung",
+    "[falsch ist.]"
+   ],
+   "text": "Wer nichts tut, riskiert die Zwangsvollstreckung."
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Privat-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Er übernimmt je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Gericht*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Bist du",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

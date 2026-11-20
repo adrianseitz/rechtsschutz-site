@@ -1,0 +1,78 @@
+{
+ "id": "k009-arbe-kuendigung-3-wochen",
+ "order": 9,
+ "topic": "arbeit",
+ "title": "Kündigung bekommen? Du hast nur 3 Wochen",
+ "caption": "Kündigung bekommen? Du hast nur 3 Wochen.\n\nGegen eine Kündigung kannst du nur innerhalb von 3 Wochen klagen. Danach gilt sie – auch wenn sie eigentlich unwirksam war.\n\nDer Arbeitsrechtsschutz der ARAG (als Baustein zum Privatrechtsschutz) übernimmt je nach Tarif Anwalt und Arbeitsgericht.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – wer erst handelt, wenn es kriselt, ist zu spät dran.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#arbeitsrecht #arbeitnehmer #job #kündigung #arbeitsrechtsschutz #rechtsschutz #deinrecht",
+ "fine": "* je nach Tarif. Arbeitsrechtsschutz als Baustein zum Privatrechtsschutz. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Arbeitnehmer",
+   "title": [
+    "Kündigung",
+    "[bekommen?]"
+   ],
+   "sub": "Jetzt läuft eine Frist, die viele verpassen."
+  },
+  {
+   "type": "zahl",
+   "kicker": "Kündigungsschutzklage nur innerhalb von",
+   "big": "3 Wochen",
+   "note": "ab Zugang der Kündigung (§ 4 KSchG)"
+  },
+  {
+   "type": "text",
+   "kicker": "Verpasst?",
+   "title": [
+    "Dann gilt",
+    "[die Kündigung.]"
+   ],
+   "text": "Auch wenn sie eigentlich unwirksam war."
+  },
+  {
+   "type": "text",
+   "kicker": "Und:",
+   "title": [
+    "Deinen Anwalt",
+    "[zahlst du selbst.]"
+   ],
+   "text": "In der ersten Instanz – auch wenn du gewinnst (§ 12a ArbGG)."
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Arbeits-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Baustein zum Privatrechtsschutz, je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Arbeitsgericht*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Bist du im Job",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

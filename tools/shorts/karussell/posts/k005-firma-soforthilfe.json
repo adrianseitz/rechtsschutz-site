@@ -1,10 +1,10 @@
 {
- "id": "k05-firma-soforthilfe",
+ "id": "k005-firma-soforthilfe",
  "order": 5,
  "topic": "firma",
  "title": "Schon Streit im Betrieb? Soforthilfe sogar für zurückliegende Fälle",
- "caption": "Du hast schon Streit mit einem Kunden und denkst, jetzt ist es zu spät für eine Versicherung?\n\nNormalerweise stimmt das: Ein Streit, der schon läuft, lässt sich nicht mehr versichern.\n\nAber: Bei der ARAG gibt es den Firmenrechtsschutz mit Soforthilfe. Damit bekommst du je nach Tarif sogar für einen zurückliegenden Fall außergerichtliche Hilfe – bis zu 3.000 €.\n\nWichtig: Das geht nur, solange noch kein Anwalt eingeschaltet ist.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#selbstständig #unternehmer #firmenrechtsschutz #kleinunternehmen #betrieb #rechtsschutz",
- "fine": "* je nach Tarif. Soforthilfe: außergerichtliche Hilfe bis 3.000 € auch für einen zurückliegenden Fall, nur solange noch kein Anwalt eingeschaltet ist. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "caption": "Du hast schon Streit mit einem Kunden und denkst, jetzt ist es zu spät für eine Versicherung?\n\nNormalerweise stimmt das: Ein Streit, der schon läuft, lässt sich nicht mehr versichern.\n\nAber: Bei der ARAG gibt es den Firmenrechtsschutz mit Soforthilfe. Damit bekommst du je nach Tarif sogar für einen zurückliegenden Fall außergerichtliche Hilfe – bis zu 3.000 € (Tarif Premium; im Tarif Komfort bis 2.000 €).\n\nWichtig: Das geht nur, solange noch kein Anwalt eingeschaltet ist.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#selbstständig #unternehmer #firmenrechtsschutz #kleinunternehmen #betrieb #rechtsschutz",
+ "fine": "* je nach Tarif. Soforthilfe einmalig für einen zurückliegenden Fall, nur außergerichtlich, bis 2.000 € (Komfort) bzw. 3.000 € (Premium), nur wenn noch kein Anwalt kontaktiert wurde. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
  "slides": [
   {
    "type": "cover",
@@ -42,7 +42,7 @@
    "type": "zahl",
    "kicker": "Soforthilfe für deinen Fall:",
    "big": "bis 3.000 €*",
-   "note": "außergerichtliche Hilfe, je nach Tarif",
+   "note": "außergerichtlich – 2.000 € in Komfort, 3.000 € in Premium",
    "itemsTitle": "Auch wenn der Streit schon da ist."
   },
   {

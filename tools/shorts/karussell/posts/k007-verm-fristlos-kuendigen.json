@@ -1,0 +1,83 @@
+{
+ "id": "k007-verm-fristlos-kuendigen",
+ "order": 7,
+ "topic": "vermieter",
+ "title": "Mieter zahlt 2 Monate nicht: fristlos kündigen – und die Falle danach",
+ "caption": "Mieter zahlt 2 Monate nicht: fristlos kündigen – und die Falle danach.\n\nAb einem Rückstand von zwei Monatsmieten darfst du fristlos kündigen. Aber: Zahlt der Mieter innerhalb der Schonfrist nach, ist die fristlose Kündigung weg. Profis kündigen deshalb zusätzlich hilfsweise ordentlich.\n\nDer Vermieterrechtsschutz der ARAG übernimmt je nach Tarif Anwalt, Gericht und Räumung – auf Wunsch mit Mietausfallschutz für 6 oder bis zu 12 Monatsmieten.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – ein Streit, der schon läuft, ist nicht versicherbar.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#vermieter #immobilien #mietrecht #vermieterrechtsschutz #vermietung #kapitalanlage #eigentumswohnung",
+ "fine": "* je nach Tarif. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Vermieter",
+   "title": [
+    "Mieter zahlt",
+    "[2 Monate] nicht?"
+   ],
+   "sub": "Dann darfst du fristlos kündigen – aber Vorsicht vor der Falle danach."
+  },
+  {
+   "type": "zahl",
+   "kicker": "Fristlos kündigen darfst du ab",
+   "big": "2 Monatsmieten",
+   "note": "Rückstand – vereinfacht gesagt (§ 543 BGB)"
+  },
+  {
+   "type": "text",
+   "kicker": "Die Falle:",
+   "title": [
+    "Zahlt er nach,",
+    "[ist die Kündigung weg.]"
+   ],
+   "text": "Begleicht der Mieter alles bis 2 Monate nach Zustellung der Räumungsklage, wird die fristlose Kündigung unwirksam (Schonfrist)."
+  },
+  {
+   "type": "liste",
+   "title": [
+    "So machen es",
+    "[die Profis:]"
+   ],
+   "items": [
+    "Fristlos kündigen",
+    "Zusätzlich hilfsweise ordentlich kündigen",
+    "Vorher Anwalt prüfen lassen"
+   ],
+   "mark": "num"
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Vermieter-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Er übernimmt je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Gericht*",
+    "Räumung*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Bist du",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

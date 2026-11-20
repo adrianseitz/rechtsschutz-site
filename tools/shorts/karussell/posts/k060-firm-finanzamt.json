@@ -1,0 +1,69 @@
+{
+ "id": "k060-firm-finanzamt",
+ "order": 60,
+ "topic": "firma",
+ "title": "Steuerbescheid falsch? 1 Monat für den Einspruch",
+ "caption": "Steuerbescheid falsch? 1 Monat für den Einspruch.\n\nGegen einen Steuerbescheid hast du einen Monat Zeit für den Einspruch. Hilft das nicht, geht es vors Finanzgericht – im Firmenrechtsschutz der ARAG ist Steuer-Rechtsschutz schon im Tarif Basis dabei.\n\nDer Firmenrechtsschutz der ARAG übernimmt je nach Tarif Anwalt und Gericht – vom Streit mit Mitarbeitern bis zum Finanzgericht.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – ein Streit, der schon läuft, ist normalerweise nicht versicherbar.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#selbstständig #unternehmer #firmenrechtsschutz #arbeitgeber #kleinunternehmen #handwerk #rechtsschutz",
+ "fine": "* je nach Tarif. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Selbstständige",
+   "title": [
+    "Ärger mit dem",
+    "[Finanzamt?]"
+   ]
+  },
+  {
+   "type": "zahl",
+   "kicker": "Einspruch innerhalb von",
+   "big": "1 Monat",
+   "note": "nach Bekanntgabe des Bescheids (§ 355 AO)"
+  },
+  {
+   "type": "text",
+   "kicker": "Hilft das nicht:",
+   "title": [
+    "Dann geht's vors",
+    "[Finanzgericht.]"
+   ],
+   "text": "Mit Anwalt oder Steuerberater – und Kosten."
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Firmen-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Steuer-Rechtsschutz, je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Verfahren vor dem Finanzgericht*",
+    "Anwalt*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Ist dein",
+    "Betrieb",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

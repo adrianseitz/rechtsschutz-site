@@ -1,0 +1,71 @@
+{
+ "id": "k049-priv-inkasso",
+ "order": 49,
+ "topic": "privat",
+ "title": "Post vom Inkassobüro? Erst prüfen, dann zahlen",
+ "caption": "Post vom Inkassobüro? Erst prüfen, dann zahlen.\n\nNicht jede Inkasso-Forderung ist berechtigt – und überhöhte Gebühren sind häufig. Prüf die Forderung, bevor du zahlst, aber ignorier den Brief nicht.\n\nDer Privatrechtsschutz der ARAG übernimmt je nach Tarif Anwalt und Gericht.\n\nWichtig: Versichert sind künftige Fälle; für viele Bereiche gilt eine Wartezeit, häufig 3 Monate.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#deinrecht #verbraucherrecht #rechtsschutz #privatrechtsschutz #rechtstipps #wissen",
+ "fine": "* je nach Tarif. Für viele Bereiche gilt eine Wartezeit, häufig 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Dein Recht",
+   "title": [
+    "Post vom",
+    "[Inkassobüro?]"
+   ]
+  },
+  {
+   "type": "liste",
+   "title": [
+    "Erst",
+    "[prüfen:]"
+   ],
+   "items": [
+    "Kenne ich den Vertrag?",
+    "Stimmt die Summe?",
+    "Sind die Gebühren angemessen?"
+   ],
+   "mark": "num"
+  },
+  {
+   "type": "mythos",
+   "myth": "Inkasso-Briefe kann man einfach ignorieren.",
+   "fact": "Gefährlich. Ist die Forderung berechtigt, folgen Mahnbescheid und Vollstreckung."
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Privat-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Er übernimmt je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Gericht*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Bist du",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

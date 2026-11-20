@@ -1,0 +1,85 @@
+{
+ "id": "k039-verm-mangel-gemeldet",
+ "order": 39,
+ "topic": "vermieter",
+ "title": "Mieter meldet einen Mangel: 3 Dinge, die du sofort tun solltest",
+ "caption": "Mieter meldet einen Mangel: 3 Dinge, die du sofort tun solltest.\n\nBei einem echten Mangel ist die Miete automatisch gemindert, bis er behoben ist. Aber nicht jede Kürzung ist berechtigt – und darüber wird oft gestritten.\n\nDer Vermieterrechtsschutz der ARAG übernimmt je nach Tarif Anwalt, Gericht und Räumung – auf Wunsch mit Mietausfallschutz für 6 oder bis zu 12 Monatsmieten.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – ein Streit, der schon läuft, ist nicht versicherbar.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#vermieter #immobilien #mietrecht #vermieterrechtsschutz #vermietung #kapitalanlage #eigentumswohnung",
+ "fine": "* je nach Tarif. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Vermieter",
+   "title": [
+    "Dein Mieter",
+    "meldet einen",
+    "[Mangel?]"
+   ]
+  },
+  {
+   "type": "liste",
+   "title": [
+    "Sofort",
+    "[tun:]"
+   ],
+   "items": [
+    "Mangel ansehen & dokumentieren",
+    "Handwerker beauftragen",
+    "Alles schriftlich festhalten"
+   ],
+   "mark": "num"
+  },
+  {
+   "type": "text",
+   "kicker": "Wichtig:",
+   "title": [
+    "Die Minderung",
+    "[gilt automatisch.]"
+   ],
+   "text": "Bei einem echten Mangel ist die Miete kraft Gesetz gemindert – bis er behoben ist (§ 536 BGB)."
+  },
+  {
+   "type": "text",
+   "kicker": "Aber:",
+   "title": [
+    "Nicht jede Kürzung",
+    "[ist berechtigt.]"
+   ],
+   "text": "Ob und wie viel, klärt im Streit oft erst ein Gutachter."
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Vermieter-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Er übernimmt je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Gericht*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Bist du",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

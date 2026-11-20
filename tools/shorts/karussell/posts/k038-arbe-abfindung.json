@@ -1,0 +1,67 @@
+{
+ "id": "k038-arbe-abfindung",
+ "order": 38,
+ "topic": "arbeit",
+ "title": "Gibt es nach einer Kündigung automatisch eine Abfindung?",
+ "caption": "Gibt es nach einer Kündigung automatisch eine Abfindung?\n\nEinen automatischen Anspruch auf eine Abfindung gibt es meist nicht. Oft wird sie im Rahmen einer Kündigungsschutzklage verhandelt – und dafür brauchst du einen Anwalt.\n\nDer Arbeitsrechtsschutz der ARAG (als Baustein zum Privatrechtsschutz) übernimmt je nach Tarif Anwalt und Arbeitsgericht.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – wer erst handelt, wenn es kriselt, ist zu spät dran.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#arbeitsrecht #arbeitnehmer #job #kündigung #arbeitsrechtsschutz #rechtsschutz #deinrecht",
+ "fine": "* je nach Tarif. Arbeitsrechtsschutz als Baustein zum Privatrechtsschutz. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Arbeitnehmer",
+   "title": [
+    "Gekündigt =",
+    "[Abfindung?]"
+   ]
+  },
+  {
+   "type": "mythos",
+   "myth": "Nach einer Kündigung steht mir automatisch eine Abfindung zu.",
+   "fact": "Meist nicht. Oft wird sie erst im Streit um die Kündigung verhandelt."
+  },
+  {
+   "type": "text",
+   "kicker": "Darum:",
+   "title": [
+    "Ohne Anwalt",
+    "[oft keine Abfindung.]"
+   ],
+   "text": "Und den zahlst du in der ersten Instanz selbst."
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Arbeits-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Baustein zum Privatrechtsschutz, je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Arbeitsgericht*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Bist du im Job",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

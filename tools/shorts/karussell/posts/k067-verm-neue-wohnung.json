@@ -1,0 +1,69 @@
+{
+ "id": "k067-verm-neue-wohnung",
+ "order": 67,
+ "topic": "vermieter",
+ "title": "Neue Wohnung gekauft? Daran musst du denken",
+ "caption": "Neue Wohnung gekauft? Daran musst du denken.\n\nVersichert sind nur die Wohnungen, die im Vertrag stehen. Bei der ARAG nimmst du ab 6 Monaten Vertragslaufzeit weitere Objekte ohne neue Wartezeit dazu – und eine selbst bewohnte Einheit ist beitragsfrei.\n\nDer Vermieterrechtsschutz der ARAG übernimmt je nach Tarif Anwalt, Gericht und Räumung – auf Wunsch mit Mietausfallschutz für 6 oder bis zu 12 Monatsmieten.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – ein Streit, der schon läuft, ist nicht versicherbar.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#vermieter #immobilien #mietrecht #vermieterrechtsschutz #vermietung #kapitalanlage #eigentumswohnung",
+ "fine": "* je nach Tarif. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Vermieter",
+   "title": [
+    "Neue Wohnung",
+    "gekauft?",
+    "[Daran denken!]"
+   ]
+  },
+  {
+   "type": "text",
+   "kicker": "Versichert sind",
+   "title": [
+    "nur Wohnungen,",
+    "[die im Vertrag stehen.]"
+   ],
+   "text": "Kommt eine dazu und du meldest sie nicht, ist sie nicht geschützt."
+  },
+  {
+   "type": "text",
+   "kicker": "Bei der ARAG:",
+   "title": [
+    "Nachversichern",
+    "[ohne neue Wartezeit.]*"
+   ],
+   "text": "Ab 6 Monaten Vertragslaufzeit, je nach Tarif."
+  },
+  {
+   "type": "text",
+   "kicker": "Und:",
+   "title": [
+    "Wohnst du selbst",
+    "in einer Einheit,",
+    "[ist sie beitragsfrei] dabei.*"
+   ]
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Vermieter-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Er übernimmt je nach Tarif:",
+   "kicker": "Alles in einem Vertrag:",
+   "items": [
+    "Anwalt*",
+    "Gericht*",
+    "Räumung*"
+   ]
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Neue Wohnung",
+    "[im Vertrag?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

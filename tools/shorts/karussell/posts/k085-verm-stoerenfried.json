@@ -1,0 +1,77 @@
+{
+ "id": "k085-verm-stoerenfried",
+ "order": 85,
+ "topic": "vermieter",
+ "title": "Ein Mieter terrorisiert das ganze Haus? Dann bist du gefragt",
+ "caption": "Ein Mieter terrorisiert das ganze Haus? Dann bist du gefragt.\n\nMassive Störungen durch einen Mieter können für die Nachbarn ein Mangel sein – sie mindern dann womöglich die Miete. Dein Weg: dokumentieren, abmahnen, kündigen.\n\nDer Vermieterrechtsschutz der ARAG übernimmt je nach Tarif Anwalt, Gericht und Räumung – auf Wunsch mit Mietausfallschutz für 6 oder bis zu 12 Monatsmieten.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – ein Streit, der schon läuft, ist nicht versicherbar.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#vermieter #immobilien #mietrecht #vermieterrechtsschutz #vermietung #kapitalanlage #eigentumswohnung",
+ "fine": "* je nach Tarif. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Vermieter",
+   "title": [
+    "Ein Mieter",
+    "[terrorisiert]",
+    "das ganze Haus?"
+   ]
+  },
+  {
+   "type": "text",
+   "kicker": "Du bist gefragt:",
+   "title": [
+    "Sonst mindern",
+    "[die anderen.]"
+   ],
+   "text": "Massive Störungen können für die Nachbarn ein Mangel sein."
+  },
+  {
+   "type": "liste",
+   "title": [
+    "Dein",
+    "[Weg:]"
+   ],
+   "items": [
+    "Beschwerden sammeln (Lärmprotokoll)",
+    "Abmahnen",
+    "Kündigen – notfalls fristlos"
+   ],
+   "mark": "num"
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Vermieter-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Er übernimmt je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Gericht*",
+    "Räumung*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Bist du",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

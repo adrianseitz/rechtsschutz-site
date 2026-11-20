@@ -35,7 +35,7 @@ type LogEntry = { at: string; kind: string; text: string };
 
 const PL: Record<Platform, string> = { tiktok: "TikTok", instagram: "Instagram", youtube: "YouTube" };
 const DAYS = [{ d: 1, l: "Mo" }, { d: 2, l: "Di" }, { d: 3, l: "Mi" }, { d: 4, l: "Do" }, { d: 5, l: "Fr" }, { d: 6, l: "Sa" }, { d: 0, l: "So" }];
-const TOPIC: Record<string, string> = { vermieter: "Vermieter", firma: "Firma", arbeit: "Arbeit", privat: "Privat", allgemein: "Allgemein", eigen: "Eigenes Video" };
+const TOPIC: Record<string, string> = { vermieter: "Vermieter", firma: "Firma", arbeit: "Arbeit", privat: "Privat", verkehr: "Verkehr", allgemein: "Allgemein", eigen: "Eigenes Video" };
 const STYLE: Record<string, string> = { whiteboard: "Whiteboard", cartoon: "Cartoon", studio3d: "3D", eigen: "hochgeladen", bilder: "Bilder-Post" };
 const isK = (ep: Ep) => ep.kind === "karussell";
 const hasMedia = (e?: EpState) => Boolean(e?.video || e?.slides?.length);

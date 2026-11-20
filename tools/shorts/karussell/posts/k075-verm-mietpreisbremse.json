@@ -1,0 +1,85 @@
+{
+ "id": "k075-verm-mietpreisbremse",
+ "order": 75,
+ "topic": "vermieter",
+ "title": "Mietpreisbremse: Gilt sie für deine Wohnung?",
+ "caption": "Mietpreisbremse: Gilt sie für deine Wohnung?\n\nIn vielen Städten darf die Miete bei Neuvermietung höchstens 10 % über der ortsüblichen Vergleichsmiete liegen. Es gibt Ausnahmen – und bei einem Verstoß kann der Mieter Geld zurückverlangen.\n\nDer Vermieterrechtsschutz der ARAG übernimmt je nach Tarif Anwalt, Gericht und Räumung – auf Wunsch mit Mietausfallschutz für 6 oder bis zu 12 Monatsmieten.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – ein Streit, der schon läuft, ist nicht versicherbar.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#vermieter #immobilien #mietrecht #vermieterrechtsschutz #vermietung #kapitalanlage #eigentumswohnung",
+ "fine": "* je nach Tarif. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Vermieter",
+   "title": [
+    "Mietpreisbremse:",
+    "[Gilt sie]",
+    "für dich?"
+   ]
+  },
+  {
+   "type": "text",
+   "kicker": "In vielen Städten gilt:",
+   "title": [
+    "Neue Miete max.",
+    "[10 % über]",
+    "der Vergleichsmiete."
+   ]
+  },
+  {
+   "type": "liste",
+   "title": [
+    "[Ausnahmen:]"
+   ],
+   "items": [
+    "Neubau (erstmals ab Okt. 2014 vermietet)",
+    "Umfassend modernisiert",
+    "Vormiete war schon höher"
+   ],
+   "mark": "check"
+  },
+  {
+   "type": "text",
+   "kicker": "Verstoß?",
+   "title": [
+    "Der Mieter kann",
+    "[Geld zurück]",
+    "verlangen."
+   ],
+   "text": "Nach einer Rüge muss zu viel gezahlte Miete zurückgezahlt werden."
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Vermieter-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Er übernimmt je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Gericht*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Bist du",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

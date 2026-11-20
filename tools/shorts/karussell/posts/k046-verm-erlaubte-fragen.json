@@ -1,0 +1,88 @@
+{
+ "id": "k046-verm-erlaubte-fragen",
+ "order": 46,
+ "topic": "vermieter",
+ "title": "Was darfst du Mietinteressenten fragen – und was nicht?",
+ "caption": "Was darfst du Mietinteressenten fragen – und was nicht?\n\nBeruf, Einkommen, Anzahl der Bewohner: erlaubt. Religion, Schwangerschaft oder Parteizugehörigkeit: tabu. Wer bei einer erlaubten Frage lügt, riskiert dagegen den Mietvertrag.\n\nDer Vermieterrechtsschutz der ARAG übernimmt je nach Tarif Anwalt, Gericht und Räumung – auf Wunsch mit Mietausfallschutz für 6 oder bis zu 12 Monatsmieten.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – ein Streit, der schon läuft, ist nicht versicherbar.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#vermieter #immobilien #mietrecht #vermieterrechtsschutz #vermietung #kapitalanlage #eigentumswohnung",
+ "fine": "* je nach Tarif. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Vermieter",
+   "title": [
+    "Was darfst",
+    "du Mieter",
+    "[fragen?]"
+   ]
+  },
+  {
+   "type": "liste",
+   "title": [
+    "[Erlaubt:]"
+   ],
+   "items": [
+    "Beruf & Einkommen",
+    "Anzahl der Bewohner",
+    "Haustiere"
+   ],
+   "mark": "check"
+  },
+  {
+   "type": "liste",
+   "title": [
+    "[Tabu:]"
+   ],
+   "items": [
+    "Religion",
+    "Schwangerschaft & Kinderwunsch",
+    "Parteizugehörigkeit"
+   ],
+   "mark": "cross"
+  },
+  {
+   "type": "text",
+   "kicker": "Lügt der Mieter",
+   "title": [
+    "bei einer",
+    "[erlaubten Frage,]"
+   ],
+   "text": "kann das ein Grund zur Anfechtung oder Kündigung sein."
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Vermieter-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Er übernimmt je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Gericht*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Ist deine",
+    "Wohnung",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

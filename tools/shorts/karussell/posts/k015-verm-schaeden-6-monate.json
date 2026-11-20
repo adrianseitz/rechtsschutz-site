@@ -1,0 +1,83 @@
+{
+ "id": "k015-verm-schaeden-6-monate",
+ "order": 15,
+ "topic": "vermieter",
+ "title": "Schäden nach dem Auszug: Du hast nur 6 Monate",
+ "caption": "Schäden nach dem Auszug: Du hast nur 6 Monate.\n\nErsatzansprüche wegen Schäden an der Wohnung verjähren schon 6 Monate nach der Rückgabe. Wer zu lange wartet, bleibt auf den Kosten sitzen.\n\nDer Vermieterrechtsschutz der ARAG übernimmt je nach Tarif Anwalt, Gericht und Räumung – auf Wunsch mit Mietausfallschutz für 6 oder bis zu 12 Monatsmieten.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – ein Streit, der schon läuft, ist nicht versicherbar.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#vermieter #immobilien #mietrecht #vermieterrechtsschutz #vermietung #kapitalanlage #eigentumswohnung",
+ "fine": "* je nach Tarif. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Vermieter",
+   "title": [
+    "Schäden nach",
+    "dem Auszug?",
+    "[Die Uhr tickt.]"
+   ]
+  },
+  {
+   "type": "zahl",
+   "kicker": "Du hast nur",
+   "big": "6 Monate",
+   "note": "ab Rückgabe der Wohnung – dann sind Ersatzansprüche verjährt (§ 548 BGB)"
+  },
+  {
+   "type": "liste",
+   "title": [
+    "Direkt bei",
+    "[der Übergabe:]"
+   ],
+   "items": [
+    "Protokoll mit Unterschrift",
+    "Fotos von jedem Raum",
+    "Zählerstände notieren"
+   ],
+   "mark": "num"
+  },
+  {
+   "type": "text",
+   "kicker": "Und dann:",
+   "title": [
+    "Nicht warten,",
+    "[handeln.]"
+   ],
+   "text": "Reicht die Kaution nicht, musst du deine Ansprüche rechtzeitig durchsetzen – notfalls vor Gericht."
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Vermieter-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Er übernimmt je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Gericht*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Ist deine",
+    "Wohnung",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

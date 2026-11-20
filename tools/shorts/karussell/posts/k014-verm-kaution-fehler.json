@@ -1,0 +1,83 @@
+{
+ "id": "k014-verm-kaution-fehler",
+ "order": 14,
+ "topic": "vermieter",
+ "title": "3 Kautions-Fehler, die Vermieter Geld kosten",
+ "caption": "3 Kautions-Fehler, die Vermieter Geld kosten.\n\nMehr als drei Kaltmieten, Kaution aufs eigene Konto, alles zu früh ausgezahlt: Diese drei Fehler sehen wir bei Vermietern immer wieder.\n\nDer Vermieterrechtsschutz der ARAG übernimmt je nach Tarif Anwalt, Gericht und Räumung – auf Wunsch mit Mietausfallschutz für 6 oder bis zu 12 Monatsmieten.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – ein Streit, der schon läuft, ist nicht versicherbar.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#vermieter #immobilien #mietrecht #vermieterrechtsschutz #vermietung #kapitalanlage #eigentumswohnung",
+ "fine": "* je nach Tarif. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Vermieter",
+   "title": [
+    "3 Kautions-",
+    "Fehler, die",
+    "[Geld kosten.]"
+   ]
+  },
+  {
+   "type": "text",
+   "kicker": "Fehler 1:",
+   "title": [
+    "Mehr als",
+    "[3 Kaltmieten]",
+    "verlangen."
+   ],
+   "text": "Mehr ist nicht erlaubt – und der Mieter darf in drei Monatsraten zahlen (§ 551 BGB)."
+  },
+  {
+   "type": "text",
+   "kicker": "Fehler 2:",
+   "title": [
+    "Kaution aufs",
+    "[eigene Konto.]"
+   ],
+   "text": "Sie muss getrennt von deinem Vermögen angelegt werden (§ 551 BGB)."
+  },
+  {
+   "type": "text",
+   "kicker": "Fehler 3:",
+   "title": [
+    "Zu früh",
+    "[alles auszahlen.]"
+   ],
+   "text": "Steht die Nebenkostenabrechnung noch aus, darfst du einen angemessenen Teil zurückbehalten."
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Vermieter-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Streit um Kaution oder Schäden? Je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Gericht*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Ist deine",
+    "Wohnung",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

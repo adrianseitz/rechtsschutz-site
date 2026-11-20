@@ -1,0 +1,85 @@
+{
+ "id": "k012-verm-nebenkosten-frist",
+ "order": 12,
+ "topic": "vermieter",
+ "title": "Nebenkostenabrechnung zu spät? Dann ist die Nachzahlung weg",
+ "caption": "Nebenkostenabrechnung zu spät? Dann ist die Nachzahlung weg.\n\nDie Nebenkostenabrechnung muss spätestens 12 Monate nach Ende des Abrechnungszeitraums beim Mieter sein. Für 2025 heißt das meist: bis 31.12.2026. Danach kannst du keine Nachzahlung mehr verlangen.\n\nDer Vermieterrechtsschutz der ARAG übernimmt je nach Tarif Anwalt, Gericht und Räumung – auf Wunsch mit Mietausfallschutz für 6 oder bis zu 12 Monatsmieten.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – ein Streit, der schon läuft, ist nicht versicherbar.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#vermieter #immobilien #mietrecht #vermieterrechtsschutz #vermietung #kapitalanlage #eigentumswohnung",
+ "fine": "* je nach Tarif. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Vermieter",
+   "title": [
+    "Nebenkosten-",
+    "abrechnung",
+    "[zu spät?]"
+   ],
+   "sub": "Dann kannst du dir die Nachzahlung abschminken."
+  },
+  {
+   "type": "zahl",
+   "kicker": "Deine Frist:",
+   "big": "12 Monate",
+   "note": "nach Ende des Abrechnungszeitraums (§ 556 BGB)"
+  },
+  {
+   "type": "text",
+   "kicker": "Beispiel:",
+   "title": [
+    "Abrechnung 2025",
+    "muss bis",
+    "[31.12.2026] da sein."
+   ],
+   "text": "Kommt sie später, gibt es keine Nachzahlung mehr – außer du kannst nichts für die Verspätung."
+  },
+  {
+   "type": "liste",
+   "title": [
+    "Häufiger",
+    "[Streit:]"
+   ],
+   "items": [
+    "Nicht umlagefähige Kosten",
+    "Falscher Verteilerschlüssel",
+    "Fehlende Belege"
+   ],
+   "mark": "cross"
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Vermieter-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Streit um Nebenkosten? Je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Gericht*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Streit um",
+    "Nebenkosten?",
+    "[Sichere dich ab.]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

@@ -1,0 +1,79 @@
+{
+ "id": "k029-firm-erster-mitarbeiter",
+ "order": 29,
+ "topic": "firma",
+ "title": "Dein erster Mitarbeiter: die Checkliste",
+ "caption": "Dein erster Mitarbeiter: die Checkliste.\n\nArbeitsvertrag mit allen wichtigen Bedingungen, Anmeldung bei Krankenkasse und Berufsgenossenschaft, Betriebsnummer, Zeiterfassung – und ein Plan für den Fall, dass es Streit gibt.\n\nDer Firmenrechtsschutz der ARAG übernimmt je nach Tarif Anwalt und Gericht – vom Streit mit Mitarbeitern bis zum Finanzgericht.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – ein Streit, der schon läuft, ist normalerweise nicht versicherbar.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#selbstständig #unternehmer #firmenrechtsschutz #arbeitgeber #kleinunternehmen #handwerk #rechtsschutz",
+ "fine": "* je nach Tarif. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Arbeitgeber",
+   "title": [
+    "Dein erster",
+    "[Mitarbeiter?]"
+   ],
+   "sub": "Glückwunsch! Das solltest du jetzt erledigen."
+  },
+  {
+   "type": "liste",
+   "title": [
+    "Die",
+    "[Checkliste:]"
+   ],
+   "items": [
+    "Arbeitsvertrag mit allen Bedingungen",
+    "Betriebsnummer beantragen",
+    "Anmelden: Krankenkasse & Berufsgenossenschaft",
+    "Zeiterfassung einrichten"
+   ],
+   "mark": "num"
+  },
+  {
+   "type": "text",
+   "kicker": "Und ab jetzt:",
+   "title": [
+    "Du bist",
+    "[Arbeitgeber.]"
+   ],
+   "text": "Mit allen Pflichten – und dem Risiko, dass es irgendwann Streit gibt."
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Firmen-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Mit Arbeitgeber-Rechtsschutz, je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Gericht*",
+    "Streit mit Mitarbeitern*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Ist dein",
+    "Betrieb",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

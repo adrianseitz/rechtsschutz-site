@@ -1,0 +1,67 @@
+{
+ "id": "k062-verm-mietausfall-erklaert",
+ "order": 62,
+ "topic": "vermieter",
+ "title": "Mietausfallschutz kurz erklärt: Was ist das eigentlich?",
+ "caption": "Mietausfallschutz kurz erklärt: Was ist das eigentlich?\n\nDer Rechtsschutz bezahlt den Streit: Anwalt, Gericht, Räumung. Der Mietausfallschutz der ARAG geht weiter und ersetzt die ausfallende Miete samt laufender Nebenkosten – je nach Vereinbarung für 6 oder bis zu 12 Monate.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – ein Streit, der schon läuft, ist nicht versicherbar.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#vermieter #immobilien #mietrecht #vermieterrechtsschutz #vermietung #kapitalanlage #eigentumswohnung",
+ "fine": "* je nach Tarif. Mietausfallschutz: Zusatzbaustein in Komfort und Premium, 6 oder bis zu 12 Monate, Wartezeit 3 Monate; Leerstand und bestehende Rückstände nicht versichert. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Vermieter",
+   "title": [
+    "Mietausfall-",
+    "schutz?",
+    "[Kurz erklärt.]"
+   ]
+  },
+  {
+   "type": "liste",
+   "title": [
+    "Der Rechtsschutz",
+    "[zahlt den Streit:]"
+   ],
+   "items": [
+    "Anwalt*",
+    "Gericht*",
+    "Räumung*"
+   ],
+   "mark": "check"
+  },
+  {
+   "type": "liste",
+   "title": [
+    "Der Mietausfallschutz",
+    "[zahlt die Miete:]"
+   ],
+   "items": [
+    "Nettomiete*",
+    "Laufende Nebenkosten*",
+    "6 oder bis zu 12 Monate*"
+   ],
+   "mark": "check"
+  },
+  {
+   "type": "liste",
+   "title": [
+    "Gut zu",
+    "[wissen:]"
+   ],
+   "items": [
+    "Zusatzbaustein in Komfort & Premium",
+    "Wartezeit 3 Monate",
+    "Leerstand ist nicht versichert"
+   ],
+   "mark": "num"
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Passt das zu",
+    "[deiner Immobilie?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

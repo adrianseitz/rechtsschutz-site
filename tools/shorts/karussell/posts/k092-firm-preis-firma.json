@@ -1,0 +1,71 @@
+{
+ "id": "k092-firm-preis-firma",
+ "order": 92,
+ "topic": "firma",
+ "title": "Was kostet Firmenrechtsschutz? Ein Beispiel",
+ "caption": "Was kostet Firmenrechtsschutz? Ein Beispiel.\n\nFür einen Betrieb mit 3 Mitarbeitern gibt es den Firmenrechtsschutz der ARAG ab 43 € im Monat (Tarif Basis, 250 € Selbstbeteiligung). Schon ein einziger Streit mit einem Mitarbeiter kostet oft mehr.\n\nLeistungen je nach Tarif – ich rechne dir deinen Beitrag genau aus.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – ein Streit, der schon läuft, ist normalerweise nicht versicherbar.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#selbstständig #unternehmer #firmenrechtsschutz #arbeitgeber #kleinunternehmen #handwerk #rechtsschutz",
+ "fine": "* Monatsbeitrag laut ARAG (Stand 11/2026), Tarif Basis, Betrieb mit 3 Mitarbeitenden, monatliche Zahlung, 250 € Selbstbeteiligung; Leistungen je nach Tarif. Wartezeit meist 3 Monate. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Selbstständige",
+   "title": [
+    "Was kostet",
+    "Firmen-",
+    "[rechtsschutz?]"
+   ]
+  },
+  {
+   "type": "zahl",
+   "kicker": "Beispiel: 3 Mitarbeiter, ab",
+   "big": "43 €*",
+   "note": "im Monat – Tarif Basis, 250 € Selbstbeteiligung"
+  },
+  {
+   "type": "liste",
+   "title": [
+    "Schon in",
+    "[Basis dabei:]"
+   ],
+   "items": [
+    "Arbeitgeber-Rechtsschutz*",
+    "Steuer-Rechtsschutz*",
+    "Straf-Rechtsschutz*",
+    "Unbegrenzte Versicherungssumme*"
+   ],
+   "mark": "check"
+  },
+  {
+   "type": "text",
+   "kicker": "Zum Vergleich:",
+   "title": [
+    "Ein Streit mit",
+    "einem Mitarbeiter",
+    "[kostet oft mehr.]"
+   ],
+   "text": "In der ersten Instanz zahlst du deinen Anwalt selbst."
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Genau für dich:",
+   "title": [
+    "Ich rechne",
+    "[deinen Beitrag] aus."
+   ],
+   "button": "Kostenlos ausrechnen lassen"
+  }
+ ]
+}

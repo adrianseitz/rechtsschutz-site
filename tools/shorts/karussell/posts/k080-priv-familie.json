@@ -1,0 +1,81 @@
+{
+ "id": "k080-priv-familie",
+ "order": 80,
+ "topic": "privat",
+ "title": "Rechtsschutz für die ganze Familie in einem Vertrag",
+ "caption": "Rechtsschutz für die ganze Familie in einem Vertrag.\n\nBei vielen Tarifen gibt es Varianten für Singles, Paare und Familien. Welche Personen genau mitversichert sind, regeln die Bedingungen – ich schau es mir mit dir an.\n\nDer Privatrechtsschutz der ARAG übernimmt je nach Tarif Anwalt und Gericht.\n\nWichtig: Versichert sind künftige Fälle; für viele Bereiche gilt eine Wartezeit, häufig 3 Monate.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#deinrecht #verbraucherrecht #rechtsschutz #privatrechtsschutz #rechtstipps #wissen",
+ "fine": "* je nach Tarif. Für viele Bereiche gilt eine Wartezeit, häufig 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Dein Recht",
+   "title": [
+    "Rechtsschutz",
+    "für die",
+    "[ganze Familie?]"
+   ]
+  },
+  {
+   "type": "liste",
+   "title": [
+    "Viele Tarife",
+    "[gibt es für:]"
+   ],
+   "items": [
+    "Singles",
+    "Paare",
+    "Familien"
+   ],
+   "mark": "check"
+  },
+  {
+   "type": "liste",
+   "title": [
+    "Kombinierbar",
+    "[mit:]"
+   ],
+   "items": [
+    "Arbeitsrechtsschutz*",
+    "Verkehrsrechtsschutz*",
+    "Wohnungsrechtsschutz*"
+   ],
+   "mark": "check"
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Privat-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Er übernimmt je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Gericht*",
+    "Telefonische Beratung*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Ist deine Familie",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

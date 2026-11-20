@@ -1,0 +1,65 @@
+{
+ "id": "k072-priv-verjaehrung-privat",
+ "order": 72,
+ "topic": "privat",
+ "title": "Am 31.12. verjähren deine Ansprüche aus 2023",
+ "caption": "Am 31.12. verjähren deine Ansprüche aus 2023.\n\nDie regelmäßige Verjährung beträgt 3 Jahre und beginnt am Jahresende. Was 2023 entstanden ist, verjährt mit Ablauf des 31.12.2026 – eine Mahnung reicht nicht, um das aufzuhalten.\n\nDer Privatrechtsschutz der ARAG übernimmt je nach Tarif Anwalt und Gericht.\n\nWichtig: Versichert sind künftige Fälle; für viele Bereiche gilt eine Wartezeit, häufig 3 Monate.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#deinrecht #verbraucherrecht #rechtsschutz #privatrechtsschutz #rechtstipps #wissen",
+ "fine": "* je nach Tarif. Für viele Bereiche gilt eine Wartezeit, häufig 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Dein Recht",
+   "title": [
+    "Jemand schuldet",
+    "dir Geld",
+    "[aus 2023?]"
+   ]
+  },
+  {
+   "type": "zahl",
+   "kicker": "Dann verjährt es am",
+   "big": "31.12.2026",
+   "note": "3 Jahre ab Ende des Entstehungsjahres (§§ 195, 199 BGB)"
+  },
+  {
+   "type": "mythos",
+   "myth": "Eine Mahnung hält die Verjährung auf.",
+   "fact": "Nein. Dafür braucht es z. B. einen Mahnbescheid oder eine Klage."
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Privat-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Er übernimmt je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Gericht*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Bist du",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

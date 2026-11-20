@@ -1,0 +1,76 @@
+{
+ "id": "k090-arbe-zu-spaet",
+ "order": 90,
+ "topic": "arbeit",
+ "title": "Erst absichern, wenn es im Job kriselt? Zu spät",
+ "caption": "Erst absichern, wenn es im Job kriselt? Zu spät.\n\nIm Arbeitsrechtsschutz gilt meist eine Wartezeit von 3 Monaten. Konflikte, die sich schon abzeichnen, sind nicht versicherbar. Wer erst handelt, wenn die Stimmung kippt, ist oft zu spät dran.\n\nDer Arbeitsrechtsschutz der ARAG (als Baustein zum Privatrechtsschutz) übernimmt je nach Tarif Anwalt und Arbeitsgericht.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – wer erst handelt, wenn es kriselt, ist zu spät dran.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#arbeitsrecht #arbeitnehmer #job #kündigung #arbeitsrechtsschutz #rechtsschutz #deinrecht",
+ "fine": "* je nach Tarif. Arbeitsrechtsschutz als Baustein zum Privatrechtsschutz. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Arbeitnehmer",
+   "title": [
+    "Die Stimmung",
+    "im Job kippt?",
+    "[Zu spät.]"
+   ]
+  },
+  {
+   "type": "chat",
+   "title": [
+    "Kennst du",
+    "[diese Nachricht?]"
+   ],
+   "sender": "Chef",
+   "status": "zuletzt online vor 1 Min.",
+   "time": "18:47",
+   "messages": [
+    "Kannst du morgen um 9 kurz in mein Büro kommen? Wir müssen reden."
+   ]
+  },
+  {
+   "type": "text",
+   "kicker": "Das Problem:",
+   "title": [
+    "Was sich schon",
+    "[abzeichnet,]",
+    "ist nicht versicherbar."
+   ]
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Arbeits-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Baustein zum Privatrechtsschutz, je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Arbeitsgericht*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Bist du im Job",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

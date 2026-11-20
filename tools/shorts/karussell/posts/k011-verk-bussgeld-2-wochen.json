@@ -1,0 +1,69 @@
+{
+ "id": "k011-verk-bussgeld-2-wochen",
+ "order": 11,
+ "topic": "verkehr",
+ "title": "Bußgeldbescheid bekommen? Du hast 2 Wochen",
+ "caption": "Bußgeldbescheid bekommen? Du hast 2 Wochen.\n\nGegen einen Bußgeldbescheid hast du 2 Wochen ab Zustellung Zeit für den Einspruch. Danach ist er rechtskräftig – mit Bußgeld, Punkten und eventuell Fahrverbot.\n\nDer Verkehrsrechtsschutz der ARAG übernimmt je nach Tarif Anwalt und Gericht.\n\nWichtig: Versichert sind Fälle, die nach Vertragsbeginn passieren.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#autofahrer #verkehrsrecht #bußgeld #unfall #verkehrsrechtsschutz #führerschein #rechtsschutz",
+ "fine": "* je nach Tarif. Verkehrsrechtsschutz als Baustein. Halt- und Parkverstöße sind in der Regel nicht versichert. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Autofahrer",
+   "title": [
+    "Bußgeld-",
+    "[bescheid?]"
+   ],
+   "sub": "Jetzt läuft die Uhr."
+  },
+  {
+   "type": "zahl",
+   "kicker": "Einspruch innerhalb von",
+   "big": "2 Wochen",
+   "note": "ab Zustellung (§ 67 OWiG)"
+  },
+  {
+   "type": "liste",
+   "title": [
+    "Danach",
+    "[gilt:]"
+   ],
+   "items": [
+    "Bußgeld zahlen",
+    "Punkte in Flensburg",
+    "Eventuell Fahrverbot"
+   ],
+   "mark": "cross"
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Verkehrs-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Bei Bußgeld, je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt & Akteneinsicht*",
+    "Gericht*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Wichtig:",
+   "title": [
+    "Absichern, bevor",
+    "[es kracht.]"
+   ],
+   "text": "Versichert sind Fälle, die nach Vertragsbeginn passieren – für einzelne Bereiche gilt eine Wartezeit."
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Bist du als Fahrer",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

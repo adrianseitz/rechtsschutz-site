@@ -1,0 +1,89 @@
+{
+ "id": "k031-verm-mietnomaden",
+ "order": 31,
+ "topic": "vermieter",
+ "title": "Mietnomaden: Was dich ein Fall wirklich kostet",
+ "caption": "Mietnomaden: Was dich ein Fall wirklich kostet.\n\nMonatelang keine Miete, Anwalt, Gericht, Räumung – und am Ende eine Wohnung voller Müll. Bei Mietnomaden übernimmt die ARAG je nach Tarif sogar das Ausräumen und Einlagern.\n\nDer Vermieterrechtsschutz der ARAG übernimmt je nach Tarif Anwalt, Gericht und Räumung – auf Wunsch mit Mietausfallschutz für 6 oder bis zu 12 Monatsmieten.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – ein Streit, der schon läuft, ist nicht versicherbar.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#vermieter #immobilien #mietrecht #vermieterrechtsschutz #vermietung #kapitalanlage #eigentumswohnung",
+ "fine": "* je nach Tarif. Mietausfallschutz: Zusatzbaustein in Komfort und Premium, 6 oder bis zu 12 Monate, Wartezeit 3 Monate; Leerstand und bestehende Rückstände nicht versichert. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Vermieter",
+   "title": [
+    "Mietnomaden:",
+    "[Der Albtraum]",
+    "jedes Vermieters."
+   ]
+  },
+  {
+   "type": "liste",
+   "title": [
+    "Was dir",
+    "[fehlt:]"
+   ],
+   "items": [
+    "Monatelang die Miete",
+    "Die Nebenkosten",
+    "Geld für Anwalt & Räumung"
+   ],
+   "mark": "cross"
+  },
+  {
+   "type": "text",
+   "kicker": "Und am Ende:",
+   "title": [
+    "Die Wohnung",
+    "[ist voller Müll.]"
+   ],
+   "text": "Ausräumen, Abtransport, Einlagern – auch das kostet."
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Vermieter-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Bei Mietnomaden je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt & Gericht*",
+    "Räumungsvollstreckung*",
+    "Ausräumen & Einlagern*"
+   ]
+  },
+  {
+   "type": "text",
+   "kicker": "Und das Beste:",
+   "title": [
+    "Mit Mietausfallschutz",
+    "bekommst du sogar",
+    "[die Miete ersetzt.]*"
+   ],
+   "text": "6 oder bis zu 12 Monatsmieten samt Nebenkosten – als Zusatzbaustein, je nach Tarif.",
+   "theme": "dark"
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Ist deine",
+    "Wohnung",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

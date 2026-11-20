@@ -5,7 +5,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { BANNED } from "../lib/validate.mjs";
 
-export const SLIDE_TYPES = ["cover", "chat", "brief", "zahl", "text", "liste", "vergleich", "loesung", "achtung", "cta"];
+export const SLIDE_TYPES = ["cover", "chat", "brief", "zahl", "text", "liste", "vergleich", "loesung", "achtung", "cta", "mythos"];
 const SUPERLATIV = /\b(die einzige[n]?|der einzige|einzigartig|unschlagbar|nr\.?\s?1)\b/i;
 
 /** @returns {string[]} Liste der Fehler (leer = in Ordnung) */
@@ -15,7 +15,7 @@ export function validateKarussell(p, fileId = null) {
   const arr = (v) => Array.isArray(v) && v.length > 0;
   if (!/^[a-z0-9][a-z0-9-]{0,60}$/.test(p.id || "")) err.push("id ungültig");
   if (fileId && p.id !== fileId) err.push("id passt nicht zum Dateinamen");
-  if (!["vermieter", "firma", "privat", "arbeit", "allgemein"].includes(p.topic)) err.push("topic ungültig");
+  if (!["vermieter", "firma", "privat", "arbeit", "verkehr", "allgemein"].includes(p.topic)) err.push("topic ungültig");
   if (!str(p.title, 5, 120)) err.push("title fehlt");
   if (!str(p.caption, 40, 2200)) err.push("caption fehlt oder zu lang");
   if (!str(p.fine, 40, 420) || !p.fine.includes("§ 34d")) err.push("fine (Pflichtangaben mit § 34d) fehlt");
@@ -29,6 +29,7 @@ export function validateKarussell(p, fileId = null) {
     if (["cover", "text", "liste", "achtung", "cta"].includes(x.type) && !(arr(x.title) || str(x.title, 2, 200))) err.push(`${n}: title fehlt`);
     if (x.type === "zahl" && !str(x.big, 1, 20)) err.push(`${n}: big fehlt`);
     if (x.type === "liste" && !(arr(x.items) && x.items.length <= 5)) err.push(`${n}: 1 bis 5 items nötig`);
+    if (x.type === "mythos" && !(str(x.myth, 5, 220) && str(x.fact, 5, 260))) err.push(`${n}: myth und fact nötig`);
     if (x.type === "chat" && !arr(x.messages)) err.push(`${n}: messages fehlen`);
     if (x.type === "brief" && !(str(x.subject, 3, 120) && arr(x.body))) err.push(`${n}: subject und body nötig`);
     if (x.type === "vergleich" && !(x.left?.rows?.length && x.right?.rows?.length && x.left.total && x.right.total)) err.push(`${n}: left/right mit rows und total nötig`);

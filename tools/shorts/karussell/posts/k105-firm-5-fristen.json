@@ -1,0 +1,55 @@
+{
+ "id": "k105-firm-5-fristen",
+ "order": 105,
+ "topic": "firma",
+ "title": "5 Fristen, die jeder Selbstständige kennen muss",
+ "caption": "5 Fristen, die jeder Selbstständige kennen muss.\n\n3 Jahre Verjährung, 2 Wochen gegen den Mahnbescheid, 2 Wochen gegen den Bußgeldbescheid, 1 Monat gegen den Steuerbescheid und 3 Wochen für die Kündigungsschutzklage deiner Mitarbeiter.\n\nDer Firmenrechtsschutz der ARAG übernimmt je nach Tarif Anwalt und Gericht – vom Streit mit Mitarbeitern bis zum Finanzgericht.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – ein Streit, der schon läuft, ist normalerweise nicht versicherbar.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#selbstständig #unternehmer #firmenrechtsschutz #arbeitgeber #kleinunternehmen #handwerk #rechtsschutz",
+ "fine": "* je nach Tarif. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Selbstständige",
+   "title": [
+    "5 Fristen für",
+    "[Selbstständige.]"
+   ]
+  },
+  {
+   "type": "liste",
+   "title": [
+    "[Merk dir:]"
+   ],
+   "items": [
+    "3 Jahre – Verjährung deiner Rechnungen",
+    "2 Wochen – Widerspruch Mahnbescheid",
+    "2 Wochen – Einspruch Bußgeld",
+    "1 Monat – Einspruch Steuerbescheid",
+    "3 Wochen – Kündigungsschutzklage"
+   ],
+   "mark": "num"
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Firmen-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Er übernimmt je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Gericht*"
+   ]
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Ist dein",
+    "Betrieb",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

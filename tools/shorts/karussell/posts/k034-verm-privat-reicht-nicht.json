@@ -1,0 +1,70 @@
+{
+ "id": "k034-verm-privat-reicht-nicht",
+ "order": 34,
+ "topic": "vermieter",
+ "title": "Du hast Rechtsschutz? Für deine vermietete Wohnung reicht er nicht",
+ "caption": "Du hast Rechtsschutz? Für deine vermietete Wohnung reicht er nicht.\n\nEin privater Rechtsschutz deckt Streit um vermietete Wohnungen in der Regel nicht ab. Dafür brauchst du den Vermieter-Baustein – das merken viele erst, wenn es zu spät ist.\n\nDer Vermieterrechtsschutz der ARAG übernimmt je nach Tarif Anwalt, Gericht und Räumung – auf Wunsch mit Mietausfallschutz für 6 oder bis zu 12 Monatsmieten.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – ein Streit, der schon läuft, ist nicht versicherbar.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#vermieter #immobilien #mietrecht #vermieterrechtsschutz #vermietung #kapitalanlage #eigentumswohnung",
+ "fine": "* je nach Tarif. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Vermieter",
+   "title": [
+    "Du hast",
+    "Rechtsschutz?",
+    "[Reicht nicht.]"
+   ],
+   "sub": "Zumindest nicht für deine vermietete Wohnung."
+  },
+  {
+   "type": "mythos",
+   "myth": "Mein Privatrechtsschutz zahlt auch beim Streit mit meinem Mieter.",
+   "fact": "In der Regel nicht. Für vermietete Wohnungen brauchst du den Vermieter-Baustein."
+  },
+  {
+   "type": "text",
+   "kicker": "Das merken viele",
+   "title": [
+    "erst, wenn es",
+    "[zu spät ist.]"
+   ],
+   "text": "Ein Streit, der schon läuft, lässt sich nicht mehr versichern."
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Vermieter-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Er übernimmt je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Gericht*",
+    "Räumung*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Prüf deinen",
+    "[Vertrag.]"
+   ],
+   "button": "Kostenlos prüfen lassen"
+  }
+ ]
+}

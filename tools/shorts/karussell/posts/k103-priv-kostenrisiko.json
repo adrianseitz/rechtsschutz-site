@@ -1,0 +1,76 @@
+{
+ "id": "k103-priv-kostenrisiko",
+ "order": 103,
+ "topic": "privat",
+ "title": "Recht haben und Recht bekommen sind zwei Paar Schuhe",
+ "caption": "Recht haben und Recht bekommen sind zwei Paar Schuhe.\n\nViele verzichten auf ihr Recht, weil sie das Kostenrisiko scheuen. Denn wer vor Gericht verliert, zahlt in der Regel beide Anwälte und das Gericht.\n\nDer Privatrechtsschutz der ARAG übernimmt je nach Tarif Anwalt und Gericht.\n\nWichtig: Versichert sind künftige Fälle; für viele Bereiche gilt eine Wartezeit, häufig 3 Monate.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#deinrecht #verbraucherrecht #rechtsschutz #privatrechtsschutz #rechtstipps #wissen",
+ "fine": "* je nach Tarif. Für viele Bereiche gilt eine Wartezeit, häufig 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Dein Recht",
+   "title": [
+    "Recht haben ≠",
+    "[Recht bekommen.]"
+   ]
+  },
+  {
+   "type": "text",
+   "kicker": "Das Problem:",
+   "title": [
+    "Viele verzichten",
+    "[auf ihr Recht.]"
+   ],
+   "text": "Weil sie Angst vor den Kosten haben."
+  },
+  {
+   "type": "liste",
+   "title": [
+    "Wer verliert,",
+    "[zahlt:]"
+   ],
+   "items": [
+    "Den eigenen Anwalt",
+    "Den Anwalt der Gegenseite",
+    "Das Gericht"
+   ],
+   "mark": "cross"
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Privat-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Er übernimmt je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Gericht*",
+    "Gegnerische Kosten, wenn du verlierst*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Bist du",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

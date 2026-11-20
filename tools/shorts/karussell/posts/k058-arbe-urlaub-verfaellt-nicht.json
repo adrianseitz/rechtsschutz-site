@@ -1,0 +1,65 @@
+{
+ "id": "k058-arbe-urlaub-verfaellt-nicht",
+ "order": 58,
+ "topic": "arbeit",
+ "title": "Resturlaub: Er verfällt nicht einfach zum Jahresende",
+ "caption": "Resturlaub: Er verfällt nicht einfach zum Jahresende.\n\nDein Urlaub verfällt nur, wenn dein Arbeitgeber dich rechtzeitig auf den Resturlaub und den Verfall hingewiesen hat.\n\nDer Arbeitsrechtsschutz der ARAG (als Baustein zum Privatrechtsschutz) übernimmt je nach Tarif Anwalt und Arbeitsgericht.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – wer erst handelt, wenn es kriselt, ist zu spät dran.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#arbeitsrecht #arbeitnehmer #job #kündigung #arbeitsrechtsschutz #rechtsschutz #deinrecht",
+ "fine": "* je nach Tarif. Arbeitsrechtsschutz als Baustein zum Privatrechtsschutz. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Arbeitnehmer",
+   "title": [
+    "Dein Resturlaub",
+    "[ist nicht weg.]"
+   ],
+   "sub": "Zumindest nicht automatisch."
+  },
+  {
+   "type": "mythos",
+   "myth": "Was ich bis 31.12. nicht nehme, ist weg.",
+   "fact": "Nur, wenn dein Arbeitgeber dich rechtzeitig auf Resturlaub und Verfall hingewiesen hat."
+  },
+  {
+   "type": "zahl",
+   "kicker": "Gesetzlicher Mindesturlaub bei 5-Tage-Woche:",
+   "big": "20 Tage",
+   "note": "24 Werktage bei 6-Tage-Woche (BUrlG)"
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Arbeits-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Baustein zum Privatrechtsschutz, je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Arbeitsgericht*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Bist du im Job",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

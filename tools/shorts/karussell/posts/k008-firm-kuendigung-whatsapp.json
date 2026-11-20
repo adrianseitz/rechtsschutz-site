@@ -1,0 +1,70 @@
+{
+ "id": "k008-firm-kuendigung-whatsapp",
+ "order": 8,
+ "topic": "firma",
+ "title": "Mitarbeiter per WhatsApp gekündigt? Unwirksam",
+ "caption": "Mitarbeiter per WhatsApp gekündigt? Unwirksam.\n\nEine Kündigung im Arbeitsverhältnis muss schriftlich sein – mit Originalunterschrift. Per E-Mail, SMS oder WhatsApp ist sie unwirksam, und das Arbeitsverhältnis läuft weiter.\n\nDer Firmenrechtsschutz der ARAG übernimmt je nach Tarif Anwalt und Gericht – vom Streit mit Mitarbeitern bis zum Finanzgericht.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – ein Streit, der schon läuft, ist normalerweise nicht versicherbar.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#selbstständig #unternehmer #firmenrechtsschutz #arbeitgeber #kleinunternehmen #handwerk #rechtsschutz",
+ "fine": "* je nach Tarif. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Arbeitgeber",
+   "title": [
+    "Mitarbeiter",
+    "per [WhatsApp]",
+    "gekündigt?"
+   ]
+  },
+  {
+   "type": "mythos",
+   "myth": "Eine Kündigung per E-Mail oder WhatsApp ist auch gültig.",
+   "fact": "Unwirksam. Die Kündigung muss schriftlich sein – mit Originalunterschrift (§ 623 BGB)."
+  },
+  {
+   "type": "text",
+   "kicker": "Die Folge:",
+   "title": [
+    "Das Arbeitsverhältnis",
+    "[läuft weiter.]"
+   ],
+   "text": "Inklusive Lohn – bis du richtig gekündigt hast."
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Firmen-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Mit Arbeitgeber-Rechtsschutz, je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Gericht*",
+    "Streit mit Mitarbeitern*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Ist dein",
+    "Betrieb",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

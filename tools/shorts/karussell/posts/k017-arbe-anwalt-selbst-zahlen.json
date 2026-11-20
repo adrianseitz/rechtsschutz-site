@@ -1,0 +1,73 @@
+{
+ "id": "k017-arbe-anwalt-selbst-zahlen",
+ "order": 17,
+ "topic": "arbeit",
+ "title": "Arbeitsgericht: Du zahlst deinen Anwalt selbst – auch wenn du gewinnst",
+ "caption": "Arbeitsgericht: Du zahlst deinen Anwalt selbst – auch wenn du gewinnst.\n\nVor dem Arbeitsgericht trägt in der ersten Instanz jede Seite ihre Anwaltskosten selbst – egal, wie es ausgeht. Viele erfahren das erst, wenn es so weit ist.\n\nDer Arbeitsrechtsschutz der ARAG (als Baustein zum Privatrechtsschutz) übernimmt je nach Tarif Anwalt und Arbeitsgericht.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – wer erst handelt, wenn es kriselt, ist zu spät dran.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#arbeitsrecht #arbeitnehmer #job #kündigung #arbeitsrechtsschutz #rechtsschutz #deinrecht",
+ "fine": "* je nach Tarif. Arbeitsrechtsschutz als Baustein zum Privatrechtsschutz. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Arbeitnehmer",
+   "title": [
+    "Gewonnen –",
+    "und trotzdem",
+    "[gezahlt?]"
+   ]
+  },
+  {
+   "type": "mythos",
+   "myth": "Wer vor Gericht gewinnt, bekommt seine Anwaltskosten zurück.",
+   "fact": "Nicht vor dem Arbeitsgericht. In der ersten Instanz zahlt jede Seite ihren Anwalt selbst (§ 12a ArbGG)."
+  },
+  {
+   "type": "liste",
+   "title": [
+    "Typische",
+    "[Fälle:]"
+   ],
+   "items": [
+    "Kündigung",
+    "Abmahnung",
+    "Arbeitszeugnis",
+    "Lohn & Überstunden"
+   ],
+   "mark": "num"
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Arbeits-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Baustein zum Privatrechtsschutz, je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Arbeitsgericht*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Bist du im Job",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

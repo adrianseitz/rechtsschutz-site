@@ -1,0 +1,73 @@
+{
+ "id": "k087-priv-telefon-mediation",
+ "order": 87,
+ "topic": "privat",
+ "title": "Streit früh klären: Telefonberatung und Mediation",
+ "caption": "Streit früh klären: Telefonberatung und Mediation.\n\nViele Rechtsschutz-Tarife enthalten eine telefonische Erstberatung oder Mediation. So klärst du Konflikte, bevor sie vor Gericht landen.\n\nDer Privatrechtsschutz der ARAG übernimmt je nach Tarif Anwalt und Gericht.\n\nWichtig: Versichert sind künftige Fälle; für viele Bereiche gilt eine Wartezeit, häufig 3 Monate.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#deinrecht #verbraucherrecht #rechtsschutz #privatrechtsschutz #rechtstipps #wissen",
+ "fine": "* je nach Tarif. Für viele Bereiche gilt eine Wartezeit, häufig 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Dein Recht",
+   "title": [
+    "Streit klären,",
+    "bevor er",
+    "[eskaliert.]"
+   ]
+  },
+  {
+   "type": "text",
+   "kicker": "In vielen Tarifen:",
+   "title": [
+    "Erstberatung",
+    "[am Telefon.]*"
+   ],
+   "text": "Schnell wissen, wo du stehst – ohne Termin in der Kanzlei."
+  },
+  {
+   "type": "text",
+   "kicker": "Und:",
+   "title": [
+    "Mediation",
+    "[statt Gericht.]*"
+   ],
+   "text": "Oft schneller, günstiger und weniger nervenaufreibend."
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Privat-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Er übernimmt je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Telefonische Beratung*",
+    "Mediation*",
+    "Anwalt & Gericht*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Bist du",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

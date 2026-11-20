@@ -1,0 +1,64 @@
+{
+ "id": "k035-verk-gutachter",
+ "order": 35,
+ "topic": "verkehr",
+ "title": "Unverschuldeter Unfall: Du darfst deinen Gutachter selbst wählen",
+ "caption": "Unverschuldeter Unfall: Du darfst deinen Gutachter selbst wählen.\n\nBist du unschuldig, darfst du bei größeren Schäden einen eigenen Gutachter beauftragen. Die gegnerische Versicherung muss das in der Regel bezahlen.\n\nDer Verkehrsrechtsschutz der ARAG übernimmt je nach Tarif Anwalt und Gericht.\n\nWichtig: Versichert sind Fälle, die nach Vertragsbeginn passieren.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#autofahrer #verkehrsrecht #bußgeld #unfall #verkehrsrechtsschutz #führerschein #rechtsschutz",
+ "fine": "* je nach Tarif. Verkehrsrechtsschutz als Baustein. Halt- und Parkverstöße sind in der Regel nicht versichert. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Autofahrer",
+   "title": [
+    "Unfall – wer",
+    "wählt den",
+    "[Gutachter?]"
+   ]
+  },
+  {
+   "type": "mythos",
+   "myth": "Ich muss den Gutachter der gegnerischen Versicherung nehmen.",
+   "fact": "Nein. Bei unverschuldeten Unfällen darfst du bei größeren Schäden einen eigenen wählen."
+  },
+  {
+   "type": "text",
+   "kicker": "Und:",
+   "title": [
+    "Die Kosten",
+    "[trägt meist der Gegner.]"
+   ],
+   "text": "Bei einem unverschuldeten Unfall in der Regel die gegnerische Versicherung."
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Verkehrs-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Versicherung kürzt? Je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Gericht*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Wichtig:",
+   "title": [
+    "Absichern, bevor",
+    "[es kracht.]"
+   ],
+   "text": "Versichert sind Fälle, die nach Vertragsbeginn passieren – für einzelne Bereiche gilt eine Wartezeit."
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Bist du als Fahrer",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

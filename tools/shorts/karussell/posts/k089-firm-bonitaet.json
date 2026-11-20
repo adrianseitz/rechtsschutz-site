@@ -1,0 +1,78 @@
+{
+ "id": "k089-firm-bonitaet",
+ "order": 89,
+ "topic": "firma",
+ "title": "Großer Auftrag, neuer Kunde? Erst die Bonität prüfen",
+ "caption": "Großer Auftrag, neuer Kunde? Erst die Bonität prüfen.\n\nBevor du in Vorleistung gehst, lohnt sich ein Blick auf die Zahlungsfähigkeit. Im Firmenrechtsschutz der ARAG sind die ersten vier Bonitätsprüfungen in Komfort und Premium kostenlos.\n\nDer Firmenrechtsschutz der ARAG übernimmt je nach Tarif Anwalt und Gericht – vom Streit mit Mitarbeitern bis zum Finanzgericht.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – ein Streit, der schon läuft, ist normalerweise nicht versicherbar.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#selbstständig #unternehmer #firmenrechtsschutz #arbeitgeber #kleinunternehmen #handwerk #rechtsschutz",
+ "fine": "* je nach Tarif. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Selbstständige",
+   "title": [
+    "Neuer Kunde,",
+    "großer Auftrag?",
+    "[Erst prüfen.]"
+   ]
+  },
+  {
+   "type": "liste",
+   "title": [
+    "Vorher",
+    "[checken:]"
+   ],
+   "items": [
+    "Bonität des Kunden",
+    "Anzahlung vereinbaren",
+    "Zahlungsziel schriftlich"
+   ],
+   "mark": "check"
+  },
+  {
+   "type": "text",
+   "kicker": "Bei der ARAG:",
+   "title": [
+    "4 Bonitätsprüfungen",
+    "[kostenlos.]*"
+   ],
+   "text": "In den Tarifen Komfort und Premium."
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Firmen-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Er übernimmt je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Bonitätsprüfungen*",
+    "Forderungsmanagement*",
+    "Anwalt & Gericht*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Ist dein",
+    "Betrieb",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

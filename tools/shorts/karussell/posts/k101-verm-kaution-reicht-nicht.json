@@ -1,0 +1,87 @@
+{
+ "id": "k101-verm-kaution-reicht-nicht",
+ "order": 101,
+ "topic": "vermieter",
+ "title": "Kaution weg, Schaden größer: So holst du dir den Rest",
+ "caption": "Kaution weg, Schaden größer: So holst du dir den Rest.\n\nDie Kaution deckt oft nur einen Teil des Schadens. Den Rest musst du einfordern – und zwar innerhalb von 6 Monaten nach Rückgabe der Wohnung.\n\nDer Vermieterrechtsschutz der ARAG übernimmt je nach Tarif Anwalt, Gericht und Räumung – auf Wunsch mit Mietausfallschutz für 6 oder bis zu 12 Monatsmieten.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – ein Streit, der schon läuft, ist nicht versicherbar.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#vermieter #immobilien #mietrecht #vermieterrechtsschutz #vermietung #kapitalanlage #eigentumswohnung",
+ "fine": "* je nach Tarif. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Vermieter",
+   "title": [
+    "Kaution weg –",
+    "[Schaden größer?]"
+   ]
+  },
+  {
+   "type": "brief",
+   "title": [
+    "Der Kostenvoranschlag",
+    "[nach dem Auszug:]"
+   ],
+   "subject": "Kostenvoranschlag Renovierung",
+   "body": [
+    "Boden erneuern, Wände spachteln und streichen, Tür ersetzen.",
+    "Summe: 6.400 €"
+   ],
+   "from": [
+    "Malerbetrieb (Beispiel)",
+    "Angebot"
+   ],
+   "stamp": "6.400 €"
+  },
+  {
+   "type": "zahl",
+   "kicker": "Die Kaution deckt nur",
+   "big": "2.400 €",
+   "note": "Beispiel: 3 × 800 € Kaltmiete",
+   "itemsTitle": "Den Rest musst du einfordern."
+  },
+  {
+   "type": "text",
+   "kicker": "Achtung Frist:",
+   "title": [
+    "Nach 6 Monaten",
+    "[ist es verjährt.]"
+   ],
+   "text": "Ab Rückgabe der Wohnung (§ 548 BGB)."
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Vermieter-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Er übernimmt je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Gericht*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Ist deine",
+    "Wohnung",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

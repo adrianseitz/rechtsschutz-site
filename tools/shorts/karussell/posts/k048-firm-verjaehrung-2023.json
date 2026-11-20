@@ -1,0 +1,66 @@
+{
+ "id": "k048-firm-verjaehrung-2023",
+ "order": 48,
+ "topic": "firma",
+ "title": "Achtung: Offene Rechnungen aus 2023 verjähren am 31.12.2026",
+ "caption": "Achtung: Offene Rechnungen aus 2023 verjähren am 31.12.2026.\n\nDie regelmäßige Verjährung beträgt 3 Jahre und beginnt am Ende des Jahres, in dem die Forderung entstanden ist. Rechnungen aus 2023 verjähren also mit Ablauf des 31.12.2026 – eine Mahnung allein hält das nicht auf.\n\nDer Firmenrechtsschutz der ARAG übernimmt je nach Tarif Anwalt und Gericht – vom Streit mit Mitarbeitern bis zum Finanzgericht.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – ein Streit, der schon läuft, ist normalerweise nicht versicherbar.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#selbstständig #unternehmer #firmenrechtsschutz #arbeitgeber #kleinunternehmen #handwerk #rechtsschutz",
+ "fine": "* je nach Tarif. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Selbstständige",
+   "title": [
+    "Rechnungen",
+    "aus 2023",
+    "[offen?]"
+   ],
+   "sub": "Dann läuft deine Zeit bald ab."
+  },
+  {
+   "type": "zahl",
+   "kicker": "Sie verjähren am",
+   "big": "31.12.2026",
+   "note": "3 Jahre ab Ende des Entstehungsjahres (§§ 195, 199 BGB)"
+  },
+  {
+   "type": "mythos",
+   "myth": "Eine Mahnung hält die Verjährung auf.",
+   "fact": "Nein. Dafür braucht es z. B. einen Mahnbescheid oder eine Klage."
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Firmen-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Je nach Tarif:",
+   "kicker": "Im Firmenrechtsschutz der ARAG:",
+   "items": [
+    "Online-Forderungsmanagement*",
+    "Anwalt & Gericht*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Offene",
+    "[Rechnungen?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

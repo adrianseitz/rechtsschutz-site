@@ -1,0 +1,86 @@
+{
+ "id": "k051-verm-untervermietung",
+ "order": 51,
+ "topic": "vermieter",
+ "title": "Dein Mieter vermietet unter – ohne zu fragen?",
+ "caption": "Dein Mieter vermietet unter – ohne zu fragen?\n\nUntervermieten darf der Mieter nur mit deiner Erlaubnis. Er kann aber einen Anspruch darauf haben – etwa bei einem berechtigten Interesse.\n\nDer Vermieterrechtsschutz der ARAG übernimmt je nach Tarif Anwalt, Gericht und Räumung – auf Wunsch mit Mietausfallschutz für 6 oder bis zu 12 Monatsmieten.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – ein Streit, der schon läuft, ist nicht versicherbar.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#vermieter #immobilien #mietrecht #vermieterrechtsschutz #vermietung #kapitalanlage #eigentumswohnung",
+ "fine": "* je nach Tarif. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Vermieter",
+   "title": [
+    "Dein Mieter",
+    "vermietet",
+    "[heimlich unter?]"
+   ]
+  },
+  {
+   "type": "text",
+   "kicker": "Grundsatz:",
+   "title": [
+    "Ohne deine Erlaubnis",
+    "[geht das nicht.]"
+   ],
+   "text": "Untervermieten darf der Mieter nur mit deiner Zustimmung (§ 540 BGB)."
+  },
+  {
+   "type": "text",
+   "kicker": "Aber:",
+   "title": [
+    "Er kann einen",
+    "[Anspruch] haben."
+   ],
+   "text": "Etwa bei einem berechtigten Interesse, wenn er nur einen Teil der Wohnung untervermietet (§ 553 BGB)."
+  },
+  {
+   "type": "liste",
+   "title": [
+    "Ohne Erlaubnis",
+    "[untervermietet?]"
+   ],
+   "items": [
+    "Abmahnen",
+    "Im Wiederholungsfall kündigen",
+    "Rechtlich prüfen lassen"
+   ],
+   "mark": "num"
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Vermieter-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Er übernimmt je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Gericht*",
+    "Räumung*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Bist du",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

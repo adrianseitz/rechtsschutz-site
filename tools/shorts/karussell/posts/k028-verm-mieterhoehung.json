@@ -1,0 +1,82 @@
+{
+ "id": "k028-verm-mieterhoehung",
+ "order": 28,
+ "topic": "vermieter",
+ "title": "Mieterhöhung: So viel darfst du – und was, wenn der Mieter nein sagt",
+ "caption": "Mieterhöhung: So viel darfst du – und was, wenn der Mieter nein sagt.\n\nIn drei Jahren darf die Miete höchstens um 20 % steigen, in vielen Städten nur um 15 %. Und der Mieter muss zustimmen – sonst bleibt nur die Klage.\n\nDer Vermieterrechtsschutz der ARAG übernimmt je nach Tarif Anwalt, Gericht und Räumung – auf Wunsch mit Mietausfallschutz für 6 oder bis zu 12 Monatsmieten.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – ein Streit, der schon läuft, ist nicht versicherbar.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#vermieter #immobilien #mietrecht #vermieterrechtsschutz #vermietung #kapitalanlage #eigentumswohnung",
+ "fine": "* je nach Tarif. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Vermieter",
+   "title": [
+    "Mieterhöhung:",
+    "[So viel]",
+    "darfst du."
+   ]
+  },
+  {
+   "type": "zahl",
+   "kicker": "In 3 Jahren höchstens",
+   "big": "+ 20 %",
+   "note": "In vielen Städten nur 15 % (Kappungsgrenze, § 558 BGB)"
+  },
+  {
+   "type": "liste",
+   "title": [
+    "Außerdem",
+    "[gilt:]"
+   ],
+   "items": [
+    "Nur bis zur ortsüblichen Vergleichsmiete",
+    "Begründung nötig, z. B. Mietspiegel",
+    "Der Mieter muss zustimmen"
+   ],
+   "mark": "check"
+  },
+  {
+   "type": "text",
+   "kicker": "Stimmt er nicht zu?",
+   "title": [
+    "Dann bleibt",
+    "[nur die Klage.]"
+   ],
+   "text": "Auf Zustimmung – mit Anwalt und Gericht."
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Vermieter-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Er übernimmt je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Gericht*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Bist du",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

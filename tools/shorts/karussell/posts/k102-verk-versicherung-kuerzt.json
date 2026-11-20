@@ -1,0 +1,71 @@
+{
+ "id": "k102-verk-versicherung-kuerzt",
+ "order": 102,
+ "topic": "verkehr",
+ "title": "Unfall nicht schuld – und die Versicherung kürzt trotzdem?",
+ "caption": "Unfall nicht schuld – und die Versicherung kürzt trotzdem?\n\nNach einem unverschuldeten Unfall kürzen Versicherungen nicht selten Reparaturkosten, Nutzungsausfall oder Schmerzensgeld. Mit Anwalt holst du dir, was dir zusteht.\n\nDer Verkehrsrechtsschutz der ARAG übernimmt je nach Tarif Anwalt und Gericht.\n\nWichtig: Versichert sind Fälle, die nach Vertragsbeginn passieren.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#autofahrer #verkehrsrecht #bußgeld #unfall #verkehrsrechtsschutz #führerschein #rechtsschutz",
+ "fine": "* je nach Tarif. Verkehrsrechtsschutz als Baustein. Halt- und Parkverstöße sind in der Regel nicht versichert. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Autofahrer",
+   "title": [
+    "Nicht schuld –",
+    "und trotzdem",
+    "[gekürzt?]"
+   ]
+  },
+  {
+   "type": "liste",
+   "title": [
+    "Oft",
+    "[gekürzt:]"
+   ],
+   "items": [
+    "Reparaturkosten",
+    "Nutzungsausfall",
+    "Schmerzensgeld"
+   ],
+   "mark": "cross"
+  },
+  {
+   "type": "text",
+   "kicker": "Mit Anwalt:",
+   "title": [
+    "Hol dir,",
+    "[was dir zusteht.]"
+   ]
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Verkehrs-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Im Streit nach einem Unfall, je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Gericht*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Wichtig:",
+   "title": [
+    "Absichern, bevor",
+    "[es kracht.]"
+   ],
+   "text": "Versichert sind Fälle, die nach Vertragsbeginn passieren – für einzelne Bereiche gilt eine Wartezeit."
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Bist du als Fahrer",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

@@ -1,0 +1,74 @@
+{
+ "id": "k078-verk-gebrauchtwagen",
+ "order": 78,
+ "topic": "verkehr",
+ "title": "Gebrauchtwagen mit Mangel: Händler oder privat – das macht den Unterschied",
+ "caption": "Gebrauchtwagen mit Mangel: Händler oder privat – das macht den Unterschied.\n\nBeim Händler hast du als Verbraucher Gewährleistung – bei Gebrauchten kann sie auf 1 Jahr verkürzt werden. Beim Privatkauf ist sie oft ganz ausgeschlossen.\n\nDer Verkehrsrechtsschutz der ARAG übernimmt je nach Tarif Anwalt und Gericht.\n\nWichtig: Versichert sind Fälle, die nach Vertragsbeginn passieren.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#autofahrer #verkehrsrecht #bußgeld #unfall #verkehrsrechtsschutz #führerschein #rechtsschutz",
+ "fine": "* je nach Tarif. Verkehrsrechtsschutz als Baustein. Halt- und Parkverstöße sind in der Regel nicht versichert. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Autofahrer",
+   "title": [
+    "Gebraucht-",
+    "wagen mit",
+    "[Macken?]"
+   ]
+  },
+  {
+   "type": "vergleich",
+   "title": [
+    "Händler oder",
+    "[privat?]"
+   ],
+   "left": {
+    "label": "Privatkauf",
+    "rows": [
+     "Gewährleistung oft ausgeschlossen",
+     "Nur bei Arglist"
+    ],
+    "total": "Kaum Rechte"
+   },
+   "right": {
+    "label": "Vom Händler",
+    "rows": [
+     "Gewährleistung",
+     "Mind. 1 Jahr bei Gebrauchten"
+    ],
+    "total": "Deine Rechte",
+    "totalLabel": "als Verbraucher"
+   }
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Verkehrs-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Streit ums Auto, je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Gericht*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Wichtig:",
+   "title": [
+    "Absichern, bevor",
+    "[es kracht.]"
+   ],
+   "text": "Versichert sind Fälle, die nach Vertragsbeginn passieren – für einzelne Bereiche gilt eine Wartezeit."
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Bist du als Fahrer",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

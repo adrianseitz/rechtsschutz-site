@@ -1,0 +1,77 @@
+{
+ "id": "k082-verm-immer-zu-spaet",
+ "order": 82,
+ "topic": "vermieter",
+ "title": "Mieter zahlt ständig zu spät? Auch das kann für eine Kündigung reichen",
+ "caption": "Mieter zahlt ständig zu spät? Auch das kann für eine Kündigung reichen.\n\nWer trotz Abmahnung immer wieder unpünktlich zahlt, kann gekündigt werden. Wichtig: jede Verspätung dokumentieren.\n\nDer Vermieterrechtsschutz der ARAG übernimmt je nach Tarif Anwalt, Gericht und Räumung – auf Wunsch mit Mietausfallschutz für 6 oder bis zu 12 Monatsmieten.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – ein Streit, der schon läuft, ist nicht versicherbar.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#vermieter #immobilien #mietrecht #vermieterrechtsschutz #vermietung #kapitalanlage #eigentumswohnung",
+ "fine": "* je nach Tarif. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Vermieter",
+   "title": [
+    "Mieter zahlt",
+    "[ständig zu spät?]"
+   ]
+  },
+  {
+   "type": "text",
+   "kicker": "Gut zu wissen:",
+   "title": [
+    "Auch ständige",
+    "Verspätung",
+    "[kann reichen.]"
+   ],
+   "text": "Wer trotz Abmahnung immer wieder zu spät zahlt, kann gekündigt werden."
+  },
+  {
+   "type": "liste",
+   "title": [
+    "So gehst",
+    "[du vor:]"
+   ],
+   "items": [
+    "Jede Verspätung dokumentieren",
+    "Schriftlich abmahnen",
+    "Bei Wiederholung kündigen"
+   ],
+   "mark": "num"
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Vermieter-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Er übernimmt je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Gericht*",
+    "Räumung*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Bist du",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

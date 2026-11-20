@@ -1,0 +1,77 @@
+{
+ "id": "k050-arbe-zeugnissprache",
+ "order": 50,
+ "topic": "arbeit",
+ "title": "Zeugnissprache: Was dein Arbeitszeugnis wirklich sagt",
+ "caption": "Zeugnissprache: Was dein Arbeitszeugnis wirklich sagt.\n\n„Stets zu unserer vollsten Zufriedenheit“ heißt sehr gut, „zu unserer Zufriedenheit“ eher ausreichend. Du hast Anspruch auf ein wohlwollendes Zeugnis.\n\nDer Arbeitsrechtsschutz der ARAG (als Baustein zum Privatrechtsschutz) übernimmt je nach Tarif Anwalt und Arbeitsgericht.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – wer erst handelt, wenn es kriselt, ist zu spät dran.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#arbeitsrecht #arbeitnehmer #job #kündigung #arbeitsrechtsschutz #rechtsschutz #deinrecht",
+ "fine": "* je nach Tarif. Arbeitsrechtsschutz als Baustein zum Privatrechtsschutz. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Arbeitnehmer",
+   "title": [
+    "Was dein",
+    "Zeugnis",
+    "[wirklich sagt.]"
+   ]
+  },
+  {
+   "type": "liste",
+   "title": [
+    "Die",
+    "[Geheimsprache:]"
+   ],
+   "items": [
+    "„stets vollste Zufriedenheit“ = sehr gut",
+    "„vollste Zufriedenheit“ = gut",
+    "„stets zur Zufriedenheit“ = befriedigend",
+    "„zur Zufriedenheit“ = ausreichend"
+   ],
+   "mark": "num"
+  },
+  {
+   "type": "text",
+   "kicker": "Dein Recht:",
+   "title": [
+    "Ein Zeugnis,",
+    "[das wohlwollend ist.]"
+   ],
+   "text": "Jeder hat Anspruch darauf (§ 109 GewO)."
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Arbeits-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Baustein zum Privatrechtsschutz, je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Arbeitsgericht*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Bist du im Job",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

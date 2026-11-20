@@ -1,0 +1,63 @@
+{
+ "id": "k061-verk-fahrverbot-4-monate",
+ "order": 61,
+ "topic": "verkehr",
+ "title": "Fahrverbot? Oft darfst du den Zeitpunkt selbst wählen",
+ "caption": "Fahrverbot? Oft darfst du den Zeitpunkt selbst wählen.\n\nHattest du in den 2 Jahren davor kein Fahrverbot, kannst du den Beginn innerhalb von 4 Monaten nach Rechtskraft selbst wählen – zum Beispiel in den Urlaub legen.\n\nDer Verkehrsrechtsschutz der ARAG übernimmt je nach Tarif Anwalt und Gericht.\n\nWichtig: Versichert sind Fälle, die nach Vertragsbeginn passieren.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#autofahrer #verkehrsrecht #bußgeld #unfall #verkehrsrechtsschutz #führerschein #rechtsschutz",
+ "fine": "* je nach Tarif. Verkehrsrechtsschutz als Baustein. Halt- und Parkverstöße sind in der Regel nicht versichert. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Autofahrer",
+   "title": [
+    "Fahrverbot –",
+    "[aber wann?]"
+   ]
+  },
+  {
+   "type": "zahl",
+   "kicker": "Du hast bis zu",
+   "big": "4 Monate",
+   "note": "für den Antritt – wenn du in den 2 Jahren davor kein Fahrverbot hattest (§ 25 StVG)"
+  },
+  {
+   "type": "text",
+   "kicker": "Tipp:",
+   "title": [
+    "Leg es in",
+    "[den Urlaub.]"
+   ]
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Verkehrs-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Bei Bußgeld & Fahrverbot, je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt & Akteneinsicht*",
+    "Gericht*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Wichtig:",
+   "title": [
+    "Absichern, bevor",
+    "[es kracht.]"
+   ],
+   "text": "Versichert sind Fälle, die nach Vertragsbeginn passieren – für einzelne Bereiche gilt eine Wartezeit."
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Bist du als Fahrer",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

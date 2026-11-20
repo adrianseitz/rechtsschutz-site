@@ -1,0 +1,71 @@
+{
+ "id": "k104-arbe-versetzung",
+ "order": 104,
+ "topic": "arbeit",
+ "title": "Dein Chef will dich versetzen – darf er das?",
+ "caption": "Dein Chef will dich versetzen – darf er das?\n\nDein Arbeitgeber darf Ort, Zeit und Inhalt der Arbeit bestimmen – aber nur im Rahmen deines Vertrags. Geht es darüber hinaus, braucht er eine Änderungskündigung. Auch dagegen gilt die 3-Wochen-Frist.\n\nDer Arbeitsrechtsschutz der ARAG (als Baustein zum Privatrechtsschutz) übernimmt je nach Tarif Anwalt und Arbeitsgericht.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – wer erst handelt, wenn es kriselt, ist zu spät dran.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#arbeitsrecht #arbeitnehmer #job #kündigung #arbeitsrechtsschutz #rechtsschutz #deinrecht",
+ "fine": "* je nach Tarif. Arbeitsrechtsschutz als Baustein zum Privatrechtsschutz. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Arbeitnehmer",
+   "title": [
+    "Dein Chef will",
+    "dich [versetzen?]"
+   ]
+  },
+  {
+   "type": "text",
+   "kicker": "Grundsatz:",
+   "title": [
+    "Er darf vieles –",
+    "[aber nicht alles.]"
+   ],
+   "text": "Ort, Zeit und Inhalt der Arbeit nur im Rahmen deines Arbeitsvertrags (§ 106 GewO)."
+  },
+  {
+   "type": "text",
+   "kicker": "Geht es darüber hinaus,",
+   "title": [
+    "braucht er eine",
+    "[Änderungskündigung.]"
+   ],
+   "text": "Und auch dagegen kannst du nur innerhalb von 3 Wochen klagen."
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Arbeits-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Baustein zum Privatrechtsschutz, je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Arbeitsgericht*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Bist du im Job",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

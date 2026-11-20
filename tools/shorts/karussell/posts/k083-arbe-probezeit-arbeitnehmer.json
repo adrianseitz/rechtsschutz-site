@@ -1,0 +1,65 @@
+{
+ "id": "k083-arbe-probezeit-arbeitnehmer",
+ "order": 83,
+ "topic": "arbeit",
+ "title": "Probezeit: Was in den ersten 6 Monaten gilt",
+ "caption": "Probezeit: Was in den ersten 6 Monaten gilt.\n\nIn der Probezeit gilt eine Kündigungsfrist von 2 Wochen, und das Kündigungsschutzgesetz greift erst nach 6 Monaten. Trotzdem muss die Kündigung schriftlich sein.\n\nDer Arbeitsrechtsschutz der ARAG (als Baustein zum Privatrechtsschutz) übernimmt je nach Tarif Anwalt und Arbeitsgericht.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – wer erst handelt, wenn es kriselt, ist zu spät dran.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#arbeitsrecht #arbeitnehmer #job #kündigung #arbeitsrechtsschutz #rechtsschutz #deinrecht",
+ "fine": "* je nach Tarif. Arbeitsrechtsschutz als Baustein zum Privatrechtsschutz. Wartezeit meist 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Arbeitnehmer",
+   "title": [
+    "Neuer Job –",
+    "[Probezeit.]"
+   ],
+   "sub": "Das solltest du jetzt wissen."
+  },
+  {
+   "type": "zahl",
+   "kicker": "Kündigungsfrist in der Probezeit:",
+   "big": "2 Wochen",
+   "note": "für beide Seiten (§ 622 BGB)"
+  },
+  {
+   "type": "text",
+   "kicker": "Und:",
+   "title": [
+    "Kündigungsschutz",
+    "[erst nach 6 Monaten.]"
+   ],
+   "text": "Und nur in Betrieben mit mehr als 10 Mitarbeitern."
+  },
+  {
+   "type": "text",
+   "kicker": "Jetzt",
+   "title": [
+    "ist der richtige",
+    "[Zeitpunkt.]"
+   ],
+   "text": "Wer sich erst absichert, wenn es kriselt, ist wegen der Wartezeit zu spät dran."
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Arbeits-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Baustein zum Privatrechtsschutz, je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Arbeitsgericht*"
+   ]
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Bist du im Job",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

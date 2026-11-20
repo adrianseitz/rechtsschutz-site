@@ -1,0 +1,68 @@
+{
+ "id": "k088-verm-leerstand",
+ "order": 88,
+ "topic": "vermieter",
+ "title": "Wohnung steht leer – zahlt dann der Mietausfallschutz?",
+ "caption": "Wohnung steht leer – zahlt dann der Mietausfallschutz?\n\nNein: Leerstand ohne Mietverhältnis ist nicht versichert, ebenso Rückstände, die beim Abschluss schon bestehen. Versichert ist die ausfallende Miete eines Mieters – je nach Vereinbarung 6 oder bis zu 12 Monate.\n\nDer Vermieterrechtsschutz der ARAG übernimmt je nach Tarif Anwalt, Gericht und Räumung – auf Wunsch mit Mietausfallschutz für 6 oder bis zu 12 Monatsmieten.\n\nWichtig: Meist gilt eine Wartezeit von 3 Monaten – ein Streit, der schon läuft, ist nicht versicherbar.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#vermieter #immobilien #mietrecht #vermieterrechtsschutz #vermietung #kapitalanlage #eigentumswohnung",
+ "fine": "* je nach Tarif. Mietausfallschutz: Zusatzbaustein in Komfort und Premium, 6 oder bis zu 12 Monate, Wartezeit 3 Monate; Leerstand und bestehende Rückstände nicht versichert. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Für Vermieter",
+   "title": [
+    "Wohnung",
+    "steht leer?",
+    "[Das zahlt keiner.]"
+   ]
+  },
+  {
+   "type": "mythos",
+   "myth": "Der Mietausfallschutz zahlt auch, wenn ich keinen Mieter finde.",
+   "fact": "Nein. Leerstand ist nicht versichert – nur die ausfallende Miete eines Mieters."
+  },
+  {
+   "type": "text",
+   "kicker": "Und:",
+   "title": [
+    "Alte Rückstände",
+    "[sind nicht drin.]"
+   ],
+   "text": "Was beim Abschluss schon offen oder bekannt ist, ist nicht versichert."
+  },
+  {
+   "type": "liste",
+   "title": [
+    "Versichert,",
+    "[je nach Tarif:]"
+   ],
+   "items": [
+    "Nettomiete*",
+    "Laufende Nebenkosten*",
+    "6 oder bis zu 12 Monate*"
+   ],
+   "mark": "check"
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Passt das zu",
+    "[deiner Immobilie?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}

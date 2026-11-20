@@ -1,0 +1,65 @@
+{
+ "id": "k010-priv-widerruf-laden",
+ "order": 10,
+ "topic": "privat",
+ "title": "Im Laden gekauft: 14 Tage Rückgaberecht? Nein",
+ "caption": "Im Laden gekauft: 14 Tage Rückgaberecht? Nein.\n\nDas Widerrufsrecht von 14 Tagen gilt bei Online- und Haustürgeschäften, nicht beim Kauf im Laden. Dort ist der Umtausch nur Kulanz.\n\nDer Privatrechtsschutz der ARAG übernimmt je nach Tarif Anwalt und Gericht.\n\nWichtig: Versichert sind künftige Fälle; für viele Bereiche gilt eine Wartezeit, häufig 3 Monate.\n\n📌 Speicher dir den Post – und schick ihn jemandem, der ihn braucht.\n\n👉 Kostenlose Beratung über den Link in der Bio.\n\n#deinrecht #verbraucherrecht #rechtsschutz #privatrechtsschutz #rechtstipps #wissen",
+ "fine": "* je nach Tarif. Für viele Bereiche gilt eine Wartezeit, häufig 3 Monate. Allgemeine Informationen, keine Rechtsberatung im Einzelfall. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "slides": [
+  {
+   "type": "cover",
+   "tag": "Dein Recht",
+   "title": [
+    "Laden-Kauf:",
+    "[14 Tage]",
+    "Rückgabe?"
+   ]
+  },
+  {
+   "type": "mythos",
+   "myth": "Was ich im Laden kaufe, kann ich 14 Tage zurückgeben.",
+   "fact": "Nein. Das Widerrufsrecht gilt online und an der Haustür – im Laden ist Umtausch Kulanz."
+  },
+  {
+   "type": "zahl",
+   "kicker": "Online-Kauf: Widerrufsrecht",
+   "big": "14 Tage",
+   "note": "meist ab Erhalt der Ware (§ 355 BGB)"
+  },
+  {
+   "type": "loesung",
+   "product": [
+    "Privat-",
+    "rechtsschutz"
+   ],
+   "itemsTitle": "Streit mit Händlern? Je nach Tarif:",
+   "kicker": "Genau dafür gibt es den",
+   "items": [
+    "Anwalt*",
+    "Gericht*"
+   ]
+  },
+  {
+   "type": "achtung",
+   "kicker": "Aber Achtung:",
+   "title": [
+    "Erst absichern,",
+    "[dann Ärger.]"
+   ],
+   "text": "Ein Streit, der schon läuft, ist nicht mehr versicherbar.",
+   "box": {
+    "big": "3 Monate",
+    "text": "Wartezeit gilt meist ab Vertragsbeginn."
+   }
+  },
+  {
+   "type": "cta",
+   "kicker": "Und jetzt du:",
+   "title": [
+    "Bist du",
+    "[abgesichert?]"
+   ],
+   "button": "Kostenlos beraten lassen"
+  }
+ ]
+}
