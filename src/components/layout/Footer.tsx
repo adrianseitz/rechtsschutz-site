@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useBrand } from "./BrandContext";
 import { ArrowUpRight, Mail, Phone } from "lucide-react";
 import { Logo } from "./Logo";
 import { legal, site } from "@/lib/site";
@@ -9,6 +10,7 @@ import { productList } from "@/lib/products";
 import { useConsent } from "../consent/ConsentManager";
 
 export function Footer() {
+  const brand = useBrand();
   const { openSettings } = useConsent();
   return (
     <footer className="px-3 pb-[112px] pt-3 lg:pb-3">
@@ -56,7 +58,7 @@ export function Footer() {
         </div>
         <div aria-hidden className="select-none overflow-hidden px-4 pt-6 text-center">
           <p className="translate-y-[18%] whitespace-nowrap text-[17vw] font-semibold leading-[0.8] tracking-[-0.07em] text-white/[0.06] lg:text-[15.5rem]">
-            {site.brandShort}<span className="font-serif font-normal italic text-sun/90">.</span>
+            {brand.mark}<span className="font-serif font-normal italic text-sun/90">.</span>
           </p>
         </div>
       </div>

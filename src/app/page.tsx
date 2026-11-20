@@ -12,15 +12,18 @@ import { CostCalculatorSection } from "@/components/tools/CostCalculator";
 import { CoverageBuilder } from "@/components/tools/CoverageBuilder";
 import { WaitingTimeline } from "@/components/tools/WaitingTimeline";
 import { generalFaq } from "@/lib/faq";
-import { site } from "@/lib/site";
+import type { Metadata } from "next";
+import { getBrand } from "@/lib/server/brand";
 
-// Für Google: Name der Website (steht in den Suchergebnissen neben dem Icon) und Logo.
-const siteJsonLd = [
-  { "@context": "https://schema.org", "@type": "WebSite", name: site.brand, url: `${site.url}/` },
-  { "@context": "https://schema.org", "@type": "Organization", name: site.brand, url: `${site.url}/`, logo: `${site.url}/icon1.png` },
-];
+export const metadata: Metadata = { alternates: { canonical: "/" } };
 
-export default function HomePage() {
+export default async function HomePage() {
+  // Für Google: Name der Website (steht in den Suchergebnissen neben dem Icon) und Logo – je Domain
+  const brand = await getBrand();
+  const siteJsonLd = [
+    { "@context": "https://schema.org", "@type": "WebSite", name: brand.name, url: `${brand.url}/` },
+    { "@context": "https://schema.org", "@type": "Organization", name: brand.name, url: `${brand.url}/`, logo: `${brand.url}/icon1.png` },
+  ];
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd) }} />

@@ -6,6 +6,8 @@ import "@fontsource/instrument-serif/400-italic.css";
 import "@fontsource-variable/caveat";
 import "./globals.css";
 import { site } from "@/lib/site";
+import { getBrand } from "@/lib/server/brand";
+import { BrandProvider } from "@/components/layout/BrandContext";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { StickyCta } from "@/components/layout/StickyCta";
@@ -18,25 +20,31 @@ import { Intro } from "@/components/ui/Intro";
 import { PublicOnly } from "@/components/layout/PublicOnly";
 import { PageView } from "@/components/analytics/PageView";
 
-export const metadata: Metadata = {
+// Name je Domain (Seitz Rechtsschutz / im Rechtsschutz). metadataBase bleibt seitz-rechtsschutz.de → Canonical für Google.
+export async function generateMetadata(): Promise<Metadata> {
+  const brand = await getBrand();
+  const image = { url: `${brand.url}/og`, width: 1200, height: 630, alt: "Rechtsschutz, der zu deinem Leben passt" };
+  return {
   metadataBase: new URL(site.url),
-  title: { default: `Rechtsschutz, der zu deinem Leben passt | ${site.brand}`, template: `%s | ${site.brand}` },
+  title: { default: `Rechtsschutz, der zu deinem Leben passt | ${brand.name}`, template: `%s | ${brand.name}` },
   description: site.description,
-  applicationName: site.brand,
+  applicationName: brand.name,
   authors: [{ name: site.owner }],
   openGraph: {
     type: "website",
     locale: site.locale,
-    siteName: site.brand,
+    siteName: brand.name,
     title: "Rechtsschutz, der zu deinem Leben passt",
     description: site.description,
-    url: "/",
+    url: `${brand.url}/`,
+    images: [image],
   },
-  twitter: { card: "summary_large_image" },
+  twitter: { card: "summary_large_image", images: [image.url] },
   robots: { index: true, follow: true },
   formatDetection: { telephone: false },
   ...(site.googleVerification ? { verification: { google: site.googleVerification } } : {}),
-};
+  };
+}
 
 export const viewport: Viewport = {
   themeColor: "#FFFFFF",
@@ -45,7 +53,8 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const brand = await getBrand();
   return (
     <html lang="de" data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
@@ -58,6 +67,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[70] focus:rounded-lg focus:bg-white focus:px-4 focus:py-2">Zum Inhalt springen</a>
+        <BrandProvider brand={brand}>
         <ConsentManager>
           <PublicOnly>
             <PageView />
@@ -75,6 +85,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <StickyCta />
           </PublicOnly>
         </ConsentManager>
+        </BrandProvider>
       </body>
     </html>
   );
