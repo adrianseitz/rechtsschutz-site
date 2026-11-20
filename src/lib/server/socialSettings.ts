@@ -33,6 +33,7 @@ export type SocialSettings = {
   postVia: PostVia;        // direkt über die offiziellen Schnittstellen (kostenlos) oder über Upload-Post
   onlyUploads: boolean;    // nur selbst hochgeladene Videos posten (automatisch erstellte bleiben aus)
   karussell: boolean;      // Bilder-Posts (Instagram-Karussell aus tools/shorts/karussell/posts) mit posten
+  karussellTiktok: boolean; // Bilder-Posts zusätzlich als TikTok-Foto-Post (Domain muss bei TikTok bestätigt sein)
   tiktokClientKey: string; // Client Key der eigenen TikTok-App (kein Geheimnis)
   tiktokMode: TiktokMode;  // als Entwurf ins TikTok-Postfach oder direkt veröffentlichen
 };
@@ -49,7 +50,7 @@ type Stored = SocialSettings & { keys?: Partial<Record<KeyName, string>>; update
 export const SOCIAL_DEFAULTS: SocialSettings = {
   enabled: false, days: [1, 3, 5], times: ["18:30"], platforms: ["tiktok", "instagram", "youtube"],
   uploadUser: "", voiceEngine: "own", voiceId: "", voiceName: "", cfAccount: "", speed: 1.1, aiLabel: true, promo: true, repeat: true, disabled: [],
-  postVia: "direkt", onlyUploads: true, karussell: true, tiktokClientKey: "", tiktokMode: "entwurf",
+  postVia: "direkt", onlyUploads: true, karussell: true, karussellTiktok: false, tiktokClientKey: "", tiktokMode: "entwurf",
 };
 
 export const socialDir = () => path.join(serverConfig.storageDir, "social");

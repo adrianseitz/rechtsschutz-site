@@ -12,7 +12,7 @@ type Settings = {
   enabled: boolean; days: number[]; times: string[]; platforms: Platform[]; uploadUser: string; voiceEngine: "own" | "elevenlabs"; voiceSample?: VoiceSample;
   voiceId: string; voiceName: string; speed: number; aiLabel: boolean; promo: boolean; repeat: boolean; disabled: string[];
   hasElevenlabs: boolean; hasUploadpost: boolean; hasHuggingface: boolean; hasInstagram: boolean; updatedAt?: string;
-  postVia: "direkt" | "uploadpost"; onlyUploads: boolean; karussell: boolean;
+  postVia: "direkt" | "uploadpost"; onlyUploads: boolean; karussell: boolean; karussellTiktok: boolean;
   tiktokClientKey: string; tiktokMode: "entwurf" | "direkt"; hasTiktokSecret: boolean; hasTiktok: boolean; tiktokUser?: { name: string; scope: string; at: string };
   cfAccount: string; hasCloudflare: boolean; figurFoto?: { file: string; at: string; bytes: number };
 };
@@ -43,6 +43,9 @@ const hasMedia = (e?: EpState) => Boolean(e?.video || e?.slides?.length);
 const directTargets = (s: Settings): Platform[] => [...(s.hasInstagram && s.platforms.includes("instagram") ? ["instagram" as const] : []), ...(s.hasTiktok && s.platforms.includes("tiktok") ? ["tiktok" as const] : [])];
 const canPostWith = (s: Settings) => (s.postVia === "uploadpost" ? s.hasUploadpost && !!s.uploadUser : directTargets(s).length > 0);
 const targetNames = (s: Settings) => (s.postVia === "uploadpost" ? s.platforms : directTargets(s)).map((p) => PL[p]).join(", ") || "–";
+/** Wohin gehen Bilder-Posts? Instagram, auf Wunsch zusätzlich TikTok (Foto-Post) */
+const kTargets = (s: Settings): Platform[] => directTargets(s).filter((p) => p === "instagram" || (p === "tiktok" && s.karussellTiktok));
+const kWhere = (s: Settings) => (s.karussellTiktok ? "Instagram + TikTok" : "nur Instagram");
 const TT_PRIVACY: Record<string, string> = { PUBLIC_TO_EVERYONE: "Öffentlich", MUTUAL_FOLLOW_FRIENDS: "Freunde", FOLLOWER_OF_CREATOR: "Follower", SELF_ONLY: "Nur ich" };
 type TiktokStatus = { ready: boolean; connected: boolean; redirectUri: string; scope?: string; error?: string; creator?: { creator_username?: string; creator_nickname?: string; privacy_level_options: string[]; comment_disabled: boolean; duet_disabled: boolean; stitch_disabled: boolean } };
 type TiktokOpts = { privacy: string; comments: boolean; duet: boolean; stitch: boolean; aigc: boolean; ownBrand: boolean };
@@ -332,7 +335,7 @@ function Queue({ settings, state, onPreview, onAction, onChanged }: { settings: 
                 </div>
                 <div className="mt-1 flex flex-wrap items-center gap-1.5 text-xs">
                   <span className={`rounded-full px-2 py-0.5 font-semibold ${st.cls}`}>{e?.status === "rendert" && <Loader2 className="mr-1 inline h-3 w-3 animate-spin" aria-hidden />}{st.label}</span>
-                  <span className="text-ink-muted">{TOPIC[ep.topic] ?? ep.topic}{ep.style !== "eigen" ? ` · ${STYLE[ep.style] ?? ep.style}` : ""}{isK(ep) ? ` · ${ep.beats} Bilder · nur Instagram` : e?.duration ? ` · ${Math.round(e.duration)} s` : ""}</span>
+                  <span className="text-ink-muted">{TOPIC[ep.topic] ?? ep.topic}{ep.style !== "eigen" ? ` · ${STYLE[ep.style] ?? ep.style}` : ""}{isK(ep) ? ` · ${ep.beats} Bilder · ${kWhere(settings)}` : e?.duration ? ` · ${Math.round(e.duration)} s` : ""}</span>
                 </div>
                 {e?.error && <p className="mt-1 text-xs text-rose-800">{e.error}</p>}
                 {e?.hinweis && !e.error && <p className="mt-1 text-xs text-amber-800">{e.hinweis}</p>}
@@ -347,8 +350,8 @@ function Queue({ settings, state, onPreview, onAction, onChanged }: { settings: 
                 <div className="mt-2 flex flex-wrap gap-1.5">
                   {e && hasMedia(e) && <Small onClick={() => onPreview({ ep, e })}><Play className="h-3.5 w-3.5" aria-hidden />Ansehen</Small>}
                   {!posted && <Small onClick={() => onAction(off ? "on" : "off", ep.id)}>{off ? "Einschalten" : "Nicht posten"}</Small>}
-                  {!posted && !off && (isK(ep) ? settings.hasInstagram && settings.platforms.includes("instagram") : canPost) && e?.status !== "wird gepostet" && (
-                    <Small onClick={() => { if (window.confirm(`„${ep.title}“ jetzt sofort auf ${isK(ep) ? "Instagram" : targetNames(settings)} veröffentlichen?`)) onAction("post", ep.id); }}><Send className="h-3.5 w-3.5" aria-hidden />Jetzt posten</Small>
+                  {!posted && !off && (isK(ep) ? kTargets(settings).length > 0 : canPost) && e?.status !== "wird gepostet" && (
+                    <Small onClick={() => { if (window.confirm(`„${ep.title}“ jetzt sofort auf ${isK(ep) ? kTargets(settings).map((p) => PL[p]).join(", ") : targetNames(settings)} veröffentlichen?`)) onAction("post", ep.id); }}><Send className="h-3.5 w-3.5" aria-hidden />Jetzt posten</Small>
                   )}
                   {ep.style !== "eigen" && (hasMedia(e) || e?.status === "fehler") && e?.status !== "rendert" && e?.status !== "wird gepostet" && <Small onClick={() => onAction("render", ep.id)}><RefreshCw className="h-3.5 w-3.5" aria-hidden />Neu erstellen</Small>}
                   {ep.style === "eigen" && e?.status !== "wird gepostet" && <Small onClick={() => remove(ep)}><Trash2 className="h-3.5 w-3.5" aria-hidden />Löschen</Small>}
@@ -495,6 +498,7 @@ function Setup({ settings, onSave, voiceTest, onSettings, onRefresh }: {
                   <li>Produkte hinzufügen: <b>Login Kit</b> (Plattform Web, Redirect URI siehe unten) und <b>Content Posting API</b> (Upload und Direct Post an). Berechtigungen: <code className="text-xs">user.info.basic</code>, <code className="text-xs">video.upload</code>, <code className="text-xs">video.publish</code>.</li>
                   <li>Unter <b>Sandbox</b> dein TikTok-Konto als <b>Target user</b> hinzufügen – damit klappt es sofort für dein Konto. Für den Dauerbetrieb die App mit <b>Submit for review</b> zur Prüfung schicken.</li>
                   <li><b>Client Key</b> und <b>Client Secret</b> hier eintragen, dann <b>Mit TikTok verbinden</b> und bei TikTok erlauben.</li>
+                  <li>Nur für Bilder-Posts: in der App unter <b>URL properties → Add → Domain</b> <code className="text-xs">seitz-rechtsschutz.de</code> eintragen. TikTok zeigt einen Prüftext – den bei IONOS unter <b>Domains &amp; SSL → seitz-rechtsschutz.de → DNS → Eintrag hinzufügen → TXT</b> (Hostname <code className="text-xs">@</code>) einfügen und bei TikTok auf <b>Verify</b> tippen.</li>
                 </ol>
                 {ttStatus?.redirectUri && (
                   <p className="mt-3 break-all rounded-lg bg-paper px-3 py-2 text-xs">Redirect URI: <code>{ttStatus.redirectUri}</code>{" "}
@@ -656,8 +660,14 @@ function Setup({ settings, onSave, voiceTest, onSettings, onRefresh }: {
           </label>
           <label className="mt-4 flex cursor-pointer items-start gap-3 text-sm">
             <input type="checkbox" className="mt-0.5 h-5 w-5 shrink-0 accent-navy" checked={s.karussell} onChange={(e) => set("karussell", e.target.checked)} />
-            <span>Bilder-Posts auf Instagram mit posten<span className="mt-0.5 block text-xs text-ink-muted">Karussells zum Durchwischen (1080 × 1350): erste Seite die Frage, dahinter Kosten, Lösung, Wartezeit und Beratung. Laufen in derselben Warteschlange wie die Videos, aber nur auf Instagram – TikTok wird dabei übersprungen.</span></span>
+            <span>Bilder-Posts auf Instagram mit posten<span className="mt-0.5 block text-xs text-ink-muted">Karussells zum Durchwischen (1080 × 1350): erste Seite die Frage, dahinter Kosten, Lösung, Wartezeit und Beratung. Laufen in derselben Warteschlange wie die Videos.</span></span>
           </label>
+          {s.karussell && (
+            <label className="mt-4 flex cursor-pointer items-start gap-3 text-sm">
+              <input type="checkbox" className="mt-0.5 h-5 w-5 shrink-0 accent-navy" checked={s.karussellTiktok} onChange={(e) => set("karussellTiktok", e.target.checked)} />
+              <span>Bilder-Posts auch auf TikTok (als Foto-Post)<span className="mt-0.5 block text-xs text-ink-muted">Gleicher Modus wie bei den Videos (Entwurf ins Postfach oder direkt). Voraussetzung: Im TikTok-Entwicklerportal ist die Domain <code>seitz-rechtsschutz.de</code> unter <b>URL properties</b> bestätigt – sonst holt TikTok die Bilder nicht ab.</span></span>
+            </label>
+          )}
 {!s.onlyUploads && (
           <label className="mt-4 flex cursor-pointer items-start gap-3 text-sm">
             <input type="checkbox" className="mt-0.5 h-5 w-5 shrink-0 accent-navy" checked={s.repeat} onChange={(e) => set("repeat", e.target.checked)} />
@@ -1086,7 +1096,7 @@ function Preview({ ep, e, onClose }: { ep: Ep; e: EpState; onClose: () => void }
             <h3 className="font-semibold">{ep.title}</h3>
             <button type="button" onClick={onClose} aria-label="Schließen" className="rounded-full p-1 hover:bg-paper"><X className="h-5 w-5" aria-hidden /></button>
           </div>
-          <p className="mt-1 text-xs text-ink-muted">{slides.length ? `Bilder-Post · ${slides.length} Bilder · nur Instagram` : `${e.voiced ? "Mit Stimme" : "Ohne Stimme"} · ${e.duration ? `${Math.round(e.duration)} s` : ""}`} · erstellt {fmt(e.renderedAt)}</p>
+          <p className="mt-1 text-xs text-ink-muted">{slides.length ? `Bilder-Post · ${slides.length} Bilder` : `${e.voiced ? "Mit Stimme" : "Ohne Stimme"} · ${e.duration ? `${Math.round(e.duration)} s` : ""}`} · erstellt {fmt(e.renderedAt)}</p>
           <p className="mt-4 text-xs font-semibold text-ink-muted">{slides.length ? "Text zum Post" : "Text zum Video"}</p>
           <p className="mt-1 whitespace-pre-line rounded-lg bg-paper p-3 text-sm leading-6">{ep.caption}</p>
           <button type="button" onClick={() => navigator.clipboard?.writeText(ep.caption).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); }).catch(() => undefined)}

@@ -2,7 +2,9 @@
 // Zwei Wege:
 //   entwurf – das Video landet im Postfach der TikTok-App; Adrian tippt dort auf „Posten“ (Sound, Text, Kennzeichnung prüfen)
 //   direkt  – wird sofort veröffentlicht. Solange TikTok die App nicht geprüft hat, sind solche Videos nur privat sichtbar.
-import { open, stat } from "node:fs/promises";
+import { randomBytes } from "node:crypto";
+import { copyFile, mkdir, open, rm, stat } from "node:fs/promises";
+import { join } from "node:path";
 
 const API = process.env.TIKTOK_API || "https://open.tiktokapis.com";
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -20,6 +22,8 @@ async function api(path, { token, body = {} }) {
       scope_not_authorized: " – die App hat diese Berechtigung nicht (im TikTok-Entwicklerportal freischalten und neu verbinden)",
       spam_risk_too_many_pending_share: " – mehr als 5 offene Entwürfe in 24 Stunden; erst die Entwürfe in der App posten",
       unaudited_client_can_only_post_to_private_accounts: " – TikTok hat die App noch nicht geprüft; bis dahin nur privat oder als Entwurf",
+      url_ownership_unverified: " – für Bilder-Posts muss die Domain seitz-rechtsschutz.de im TikTok-Entwicklerportal bestätigt sein (URL properties)",
+      app_version_check_failed: " – bitte die TikTok-App auf dem Handy aktualisieren",
     }[code] || "";
     throw new Error(`TikTok: ${j.error?.message || code}${hint}`);
   }
@@ -112,4 +116,54 @@ export async function ttPost({ token, file, caption, mode, opts = {}, onStep = a
     }
   }
   throw new Error("TikTok hat das Video nach 10 Minuten noch nicht verarbeitet.");
+}
+
+/**
+ * Bilder-Post (Foto-Karussell) zu TikTok schicken – TikTok holt die Bilder selbst von einer Kurzzeit-Adresse ab
+ * (PULL_FROM_URL). Voraussetzung: Die Domain ist im TikTok-Entwicklerportal unter „URL properties“ bestätigt.
+ * @param {{ token: string, files: string[], title: string, caption: string, mode: "entwurf"|"direkt", site: string, publicDir: string, opts?: object, onStep?: (t: string) => Promise<void> }} o
+ * @returns {Promise<{ status: "inbox"|"published"|"private", url: string|null, username: string }>}
+ */
+export async function ttPostPhotos({ token, files, title, caption, mode, site, publicDir, opts = {}, onStep = async () => {} }) {
+  if (files.length < 1 || files.length > 35) throw new Error(`TikTok erlaubt 1 bis 35 Bilder (hier: ${files.length}).`);
+  const info = await api("/v2/post/publish/creator_info/query/", { token });
+  await mkdir(publicDir, { recursive: true });
+  const copies = [];
+  try {
+    for (const f of files) {
+      const name = `${randomBytes(16).toString("hex")}.jpg`;
+      await copyFile(f, join(publicDir, name));
+      copies.push(name);
+    }
+    const source_info = { source: "PULL_FROM_URL", photo_cover_index: 0, photo_images: copies.map((n) => `${site}/api/social/clip/${n}`) };
+    const post_info = { title: [...(title || "")].slice(0, 90).join(""), description: [...(caption || "")].slice(0, 4000).join("") };
+    let privacy = null;
+    if (mode === "direkt") {
+      const allowed = info.privacy_level_options || [];
+      privacy = allowed.includes(opts.privacy) ? opts.privacy : allowed.includes("SELF_ONLY") ? "SELF_ONLY" : allowed[0];
+      Object.assign(post_info, {
+        privacy_level: privacy, disable_comment: info.comment_disabled || opts.comments === false,
+        auto_add_music: true, brand_content_toggle: false, brand_organic_toggle: opts.ownBrand !== false,
+      });
+    }
+    await onStep(mode === "direkt" ? "TikTok holt die Bilder ab" : "Schickt die Bilder ins TikTok-Postfach");
+    const init = await api("/v2/post/publish/content/init/", {
+      token, body: { media_type: "PHOTO", post_mode: mode === "direkt" ? "DIRECT_POST" : "MEDIA_UPLOAD", post_info, source_info },
+    });
+    // Abholen und Verarbeiten abwarten (höchstens 10 Minuten); erst danach die Kopien löschen
+    for (let i = 0; i < 120; i++) {
+      await sleep(5_000);
+      const st = await api("/v2/post/publish/status/fetch/", { token, body: { publish_id: init.publish_id } });
+      if (st.status === "FAILED") throw new Error(`TikTok konnte die Bilder nicht verarbeiten (${st.fail_reason || "unbekannt"}).`);
+      if (st.status === "SEND_TO_USER_INBOX") return { status: "inbox", url: null, username: info.creator_username || "" };
+      if (st.status === "PUBLISH_COMPLETE") {
+        const id = (st.publicaly_available_post_id || [])[0];
+        const url = id && info.creator_username ? `https://www.tiktok.com/@${info.creator_username}/photo/${id}` : null;
+        return { status: privacy === "PUBLIC_TO_EVERYONE" && id ? "published" : "private", url, username: info.creator_username || "" };
+      }
+    }
+    throw new Error("TikTok hat die Bilder nach 10 Minuten noch nicht verarbeitet.");
+  } finally {
+    for (const name of copies) await rm(join(publicDir, name), { force: true });
+  }
 }

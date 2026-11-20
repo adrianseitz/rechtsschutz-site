@@ -56,8 +56,10 @@ In `karussell/posts/` liegt je Bilder-Post eine Datei: erste Folie die Frage (`c
 `text`, `liste`, `vergleich`, `loesung`, `achtung`, zuletzt `cta` mit Adrians Foto und den Pflichtangaben (`fine`).
 `karussell/vorlage.html` zeichnet die Folien (1080 × 1350, 4:5, Markenfarben), `karussell/render.mjs` macht daraus JPGs,
 `karussell/validate.mjs` prüft wie bei den Videos („je nach Tarif“, Wartezeit, keine Superlative, höchstens 10 Folien).
-Der Worker reiht sie in dieselbe Warteschlange wie die Videos ein und postet sie zum Termin als Karussell auf Instagram
-(TikTok wird dabei übersprungen). Abschaltbar im CRM: „Bilder-Posts auf Instagram mit posten“.
+Der Worker reiht sie in dieselbe Warteschlange wie die Videos ein und postet sie zum Termin als Karussell auf Instagram.
+Abschaltbar im CRM: „Bilder-Posts auf Instagram mit posten“. Auf Wunsch zusätzlich als TikTok-Foto-Post („Bilder-Posts auch
+auf TikTok“, `worker/tiktok.mjs` → `ttPostPhotos`): TikTok holt die Bilder von der Kurzzeit-Adresse ab (PULL_FROM_URL), dafür
+muss die Domain `seitz-rechtsschutz.de` im TikTok-Entwicklerportal unter „URL properties“ bestätigt sein (TXT-Eintrag bei IONOS).
 
 ```bash
 node karussell/render.mjs --alle --out=out/karussell --sheet    # alle Bilder + je ein Übersichtsbild

@@ -12,7 +12,7 @@ import { P, decrypt, encrypt, ensureDirs, log, ownFile, readJson, takeJobs, trim
 import { cleanPublic, igPublishCarousel, igPublishReel, igRefresh } from "./instagram.mjs";
 import { POSTS as KARUSSELL, renderKarussell } from "../karussell/render.mjs";
 import { validateKarussell } from "../karussell/validate.mjs";
-import { ttPost, ttRefresh } from "./tiktok.mjs";
+import { ttPost, ttPostPhotos, ttRefresh } from "./tiktok.mjs";
 import { elevenlabsUsage, tts, uploadStatus, uploadVideo, voiceInfo } from "./services.mjs";
 import { CREDIT, ENGINE, VoiceError, prepareVoice, speak } from "./ownvoice.mjs";
 import { figurSchritt, kitDir } from "./figur.mjs";
@@ -383,8 +383,9 @@ const PL_NAME = { instagram: "Instagram", tiktok: "TikTok", youtube: "YouTube" }
 async function postDirect(ep, settings, keys, state, why) {
   const e = (state.episodes[ep.id] ||= {});
   const want = (settings.platforms || PLATFORMS).filter((p) => PLATFORMS.includes(p));
-  const can = { instagram: Boolean(keys.ig), tiktok: ttReady(settings, keys) && !isK(ep), youtube: false };
-  const why0 = (p) => (isK(ep) && p !== "instagram" ? "Bilder-Posts gehen nur auf Instagram" : p === "youtube" ? "YouTube direkt folgt" : "nicht verbunden");
+  const kTiktok = settings.karussellTiktok === true;   // Bilder-Posts auch als TikTok-Foto-Post
+  const can = { instagram: Boolean(keys.ig), tiktok: ttReady(settings, keys) && (!isK(ep) || kTiktok), youtube: false };
+  const why0 = (p) => (isK(ep) && p === "tiktok" && ttReady(settings, keys) && !kTiktok ? "Bilder-Posts auf TikTok sind im CRM ausgeschaltet" : isK(ep) && p === "youtube" ? "Bilder-Posts gehen nicht auf YouTube" : p === "youtube" ? "YouTube direkt folgt" : "nicht verbunden");
   const platforms = Object.fromEntries(want.map((p) => [p, can[p] ? { status: "processing" } : { status: "skipped", message: why0(p) }]));
   Object.assign(e, { status: "wird gepostet", requestId: null, postStartedAt: now(), platforms, error: null, why });
   await writeJson(P.state, state);
@@ -407,7 +408,9 @@ async function postDirect(ep, settings, keys, state, why) {
     if (platforms.tiktok?.status === "processing") {
       try {
         const token = await tiktokToken(settings, keys);
-        const r = await ttPost({ token, file, caption: ep.caption || ep.title, mode: settings.tiktokMode || "entwurf", opts: ep.tiktok || {}, onStep });
+        const r = isK(ep)
+          ? await ttPostPhotos({ token, files: e.slides.map((f) => join(P.videos, f)), title: ep.title, caption: ep.caption || ep.title, mode: settings.tiktokMode || "entwurf", site: SITE, publicDir: P.public, opts: { ownBrand: settings.promo !== false }, onStep })
+          : await ttPost({ token, file, caption: ep.caption || ep.title, mode: settings.tiktokMode || "entwurf", opts: ep.tiktok || {}, onStep });
         e.platforms.tiktok = { status: "completed", url: r.url, inbox: r.status === "inbox", message: r.status === "private" ? "nur privat sichtbar, bis TikTok die App geprüft hat" : undefined };
         await log("post", r.status === "inbox" ? `Im TikTok-Postfach: ${ep.title} – in der TikTok-App auf „Posten“ tippen` : `Auf TikTok veröffentlicht${r.status === "private" ? " (nur privat)" : ""}: ${ep.title}`);
       } catch (err) {
@@ -425,7 +428,7 @@ async function postDirect(ep, settings, keys, state, why) {
 }
 
 async function post(ep, settings, keys, state, why) {
-  if (direkt(settings) || isK(ep)) return postDirect(ep, settings, keys, state, why);   // Bilder-Posts immer direkt (Instagram)
+  if (direkt(settings) || isK(ep)) return postDirect(ep, settings, keys, state, why);   // Bilder-Posts immer direkt (Instagram, auf Wunsch TikTok)
   const e = (state.episodes[ep.id] ||= {});
   const platforms = (settings.platforms || PLATFORMS).filter((p) => PLATFORMS.includes(p));
   if (!platforms.length) { await log("fehler", "Keine Plattform ausgewählt – nichts gepostet."); return false; }
