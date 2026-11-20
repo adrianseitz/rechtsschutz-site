@@ -1,0 +1,40 @@
+{
+ "id": "reel-07-v-privatschutz-reicht-nicht",
+ "title": "Du hast Rechtsschutz und vermietest? Aufgepasst",
+ "topic": "vermieter",
+ "format": "reel-2026",
+ "caption": "Du hast Rechtsschutz und vermietest? Ein privater Rechtsschutz deckt Streit mit Mietern in der Regel nicht ab. Dafür brauchst du den Vermieter-Baustein – und jede Wohnung muss im Vertrag stehen. Neue Wohnung? Gleich nachmelden. Kostenloser Check über den Link in der Bio. Kostenloser Check über den Link in der Bio.\n\n#vermieter #mietrecht #immobilien #vermieterrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "voice": "Du hast Rechtsschutz und *vermietest* eine Wohnung? Dann aufgepasst.",
+   "say": "Du hast Rechtsschutz und vermietest eine Wohnung? Dann aufgepasst."
+  },
+  {
+   "key": "fakt",
+   "mood": "ernst",
+   "voice": "Dein privater Rechtsschutz deckt Streit mit deinen Mietern in der Regel *nicht* ab.",
+   "say": "Dein privater Rechtsschutz deckt Streit mit deinen Mietern in der Regel nicht ab."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Dafür brauchst du den *Vermieter-Baustein.* Und jede vermietete Wohnung muss im Vertrag stehen.",
+   "say": "Dafür brauchst du den Vermieter-Baustein. Und jede vermietete Wohnung muss im Vertrag stehen."
+  },
+  {
+   "key": "tipp",
+   "mood": "eindringlich",
+   "voice": "Neue Wohnung gekauft? Dann gleich *nachmelden,* sonst ist sie nicht geschützt.",
+   "say": "Neue Wohnung gekauft? Dann gleich nachmelden, sonst ist sie nicht geschützt."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Sind alle deine Wohnungen abgesichert? Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Sind alle deine Wohnungen abgesichert? Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

@@ -1,0 +1,46 @@
+{
+ "id": "reel-34-f-lohnfortzahlung",
+ "title": "Mitarbeiter krank? So lange zahlst du weiter",
+ "topic": "firma",
+ "format": "reel-2026",
+ "caption": "Bei Krankheit zahlst du den Lohn bis zu 6 Wochen weiter (Entgeltfortzahlungsgesetz). Kleinere Betriebe bekommen über die U1-Umlage einen Teil von der Krankenkasse erstattet. Streit um Krankschreibung oder Zahlung? Arbeitgeber-Rechtsschutz je nach Tarif. Kostenloser Check über den Link in der Bio.\n\n#selbstständig #unternehmer #arbeitgeber #firmenrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "voice": "Dein Mitarbeiter ist krank. Wie lange musst du *weiterzahlen?*",
+   "say": "Dein Mitarbeiter ist krank. Wie lange musst du weiterzahlen?"
+  },
+  {
+   "key": "regel",
+   "mood": "ernst",
+   "voice": "Bis zu *sechs Wochen* pro Krankheit zahlst du den Lohn weiter.",
+   "say": "Bis zu sechs Wochen pro Krankheit zahlst du den Lohn weiter."
+  },
+  {
+   "key": "tipp",
+   "mood": "begeistert",
+   "voice": "Kleinere Betriebe bekommen einen Teil davon über die Umlage U1 von der Krankenkasse zurück.",
+   "say": "Kleinere Betriebe bekommen einen Teil davon über die Umlage U1 von der Krankenkasse zurück."
+  },
+  {
+   "key": "streit",
+   "mood": "eindringlich",
+   "voice": "Streit gibt es, wenn Zweifel an der Krankschreibung bestehen oder die Zahlung eingestellt wird.",
+   "say": "Streit gibt es, wenn Zweifel an der Krankschreibung bestehen oder die Zahlung eingestellt wird."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Dann hilft der Arbeitgeber-Baustein je nach Tarif.",
+   "say": "Dann hilft der Arbeitgeber-Baustein je nach Tarif."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

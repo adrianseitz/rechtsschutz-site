@@ -1,0 +1,46 @@
+{
+ "id": "reel-17-v-schoenheitsreparaturen",
+ "title": "Schönheitsreparaturen: Diese Klauseln sind oft unwirksam",
+ "topic": "vermieter",
+ "format": "reel-2026",
+ "caption": "Viele Klauseln zu Schönheitsreparaturen sind unwirksam – z. B. starre Fristenpläne oder wenn die Wohnung unrenoviert übergeben wurde (BGH). Vertrag prüfen lassen, bevor du von der Kaution etwas einbehältst. Streit? Vermieterrechtsschutz je nach Tarif. Kostenloser Check über den Link in der Bio.\n\n#vermieter #mietrecht #immobilien #vermieterrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "voice": "Muss dein Mieter beim Auszug *streichen?* Nicht unbedingt.",
+   "say": "Muss dein Mieter beim Auszug streichen? Nicht unbedingt."
+  },
+  {
+   "key": "fakt",
+   "mood": "ernst",
+   "voice": "Viele Klauseln zu Schönheitsreparaturen sind *unwirksam.*",
+   "say": "Viele Klauseln zu Schönheitsreparaturen sind unwirksam."
+  },
+  {
+   "key": "beispiele",
+   "mood": "eindringlich",
+   "voice": "Zum Beispiel starre Fristen wie: alle drei Jahre Küche und Bad. Oder wenn die Wohnung unrenoviert übergeben wurde.",
+   "say": "Zum Beispiel starre Fristen wie: alle drei Jahre Küche und Bad. Oder wenn die Wohnung unrenoviert übergeben wurde."
+  },
+  {
+   "key": "tipp",
+   "mood": "warm",
+   "voice": "Lass deinen Mietvertrag prüfen, bevor du Geld von der Kaution einbehältst.",
+   "say": "Lass deinen Mietvertrag prüfen, bevor du Geld von der Kaution einbehältst."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Und kommt es zum Streit, hilft der Vermieterrechtsschutz je nach Tarif.",
+   "say": "Und kommt es zum Streit, hilft der Vermieterrechtsschutz je nach Tarif."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

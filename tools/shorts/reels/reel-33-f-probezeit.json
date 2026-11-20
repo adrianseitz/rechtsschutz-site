@@ -1,0 +1,46 @@
+{
+ "id": "reel-33-f-probezeit",
+ "title": "Probezeit: Was beim Kündigen gilt",
+ "topic": "firma",
+ "format": "reel-2026",
+ "caption": "In der Probezeit gilt meist eine Kündigungsfrist von zwei Wochen, längstens für die ersten sechs Monate (§ 622 Abs. 3 BGB). Streit gibt es trotzdem – um Form, Lohn oder Sonderkündigungsschutz. Arbeitgeber-Rechtsschutz je nach Tarif. Kostenloser Check über den Link in der Bio.\n\n#selbstständig #unternehmer #arbeitgeber #firmenrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "voice": "Kündigen in der Probezeit? Das geht schneller, als viele denken.",
+   "say": "Kündigen in der Probezeit? Das geht schneller, als viele denken."
+  },
+  {
+   "key": "frist",
+   "mood": "ernst",
+   "voice": "In der Probezeit gilt meist eine Kündigungsfrist von nur *zwei Wochen.*",
+   "say": "In der Probezeit gilt meist eine Kündigungsfrist von nur zwei Wochen."
+  },
+  {
+   "key": "dauer",
+   "mood": "eindringlich",
+   "voice": "Diese kurze Frist gilt höchstens für die ersten *sechs Monate.*",
+   "say": "Diese kurze Frist gilt höchstens für die ersten sechs Monate."
+  },
+  {
+   "key": "aber",
+   "mood": "dramatisch",
+   "voice": "Trotzdem gibt es Streit: um Formfehler, um Lohn oder um Sonderkündigungsschutz.",
+   "say": "Trotzdem gibt es Streit: um Formfehler, um Lohn oder um Sonderkündigungsschutz."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Dann hilft der Arbeitgeber-Baustein im Firmenrechtsschutz, je nach Tarif.",
+   "say": "Dann hilft der Arbeitgeber-Baustein im Firmenrechtsschutz, je nach Tarif."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

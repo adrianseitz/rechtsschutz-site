@@ -1,0 +1,46 @@
+{
+ "id": "reel-18-v-untervermietung",
+ "title": "Mieter vermietet unter? Das gilt",
+ "topic": "vermieter",
+ "format": "reel-2026",
+ "caption": "Untervermietung braucht die Erlaubnis des Vermieters (§ 540 BGB). Hat der Mieter ein berechtigtes Interesse an der Untervermietung eines Teils der Wohnung, muss sie meist erteilt werden (§ 553 BGB). Unerlaubt? Abmahnung, im Ernstfall Kündigung. Streit? Vermieterrechtsschutz je nach Tarif. Kostenloser Check über den Link in der Bio.\n\n#vermieter #mietrecht #immobilien #vermieterrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "voice": "Dein Mieter vermietet einfach *unter?*",
+   "say": "Dein Mieter vermietet einfach unter?"
+  },
+  {
+   "key": "regel",
+   "mood": "ernst",
+   "voice": "Dafür braucht er deine *Erlaubnis.* Ohne Erlaubnis ist das ein Vertragsverstoß.",
+   "say": "Dafür braucht er deine Erlaubnis. Ohne Erlaubnis ist das ein Vertragsverstoß."
+  },
+  {
+   "key": "aber",
+   "mood": "eindringlich",
+   "voice": "Aber: Hat er ein berechtigtes Interesse an der Untervermietung eines Teils der Wohnung, muss die Erlaubnis meist erteilt werden.",
+   "say": "Aber: Hat er ein berechtigtes Interesse an der Untervermietung eines Teils der Wohnung, muss die Erlaubnis meist erteilt werden."
+  },
+  {
+   "key": "folge",
+   "mood": "ernst",
+   "voice": "Bei unerlaubter Untervermietung sind Abmahnung und im Ernstfall Kündigung möglich.",
+   "say": "Bei unerlaubter Untervermietung sind Abmahnung und im Ernstfall Kündigung möglich."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Streitest du darüber, übernimmt der Vermieterrechtsschutz je nach Tarif Anwalt und Gericht.",
+   "say": "Streitest du darüber, übernimmt der Vermieterrechtsschutz je nach Tarif Anwalt und Gericht."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

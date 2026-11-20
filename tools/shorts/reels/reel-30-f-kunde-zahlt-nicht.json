@@ -1,0 +1,40 @@
+{
+ "id": "reel-30-f-kunde-zahlt-nicht",
+ "title": "Kunde zahlt nicht? Was Rechtsschutz wirklich abdeckt",
+ "topic": "firma",
+ "format": "reel-2026",
+ "caption": "Kunde zahlt nicht? Ehrlich: Vertragsstreit mit Kunden ist im Firmenrechtsschutz oft nur als Baustein und eingeschränkt versicherbar. Vorher klären, welche Bausteine du brauchst und was dein Tarif ausschließt. Kostenloser Check über den Link in der Bio.\n\n#selbstständig #unternehmer #arbeitgeber #firmenrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "voice": "Dein Kunde zahlt die Rechnung *nicht?*",
+   "say": "Dein Kunde zahlt die Rechnung nicht?"
+  },
+  {
+   "key": "ehrlich",
+   "mood": "ernst",
+   "voice": "Ehrlich gesagt: Streit um Verträge mit Kunden ist im Firmenrechtsschutz oft nur *eingeschränkt* versicherbar.",
+   "say": "Ehrlich gesagt: Streit um Verträge mit Kunden ist im Firmenrechtsschutz oft nur eingeschränkt versicherbar."
+  },
+  {
+   "key": "klaeren",
+   "mood": "eindringlich",
+   "voice": "Darum vorher klären: welche Bausteine du brauchst, was dein Tarif ausschließt und ab wann der Schutz gilt.",
+   "say": "Darum vorher klären: welche Bausteine du brauchst, was dein Tarif ausschließt und ab wann der Schutz gilt."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Ich prüfe mit dir, was für deinen Betrieb wirklich möglich ist.",
+   "say": "Ich prüfe mit dir, was für deinen Betrieb wirklich möglich ist."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

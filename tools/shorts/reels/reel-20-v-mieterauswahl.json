@@ -1,0 +1,46 @@
+{
+ "id": "reel-20-v-mieterauswahl",
+ "title": "Den richtigen Mieter finden: Diese 3 Unterlagen",
+ "topic": "vermieter",
+ "format": "reel-2026",
+ "caption": "Bevor du vermietest: Einkommensnachweis, Bonitätsauskunft (z. B. Schufa) und Mietschuldenfreiheitsbescheinigung vom Vormieter. Und falls trotzdem etwas schiefgeht: Vermieterrechtsschutz und Mietausfallschutz je nach Tarif. Kostenloser Check über den Link in der Bio.\n\n#vermieter #mietrecht #immobilien #vermieterrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "voice": "Der beste Schutz vor Mietausfall beginnt *vor* dem Vertrag.",
+   "say": "Der beste Schutz vor Mietausfall beginnt vor dem Vertrag."
+  },
+  {
+   "key": "eins",
+   "mood": "ernst",
+   "voice": "Erstens: ein aktueller *Einkommensnachweis.*",
+   "say": "Erstens: ein aktueller Einkommensnachweis."
+  },
+  {
+   "key": "zwei",
+   "mood": "ernst",
+   "voice": "Zweitens: eine Bonitätsauskunft, zum Beispiel von der Schufa.",
+   "say": "Zweitens: eine Bonitätsauskunft, zum Beispiel von der Schufa."
+  },
+  {
+   "key": "drei",
+   "mood": "ernst",
+   "voice": "Drittens: eine Mietschuldenfreiheitsbescheinigung vom Vormieter.",
+   "say": "Drittens: eine Mietschuldenfreiheitsbescheinigung vom Vormieter."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Und falls trotzdem etwas schiefgeht: Vermieterrechtsschutz und Mietausfallschutz, je nach Tarif.",
+   "say": "Und falls trotzdem etwas schiefgeht: Vermieterrechtsschutz und Mietausfallschutz, je nach Tarif."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

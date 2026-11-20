@@ -1,0 +1,40 @@
+{
+ "id": "reel-08-v-kaution-zurueck",
+ "title": "Mieter will die volle Kaution zurück? Diese Frist läuft",
+ "topic": "vermieter",
+ "format": "reel-2026",
+ "caption": "Mieter zieht aus und will die volle Kaution zurück? Streit gibt es oft um Schäden, Nebenkosten oder Schönheitsreparaturen. Wichtig: Ersatzansprüche wegen Schäden verjähren 6 Monate nach Rückgabe der Wohnung (§ 548 BGB). Vermieterrechtsschutz übernimmt im Streitfall je nach Tarif Anwalt und Gericht. Kostenloser Check über den Link in der Bio.\n\n#vermieter #mietrecht #immobilien #vermieterrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "voice": "Dein Mieter zieht aus und will die *volle* Kaution zurück?",
+   "say": "Dein Mieter zieht aus und will die volle Kaution zurück?"
+  },
+  {
+   "key": "streit",
+   "mood": "ernst",
+   "voice": "Streit gibt es oft um Schäden, offene Nebenkosten oder Schönheitsreparaturen.",
+   "say": "Streit gibt es oft um Schäden, offene Nebenkosten oder Schönheitsreparaturen."
+  },
+  {
+   "key": "frist",
+   "mood": "dramatisch",
+   "voice": "Und Vorsicht: Ansprüche wegen Schäden verjähren schon *sechs Monate* nach Rückgabe der Wohnung.",
+   "say": "Und Vorsicht: Ansprüche wegen Schäden verjähren schon sechs Monate nach Rückgabe der Wohnung."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Kommt es zum Streit, übernimmt der Vermieterrechtsschutz je nach Tarif Anwalt und Gericht.",
+   "say": "Kommt es zum Streit, übernimmt der Vermieterrechtsschutz je nach Tarif Anwalt und Gericht."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

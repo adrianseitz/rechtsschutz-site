@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<style>
+@font-face { font-family: "Archivo"; src: url(assets/archivo-latin-wdth-normal.woff2) format("woff2-variations"); font-weight: 100 900; font-stretch: 62% 125%; unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Archivo"; src: url(assets/archivo-latin-ext-wdth-normal.woff2) format("woff2-variations"); font-weight: 100 900; font-stretch: 62% 125%; unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Hand"; src: url(assets/kalam-latin-700-normal.woff2) format("woff2"); font-weight: 700; }
+@font-face { font-family: "Typed"; src: url(assets/mono.woff2) format("woff2"); }
+:root {
+  --ink: #17181B; --ink2: #23252A; --paper: #F4F3EE; --paper2: #E9E7DF;
+  --yellow: #FFD60A; --red: #E5484D; --mute: #8C8E94; --line: rgba(255,255,255,.12);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--ink); }
+body { font-family: "Archivo", sans-serif; -webkit-font-smoothing: antialiased; }
+#frame { position: absolute; inset: 0; overflow: hidden; }
+#bgDark, #bgLight { position: absolute; inset: 0; }
+#bgDark { background: radial-gradient(1200px 900px at 50% 38%, #2A2C32 0%, #17181B 62%, #111214 100%); }
+#bgLight { background: radial-gradient(1200px 1000px at 50% 36%, #FBFAF6 0%, #F4F3EE 55%, #E8E6DE 100%); opacity: 0; }
+#grain { position: absolute; inset: -40px; opacity: .07; mix-blend-mode: overlay; pointer-events: none; }
+.light #grain { opacity: .05; mix-blend-mode: multiply; }
+#stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+.scene { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; will-change: transform, opacity; }
+/* Kopf */
+#badge { position: absolute; left: 70px; top: 150px; height: 64px; padding: 0 28px 0 22px; border-radius: 32px; display: flex; align-items: center; gap: 14px;
+  font-weight: 650; font-stretch: 88%; font-size: 30px; letter-spacing: .2px; color: #fff; background: rgba(255,255,255,.08); border: 2px solid rgba(255,255,255,.14); }
+#badge i { width: 16px; height: 16px; border-radius: 50%; background: var(--yellow); display: block; }
+.light #badge { color: var(--ink); background: rgba(23,24,27,.06); border-color: rgba(23,24,27,.12); }
+#hookTitle { position: absolute; left: 70px; right: 70px; top: 250px; font-weight: 900; font-stretch: 112%; font-size: 92px; line-height: .98; letter-spacing: -1.5px; color: #fff; }
+#hookTitle .mark { color: var(--ink); background: linear-gradient(transparent 8%, var(--yellow) 8%, var(--yellow) 92%, transparent 92%); padding: 0 10px; margin: 0 -4px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+/* Untertitel */
+#caps { position: absolute; left: 70px; right: 150px; top: 1290px; height: 260px; display: flex; flex-wrap: wrap; align-content: flex-start; gap: 6px 20px; }
+.w { position: relative; font-weight: 800; font-stretch: 78%; font-size: 82px; line-height: 1.08; color: #fff; letter-spacing: -.5px; white-space: nowrap; }
+.light .w { color: var(--ink); }
+.w b { position: relative; z-index: 2; font-weight: inherit; }
+.w s { position: absolute; z-index: 1; left: -10px; right: -10px; top: 10%; bottom: 4%; background: var(--yellow); border-radius: 6px; transform-origin: left center; text-decoration: none; }
+.w.on b { color: var(--ink); }
+.w.emph b { color: var(--yellow); }
+.light .w.emph b { color: var(--ink); text-decoration: underline; text-decoration-color: var(--yellow); text-decoration-thickness: 12px; text-underline-offset: 6px; }
+.w.on.emph b { color: var(--ink); text-decoration: none; }
+/* Allgemein */
+.card { position: absolute; border-radius: 34px; }
+.dk { background: #24262B; border: 2px solid rgba(255,255,255,.08); box-shadow: 0 40px 80px rgba(0,0,0,.45); }
+.lt { background: #FFFFFF; border: 2px solid rgba(23,24,27,.07); box-shadow: 0 30px 70px rgba(40,36,20,.16), 0 4px 10px rgba(40,36,20,.06); }
+.big { font-weight: 900; font-stretch: 100%; letter-spacing: -2px; }
+.hand { font-family: "Hand", cursive; font-weight: 700; }
+.typed { font-family: "Typed", monospace; }
+.center { position: absolute; left: 0; right: 0; text-align: center; }
+svg { overflow: visible; }
+</style>
+</head>
+<body>
+<div id="frame">
+  <div id="bgDark"></div><div id="bgLight"></div>
+  <svg id="grain" width="1160" height="2000"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#n)"/></svg>
+  <div id="stage"></div>
+  <div id="badge"><i></i><span id="badgeText"></span></div>
+  <div id="hookTitle"></div>
+  <div id="caps"></div>
+</div>
+<script>
+// ---------- Werkzeuge ----------
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+const lerp = (a, b, t) => a + (b - a) * t;
+const eo = t => 1 - Math.pow(1 - clamp(t), 3);                 // ease out cubic
+const eio = t => { t = clamp(t); return t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2; };
+const back = t => { t = clamp(t); const c = 1.6; return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); };
+const prog = (t, a, d) => clamp((t - a) / d);
+const el = (tag, css = '', html = '', parent = null) => { const e = document.createElement(tag); if (css) e.style.cssText = css; if (html) e.innerHTML = html; if (parent) parent.appendChild(e); return e; };
+const euro = n => n.toLocaleString('de-DE') + ' €';
+const EV = [];   // Soundeffekte: {t, type}
+const ICON = {
+  check: c => `<svg width="64" height="64" viewBox="0 0 64 64"><path d="M14 33 L27 46 L51 19" fill="none" stroke="${c}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  x: c => `<svg width="64" height="64" viewBox="0 0 64 64"><path d="M18 18 L46 46 M46 18 L18 46" stroke="${c}" stroke-width="8" stroke-linecap="round"/></svg>`,
+  shield: (c, f) => `<svg width="220" height="250" viewBox="0 0 220 250"><path d="M110 12 L196 44 V118 C196 176 158 216 110 236 C62 216 24 176 24 118 V44 Z" fill="${f}" stroke="${c}" stroke-width="12" stroke-linejoin="round"/><path d="M70 126 L100 156 L152 100" fill="none" stroke="${c}" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  warn: c => `<svg width="120" height="110" viewBox="0 0 120 110"><path d="M60 8 L114 102 H6 Z" fill="${c}" stroke="${c}" stroke-width="8" stroke-linejoin="round"/><path d="M60 40 V68" stroke="#17181B" stroke-width="10" stroke-linecap="round"/><circle cx="60" cy="86" r="6" fill="#17181B"/></svg>`,
+  lens: c => `<svg width="130" height="130" viewBox="0 0 130 130"><circle cx="54" cy="54" r="38" fill="none" stroke="${c}" stroke-width="12"/><path d="M82 82 L118 118" stroke="${c}" stroke-width="14" stroke-linecap="round"/></svg>`,
+  arrowUp: c => `<svg width="56" height="56" viewBox="0 0 56 56"><path d="M28 46 V12 M12 27 L28 11 L44 27" fill="none" stroke="${c}" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  house: c => `<svg width="120" height="110" viewBox="0 0 120 110"><path d="M12 52 L60 12 L108 52 V100 H12 Z" fill="none" stroke="${c}" stroke-width="9" stroke-linejoin="round"/><rect x="48" y="62" width="24" height="38" fill="${c}"/></svg>`,
+  scale: c => `<svg width="200" height="170" viewBox="0 0 200 170"><path d="M100 14 V150 M60 150 H140 M30 40 H170" stroke="${c}" stroke-width="9" stroke-linecap="round"/><path d="M30 40 L8 96 H52 Z M170 40 L148 96 H192 Z" fill="none" stroke="${c}" stroke-width="8" stroke-linejoin="round"/></svg>`,
+  person: c => `<svg width="120" height="150" viewBox="0 0 120 150"><circle cx="60" cy="42" r="28" fill="${c}"/><path d="M14 146 C14 104 34 84 60 84 C86 84 106 104 106 146 Z" fill="${c}"/></svg>`,
+};
+
+ICON.doc = c => `<svg width="120" height="150" viewBox="0 0 120 150"><path d="M14 8 H78 L106 36 V142 H14 Z" fill="none" stroke="${c}" stroke-width="9" stroke-linejoin="round"/><path d="M34 64 H86 M34 88 H86 M34 112 H66" stroke="${c}" stroke-width="8" stroke-linecap="round"/></svg>`;
+ICON.car = c => `<svg width="190" height="120" viewBox="0 0 190 120"><path d="M14 78 L30 38 Q36 26 50 26 H134 Q148 26 156 38 L176 78 V100 H14 Z" fill="none" stroke="${c}" stroke-width="9" stroke-linejoin="round"/><circle cx="52" cy="100" r="16" fill="${c}"/><circle cx="138" cy="100" r="16" fill="${c}"/><path d="M40 70 L52 44 H136 L150 70 Z" fill="${c}" opacity=".25"/></svg>`;
+ICON.euro = c => `<svg width="130" height="130" viewBox="0 0 130 130"><circle cx="65" cy="65" r="56" fill="none" stroke="${c}" stroke-width="9"/><path d="M84 42 Q74 34 64 34 Q40 34 40 65 Q40 96 64 96 Q74 96 84 88 M28 56 H66 M28 74 H66" fill="none" stroke="${c}" stroke-width="9" stroke-linecap="round"/></svg>`;
+ICON.shieldSmall = (c, f) => `<svg width="130" height="150" viewBox="0 0 220 250"><path d="M110 12 L196 44 V118 C196 176 158 216 110 236 C62 216 24 176 24 118 V44 Z" fill="${f || 'none'}" stroke="${c}" stroke-width="14" stroke-linejoin="round"/></svg>`;
+// ---------- Szenen-Bausteine ----------
+// Jede Funktion baut DOM in "root" und gibt update(lt) zurück (lt = Sekunden seit Satzbeginn).
+const W = {};
+const dark = () => !document.body.classList.contains('light');
+
+W.phone = (root, p, beat) => {
+  const ph = el('div', `position:absolute; left:250px; top:470px; width:580px; height:760px; border-radius:72px; background:#0E0F11; border:3px solid #3A3D44; box-shadow:0 60px 120px rgba(0,0,0,.6); overflow:hidden;`, '', root);
+  el('div', `position:absolute; left:210px; top:22px; width:160px; height:40px; border-radius:20px; background:#000;`, '', ph);
+  const head = el('div', `position:absolute; left:0; right:0; top:84px; height:110px; border-bottom:2px solid #24262B; display:flex; align-items:center; gap:22px; padding:0 34px;`, '', ph);
+  el('div', `width:72px; height:72px; border-radius:50%; background:#3A3D44; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:30px;`, p.initials || 'M', head);
+  el('div', `color:#fff; font-weight:700; font-stretch:90%; font-size:34px; line-height:1.15`, `${p.name}<div style="font-weight:500; font-size:24px; color:#8C8E94">${p.sub || 'online'}</div>`, head);
+  const dots = el('div', `position:absolute; left:34px; top:240px; width:140px; height:76px; border-radius:38px 38px 38px 10px; background:#2A2C31; display:flex; gap:14px; align-items:center; justify-content:center;`, '', ph);
+  const d = [0,1,2].map(() => el('i', `display:block; width:18px; height:18px; border-radius:50%; background:#8C8E94;`, '', dots));
+  const bubs = p.msgs.map((m, i) => el('div', `position:absolute; left:34px; top:${240 + i*0}px; max-width:470px; padding:26px 30px; border-radius:38px 38px 38px 10px; background:#2A2C31; color:#fff; font-weight:500; font-stretch:92%; font-size:36px; line-height:1.28; transform-origin:left bottom;`, m + `<div style="text-align:right; font-size:22px; color:#8C8E94; margin-top:8px">${p.time || '21:47'}</div>`, ph));
+  let y = 240; bubs.forEach(b => { b.style.top = y + 'px'; y += b.offsetHeight + 18; });
+  const tIn = 0.0, tMsg = p.msgWord ? Math.max(.7, (beat.wordAt(p.msgWord) ?? beat.start + .95) - beat.start) : (p.msgAt ?? 0.95), tType = Math.min(.35, tMsg - .4);
+  EV.push({ t: beat.start + tMsg, type: 'pop' }); EV.push({ t: beat.start + 0.05, type: 'whoosh' });
+  return lt => {
+    const a = eo(prog(lt, tIn, .55)); ph.style.transform = `translateY(${(1-a)*520}px) rotate(${(1-a)*-6 + Math.sin(lt*1.3)*.6}deg)`;
+    const typing = lt > tType && lt < tMsg; dots.style.opacity = typing ? 1 : 0;
+    d.forEach((x, i) => x.style.transform = `translateY(${Math.sin(lt*10 - i*.9)*6}px)`);
+    bubs.forEach((b, i) => { const k = back(prog(lt, tMsg + i*.5, .38)); b.style.transform = `scale(${k})`; b.style.opacity = clamp(k*2); });
+  };
+};
+
+W.months = (root, p, beat) => {
+  const n = p.months.length, cols = p.cols || 3, cw = p.cw || 270, ch = p.ch || 190, gap = p.gap || 26;
+  const rows = Math.ceil(n / cols), totalW = cols*cw + (cols-1)*gap, x0 = (1080 - totalW)/2, y0 = p.top || 640;
+  if (p.label) el('div', `position:absolute; left:${x0}px; top:${y0 - 90}px; font-weight:700; font-stretch:90%; font-size:40px; color:${dark()?'#C9CACE':'#55575D'}`, p.label, root);
+  const tiles = p.months.map((m, i) => {
+    const t = el('div', `position:absolute; left:${x0 + (i%cols)*(cw+gap)}px; top:${y0 + Math.floor(i/cols)*(ch+gap)}px; width:${cw}px; height:${ch}px; border-radius:28px; display:flex; flex-direction:column; justify-content:space-between; padding:22px 26px;`, '', root);
+    t.className = dark() ? 'dk' : 'lt';
+    el('div', `font-weight:800; font-stretch:90%; font-size:40px; color:${dark()?'#fff':'#17181B'}`, m, t);
+    el('div', `font-weight:600; font-size:26px; color:#8C8E94`, p.sub || 'Miete', t);
+    const mark = el('div', `position:absolute; right:22px; top:50%; margin-top:-32px;`, p.mode === 'fill' ? ICON.check('#17181B') : ICON.x('#E5484D'), t);
+    return { t, mark };
+  });
+  const span = p.span || Math.max(.8, (beat.end - beat.start) - .6), step = span / n;
+  tiles.forEach((o, i) => EV.push({ t: beat.start + .25 + i*step + .15, type: p.mode === 'fill' ? 'tick' : 'stamp' }));
+  return lt => tiles.forEach((o, i) => {
+    const a = eo(prog(lt, i*.06, .4)); o.t.style.opacity = a; o.t.style.transform = `translateY(${(1-a)*60}px)`;
+    const k = prog(lt, .25 + i*step, .3);
+    if (p.mode === 'fill') { o.t.style.background = k > 0 ? `linear-gradient(90deg, #FFD60A ${k*100}%, ${dark()?'#24262B':'#fff'} ${k*100}%)` : ''; o.mark.style.opacity = k >= 1 ? 1 : 0; o.mark.style.transform = `scale(${back(prog(lt, .25 + i*step + .2, .3))})`; }
+    else { o.mark.style.opacity = k > 0 ? 1 : 0; o.mark.style.transform = `scale(${lerp(2.2, 1, back(k))}) rotate(${(1-k)*-20}deg)`; o.t.style.borderColor = k > 0 ? 'rgba(229,72,77,.6)' : ''; }
+  });
+};
+
+W.counter = (root, p, beat) => {
+  const wrap = el('div', `position:absolute; left:0; right:0; top:${p.top || 640}px; text-align:center;`, '', root);
+  const lab = el('div', `font-weight:700; font-stretch:90%; font-size:42px; color:${dark()?'#C9CACE':'#55575D'}; margin-bottom:24px;`, p.label || '', wrap);
+  const num = el('div', `font-weight:900; font-stretch:${p.stretch || 92}%; font-size:${p.size || 210}px; line-height:1; letter-spacing:-6px; color:${p.color === 'yellow' ? '#FFD60A' : p.color === 'ink' ? '#17181B' : '#E5484D'};`, '', wrap);
+  const f = el('div', `display:inline-block; margin-top:40px; padding:18px 34px; border-radius:24px; font-weight:700; font-stretch:90%; font-size:44px; color:${dark()?'#fff':'#17181B'}; background:${dark()?'rgba(255,255,255,.07)':'rgba(23,24,27,.06)'};`, p.formula || '', wrap);
+  if (!p.formula) f.style.display = 'none';
+  const dur = p.dur ?? 1.6; const tStart = p.endWord ? Math.max(.35, (beat.wordAt(p.endWord) ?? beat.start + 2) - beat.start + .25 - dur) : (p.at ?? .5);
+  let ex = null; if (p.extra) { const nt = p.extra.tone === 'neutral'; ex = el('div', `display:block; width:max-content; margin:22px auto 0; padding:18px 34px; border-radius:24px; font-weight:800; font-stretch:90%; font-size:44px; color:${nt ? '#17181B' : '#E5484D'}; background:${nt ? '#FFD60A' : 'rgba(229,72,77,.12)'};`, p.extra.text, wrap); }
+  const exAt = p.extra ? (beat.wordAt(p.extra.word) ?? beat.start + 3) - beat.start : 0; if (p.extra) EV.push({ t: beat.start + exAt, type: 'pop', gain: .7 });
+  for (let i = 0; i < 9; i++) EV.push({ t: beat.start + tStart + i*dur/9, type: 'tick', gain: .5 });
+  EV.push({ t: beat.start + tStart + dur, type: p.endSound || 'thud' });
+  return lt => {
+    const a = eo(prog(lt, 0, .45)); wrap.style.opacity = a; wrap.style.transform = `translateY(${(1-a)*50}px)`;
+    const k = eio(prog(lt, tStart, dur)); const v = Math.round(lerp(p.from || 0, p.to, k) / (p.round || 1)) * (p.round || 1);
+    num.textContent = (p.prefix || '') + (p.fmt === 'pct' ? v + ' %' : euro(v)) + (p.unit || ''); if (ex) { const q = back(prog(lt, exAt, .35)); ex.style.transform = `scale(${q})`; ex.style.opacity = clamp(q*2); }
+    const pop = prog(lt, tStart + dur, .35); num.style.transform = `scale(${1 + Math.sin(pop*Math.PI)*.08})`;
+    f.style.opacity = eo(prog(lt, .2, .4));
+  };
+};
+
+W.stack = (root, p, beat) => {
+  const items = p.items.map((it, i) => {
+    const c = el('div', `left:${150 + i*30}px; top:${(p.top || 560) + i*190}px; width:${780 - i*30}px; height:170px; display:flex; align-items:center; gap:30px; padding:0 40px;`, '', root);
+    c.className = 'card ' + (dark() ? 'dk' : 'lt');
+    el('div', `width:96px; height:96px; border-radius:24px; background:${dark()?'rgba(229,72,77,.16)':'rgba(229,72,77,.12)'}; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:54px; color:#E5484D;`, '+', c);
+    el('div', `font-weight:850; font-stretch:${it.title.length > 12 ? 84 : 95}%; font-size:${it.title.length > 12 ? 50 : 58}px; color:${dark()?'#fff':'#17181B'}; line-height:1.05`, it.title + (it.sub ? `<div style="font-weight:600; font-size:30px; color:#8C8E94; margin-top:6px">${it.sub}</div>` : ''), c);
+    const st = el('div', `position:absolute; right:-18px; top:-22px; background:${dark()?'#24262B':'#fff'}; padding:8px 16px; border:5px solid #E5484D; border-radius:12px; color:#E5484D; font-weight:900; font-stretch:80%; font-size:34px; transform:rotate(-8deg); letter-spacing:1px;`, it.stamp || 'Kosten', c);
+    const at = (beat.wordAt(it.word) ?? (beat.start + .3 + i*.6)) - beat.start;
+    EV.push({ t: beat.start + at, type: 'whoosh', gain: .6 }); EV.push({ t: beat.start + at + .3, type: 'stamp', gain: .7 });
+    return { c, st, at };
+  });
+  return lt => items.forEach(o => {
+    const a = back(prog(lt, o.at - .15, .45)); o.c.style.opacity = clamp(a*1.5); o.c.style.transform = `translateX(${(1-a)*-700}px) rotate(${(1-a)*-4}deg)`;
+    const s = prog(lt, o.at + .25, .25); o.st.style.opacity = s > 0 ? 1 : 0; o.st.style.transform = `rotate(-8deg) scale(${lerp(2, 1, eo(s))})`;
+  });
+};
+
+W.checklist = (root, p, beat) => {
+  const card = el('div', `left:110px; top:${p.top || 470}px; width:860px; padding:56px 60px 64px;`, '', root); card.className = 'card lt';
+  const head = el('div', `display:flex; align-items:center; gap:30px; margin-bottom:34px;`, '', card);
+  const sh = el('div', `width:150px; height:170px; flex:none;${p.icon === 'none' ? ' display:none;' : ''}`, ICON.shield('#17181B', '#FFD60A'), head);
+  sh.firstChild.setAttribute('width', 150); sh.firstChild.setAttribute('height', 170);
+  el('div', `font-weight:900; font-stretch:${p.titleStretch || 86}%; font-size:${p.titleSize || 64}px; line-height:1.02; color:#17181B; letter-spacing:-1px`, p.title, head);
+  const rows = p.items.map((it, i) => {
+    const r = el('div', `display:flex; align-items:center; gap:26px; padding:22px 0; border-top:2px solid #ECEAE3;`, '', card);
+    const box = el('div', `width:78px; height:78px; border-radius:22px; border:5px solid #17181B; display:flex; align-items:center; justify-content:center; flex:none;`, '', r);
+    const ck = el('div', ``, ICON.check('#17181B'), box);
+    el('div', `font-weight:750; font-stretch:92%; font-size:52px; color:#17181B;`, it.label, r);
+    const at = (beat.wordAt(it.word) ?? (beat.start + .6 + i*.5)) - beat.start;
+    EV.push({ t: beat.start + at + .05, type: 'tick' });
+    return { r, box, ck, at };
+  });
+  let note = null;
+  if (p.note) { note = el('div', `position:absolute; right:40px; bottom:-40px; transform:rotate(-6deg); padding:6px 22px; background:#FFD60A; border-radius:8px; color:#17181B; font-size:46px;`, p.note, card); note.className = 'hand'; }
+  const noteAt = p.noteWord ? (beat.wordAt(p.noteWord) ?? beat.start + 1) - beat.start : 1.2;
+  EV.push({ t: beat.start + .05, type: 'whoosh' });
+  return lt => {
+    const a = eo(prog(lt, 0, .55)); card.style.opacity = a; card.style.transform = `translateY(${(1-a)*140}px) rotate(${(1-a)*3}deg)`;
+    sh.style.transform = `scale(${back(prog(lt, .15, .5))})`;
+    rows.forEach(o => { const k = prog(lt, o.at, .3); o.ck.style.transform = `scale(${back(k)})`; o.ck.style.opacity = k > 0 ? 1 : 0; o.box.style.background = k > .3 ? '#FFD60A' : 'transparent'; });
+    if (note) { const k = back(prog(lt, noteAt, .4)); note.style.transform = `rotate(-6deg) scale(${k})`; note.style.opacity = clamp(k*2); }
+  };
+};
+
+W.timeline = (root, p, beat) => {
+  const box = el('div', `position:absolute; left:90px; right:90px; top:${p.top || 540}px;`, '', root);
+  const warn = el('div', `display:flex; align-items:center; gap:28px; margin-bottom:60px;`, '', box);
+  el('div', `flex:none`, ICON.warn('#FFD60A'), warn);
+  el('div', `font-weight:900; font-stretch:95%; font-size:72px; line-height:1; color:${dark()?'#fff':'#17181B'}`, p.title || 'Achtung', warn);
+  const steps = p.steps.map((s, i) => {
+    const r = el('div', `position:relative; display:flex; align-items:center; gap:34px; height:150px;`, '', box);
+    const dot = el('div', `width:64px; height:64px; border-radius:50%; flex:none; border:6px solid ${s.c === 'red' ? '#E5484D' : '#FFD60A'}; background:${s.fill ? (s.c === 'red' ? '#E5484D' : '#FFD60A') : 'transparent'};`, '', r);
+    el('div', `font-weight:800; font-stretch:92%; font-size:52px; color:${dark()?'#fff':'#17181B'}; line-height:1.05`, s.t + (s.sub ? `<div style="font-weight:600; font-size:32px; color:#8C8E94; margin-top:6px">${s.sub}</div>` : ''), r);
+    const ln = i < p.steps.length - 1 ? el('div', `position:absolute; left:29px; top:107px; width:6px; height:86px; background:${dark()?'#3A3D44':'#D6D3CA'}; transform-origin:top;`, '', r) : null;
+    const at = (s.word ? (beat.wordAt(s.word) ?? beat.start) : beat.start + .3 + i*.55) - beat.start;
+    EV.push({ t: beat.start + at, type: 'tick' });
+    return { r, ln, at };
+  });
+  EV.push({ t: beat.start + .02, type: 'alert' });
+  return lt => {
+    warn.style.transform = `scale(${back(prog(lt, 0, .45))})`; warn.style.opacity = clamp(prog(lt, 0, .2));
+    steps.forEach(o => { const a = eo(prog(lt, o.at - .1, .4)); o.r.style.opacity = a; o.r.style.transform = `translateX(${(1-a)*80}px)`; if (o.ln) o.ln.style.transform = `scaleY(${eo(prog(lt, o.at + .2, .5))})`; });
+  };
+};
+
+W.letter = (root, p, beat) => {
+  const paper = el('div', `left:130px; top:${p.top || 440}px; width:820px; height:${p.h || 820}px; padding:64px 64px; border-radius:18px; background:#FBFAF6;`, '', root); paper.className = 'card lt';
+  paper.style.borderRadius = '18px';
+  el('div', `font-size:26px; color:#8C8E94; line-height:1.5`, p.from || 'Absender', paper); paper.lastChild.className = 'typed';
+  el('div', `margin:40px 0 34px; font-weight:900; font-stretch:90%; font-size:54px; color:#17181B; line-height:1.05`, p.subject, paper);
+  const body = el('div', `font-size:31px; line-height:1.55; color:#2A2C31;`, '', paper); body.className = 'typed';
+  const lines = p.lines.map(l => { const s = el('div', `position:relative; display:block; margin-bottom:6px;`, '', body);
+    if (l === p.highlight) { const m = el('span', `position:absolute; left:-10px; top:6%; bottom:2%; right:-10px; background:#FFD60A; border-radius:4px; transform-origin:left; z-index:0`, '', s); s.dataset.hl = 1; s._m = m; }
+    el('span', `position:relative; z-index:1`, l, s); return s; });
+  const hlAt = (p.hlWord ? (beat.wordAt(p.hlWord) ?? beat.start + 1) : beat.start + 1) - beat.start;
+  let stp = null; if (p.stamp) { stp = el('div', `position:absolute; right:40px; top:${p.stampTop || 300}px; padding:14px 30px; border:9px solid #E5484D; border-radius:16px; color:#E5484D; font-weight:900; font-stretch:80%; font-size:78px; letter-spacing:2px; transform:rotate(-12deg); background:rgba(251,250,246,.85)`, p.stamp, paper); }
+  const stAt = p.stampWord ? (beat.wordAt(p.stampWord) ?? beat.start + 1.5) - beat.start : 99; if (p.stamp) EV.push({ t: beat.start + stAt, type: 'stamp' });
+  EV.push({ t: beat.start + .02, type: 'paper' }); EV.push({ t: beat.start + hlAt, type: 'marker' });
+  return lt => {
+    const a = eo(prog(lt, 0, .6)); paper.style.opacity = a; paper.style.transform = `translateY(${(1-a)*300}px) rotate(${lerp(-8, -2, a)}deg)`;
+    lines.forEach(s => { if (s._m) s._m.style.transform = `scaleX(${eio(prog(lt, hlAt, .5))})`; });
+    if (stp) { const k = prog(lt, stAt, .25); stp.style.opacity = k > 0 ? 1 : 0; stp.style.transform = `rotate(-12deg) scale(${lerp(2.4, 1, eo(k))})`; }
+  };
+};
+
+W.split = (root, p, beat) => {
+  const mk = (x, side) => {
+    const c = el('div', `left:${x}px; top:${p.top || 470}px; width:450px; height:780px; padding:44px 36px; text-align:center;`, '', root);
+    c.className = 'card ' + (side.good ? 'lt' : 'dk');
+    if (side.good) c.style.background = '#FFD60A', c.style.borderColor = '#FFD60A';
+    el('div', `font-weight:900; font-stretch:90%; font-size:58px; color:${side.good ? '#17181B' : '#fff'}`, side.title, c);
+    el('div', `margin:44px auto 34px; width:120px;`, ICON.person(side.good ? '#17181B' : '#8C8E94'), c);
+    const num = el('div', `font-weight:900; font-stretch:80%; font-size:104px; letter-spacing:-3px; color:${side.good ? '#17181B' : '#E5484D'}`, '', c);
+    el('div', `margin-top:14px; font-weight:650; font-stretch:92%; font-size:34px; line-height:1.2; color:${side.good ? '#17181B' : '#C9CACE'}`, side.sub, c);
+    return { c, num, side };
+  };
+  const L = mk(70, p.left), R = mk(560, p.right); if (p.right.size) R.num.style.fontSize = p.right.size + 'px', R.num.style.lineHeight = '1.02', R.num.style.letterSpacing = '-1px';
+  const lAt = p.leftDone ? -10 : (beat.wordAt(p.left.word) ?? beat.start + .3) - beat.start;
+  if (p.enter !== false) EV.push({ t: beat.start + .02, type: 'whoosh' });
+  if (!p.leftDone) for (let i = 0; i < 8; i++) EV.push({ t: beat.start + lAt + i*.15, type: 'tick', gain: .45 });
+  const rAt = p.right.word ? (beat.wordAt(p.right.word) ?? beat.start + .5) - beat.start : null; if (rAt != null) EV.push({ t: beat.start + rAt, type: 'ding', gain: .7 });
+  return lt => {
+    [L, R].forEach((o, i) => { const a = p.enter === false ? 1 : back(prog(lt, i*.12, .5)); o.c.style.opacity = clamp(a*1.4); o.c.style.transform = `translateY(${(1-a)*200}px)`; });
+    const kl = eio(prog(lt, lAt, 1.2)); L.num.textContent = (p.left.prefix || '') + euro(Math.round(lerp(0, p.left.to, kl)/10)*10);
+    const kr = rAt != null ? back(prog(lt, rAt, .45)) : (p.right.hidden ? 0 : 1); R.num.innerHTML = kr > 0 ? (p.right.text || euro(p.right.to || 0)) : (p.right.placeholder || '?'); R.num.style.transform = `scale(${kr > 0 ? kr : 1})`;
+    const dim = p.dim === 'left' ? 1 : 0; L.c.style.filter = dim ? 'saturate(.6)' : '';
+  };
+};
+
+W.chips = (root, p, beat) => {
+  const box = el('div', `position:absolute; left:90px; right:90px; top:${p.top || 540}px; display:flex; flex-wrap:wrap; gap:26px;`, '', root);
+  if (p.title) el('div', `width:100%; margin-bottom:16px; font-weight:900; font-stretch:95%; font-size:68px; line-height:1; color:${dark()?'#fff':'#17181B'}`, p.title, box);
+  const cs = p.items.map((it, i) => {
+    const c = el('div', `padding:28px 40px; border-radius:60px; font-weight:800; font-stretch:88%; font-size:50px; ${dark() ? 'background:#24262B; color:#fff; border:2px solid rgba(255,255,255,.1);' : 'background:#fff; color:#17181B; box-shadow:0 14px 30px rgba(40,36,20,.12);'}`, it.label, box);
+    const at = (beat.wordAt(it.word) ?? (beat.start + .3 + i*.45)) - beat.start; EV.push({ t: beat.start + at, type: 'pop', gain: .7 }); return { c, at };
+  });
+  return lt => cs.forEach(o => { const k = back(prog(lt, o.at - .05, .35)); o.c.style.transform = `scale(${k})`; o.c.style.opacity = clamp(k*2); });
+};
+
+W.statement = (root, p, beat) => {
+  const box = el('div', `position:absolute; left:90px; right:90px; top:${p.top || 500}px;`, '', root);
+  let ic = null; if (p.icon) ic = el('div', `margin-bottom:40px; width:200px;`, ICON[p.icon](p.iconColor || (dark() ? '#FFD60A' : '#17181B'), dark() ? 'transparent' : '#FFD60A'), box);
+  const lines = p.lines.map((l, i) => el('div', `font-weight:${l.w || 900}; font-stretch:${l.s || 100}%; font-size:${l.size || 92}px; line-height:1.02; letter-spacing:-1.5px; margin-bottom:${l.mb || 14}px; color:${l.c === 'red' ? '#E5484D' : l.c === 'yellow' ? (dark() ? '#FFD60A' : '#17181B') : l.c === 'mute' ? '#8C8E94' : (dark() ? '#fff' : '#17181B')}`, l.t, box));
+  const ats = p.lines.map((l, i) => (l.word ? (beat.wordAt(l.word) ?? beat.start + i*.4) : beat.start + .1 + i*.35) - beat.start);
+  ats.forEach(a => EV.push({ t: beat.start + a, type: 'whoosh', gain: .45 }));
+  return lt => {
+    if (ic) ic.style.transform = `scale(${back(prog(lt, 0, .45))})`;
+    lines.forEach((d, i) => { const a = eo(prog(lt, ats[i] - .05, .4)); d.style.opacity = a; d.style.transform = `translateY(${(1-a)*50}px)`; });
+  };
+};
+
+W.shield = (root, p, beat) => {
+  const box = el('div', `position:absolute; left:0; right:0; top:${p.top || 470}px; text-align:center;`, '', root);
+  const s = el('div', `display:inline-block;`, ICON.shield('#17181B', '#FFD60A'), box);
+  s.firstChild.setAttribute('width', 330); s.firstChild.setAttribute('height', 375);
+  const t = el('div', `margin-top:40px; font-weight:900; font-stretch:${p.stretch || 88}%; font-size:${p.size || 88}px; line-height:1; letter-spacing:-1.5px; color:#17181B`, p.title, box);
+  const sub = el('div', `margin-top:22px; font-weight:650; font-stretch:92%; font-size:42px; color:#55575D`, p.sub || '', box);
+  EV.push({ t: beat.start + .1, type: 'ding' });
+  return lt => { s.style.transform = `scale(${back(prog(lt, .05, .55))}) rotate(${Math.sin(lt*1.2)*1.2}deg)`; t.style.opacity = eo(prog(lt, .3, .4)); sub.style.opacity = eo(prog(lt, .5, .4)); };
+};
+
+W.rewind = (root, p, beat) => {
+  const box = el('div', `position:absolute; left:90px; right:90px; top:${p.top || 500}px;`, '', root);
+  const cal = el('div', `position:relative; height:330px; border-radius:34px; padding:40px 44px;`, '', box); cal.className = 'lt'; cal.style.position = 'relative';
+  el('div', `font-weight:700; font-stretch:90%; font-size:36px; color:#8C8E94`, p.calLabel || 'Streit begann', cal);
+  el('div', `margin-top:10px; max-width:600px; font-weight:900; font-stretch:88%; font-size:76px; line-height:1; color:#17181B; letter-spacing:-2px`, p.calDate || 'vor 3 Wochen', cal);
+  const arr = el('div', `position:absolute; right:44px; top:64px; width:200px; height:200px;`, `<svg width="170" height="170" viewBox="0 0 200 200"><path d="M160 100 A60 60 0 1 1 100 40" fill="none" stroke="#17181B" stroke-width="16" stroke-linecap="round"/><path d="M100 10 L132 40 L100 70" fill="none" stroke="#17181B" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/></svg>`, cal);
+  const badge = el('div', `margin-top:44px; display:inline-block; padding:30px 44px; border-radius:30px; background:#FFD60A; color:#17181B; font-weight:900; font-stretch:88%; font-size:70px; letter-spacing:-1px; line-height:1.05`, p.badge, box);
+  const sub = el('div', `margin-top:26px; font-weight:650; font-stretch:92%; font-size:42px; color:#55575D; line-height:1.2`, p.sub || '', box);
+  const bAt = (beat.wordAt(p.badgeWord) ?? beat.start + 1.5) - beat.start;
+  EV.push({ t: beat.start + .05, type: 'rewind' }); EV.push({ t: beat.start + bAt, type: 'ding', gain: .7 });
+  return lt => {
+    const a = eo(prog(lt, 0, .5)); cal.style.opacity = a; cal.style.transform = `translateY(${(1-a)*120}px)`;
+    arr.style.transform = `rotate(${-eio(prog(lt, .2, 1.2))*360}deg)`;
+    const k = back(prog(lt, bAt, .45)); badge.style.transform = `scale(${k})`; badge.style.opacity = clamp(k*2); sub.style.opacity = eo(prog(lt, bAt + .3, .4));
+  };
+};
+
+W.blocks = (root, p, beat) => {
+  const base = el('div', `left:140px; top:${(p.top || 560) + 230}px; width:800px; height:220px; display:flex; align-items:center; justify-content:center; text-align:center; font-weight:900; font-stretch:88%; font-size:64px; color:#17181B; line-height:1`, p.base, root); base.className = 'card lt';
+  const blk = el('div', `left:290px; top:${p.top || 560}px; width:500px; height:190px; border-radius:30px; background:#FFD60A; display:flex; align-items:center; justify-content:center; text-align:center; font-weight:900; font-stretch:86%; font-size:54px; color:#17181B; line-height:1.02; box-shadow:0 30px 60px rgba(40,36,20,.2);`, p.block, root); blk.className = 'card';
+  [0,1,2].forEach(i => el('div', `position:absolute; bottom:-22px; left:${90 + i*140}px; width:80px; height:24px; border-radius:0 0 10px 10px; background:#E5BF00;`, '', blk));
+  const at = (beat.wordAt(p.word) ?? beat.start + .5) - beat.start;
+  EV.push({ t: beat.start + at + .5, type: 'click' });
+  let nt = null; if (p.note) { nt = el('div', `position:absolute; left:0; right:0; top:${(p.top || 560) + 500}px; text-align:center;`, `<span class="hand" style="display:inline-block; padding:6px 24px; background:#FFD60A; border-radius:8px; font-size:50px; color:#17181B; transform:rotate(-4deg)">${p.note}</span>`, root); }
+  const ntAt = p.noteWord ? (beat.wordAt(p.noteWord) ?? beat.start + 2) - beat.start : at + 1;
+  return lt => {
+    base.style.opacity = eo(prog(lt, 0, .4)); base.style.transform = `translateY(${(1 - eo(prog(lt, 0, .4)))*80}px)`;
+    const k = prog(lt, at, .55); const y = lerp(-520, 0, eio(k)); blk.style.transform = `translateY(${y}px) rotate(${(1-k)*-10}deg)`; blk.style.opacity = clamp(k*3);
+    const sq = prog(lt, at + .5, .25); blk.style.transform += ` scale(${1 + Math.sin(sq*Math.PI)*.05}, ${1 - Math.sin(sq*Math.PI)*.05})`;
+    if (nt) { const q = back(prog(lt, ntAt, .4)); nt.style.transform = `scale(${q})`; nt.style.opacity = clamp(q*2); }
+  };
+};
+
+W.endcard = (root, p, beat) => {
+  const card = el('div', `left:90px; top:330px; width:900px; padding:52px 60px 56px; text-align:center;`, '', root); card.className = 'card lt';
+  const img = el('div', `width:300px; height:300px; margin:0 auto 34px; border-radius:50%; background:url(assets/adrian-sq.jpg) center/cover; border:10px solid #FFD60A;`, '', card);
+  el('div', `font-weight:900; font-stretch:100%; font-size:84px; letter-spacing:-2px; color:#17181B; line-height:1`, 'Adrian Seitz', card);
+  el('div', `margin-top:16px; font-weight:600; font-stretch:92%; font-size:38px; color:#55575D`, p.role || 'Vertriebspartner der ARAG · Rechtsschutz', card);
+  const pill = el('div', `margin:44px auto 0; display:inline-flex; align-items:center; gap:18px; padding:28px 44px; border-radius:60px; background:#17181B; color:#fff; font-weight:850; font-stretch:92%; font-size:52px;`, `Kostenlos beraten lassen`, card);
+  const link = el('div', `margin-top:34px; display:inline-flex; align-items:center; gap:14px; font-weight:800; font-stretch:92%; font-size:44px; color:#17181B;`, ICON.arrowUp('#17181B') + `<span>Link in der Bio</span>`, card);
+  el('div', `margin-top:14px; font-weight:600; font-size:32px; color:#8C8E94`, 'seitz-rechtsschutz.de', card);
+  EV.push({ t: beat.start + .05, type: 'whoosh' }); EV.push({ t: beat.start + .5, type: 'ding', gain: .6 });
+  return lt => {
+    const a = back(prog(lt, 0, .55)); card.style.opacity = clamp(a*1.5); card.style.transform = `translateY(${(1-a)*220}px)`;
+    img.style.transform = `scale(${back(prog(lt, .15, .5))})`;
+    pill.style.transform = `scale(${1 + Math.max(0, Math.sin((lt - .8) * 3.2)) * .035})`;
+    link.style.transform = `translateY(${Math.sin(lt*4)*6}px)`;
+  };
+};
+
+W.ring = (root, p, beat) => {
+  const box = el('div', `position:absolute; left:0; right:0; top:${p.top || 470}px; text-align:center;`, '', root);
+  if (p.label) el('div', `font-weight:700; font-stretch:90%; font-size:42px; color:${dark()?'#C9CACE':'#55575D'}; margin-bottom:30px;`, p.label, box);
+  const col = p.color === 'red' ? '#E5484D' : '#FFD60A', R = 210, C = 2*Math.PI*R;
+  const wrap = el('div', `position:relative; width:520px; height:520px; margin:0 auto;`, `<svg width="520" height="520" viewBox="0 0 520 520"><circle cx="260" cy="260" r="${R}" fill="none" stroke="${dark()?'#2E3036':'#E2DFD6'}" stroke-width="40"/><circle class="arc" cx="260" cy="260" r="${R}" fill="none" stroke="${col}" stroke-width="40" stroke-linecap="round" transform="rotate(-90 260 260)" stroke-dasharray="${C}" stroke-dashoffset="${C}"/></svg>`, box);
+  const arc = wrap.querySelector('.arc');
+  const mid = el('div', `position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;`, '', wrap);
+  const num = el('div', `font-weight:900; font-stretch:90%; font-size:${p.size || 190}px; line-height:.9; letter-spacing:-5px; color:${dark()?'#fff':'#17181B'}`, p.value, mid);
+  el('div', `margin-top:10px; font-weight:800; font-stretch:${(p.unit||'').length > 8 ? 80 : 90}%; font-size:${(p.unit||'').length > 8 ? 42 : 54}px; color:${dark()?'#fff':'#17181B'}`, p.unit || '', mid);
+  const sub = el('div', `margin-top:34px; font-weight:650; font-stretch:92%; font-size:40px; line-height:1.2; color:${dark()?'#C9CACE':'#55575D'}; padding:0 60px`, p.sub || '', box);
+  const at = (p.word ? (beat.wordAt(p.word) ?? beat.start + .3) : beat.start + .3) - beat.start, dur = p.dur || 1.4;
+  for (let i = 0; i < 8; i++) EV.push({ t: beat.start + at + i*dur/8, type: 'tick', gain: .45 }); EV.push({ t: beat.start + at + dur, type: p.color === 'red' ? 'thud' : 'ding', gain: .6 });
+  return lt => {
+    const a = back(prog(lt, 0, .5)); wrap.style.transform = `scale(${a})`; box.style.opacity = clamp(a*1.5);
+    arc.style.strokeDashoffset = C * (1 - eio(prog(lt, at, dur)) * (p.fill ?? 1));
+    num.style.transform = `scale(${1 + Math.sin(prog(lt, at + dur, .3)*Math.PI)*.06})`; sub.style.opacity = eo(prog(lt, at + dur*.5, .5));
+  };
+};
+
+W.bars = (root, p, beat) => {
+  const box = el('div', `position:absolute; left:90px; right:90px; top:${p.top || 470}px; height:700px;`, '', root);
+  if (p.title) el('div', `font-weight:900; font-stretch:95%; font-size:62px; line-height:1.02; color:${dark()?'#fff':'#17181B'}; margin-bottom:30px`, p.title, box);
+  const area = el('div', `position:absolute; left:0; right:0; bottom:0; height:${p.title ? 560 : 680}px; display:flex; align-items:flex-end; justify-content:center; gap:60px;`, '', box);
+  const max = p.max || Math.max(...p.items.map(i => i.value));
+  const bars = p.items.map(it => {
+    const col = el('div', `width:${p.items.length > 2 ? 220 : 300}px; height:100%; display:flex; flex-direction:column; justify-content:flex-end; align-items:center;`, '', area);
+    const val = el('div', `font-weight:900; font-stretch:90%; font-size:84px; letter-spacing:-2px; color:${it.color === 'red' ? '#E5484D' : (dark() ? '#fff' : '#17181B')}; margin-bottom:14px`, it.display, col);
+    const bar = el('div', `width:100%; border-radius:26px 26px 8px 8px; background:${it.color === 'red' ? '#E5484D' : it.color === 'mute' ? (dark()?'#3A3D44':'#D6D3CA') : '#FFD60A'}; transform-origin:bottom; height:${Math.round(380*it.value/max)}px`, '', col);
+    el('div', `margin-top:18px; font-weight:750; font-stretch:90%; font-size:36px; line-height:1.15; text-align:center; color:${dark()?'#C9CACE':'#55575D'}`, it.label, col);
+    const at = it.done ? -10 : it.hidden ? 99 : (it.word ? (beat.wordAt(it.word) ?? beat.start + .3) : beat.start + .3) - beat.start; if (!it.done) EV.push({ t: beat.start + at, type: 'whoosh', gain: .5 });
+    return { val, bar, at };
+  });
+  return lt => { box.style.opacity = p.cont ? 1 : eo(prog(lt, 0, .3)); bars.forEach(o => { const k = eio(prog(lt, o.at - .1, .7)); o.bar.style.transform = `scaleY(${k})`; o.val.style.opacity = clamp((k - .5)*2); }); };
+};
+
+W.myth = (root, p, beat) => {
+  const mk = (top, kind, text) => {
+    const c = el('div', `left:90px; top:${top}px; width:900px; padding:44px 50px; display:flex; gap:34px; align-items:flex-start;`, '', root);
+    c.className = 'card ' + (kind === 'myth' ? (dark() ? 'dk' : 'lt') : 'lt'); if (kind === 'fact') c.style.background = '#FFD60A', c.style.borderColor = '#FFD60A';
+    const ic = el('div', `flex:none; width:96px; height:96px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:${kind === 'myth' ? 'rgba(229,72,77,.15)' : '#17181B'}`, kind === 'myth' ? ICON.x('#E5484D') : ICON.check('#FFD60A'), c);
+    const tx = el('div', ``, `<div style="font-weight:800; font-stretch:88%; font-size:34px; color:${kind === 'fact' ? '#17181B' : '#8C8E94'}; margin-bottom:8px">${kind === 'myth' ? 'Mythos' : 'Fakt'}</div><div style="font-weight:850; font-stretch:90%; font-size:56px; line-height:1.08; color:${kind === 'fact' ? '#17181B' : (dark() ? '#fff' : '#17181B')}">${text}</div>`, c);
+    return c;
+  };
+  const m = mk(p.top || 470, 'myth', p.myth), f = mk((p.top || 470) + (p.gap || 340), 'fact', p.fact);
+  const fAt = (p.factWord ? (beat.wordAt(p.factWord) ?? beat.start + 1.2) : beat.start + 1.2) - beat.start;
+  EV.push({ t: beat.start + .05, type: 'whoosh' }); EV.push({ t: beat.start + .35, type: 'alert', gain: .6 }); EV.push({ t: beat.start + fAt, type: 'ding', gain: .7 });
+  return lt => {
+    const a = back(prog(lt, 0, .45)); m.style.opacity = clamp(a*1.5); m.style.transform = `translateX(${(1-a)*-500}px)`;
+    const k = back(prog(lt, fAt, .5)); f.style.opacity = clamp(k*1.5); f.style.transform = `translateY(${(1-k)*200}px) scale(${.9 + .1*k})`;
+    m.style.filter = lt > fAt ? `saturate(${1 - eo(prog(lt, fAt, .4))*.8})` : '';
+  };
+};
+
+W.numbered = (root, p, beat) => {
+  const box = el('div', `position:absolute; left:90px; right:90px; top:${p.top || 470}px;`, '', root);
+  if (p.title) el('div', `font-weight:900; font-stretch:95%; font-size:66px; line-height:1; color:${dark()?'#fff':'#17181B'}; margin-bottom:44px`, p.title, box);
+  const cur = p.show ?? p.items.length - 1; const timed = !!p.timed;
+  const rows = p.items.slice(0, cur + 1).map((it, i) => {
+    const r = el('div', `display:flex; align-items:center; gap:34px; margin-bottom:34px;`, '', box); const on = timed || i === cur;
+    el('div', `flex:none; width:110px; height:110px; border-radius:50%; background:${on ? '#FFD60A' : (dark() ? '#2E3036' : '#E2DFD6')}; color:#17181B; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:62px; ${on ? '' : `color:${dark()?'#8C8E94':'#55575D'}`}`, String(i + 1), r);
+    el('div', `font-weight:${on ? 850 : 700}; font-stretch:90%; font-size:${on ? (timed ? 50 : 56) : 44}px; line-height:1.08; color:${on ? (dark() ? '#fff' : '#17181B') : '#8C8E94'}`, it.t + (it.sub && on ? `<div style="font-weight:600; font-size:34px; color:#8C8E94; margin-top:6px">${it.sub}</div>` : ''), r);
+    const at = timed ? ((it.word ? (beat.wordAt(it.word) ?? beat.start + .3 + i*.6) : beat.start + .3 + i*.6) - beat.start) : .02;
+    EV.push({ t: beat.start + at + .05, type: 'pop', gain: .7 });
+    return { r, isCur: on, at };
+  });
+  return lt => rows.forEach(o => { if (o.isCur) { const k = back(prog(lt, o.at, .45)); o.r.style.transform = `translateX(${(1-k)*-120}px)`; o.r.style.opacity = clamp(k*1.5); } });
+};
+
+W.versus = (root, p, beat) => {
+  const mk = (s, top) => {
+    const c = el('div', `left:90px; top:${top}px; width:900px; height:330px; padding:44px 50px; display:flex; gap:40px; align-items:center;`, '', root);
+    c.className = 'card ' + (s.tone === 'yellow' || !dark() ? 'lt' : 'dk'); if (s.tone === 'yellow') c.style.background = '#FFD60A', c.style.borderColor = '#FFD60A';
+    const ink = s.tone === 'yellow' || !dark() ? '#17181B' : '#fff';
+    el('div', `flex:none; width:150px; text-align:center; transform:scale(.8)`, ICON[s.icon || 'person'](ink, s.tone === 'yellow' ? '#fff' : 'transparent'), c);
+    el('div', ``, `<div style="font-weight:700; font-stretch:90%; font-size:36px; color:${s.tone === 'yellow' ? '#17181B' : '#8C8E94'}; margin-bottom:8px">${s.kicker || ''}</div><div style="font-weight:900; font-stretch:88%; font-size:64px; line-height:1; color:${ink}">${s.title}</div><div style="margin-top:12px; font-weight:650; font-stretch:92%; font-size:36px; line-height:1.2; color:${s.tone === 'yellow' ? '#17181B' : '#8C8E94'}">${s.text || ''}</div>`, c);
+    const at = s.done ? -10 : (s.word ? (beat.wordAt(s.word) ?? beat.start + .2) : beat.start + .2) - beat.start; if (!s.done) EV.push({ t: beat.start + at, type: 'whoosh', gain: .6 });
+    return { c, at };
+  };
+  const A = mk(p.a, p.top || 470), Bc = p.b ? mk(p.b, (p.top || 470) + 370) : null;
+  return lt => [A, Bc].filter(Boolean).forEach((o, i) => { const k = back(prog(lt, o.at - .1, .45)); o.c.style.opacity = clamp(k*1.5); o.c.style.transform = `translateX(${(1-k)*(i ? 600 : -600)}px)`; });
+};
+
+W.form = (root, p, beat) => {
+  const paper = el('div', `left:130px; top:${p.top || 450}px; width:820px; padding:56px 60px 60px; border-radius:18px; background:#FBFAF6;`, '', root); paper.className = 'card lt'; paper.style.borderRadius = '18px';
+  el('div', `font-weight:900; font-stretch:90%; font-size:58px; color:#17181B; margin-bottom:30px`, p.title, paper);
+  const rows = p.rows.map(r => {
+    const d = el('div', `display:flex; align-items:center; gap:24px; padding:24px 0; border-top:2px solid #ECEAE3;`, '', paper);
+    const box = el('div', `flex:none; width:64px; height:64px; border-radius:16px; border:5px solid #17181B; display:flex; align-items:center; justify-content:center;`, '', d);
+    const ck = el('div', `transform:scale(.8)`, ICON.check('#17181B'), box);
+    el('div', `font-weight:750; font-stretch:92%; font-size:46px; color:#17181B; flex:1`, r.label, d);
+    const v = el('div', `font-size:40px; color:#3050C8; transform:rotate(-3deg)`, r.value || '', d); v.className = 'hand';
+    const at = p.ticks === false ? 99 : (r.word ? (beat.wordAt(r.word) ?? beat.start + .5) : beat.start + .5) - beat.start; if (p.ticks !== false) EV.push({ t: beat.start + at, type: 'tick' });
+    return { box, ck, v, at };
+  });
+  let sig = null; if (p.sign) { sig = el('div', `margin-top:30px; font-size:56px; color:#3050C8; border-bottom:3px solid #17181B; padding-bottom:4px; width:420px; clip-path:inset(0 100% 0 0)`, p.sign, paper); sig.className = 'hand'; }
+  const sAt = p.signWord ? (beat.wordAt(p.signWord) ?? beat.start + 2) - beat.start : 99;
+  if (p.sign) EV.push({ t: beat.start + sAt, type: 'marker' });
+  if (!p.cont) EV.push({ t: beat.start + .02, type: 'paper' });
+  return lt => {
+    const a = p.cont ? 1 : eo(prog(lt, 0, .5)); paper.style.opacity = a; paper.style.transform = `translateY(${(1-a)*240}px) rotate(${lerp(-6, -1.5, a)}deg)`;
+    rows.forEach(o => { const k = prog(lt, o.at, .3); o.ck.style.opacity = k > 0 ? 1 : 0; o.ck.style.transform = `scale(${.8*back(k)})`; o.box.style.background = k > .3 ? '#FFD60A' : 'transparent'; o.v.style.opacity = eo(prog(lt, o.at + .15, .3)); });
+    if (sig) sig.style.clipPath = `inset(0 ${100 - eo(prog(lt, sAt, .8))*100}% 0 0)`;
+  };
+};
+
+// ---------- Ablauf ----------
+let T = null, beats = [], scenes = [], words = [], chunks = [], lightAt = 1e9;
+function build(data) {
+  T = data; lightAt = data.lightAt ?? 1e9;
+  document.getElementById('badgeText').textContent = data.badge;
+  const ht = document.getElementById('hookTitle'); ht.innerHTML = data.hookTitle;
+  const stage = document.getElementById('stage');
+  beats = data.beats;
+  beats.forEach((b, i) => {
+    b.wordAt = w => { if (!w) return null; const k = b.words.find(x => x.w.toLowerCase().replace(/[^a-zäöüß0-9.]/g, '').startsWith(w.toLowerCase())); return k ? k.s : null; };
+    b.next = beats[i+1] ? beats[i+1].start : data.duration;
+    // Hell/Dunkel für den Baustein beim Bau festlegen
+    document.body.classList.toggle('light', b.start >= lightAt - .01);
+    const root = el('div', '', '', stage); root.className = 'scene'; root.style.opacity = 0;
+    b.update = W[b.scene.type](root, b.scene, b); b.root = root;
+  });
+  document.body.classList.remove('light');
+  // Untertitel in Häppchen (max. 3 Wörter, Satzzeichen beenden ein Häppchen)
+  beats.forEach(b => {
+    let cur = [];
+    b.words.forEach((w, i) => {
+      cur.push(w); const end = /[.,!?:;]$/.test(w.w) || cur.length >= (w.w.length > 12 ? 2 : 3) || i === b.words.length - 1;
+      if (end) { chunks.push({ words: cur, start: cur[0].s, beat: b }); cur = []; }
+    });
+  });
+  chunks.forEach((c, i) => { c.end = chunks[i+1] ? Math.min(chunks[i+1].start, c.words[c.words.length-1].e + .9) : c.words[c.words.length-1].e + .6; });
+  // Ton: Hell-Schalter
+  if (lightAt < 1e8) EV.push({ t: lightAt, type: 'switch' });
+  return { events: EV, duration: data.duration };
+}
+let lastChunk = null;
+function renderAt(t) {
+  // Hintergrund hell/dunkel
+  const L = eio(prog(t, lightAt + .04, .12));
+  document.getElementById('bgLight').style.opacity = L;
+  document.body.classList.toggle('light', L > .5);
+  // Kopf
+  const ht = document.getElementById('hookTitle'); const h0 = beats[0];
+  const hIn = back(prog(t, 0, .5)), hOut = prog(t, h0.next - .35, .35);
+  ht.style.opacity = clamp(hIn*1.5) * (1 - hOut); ht.style.transform = `translateY(${(1-hIn)*40 - hOut*30}px)`;
+  document.getElementById('badge').style.opacity = eo(prog(t, h0.next - .2, .4));
+  // Szenen: aktuelle sichtbar, vorige gleitet weg
+  beats.forEach((b, i) => {
+    const vis = t >= b.start - .02 && t < b.next + (beats[i+1] && beats[i+1].scene.cont ? 0 : .16);
+    if (!vis) { b.root.style.opacity = 0; b.root.style.visibility = 'hidden'; return; }
+    b.root.style.visibility = 'visible';
+    const nx = beats[i+1], keepOut = nx && nx.scene.cont, keepIn = b.scene.cont;
+    const out = keepOut ? (t >= b.next ? 1 : 0) : prog(t, b.next - .03, .16), inn = keepIn ? 1 : prog(t, b.start + .08, .14);
+    b.root.style.opacity = (i === 0 ? 1 : eo(inn)) * (1 - eo(out));
+    b.root.style.transform = `translateY(${-eo(out)*110}px) scale(${1 - eo(out)*.06})`;
+    b.update(t - b.start);
+  });
+  // Untertitel
+  const caps = document.getElementById('caps');
+  const c = chunks.find(c => t >= c.start - .04 && t < c.end);
+  if (c !== lastChunk) {
+    caps.innerHTML = ''; lastChunk = c;
+    if (c) c.words.forEach(w => { const d = el('div', '', `<s></s><b>${w.w}</b>`, caps); d.className = 'w' + (w.emph ? ' emph' : ''); w.el = d; });
+  }
+  if (c) {
+    const age = t - c.start; caps.style.transform = `translateY(${(1 - back(prog(age, 0, .25)))*24}px)`; caps.style.opacity = clamp(age*8 + .4);
+    c.words.forEach(w => { const on = t >= w.s - .03 && t < Math.max(w.e, w.s + .18); w.el.classList.toggle('on', on); const s = w.el.firstChild; s.style.transform = `scaleX(${on ? eo(prog(t, w.s - .03, .12)) : 0})`; });
+  }
+}
+window.build = build; window.renderAt = renderAt;
+</script>
+</body>
+</html>

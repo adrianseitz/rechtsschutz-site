@@ -1,0 +1,40 @@
+{
+ "id": "reel-23-f-finanzamt",
+ "title": "Streit mit dem Finanzamt? Das musst du wissen",
+ "topic": "firma",
+ "format": "reel-2026",
+ "caption": "Streit mit dem Finanzamt? Steuer-Rechtsschutz greift meist erst vor dem Finanzgericht, nicht schon beim Einspruch. Typisch: zu hoher Steuerbescheid, Betriebsausgaben, Betriebsprüfung. Im Firmenrechtsschutz je nach Tarif als Baustein. Kostenloser Check über den Link in der Bio.\n\n#selbstständig #unternehmer #arbeitgeber #firmenrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "voice": "Streit mit dem *Finanzamt?*",
+   "say": "Streit mit dem Finanzamt?"
+  },
+  {
+   "key": "fakt",
+   "mood": "ernst",
+   "voice": "Gut zu wissen: Steuer-Rechtsschutz greift meist erst *vor dem Finanzgericht,* nicht schon beim Einspruch.",
+   "say": "Gut zu wissen: Steuer-Rechtsschutz greift meist erst vor dem Finanzgericht, nicht schon beim Einspruch."
+  },
+  {
+   "key": "faelle",
+   "mood": "eindringlich",
+   "voice": "Typische Fälle: ein zu hoher Steuerbescheid, Streit um Betriebsausgaben oder Ärger nach einer Betriebsprüfung.",
+   "say": "Typische Fälle: ein zu hoher Steuerbescheid, Streit um Betriebsausgaben oder Ärger nach einer Betriebsprüfung."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Im Firmenrechtsschutz ist Steuer-Rechtsschutz vor Gericht je nach Tarif als Baustein mit drin.",
+   "say": "Im Firmenrechtsschutz ist Steuer-Rechtsschutz vor Gericht je nach Tarif als Baustein mit drin."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

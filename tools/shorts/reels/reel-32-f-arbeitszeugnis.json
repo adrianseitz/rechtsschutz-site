@@ -1,0 +1,40 @@
+{
+ "id": "reel-32-f-arbeitszeugnis",
+ "title": "Streit ums Arbeitszeugnis? Das musst du wissen",
+ "topic": "firma",
+ "format": "reel-2026",
+ "caption": "Jeder Mitarbeiter hat Anspruch auf ein Arbeitszeugnis – wahr und wohlwollend (§ 109 GewO). Streit gibt es oft um Noten, Formulierungen und versteckte Codes. Arbeitgeber-Rechtsschutz je nach Tarif. Kostenloser Check über den Link in der Bio.\n\n#selbstständig #unternehmer #arbeitgeber #firmenrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "voice": "Ein Ex-Mitarbeiter will sein Zeugnis *geändert* haben?",
+   "say": "Ein Ex-Mitarbeiter will sein Zeugnis geändert haben?"
+  },
+  {
+   "key": "regel",
+   "mood": "ernst",
+   "voice": "Jeder Mitarbeiter hat Anspruch auf ein Arbeitszeugnis. Und es muss *wahr* und *wohlwollend* sein.",
+   "say": "Jeder Mitarbeiter hat Anspruch auf ein Arbeitszeugnis. Und es muss wahr und wohlwollend sein."
+  },
+  {
+   "key": "streit",
+   "mood": "eindringlich",
+   "voice": "Gestritten wird oft um Noten, um einzelne Formulierungen oder versteckte Codes.",
+   "say": "Gestritten wird oft um Noten, um einzelne Formulierungen oder versteckte Codes."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Landet das vor Gericht, übernimmt der Arbeitgeber-Baustein je nach Tarif Anwalt und Gericht.",
+   "say": "Landet das vor Gericht, übernimmt der Arbeitgeber-Baustein je nach Tarif Anwalt und Gericht."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

@@ -1,0 +1,40 @@
+{
+ "id": "reel-27-f-erster-mitarbeiter",
+ "title": "Erster Mitarbeiter? Dann prüf deinen Rechtsschutz",
+ "topic": "firma",
+ "format": "reel-2026",
+ "caption": "Ersten Mitarbeiter eingestellt? Ab jetzt sind neue Streitfälle möglich: Kündigung, Arbeitszeugnis, Lohn. Der Arbeitgeber-Baustein im Firmenrechtsschutz deckt das je nach Tarif ab – rechtzeitig ergänzen, meist gilt eine Wartezeit. Kostenloser Check über den Link in der Bio.\n\n#selbstständig #unternehmer #arbeitgeber #firmenrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "begeistert",
+   "voice": "Du hast deinen *ersten* Mitarbeiter eingestellt? Glückwunsch!",
+   "say": "Du hast deinen ersten Mitarbeiter eingestellt? Glückwunsch!"
+  },
+  {
+   "key": "neu",
+   "mood": "ernst",
+   "voice": "Ab jetzt gibt es neue Streitfälle: um eine Kündigung, ums Arbeitszeugnis oder um den Lohn.",
+   "say": "Ab jetzt gibt es neue Streitfälle: um eine Kündigung, ums Arbeitszeugnis oder um den Lohn."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Im Firmenrechtsschutz deckt der *Arbeitgeber-Baustein* solche Streitigkeiten je nach Tarif ab.",
+   "say": "Im Firmenrechtsschutz deckt der Arbeitgeber-Baustein solche Streitigkeiten je nach Tarif ab."
+  },
+  {
+   "key": "achtung",
+   "mood": "eindringlich",
+   "voice": "Wichtig: Rechtzeitig ergänzen. Meist gilt eine Wartezeit von drei Monaten.",
+   "say": "Wichtig: Rechtzeitig ergänzen. Meist gilt eine Wartezeit von drei Monaten."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

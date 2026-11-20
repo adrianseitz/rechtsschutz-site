@@ -1,0 +1,46 @@
+{
+ "id": "reel-21-v-zahlt-nicht-alles",
+ "title": "Rechtsschutz zahlt alles? Leider nein",
+ "topic": "vermieter",
+ "format": "reel-2026",
+ "caption": "Rechtsschutz zahlt nicht alles: Meist gilt eine Wartezeit von 3 Monaten, je nach Tarif gibt es eine Selbstbeteiligung, und manches ist ausgeschlossen – z. B. Streit um Kauf oder Bau der Immobilie. Vorher klären, was dein Tarif abdeckt. Kostenloser Check über den Link in der Bio.\n\n#vermieter #mietrecht #immobilien #vermieterrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "voice": "Rechtsschutz zahlt *alles?* Leider nein.",
+   "say": "Rechtsschutz zahlt alles? Leider nein."
+  },
+  {
+   "key": "eins",
+   "mood": "ernst",
+   "voice": "Erstens: Es gibt meist eine *Wartezeit* von drei Monaten.",
+   "say": "Erstens: Es gibt meist eine Wartezeit von drei Monaten."
+  },
+  {
+   "key": "zwei",
+   "mood": "ernst",
+   "voice": "Zweitens: Je nach Tarif gibt es eine *Selbstbeteiligung.*",
+   "say": "Zweitens: Je nach Tarif gibt es eine Selbstbeteiligung."
+  },
+  {
+   "key": "drei",
+   "mood": "eindringlich",
+   "voice": "Drittens: Manches ist ausgeschlossen, zum Beispiel Streit um Kauf oder Bau der Immobilie.",
+   "say": "Drittens: Manches ist ausgeschlossen, zum Beispiel Streit um Kauf oder Bau der Immobilie."
+  },
+  {
+   "key": "tipp",
+   "mood": "warm",
+   "voice": "Darum vorher genau klären, was dein Tarif abdeckt.",
+   "say": "Darum vorher genau klären, was dein Tarif abdeckt."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

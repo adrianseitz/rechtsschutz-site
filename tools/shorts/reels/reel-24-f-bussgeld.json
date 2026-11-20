@@ -1,0 +1,40 @@
+{
+ "id": "reel-24-f-bussgeld",
+ "title": "Bußgeld für den Betrieb? Das zahlt die Versicherung",
+ "topic": "firma",
+ "format": "reel-2026",
+ "caption": "Bußgeldbescheid nach Hygiene-Kontrolle, Arbeitsschutz oder vom Ordnungsamt? Das Bußgeld selbst zahlt keine Versicherung – wohl aber die Verteidigung. Ordnungswidrigkeiten-Rechtsschutz im Firmenrechtsschutz je nach Tarif. Kostenloser Check über den Link in der Bio.\n\n#selbstständig #unternehmer #arbeitgeber #firmenrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "voice": "Ein Bußgeldbescheid für deinen Betrieb kommt schneller, als du denkst.",
+   "say": "Ein Bußgeldbescheid für deinen Betrieb kommt schneller, als du denkst."
+  },
+  {
+   "key": "wann",
+   "mood": "ernst",
+   "voice": "Zum Beispiel nach einer Hygiene-Kontrolle, wegen Arbeitsschutz oder vom Ordnungsamt.",
+   "say": "Zum Beispiel nach einer Hygiene-Kontrolle, wegen Arbeitsschutz oder vom Ordnungsamt."
+  },
+  {
+   "key": "fakt",
+   "mood": "dramatisch",
+   "voice": "Das Bußgeld selbst zahlt *keine* Versicherung. Aber die *Verteidigung,* also Anwalt und Verfahren.",
+   "say": "Das Bußgeld selbst zahlt keine Versicherung. Aber die Verteidigung, also Anwalt und Verfahren."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Im Firmenrechtsschutz ist der Ordnungswidrigkeiten-Rechtsschutz je nach Tarif mit drin.",
+   "say": "Im Firmenrechtsschutz ist der Ordnungswidrigkeiten-Rechtsschutz je nach Tarif mit drin."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

@@ -1,0 +1,46 @@
+{
+ "id": "reel-14-v-kaution-hoehe",
+ "title": "Wie hoch darf die Kaution sein?",
+ "topic": "vermieter",
+ "format": "reel-2026",
+ "caption": "Die Kaution darf höchstens drei Monatsmieten ohne Nebenkosten betragen, der Mieter darf in drei Raten zahlen, und du musst sie getrennt von deinem Vermögen anlegen (§ 551 BGB). Streit um die Kaution? Vermieterrechtsschutz je nach Tarif. Kostenloser Check über den Link in der Bio.\n\n#vermieter #mietrecht #immobilien #vermieterrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "voice": "Wie hoch darf die Kaution eigentlich sein?",
+   "say": "Wie hoch darf die Kaution eigentlich sein?"
+  },
+  {
+   "key": "regel",
+   "mood": "ernst",
+   "voice": "Höchstens *drei Monatsmieten,* gerechnet ohne Nebenkosten.",
+   "say": "Höchstens drei Monatsmieten, gerechnet ohne Nebenkosten."
+  },
+  {
+   "key": "raten",
+   "mood": "eindringlich",
+   "voice": "Und dein Mieter darf sie in *drei Raten* zahlen. Die erste ist zu Beginn des Mietverhältnisses fällig.",
+   "say": "Und dein Mieter darf sie in drei Raten zahlen. Die erste ist zu Beginn des Mietverhältnisses fällig."
+  },
+  {
+   "key": "anlage",
+   "mood": "ernst",
+   "voice": "Du musst die Kaution getrennt von deinem eigenen Vermögen anlegen.",
+   "say": "Du musst die Kaution getrennt von deinem eigenen Vermögen anlegen."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Gibt es später Streit um die Kaution, hilft der Vermieterrechtsschutz je nach Tarif.",
+   "say": "Gibt es später Streit um die Kaution, hilft der Vermieterrechtsschutz je nach Tarif."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

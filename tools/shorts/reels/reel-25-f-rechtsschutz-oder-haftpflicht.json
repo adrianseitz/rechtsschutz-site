@@ -1,0 +1,40 @@
+{
+ "id": "reel-25-f-rechtsschutz-oder-haftpflicht",
+ "title": "Rechtsschutz oder Haftpflicht? Das verwechseln viele",
+ "topic": "firma",
+ "format": "reel-2026",
+ "caption": "Faustregel: Willst du Geld von jemand anderem, hilft der Rechtsschutz, deine Ansprüche durchzusetzen. Will jemand Geld von dir, ist meist die Betriebshaftpflicht zuständig – sie wehrt unberechtigte Forderungen ab. Am besten passen beide zusammen. Kostenloser Check über den Link in der Bio.\n\n#selbstständig #unternehmer #arbeitgeber #firmenrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "voice": "Rechtsschutz oder Haftpflicht? Das verwechseln viele Selbstständige.",
+   "say": "Rechtsschutz oder Haftpflicht? Das verwechseln viele Selbstständige."
+  },
+  {
+   "key": "rs",
+   "mood": "warm",
+   "voice": "Du willst Geld von jemand anderem? Dann hilft der *Rechtsschutz,* deine Ansprüche durchzusetzen.",
+   "say": "Du willst Geld von jemand anderem? Dann hilft der Rechtsschutz, deine Ansprüche durchzusetzen."
+  },
+  {
+   "key": "hp",
+   "mood": "ernst",
+   "voice": "Will jemand Geld von dir, ist meist die *Betriebshaftpflicht* dran. Sie wehrt unberechtigte Forderungen ab.",
+   "say": "Will jemand Geld von dir, ist meist die Betriebshaftpflicht dran. Sie wehrt unberechtigte Forderungen ab."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Am besten passen beide zusammen, je nach Tarif.",
+   "say": "Am besten passen beide zusammen, je nach Tarif."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

@@ -1,0 +1,46 @@
+{
+ "id": "reel-15-v-kappungsgrenze",
+ "title": "Mieterhöhung: Um wie viel darfst du erhöhen?",
+ "topic": "vermieter",
+ "format": "reel-2026",
+ "caption": "Kappungsgrenze: In drei Jahren darf die Miete um höchstens 20 % steigen, in Gebieten mit angespanntem Wohnungsmarkt um 15 % – und nie über die ortsübliche Vergleichsmiete (§ 558 BGB). Streit über die Erhöhung? Vermieterrechtsschutz je nach Tarif. Kostenloser Check über den Link in der Bio.\n\n#vermieter #mietrecht #immobilien #vermieterrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "voice": "Du willst die Miete erhöhen? Dann kenn diese *Grenze.*",
+   "say": "Du willst die Miete erhöhen? Dann kenn diese Grenze."
+  },
+  {
+   "key": "regel",
+   "mood": "ernst",
+   "voice": "Innerhalb von drei Jahren darf die Miete um höchstens *20 Prozent* steigen.",
+   "say": "Innerhalb von drei Jahren darf die Miete um höchstens 20 Prozent steigen."
+  },
+  {
+   "key": "angespannt",
+   "mood": "eindringlich",
+   "voice": "In vielen Städten mit knappem Wohnraum sind es sogar nur *15 Prozent.*",
+   "say": "In vielen Städten mit knappem Wohnraum sind es sogar nur 15 Prozent."
+  },
+  {
+   "key": "vergleich",
+   "mood": "ernst",
+   "voice": "Und nie über die ortsübliche Vergleichsmiete hinaus.",
+   "say": "Und nie über die ortsübliche Vergleichsmiete hinaus."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Kommt es zum Streit über die Erhöhung, übernimmt der Vermieterrechtsschutz je nach Tarif Anwalt und Gericht.",
+   "say": "Kommt es zum Streit über die Erhöhung, übernimmt der Vermieterrechtsschutz je nach Tarif Anwalt und Gericht."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

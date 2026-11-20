@@ -1,0 +1,46 @@
+{
+ "id": "reel-26-f-3-fehler",
+ "title": "3 Fehler, die Selbstständige beim Rechtsschutz machen",
+ "topic": "firma",
+ "format": "reel-2026",
+ "caption": "3 Fehler beim Firmenrechtsschutz: 1. Glauben, der private Rechtsschutz reicht. 2. Erst abschließen, wenn es schon kracht. 3. Der Betrieb wächst, der Vertrag nicht. Kostenloser Check über den Link in der Bio.\n\n#selbstständig #unternehmer #arbeitgeber #firmenrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "voice": "Drei Fehler, die Selbstständige beim Rechtsschutz machen.",
+   "say": "Drei Fehler, die Selbstständige beim Rechtsschutz machen."
+  },
+  {
+   "key": "eins",
+   "mood": "ernst",
+   "voice": "Erstens: Zu glauben, der *private* Rechtsschutz reicht.",
+   "say": "Erstens: Zu glauben, der private Rechtsschutz reicht."
+  },
+  {
+   "key": "zwei",
+   "mood": "ernst",
+   "voice": "Zweitens: Erst abschließen, wenn es *schon kracht.*",
+   "say": "Zweitens: Erst abschließen, wenn es schon kracht."
+  },
+  {
+   "key": "drei",
+   "mood": "eindringlich",
+   "voice": "Drittens: Der Betrieb wächst, aber der Vertrag bleibt gleich.",
+   "say": "Drittens: Der Betrieb wächst, aber der Vertrag bleibt gleich."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Neue Mitarbeiter oder ein zweiter Standort? Dann sollte der Vertrag mitwachsen.",
+   "say": "Neue Mitarbeiter oder ein zweiter Standort? Dann sollte der Vertrag mitwachsen."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

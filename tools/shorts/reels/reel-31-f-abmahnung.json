@@ -1,0 +1,46 @@
+{
+ "id": "reel-31-f-abmahnung",
+ "title": "Kündigen ohne Abmahnung? Meist ein Fehler",
+ "topic": "firma",
+ "format": "reel-2026",
+ "caption": "Bei verhaltensbedingten Kündigungen ist vorher meist eine Abmahnung nötig. Sie muss das Fehlverhalten genau benennen und die Kündigung androhen. Fehlt sie, scheitert die Kündigung vor Gericht oft. Arbeitgeber-Rechtsschutz je nach Tarif. Kostenloser Check über den Link in der Bio.\n\n#selbstständig #unternehmer #arbeitgeber #firmenrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "voice": "Ein Mitarbeiter kommt ständig zu spät, und du willst *kündigen?*",
+   "say": "Ein Mitarbeiter kommt ständig zu spät, und du willst kündigen?"
+  },
+  {
+   "key": "regel",
+   "mood": "ernst",
+   "voice": "Bei Fehlverhalten brauchst du vorher meist eine *Abmahnung.*",
+   "say": "Bei Fehlverhalten brauchst du vorher meist eine Abmahnung."
+  },
+  {
+   "key": "inhalt",
+   "mood": "eindringlich",
+   "voice": "Sie muss das Fehlverhalten genau benennen und klar machen: Beim nächsten Mal droht die Kündigung.",
+   "say": "Sie muss das Fehlverhalten genau benennen und klar machen: Beim nächsten Mal droht die Kündigung."
+  },
+  {
+   "key": "folge",
+   "mood": "dramatisch",
+   "voice": "Fehlt die Abmahnung, scheitert die Kündigung vor Gericht oft.",
+   "say": "Fehlt die Abmahnung, scheitert die Kündigung vor Gericht oft."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Kommt es zur Klage, übernimmt der Arbeitgeber-Baustein je nach Tarif Anwalt und Gericht.",
+   "say": "Kommt es zur Klage, übernimmt der Arbeitgeber-Baustein je nach Tarif Anwalt und Gericht."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

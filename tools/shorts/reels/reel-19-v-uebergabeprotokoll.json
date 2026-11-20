@@ -1,0 +1,46 @@
+{
+ "id": "reel-19-v-uebergabeprotokoll",
+ "title": "Wohnungsübergabe: Dieses Papier spart dir Ärger",
+ "topic": "vermieter",
+ "format": "reel-2026",
+ "caption": "Übergabeprotokoll bei Ein- und Auszug: Zählerstände, Schlüssel, Schäden mit Fotos – und beide unterschreiben. Ohne Beweis ist es schwer, Schäden von der Kaution abzuziehen. Vermieterrechtsschutz hilft im Streitfall je nach Tarif. Kostenloser Check über den Link in der Bio.\n\n#vermieter #mietrecht #immobilien #vermieterrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "voice": "Ein Blatt Papier kann dir beim Auszug *viel* Ärger sparen.",
+   "say": "Ein Blatt Papier kann dir beim Auszug viel Ärger sparen."
+  },
+  {
+   "key": "was",
+   "mood": "ernst",
+   "voice": "Das Übergabeprotokoll. Halte beim Einzug und beim Auszug alles fest.",
+   "say": "Das Übergabeprotokoll. Halte beim Einzug und beim Auszug alles fest."
+  },
+  {
+   "key": "inhalt",
+   "mood": "eindringlich",
+   "voice": "Zählerstände, Schlüssel, Schäden mit Fotos. Und beide unterschreiben.",
+   "say": "Zählerstände, Schlüssel, Schäden mit Fotos. Und beide unterschreiben."
+  },
+  {
+   "key": "warum",
+   "mood": "dramatisch",
+   "voice": "Denn ohne Beweis wird es schwer, Schäden von der Kaution abzuziehen.",
+   "say": "Denn ohne Beweis wird es schwer, Schäden von der Kaution abzuziehen."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Und reicht das nicht, hilft der Vermieterrechtsschutz je nach Tarif mit Anwalt und Gericht.",
+   "say": "Und reicht das nicht, hilft der Vermieterrechtsschutz je nach Tarif mit Anwalt und Gericht."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

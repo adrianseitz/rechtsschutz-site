@@ -1,0 +1,34 @@
+{
+ "id": "reel-22-f-privatschutz-zaehlt-nicht",
+ "title": "Selbstständig? Dein Privat-Rechtsschutz zählt nicht",
+ "topic": "firma",
+ "format": "reel-2026",
+ "caption": "Selbstständig? Dein privater Rechtsschutz gilt in der Regel nicht für deinen Betrieb. Streit mit Mitarbeitern, Bußgeld oder Steuerstreit vor Gericht brauchen einen eigenen Firmenrechtsschutz – modular nach Branche und Größe (je nach Tarif). Kostenloser Check über den Link in der Bio.\n\n#selbstständig #unternehmer #arbeitgeber #firmenrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "voice": "Du bist selbstständig? Dann gilt dein privater Rechtsschutz in der Regel *nicht* für deine Firma.",
+   "say": "Du bist selbstständig? Dann gilt dein privater Rechtsschutz in der Regel nicht für deine Firma."
+  },
+  {
+   "key": "aerger",
+   "mood": "ernst",
+   "voice": "Typischer Ärger im Betrieb: Streit mit Mitarbeitern, ein Bußgeldverfahren oder ein Steuerstreit vor Gericht.",
+   "say": "Typischer Ärger im Betrieb: Streit mit Mitarbeitern, ein Bußgeldverfahren oder ein Steuerstreit vor Gericht."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Dafür gibt es den *Firmenrechtsschutz,* passend zu Branche und Größe, je nach Tarif mit den passenden Bausteinen.",
+   "say": "Dafür gibt es den Firmenrechtsschutz, passend zu Branche und Größe, je nach Tarif mit den passenden Bausteinen."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Passt dein Schutz zu deinem Betrieb? Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Passt dein Schutz zu deinem Betrieb? Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

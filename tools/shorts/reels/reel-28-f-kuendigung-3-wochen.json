@@ -1,0 +1,40 @@
+{
+ "id": "reel-28-f-kuendigung-3-wochen",
+ "title": "Mitarbeiter gekündigt? Diese Frist läuft jetzt",
+ "topic": "firma",
+ "format": "reel-2026",
+ "caption": "Nach Zugang der Kündigung hat der Mitarbeiter 3 Wochen Zeit für eine Kündigungsschutzklage (§ 4 KSchG). Häufige Fehler: nicht schriftlich, Frist falsch berechnet, Betriebsrat nicht angehört. Arbeitgeber-Rechtsschutz je nach Tarif. Kostenloser Check über den Link in der Bio.\n\n#selbstständig #unternehmer #arbeitgeber #firmenrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "voice": "Du musst einem Mitarbeiter kündigen? Dann läuft danach eine wichtige *Frist.*",
+   "say": "Du musst einem Mitarbeiter kündigen? Dann läuft danach eine wichtige Frist."
+  },
+  {
+   "key": "frist",
+   "mood": "ernst",
+   "voice": "Ab Zugang der Kündigung hat er *drei Wochen* Zeit für eine Kündigungsschutzklage.",
+   "say": "Ab Zugang der Kündigung hat er drei Wochen Zeit für eine Kündigungsschutzklage."
+  },
+  {
+   "key": "fehler",
+   "mood": "eindringlich",
+   "voice": "Häufige Fehler: Die Kündigung ist nicht schriftlich, die Frist ist falsch berechnet, oder der Betriebsrat wurde nicht angehört.",
+   "say": "Häufige Fehler: Die Kündigung ist nicht schriftlich, die Frist ist falsch berechnet, oder der Betriebsrat wurde nicht angehört."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Kommt die Klage, übernimmt der Arbeitgeber-Baustein je nach Tarif Anwalt und Gericht.",
+   "say": "Kommt die Klage, übernimmt der Arbeitgeber-Baustein je nach Tarif Anwalt und Gericht."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

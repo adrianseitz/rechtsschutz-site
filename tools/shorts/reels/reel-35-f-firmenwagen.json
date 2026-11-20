@@ -1,0 +1,40 @@
+{
+ "id": "reel-35-f-firmenwagen",
+ "title": "Firmenwagen: Bist du hier abgesichert?",
+ "topic": "firma",
+ "format": "reel-2026",
+ "caption": "Unfall mit dem Firmenwagen? Oft folgt Streit um Schadenersatz, mit der Werkstatt oder wegen eines Bußgelds. Der private Verkehrs-Rechtsschutz gilt für Firmenfahrzeuge meist nicht. Firmenfahrzeuge im Firmenrechtsschutz je nach Tarif mit absichern. Kostenloser Check über den Link in der Bio.\n\n#selbstständig #unternehmer #arbeitgeber #firmenrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "voice": "Dein Firmenwagen hat einen Unfall. Und jetzt?",
+   "say": "Dein Firmenwagen hat einen Unfall. Und jetzt?"
+  },
+  {
+   "key": "streit",
+   "mood": "ernst",
+   "voice": "Oft folgt Streit: um Schadenersatz, mit der Werkstatt oder wegen eines Bußgelds.",
+   "say": "Oft folgt Streit: um Schadenersatz, mit der Werkstatt oder wegen eines Bußgelds."
+  },
+  {
+   "key": "fakt",
+   "mood": "eindringlich",
+   "voice": "Dein privater Verkehrs-Rechtsschutz gilt für Firmenfahrzeuge meist *nicht.*",
+   "say": "Dein privater Verkehrs-Rechtsschutz gilt für Firmenfahrzeuge meist nicht."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Im Firmenrechtsschutz kannst du deine Firmenfahrzeuge je nach Tarif mit absichern.",
+   "say": "Im Firmenrechtsschutz kannst du deine Firmenfahrzeuge je nach Tarif mit absichern."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

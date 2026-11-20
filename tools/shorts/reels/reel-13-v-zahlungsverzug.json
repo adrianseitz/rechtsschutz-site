@@ -1,0 +1,40 @@
+{
+ "id": "reel-13-v-zahlungsverzug",
+ "title": "Mieter zahlt nicht? Ab wann du fristlos kündigen darfst",
+ "topic": "vermieter",
+ "format": "reel-2026",
+ "caption": "Ab einem Rückstand von zwei Monatsmieten ist eine fristlose Kündigung in der Regel möglich (§ 543 BGB). Wichtig: Rückstand genau berechnen, schriftlich kündigen, Zugang nachweisen. Vermieterrechtsschutz plus Mietausfallschutz (je nach Tarif). Kostenloser Check über den Link in der Bio.\n\n#vermieter #mietrecht #immobilien #vermieterrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "voice": "Dein Mieter zahlt ständig zu spät oder gar nicht?",
+   "say": "Dein Mieter zahlt ständig zu spät oder gar nicht?"
+  },
+  {
+   "key": "regel",
+   "mood": "ernst",
+   "voice": "Ab einem Rückstand von *zwei Monatsmieten* ist eine fristlose Kündigung in der Regel möglich.",
+   "say": "Ab einem Rückstand von zwei Monatsmieten ist eine fristlose Kündigung in der Regel möglich."
+  },
+  {
+   "key": "tipp",
+   "mood": "eindringlich",
+   "voice": "Darauf kommt es an: Rückstand genau berechnen, schriftlich kündigen und den Zugang nachweisen.",
+   "say": "Darauf kommt es an: Rückstand genau berechnen, schriftlich kündigen und den Zugang nachweisen."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Der Vermieterrechtsschutz übernimmt je nach Tarif Anwalt, Gericht und Räumung. Mit Mietausfallschutz gibt es sogar die Miete ersetzt.",
+   "say": "Der Vermieterrechtsschutz übernimmt je nach Tarif Anwalt, Gericht und Räumung. Mit Mietausfallschutz gibt es sogar die Miete ersetzt."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

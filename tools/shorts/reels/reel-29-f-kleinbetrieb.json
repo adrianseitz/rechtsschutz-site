@@ -1,0 +1,40 @@
+{
+ "id": "reel-29-f-kleinbetrieb",
+ "title": "Kleinbetrieb = keine Klage? Vorsicht",
+ "topic": "firma",
+ "format": "reel-2026",
+ "caption": "Das Kündigungsschutzgesetz gilt in der Regel erst bei mehr als 10 Mitarbeitern (§ 23 KSchG). Klagen gibt es trotzdem – wegen Formfehlern, Sonderkündigungsschutz oder um Lohn und Zeugnis. Arbeitgeber-Rechtsschutz je nach Tarif. Kostenloser Check über den Link in der Bio.\n\n#selbstständig #unternehmer #arbeitgeber #firmenrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "voice": "Kleiner Betrieb, kein Kündigungsschutz, also auch keine Klage? *Vorsicht.*",
+   "say": "Kleiner Betrieb, kein Kündigungsschutz, also auch keine Klage? Vorsicht."
+  },
+  {
+   "key": "fakt",
+   "mood": "ernst",
+   "voice": "Das Kündigungsschutzgesetz gilt in der Regel erst bei mehr als *zehn* Mitarbeitern.",
+   "say": "Das Kündigungsschutzgesetz gilt in der Regel erst bei mehr als zehn Mitarbeitern."
+  },
+  {
+   "key": "aber",
+   "mood": "eindringlich",
+   "voice": "Geklagt wird trotzdem: wegen Formfehlern, wegen Sonderkündigungsschutz, zum Beispiel bei Schwangeren, oder um Lohn und Zeugnis.",
+   "say": "Geklagt wird trotzdem: wegen Formfehlern, wegen Sonderkündigungsschutz, zum Beispiel bei Schwangeren, oder um Lohn und Zeugnis."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Der Arbeitgeber-Baustein deckt solche Streitigkeiten je nach Tarif ab.",
+   "say": "Der Arbeitgeber-Baustein deckt solche Streitigkeiten je nach Tarif ab."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

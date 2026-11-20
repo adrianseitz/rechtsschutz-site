@@ -1,0 +1,40 @@
+{
+ "id": "reel-11-v-nebenkosten-frist",
+ "title": "Nebenkostenabrechnung: Diese Frist kostet Vermieter Geld",
+ "topic": "vermieter",
+ "format": "reel-2026",
+ "caption": "Die Nebenkostenabrechnung muss spätestens 12 Monate nach Ende des Abrechnungszeitraums beim Mieter sein (§ 556 Abs. 3 BGB). Danach ist die Nachforderung in der Regel ausgeschlossen. Kommt es zum Streit, übernimmt der Vermieterrechtsschutz je nach Tarif Anwalt und Gericht. Kostenloser Check über den Link in der Bio.\n\n#vermieter #mietrecht #immobilien #vermieterrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "voice": "Für die Nebenkostenabrechnung hast du nur *zwölf Monate* Zeit.",
+   "say": "Für die Nebenkostenabrechnung hast du nur zwölf Monate Zeit."
+  },
+  {
+   "key": "frist",
+   "mood": "ernst",
+   "voice": "Sie muss spätestens zwölf Monate nach Ende des Abrechnungszeitraums beim Mieter sein.",
+   "say": "Sie muss spätestens zwölf Monate nach Ende des Abrechnungszeitraums beim Mieter sein."
+  },
+  {
+   "key": "folge",
+   "mood": "dramatisch",
+   "voice": "Kommt sie zu spät, ist eine Nachforderung in der Regel *weg.*",
+   "say": "Kommt sie zu spät, ist eine Nachforderung in der Regel weg."
+  },
+  {
+   "key": "streit",
+   "mood": "eindringlich",
+   "voice": "Und zahlt der Mieter die Nachzahlung nicht, übernimmt der Vermieterrechtsschutz je nach Tarif Anwalt und Gericht.",
+   "say": "Und zahlt der Mieter die Nachzahlung nicht, übernimmt der Vermieterrechtsschutz je nach Tarif Anwalt und Gericht."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

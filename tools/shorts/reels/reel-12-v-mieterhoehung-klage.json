@@ -1,0 +1,46 @@
+{
+ "id": "reel-12-v-mieterhoehung-klage",
+ "title": "Mieter lehnt die Mieterhöhung ab? Diese Frist läuft",
+ "topic": "vermieter",
+ "format": "reel-2026",
+ "caption": "Mieter stimmt der Mieterhöhung nicht zu? Dann musst du auf Zustimmung klagen – innerhalb von 3 Monaten nach Ablauf seiner Überlegungsfrist (§ 558b BGB). Vermieterrechtsschutz je nach Tarif, vorher abschließen (Wartezeit meist 3 Monate). Kostenloser Check über den Link in der Bio.\n\n#vermieter #mietrecht #immobilien #vermieterrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "voice": "Dein Mieter stimmt der Mieterhöhung *nicht* zu?",
+   "say": "Dein Mieter stimmt der Mieterhöhung nicht zu?"
+  },
+  {
+   "key": "frist",
+   "mood": "ernst",
+   "voice": "Dann musst du auf Zustimmung klagen. Dafür hast du nur *drei Monate* nach Ende seiner Überlegungsfrist.",
+   "say": "Dann musst du auf Zustimmung klagen. Dafür hast du nur drei Monate nach Ende seiner Überlegungsfrist."
+  },
+  {
+   "key": "streit",
+   "mood": "eindringlich",
+   "voice": "Gestritten wird oft um Mietspiegel, Kappungsgrenze, Form und Begründung.",
+   "say": "Gestritten wird oft um Mietspiegel, Kappungsgrenze, Form und Begründung."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Der Vermieterrechtsschutz übernimmt je nach Tarif Anwalt und Gericht.",
+   "say": "Der Vermieterrechtsschutz übernimmt je nach Tarif Anwalt und Gericht."
+  },
+  {
+   "key": "achtung",
+   "mood": "eindringlich",
+   "voice": "Wichtig: Erst absichern, dann erhöhen. Meist gilt eine Wartezeit von drei Monaten.",
+   "say": "Wichtig: Erst absichern, dann erhöhen. Meist gilt eine Wartezeit von drei Monaten."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

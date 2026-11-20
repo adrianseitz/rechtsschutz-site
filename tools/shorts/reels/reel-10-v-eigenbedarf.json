@@ -1,0 +1,46 @@
+{
+ "id": "reel-10-v-eigenbedarf",
+ "title": "Eigenbedarf? Darum gibt es oft Streit",
+ "topic": "vermieter",
+ "format": "reel-2026",
+ "caption": "Eigenbedarf? Viele Mieter wehren sich – oft bis vor Gericht. Streitpunkte: Ist der Eigenbedarf echt, liegt ein Härtefall vor, stimmen Frist und Form? Vermieterrechtsschutz je nach Tarif – aber abschließen, bevor du kündigst (Wartezeit meist 3 Monate). Kostenloser Check über den Link in der Bio.\n\n#vermieter #mietrecht #immobilien #vermieterrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "voice": "Du brauchst deine vermietete Wohnung *selbst?*",
+   "say": "Du brauchst deine vermietete Wohnung selbst?"
+  },
+  {
+   "key": "fakt",
+   "mood": "ernst",
+   "voice": "Dann kündigst du wegen Eigenbedarf. Und viele Mieter wehren sich, oft bis vor *Gericht.*",
+   "say": "Dann kündigst du wegen Eigenbedarf. Und viele Mieter wehren sich, oft bis vor Gericht."
+  },
+  {
+   "key": "streit",
+   "mood": "eindringlich",
+   "voice": "Typische Streitpunkte: Ist der Eigenbedarf echt, gibt es einen Härtefall, und stimmen Frist und Form?",
+   "say": "Typische Streitpunkte: Ist der Eigenbedarf echt, gibt es einen Härtefall, und stimmen Frist und Form?"
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Der Vermieterrechtsschutz übernimmt je nach Tarif Anwalt, Gericht und Räumung.",
+   "say": "Der Vermieterrechtsschutz übernimmt je nach Tarif Anwalt, Gericht und Räumung."
+  },
+  {
+   "key": "achtung",
+   "mood": "eindringlich",
+   "voice": "Aber: Abschließen, *bevor* du kündigst. Meist gilt eine Wartezeit von drei Monaten.",
+   "say": "Aber: Abschließen, bevor du kündigst. Meist gilt eine Wartezeit von drei Monaten."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

@@ -1,0 +1,46 @@
+{
+ "id": "reel-16-v-modernisierung",
+ "title": "Modernisiert? So viel darfst du umlegen",
+ "topic": "vermieter",
+ "format": "reel-2026",
+ "caption": "Nach einer Modernisierung darfst du in der Regel 8 % der Kosten pro Jahr auf die Jahresmiete umlegen (§ 559 BGB) – mit Kappungsgrenze und korrekter Ankündigung. Beispiel: 10.000 € = 800 € im Jahr, rund 67 € im Monat. Streit? Vermieterrechtsschutz je nach Tarif. Kostenloser Check über den Link in der Bio.\n\n#vermieter #mietrecht #immobilien #vermieterrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "voice": "Du modernisierst deine Wohnung? Dann darfst du einen Teil *umlegen.*",
+   "say": "Du modernisierst deine Wohnung? Dann darfst du einen Teil umlegen."
+  },
+  {
+   "key": "regel",
+   "mood": "ernst",
+   "voice": "In der Regel *8 Prozent* der Kosten pro Jahr kommen auf die Jahresmiete.",
+   "say": "In der Regel 8 Prozent der Kosten pro Jahr kommen auf die Jahresmiete."
+  },
+  {
+   "key": "beispiel",
+   "mood": "dramatisch",
+   "voice": "Bei 10.000 Euro Kosten sind das 800 Euro im Jahr, also rund 67 Euro im Monat.",
+   "say": "Bei 10.000 Euro Kosten sind das 800 Euro im Jahr, also rund 67 Euro im Monat."
+  },
+  {
+   "key": "grenze",
+   "mood": "eindringlich",
+   "voice": "Aber es gibt eine *Kappungsgrenze,* und die Ankündigung muss stimmen.",
+   "say": "Aber es gibt eine Kappungsgrenze, und die Ankündigung muss stimmen."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Wehrt sich dein Mieter, übernimmt der Vermieterrechtsschutz je nach Tarif Anwalt und Gericht.",
+   "say": "Wehrt sich dein Mieter, übernimmt der Vermieterrechtsschutz je nach Tarif Anwalt und Gericht."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

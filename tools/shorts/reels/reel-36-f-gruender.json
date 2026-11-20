@@ -1,0 +1,40 @@
+{
+ "id": "reel-36-f-gruender",
+ "title": "Gründer? Darum solltest du früh absichern",
+ "topic": "firma",
+ "format": "reel-2026",
+ "caption": "Gerade gegründet? Meist gilt eine Wartezeit von 3 Monaten – Streit, der vorher beginnt, ist nicht versichert. Wichtig für Gründer: Arbeitgeber-, Steuer- (vor Gericht) und Ordnungswidrigkeiten-Rechtsschutz, je nach Tarif. Kostenloser Check über den Link in der Bio.\n\n#selbstständig #unternehmer #arbeitgeber #firmenrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "begeistert",
+   "voice": "Du gründest gerade? Dann denk *früh* an Rechtsschutz.",
+   "say": "Du gründest gerade? Dann denk früh an Rechtsschutz."
+  },
+  {
+   "key": "warum",
+   "mood": "ernst",
+   "voice": "Denn meist gilt eine Wartezeit von *drei Monaten.* Streit, der vorher beginnt, ist nicht versichert.",
+   "say": "Denn meist gilt eine Wartezeit von drei Monaten. Streit, der vorher beginnt, ist nicht versichert."
+  },
+  {
+   "key": "was",
+   "mood": "eindringlich",
+   "voice": "Wichtig für Gründer: Arbeitgeber-Rechtsschutz, Steuer-Rechtsschutz vor Gericht und Ordnungswidrigkeiten.",
+   "say": "Wichtig für Gründer: Arbeitgeber-Rechtsschutz, Steuer-Rechtsschutz vor Gericht und Ordnungswidrigkeiten."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Ein Firmenrechtsschutz nach Maß wächst je nach Tarif mit deinem Betrieb mit.",
+   "say": "Ein Firmenrechtsschutz nach Maß wächst je nach Tarif mit deinem Betrieb mit."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}
