@@ -124,7 +124,7 @@ BOARDS30 = {
    'zwei': num('3 Unterlagen', [('Einkommensnachweis', 'aktuell', None), ('Bonitätsauskunft', 'z. B. Schufa', None), ('Mietschuldenfreiheits&shy;bescheinigung', 'vom Vormieter', None)], show=1, cont=True),
    'drei': num('3 Unterlagen', [('Einkommensnachweis', 'aktuell', None), ('Bonitätsauskunft', 'z. B. Schufa', None), ('Mietschuldenfreiheits&shy;bescheinigung', 'vom Vormieter', None)], show=2, cont=True),
    'loesung': ck('Falls doch<br>etwas passiert', [('Vermieterrechtsschutz', 'Vermieterrechtsschutz'), ('Mietausfallschutz', 'Mietausfallschutz')]), 'cta': END}),
- 'reel-21-v-zahlt-nicht-alles': dict(badge=V, hookTitle='Zahlt Rechtsschutz<br><span class="mark">alles?</span>', lightAt='tipp', scenes={
+ 'reel-21-v-zahlt-nicht-alles': dict(badge=V, hookTitle='Rechtsschutz<br><span class="mark">zahlt alles?</span>', lightAt='tipp', scenes={
    'hook': myth('Rechtsschutz zahlt alles.', 'Leider nein.', 'Leider'),
    'eins': num('Darauf achten', [('Wartezeit', 'meist 3 Monate', None), ('Selbstbeteiligung', 'je nach Tarif', None), ('Ausschlüsse', 'z. B. Kauf oder Bau der Immobilie', None)], show=0),
    'zwei': num('Darauf achten', [('Wartezeit', 'meist 3 Monate', None), ('Selbstbeteiligung', 'je nach Tarif', None), ('Ausschlüsse', 'z. B. Kauf oder Bau der Immobilie', None)], show=1, cont=True),
