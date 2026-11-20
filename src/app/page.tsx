@@ -14,9 +14,16 @@ import { WaitingTimeline } from "@/components/tools/WaitingTimeline";
 import { generalFaq } from "@/lib/faq";
 import { site } from "@/lib/site";
 
+// Für Google: Name der Website (steht in den Suchergebnissen neben dem Icon) und Logo.
+const siteJsonLd = [
+  { "@context": "https://schema.org", "@type": "WebSite", name: site.brand, url: `${site.url}/` },
+  { "@context": "https://schema.org", "@type": "Organization", name: site.brand, url: `${site.url}/`, logo: `${site.url}/icon1.png` },
+];
+
 export default function HomePage() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd) }} />
       <Hero
         eyebrow="Persönliche Rechtsschutz-Beratung · ARAG-Vertriebspartner"
         title="Rechtsschutz, der zu deinem Leben passt."
