@@ -67,13 +67,13 @@ export function buildLeadRecord(input: LeadInput, meta: SubmissionRecord["meta"]
       ...(answers.bereich === "vermieter" && answers.einheiten !== undefined
         ? { einheiten: { value: String(answers.einheiten), label: einheitenLabel(answers.einheiten) } }
         : {}),
-      beginn: { value: answers.beginn, label: labelFor("beginn", answers.beginn) },
-      bestand: { value: answers.bestand, label: labelFor("bestand", answers.bestand) },
+      ...(answers.beginn ? { beginn: { value: answers.beginn, label: labelFor("beginn", answers.beginn) } } : {}),
+      ...(answers.bestand ? { bestand: { value: answers.bestand, label: labelFor("bestand", answers.bestand) } } : {}),
     },
     contact: {
       firstName: contact.firstName,
-      lastName: contact.lastName,
-      email: contact.email.toLowerCase(),
+      lastName: contact.lastName || undefined,
+      email: (contact.email || "").toLowerCase(),
       phone: contact.phone || undefined,
       contactMethod: contact.contactMethod,
       reachable: contact.phone && contact.reachable ? reachableLabel(contact.reachable) : undefined,

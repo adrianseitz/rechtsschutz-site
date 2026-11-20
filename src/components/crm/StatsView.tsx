@@ -175,8 +175,7 @@ export function StatsView({ stats, leads }: { stats: StatsData; leads: CrmLead[]
             <Funnel steps={[
               ["Check gestartet", data.events.check_start ?? 0],
               ["Situation gewählt", data.events.step_situation ?? 0],
-              ["Beginn gewählt", data.events.step_beginn ?? 0],
-              ["Kontaktformular erreicht", data.events.step_bestand ?? 0],
+              ["Kontaktformular erreicht", (data.events.step_kontakt ?? 0) + (data.events.step_bestand ?? 0)],
               ["Anfrage abgeschickt", data.events.lead ?? 0],
             ]} />
           )}

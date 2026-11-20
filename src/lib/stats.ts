@@ -34,6 +34,7 @@ export const EVENT_LABEL: Record<string, string> = {
   step_situation: "Situation gewählt",
   step_einheiten: "Wohneinheiten angegeben",
   step_beginn: "Beginn gewählt",
-  step_bestand: "Kontaktformular erreicht",
+  step_bestand: "Kontaktformular erreicht (bis 20.11.)",
+  step_kontakt: "Kontaktformular erreicht",
   lead: "Anfrage abgeschickt",
 };

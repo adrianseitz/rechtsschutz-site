@@ -19,7 +19,7 @@ import { AdvisorAvatar } from "../ui/AdvisorAvatar";
 type Topic = ContactFormInput["topic"];
 
 /**
- * Zwei Wege nach dem Lesen: der Check (4 kurze Schritte) oder ein Rückruf mit nur Name und Telefonnummer.
+ * Zwei Wege nach dem Lesen: der Check (2–3 kurze Fragen) oder ein Rückruf mit nur Name und Telefonnummer.
  * Für Besucher aus Anzeigen ist der Rückruf oft die kleinere Hürde.
  */
 export function QuickCallback({ topic, checkHref, checkLabel, text }: { topic: Topic; checkHref: string; checkLabel: string; text: string }) {
@@ -116,7 +116,7 @@ export function QuickCallback({ topic, checkHref, checkLabel, text }: { topic: T
 
             <label className="mt-4 flex cursor-pointer items-start gap-3 text-[13px] leading-5 text-ink-soft">
               <input type="checkbox" className="mt-0.5 h-5 w-5 shrink-0 accent-teal" {...register("consentContact")} />
-              <span>Ich bin damit einverstanden, dass Adrian Seitz mich zur Bearbeitung meiner Anfrage kontaktiert. Die <Link href="/datenschutz" target="_blank" className="font-medium text-teal-700 underline underline-offset-2">Datenschutzhinweise</Link> habe ich zur Kenntnis genommen. <span className="text-red-600">*</span></span>
+              <span>Adrian Seitz darf mich zu meiner Anfrage kontaktieren. Die <Link href="/datenschutz" target="_blank" className="font-medium text-teal-700 underline underline-offset-2">Datenschutzhinweise</Link> habe ich gelesen. <span className="text-red-600">*</span></span>
             </label>
             {errors.consentContact && <p className="field-error pl-8">{errors.consentContact.message}</p>}
 

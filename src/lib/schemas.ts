@@ -2,11 +2,11 @@ import { z } from "zod";
 import { AREA_VALUES, BEGINN, BESTAND, EINHEITEN_MAX, SITUATION } from "./funnel";
 
 /** Version der Einwilligungstexte – bei Textänderungen hochzählen (Nachweisbarkeit). */
-export const CONSENT_VERSION = "2026-10-20";
+export const CONSENT_VERSION = "2026-11-20";
 
 export const CONSENT_TEXTS = {
-  contact:
-    "Ich bin damit einverstanden, dass Adrian Seitz mich über den gewählten Kontaktweg zur Bearbeitung meiner Anfrage kontaktiert. Die Datenschutzhinweise habe ich zur Kenntnis genommen.",
+  // Kurz gehalten – genau dieser Text steht in allen drei Formularen (Check, Rückruf, Kontakt).
+  contact: "Adrian Seitz darf mich zu meiner Anfrage kontaktieren. Die Datenschutzhinweise habe ich gelesen.",
   marketing:
     "Optional: Ich möchte darüber hinaus gelegentlich per E-Mail oder Telefon Informationen zu weiteren passenden Versicherungslösungen erhalten. Diese Einwilligung kann ich jederzeit widerrufen.",
 } as const;
@@ -15,21 +15,28 @@ const trimmed = (max: number) => z.string().trim().max(max);
 
 const phoneRegex = /^[+0-9][0-9 ()/-]{5,24}$/;
 
+/**
+ * Was der Server für eine Check-Anfrage annimmt. Nachname und E-Mail sind freiwillig:
+ * Der Check fragt nur noch Name + Telefon ab (ältere, noch offene Seiten schicken weiter alle Felder).
+ */
 export const contactFieldsSchema = z
   .object({
-    firstName: trimmed(60).min(2, "Bitte gib deinen Vornamen an."),
-    lastName: trimmed(80).min(2, "Bitte gib deinen Nachnamen an."),
-    email: trimmed(160).email("Bitte gib eine gültige E-Mail-Adresse an."),
+    firstName: trimmed(60).min(2, "Bitte gib deinen Namen an."),
+    lastName: trimmed(80).optional().default(""),
+    email: trimmed(160).email("Bitte gib eine gültige E-Mail-Adresse an.").or(z.literal("")).optional().default(""),
     phone: trimmed(30).optional().or(z.literal("")),
-    contactMethod: z.enum(["email", "telefon", "egal"], { errorMap: () => ({ message: "Bitte wähle einen Kontaktweg." }) }),
+    contactMethod: z.enum(["email", "telefon", "egal"], { errorMap: () => ({ message: "Bitte wähle einen Kontaktweg." }) }).default("telefon"),
     reachable: z.enum(["vormittags", "mittags", "nachmittags", "abends"]).optional().or(z.literal("")),
-    consentContact: z.literal(true, { errorMap: () => ({ message: "Bitte bestätige die Kontaktaufnahme zu deiner Anfrage." }) }),
-    consentMarketing: z.boolean(),
+    consentContact: z.literal(true, { errorMap: () => ({ message: "Bitte bestätige kurz, dass ich dich kontaktieren darf." }) }),
+    consentMarketing: z.boolean().default(false),
   })
   .superRefine((d, ctx) => {
     const phone = d.phone?.trim() ?? "";
+    if (d.contactMethod === "email" && !d.email) {
+      ctx.addIssue({ code: "custom", path: ["email"], message: "Bitte gib deine E-Mail-Adresse an." });
+    }
     if (d.contactMethod !== "email" && phone.length === 0) {
-      ctx.addIssue({ code: "custom", path: ["phone"], message: "Für einen Rückruf benötigen wir deine Telefonnummer." });
+      ctx.addIssue({ code: "custom", path: ["phone"], message: "Bitte gib deine Telefonnummer an, damit ich dich zurückrufen kann." });
     }
     if (phone.length > 0 && !phoneRegex.test(phone)) {
       ctx.addIssue({ code: "custom", path: ["phone"], message: "Bitte gib eine gültige Telefonnummer an." });
@@ -37,6 +44,26 @@ export const contactFieldsSchema = z
   });
 
 export type ContactFields = z.infer<typeof contactFieldsSchema>;
+
+/** Letzter Schritt im Check: nur Name und Telefon sind Pflicht. */
+export const checkContactFormSchema = z.object({
+  name: trimmed(120).min(2, "Bitte gib deinen Namen an."),
+  phone: trimmed(30)
+    .min(1, "Bitte gib deine Telefonnummer an, damit ich dich zurückrufen kann.")
+    .regex(phoneRegex, "Bitte gib eine gültige Telefonnummer an."),
+  email: trimmed(160).email("Bitte gib eine gültige E-Mail-Adresse an.").or(z.literal("")),
+  reachable: z.enum(["vormittags", "mittags", "nachmittags", "abends"]).optional().or(z.literal("")),
+  consentContact: z.literal(true, { errorMap: () => ({ message: "Bitte bestätige kurz, dass ich dich kontaktieren darf." }) }),
+  consentMarketing: z.boolean(),
+});
+
+export type CheckContactForm = z.infer<typeof checkContactFormSchema>;
+
+/** „Max Mustermann“ → Vorname „Max“, Nachname „Mustermann“. */
+export function splitName(full: string) {
+  const parts = full.trim().split(/\s+/);
+  return { firstName: parts[0] ?? "", lastName: parts.slice(1).join(" ") };
+}
 
 export const attributionSchema = z
   .object({
@@ -66,8 +93,9 @@ export const leadSchema = z
       bereich: z.enum(AREA_VALUES),
       situation: z.array(trimmed(40)).min(1).max(6),
       einheiten: z.number().int().min(1).max(EINHEITEN_MAX).optional(),
-      beginn: z.enum(BEGINN.options.map((o) => o.value) as [string, ...string[]]),
-      bestand: z.enum(BESTAND.options.map((o) => o.value) as [string, ...string[]]),
+      // Werden im Check nicht mehr abgefragt; ältere offene Seiten schicken sie evtl. noch mit.
+      beginn: z.enum(BEGINN.options.map((o) => o.value) as [string, ...string[]]).optional(),
+      bestand: z.enum(BESTAND.options.map((o) => o.value) as [string, ...string[]]).optional(),
     }),
     contact: contactFieldsSchema,
     attribution: attributionSchema,

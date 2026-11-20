@@ -7,8 +7,8 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertCircle, ArrowLeft, ArrowRight, Check, Loader2, Lock, Minus, Plus } from "lucide-react";
-import { AREAS, BEGINN, BESTAND, CONTACT_METHODS, EINHEITEN_MAX, REACHABLE, SITUATION, type Question } from "@/lib/funnel";
-import { CONSENT_TEXTS, contactFieldsSchema, type ContactFields } from "@/lib/schemas";
+import { AREAS, EINHEITEN_MAX, REACHABLE, SITUATION, type Question } from "@/lib/funnel";
+import { CONSENT_TEXTS, checkContactFormSchema, splitName, type CheckContactForm } from "@/lib/schemas";
 import { getAttribution } from "@/lib/attribution";
 import { currentTrackingConsent } from "@/lib/consent";
 import { track } from "@/lib/tracking";
@@ -18,10 +18,11 @@ import { Icon3D } from "../ui/Icon3D";
 import { StampOverlay } from "../ui/StampOverlay";
 import { fireBurst } from "../ui/ClickBurst";
 
-type Answers = { bereich?: string; situation: string[]; einheiten?: number; beginn?: string; bestand?: string };
-type StepId = "bereich" | "situation" | "einheiten" | "beginn" | "bestand" | "kontakt";
-const BASE_STEPS: StepId[] = ["bereich", "situation", "beginn", "bestand", "kontakt"];
-const VERMIETER_STEPS: StepId[] = ["bereich", "situation", "einheiten", "beginn", "bestand", "kontakt"];
+type Answers = { bereich?: string; situation: string[]; einheiten?: number };
+type StepId = "bereich" | "situation" | "einheiten" | "kontakt";
+// Kurz halten: Die Fragen nach Beginn und bestehendem Vertrag klärt Adrian im Rückruf.
+const BASE_STEPS: StepId[] = ["bereich", "situation", "kontakt"];
+const VERMIETER_STEPS: StepId[] = ["bereich", "situation", "einheiten", "kontakt"];
 
 const BEREICH_Q: Question = { id: "bereich", title: "Welchen Bereich möchtest du absichern?", options: AREAS };
 
@@ -49,10 +50,13 @@ export function RechtsschutzCheck() {
   const startedAt = useRef<number>(Date.now());
   const runId = useRef<string>("");
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const counted = useRef(new Set<string>());
 
   useEffect(() => {
     runId.current = Math.random().toString(36).slice(2);
     if (preset.answers.bereich) markStarted(preset.answers.bereich);
+    // Situation schon auf der Landingpage gewählt: zählt als gewählt, sonst stimmt die Statistik nicht.
+    if (preset.answers.situation.length > 0) { counted.current.add("situation"); countEvent("step_situation"); }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -70,11 +74,13 @@ export function RechtsschutzCheck() {
 
   const STEPS = answers.bereich === "vermieter" ? VERMIETER_STEPS : BASE_STEPS;
   const stepId = STEPS[step];
+
+  useEffect(() => {
+    if (stepId === "kontakt" && !counted.current.has("kontakt")) { counted.current.add("kontakt"); countEvent("step_kontakt"); }
+  }, [stepId]);
   const question: Question | null = useMemo(() => {
     if (stepId === "bereich") return BEREICH_Q;
     if (stepId === "situation") return answers.bereich ? SITUATION[answers.bereich] : null;
-    if (stepId === "beginn") return BEGINN;
-    if (stepId === "bestand") return BESTAND;
     return null;
   }, [stepId, answers.bereich]);
 
@@ -83,7 +89,6 @@ export function RechtsschutzCheck() {
     setStep(to);
   }, [step]);
 
-  const counted = useRef(new Set<string>());
   const completeStep = (id: StepId, bereich?: string) => {
     if (id !== "bereich" && id !== "kontakt" && !counted.current.has(id)) { counted.current.add(id); countEvent(`step_${id}`); }
     track("funnel_step_completed", { step_number: step + 1, step_name: id, bereich: bereich ?? answers.bereich }, { dedupeKey: `${runId.current}:${id}` });
@@ -102,12 +107,6 @@ export function RechtsschutzCheck() {
       }
       setAnswers((a) => ({ ...a, situation: [value] }));
       completeStep("situation");
-    } else if (question.id === "beginn") {
-      setAnswers((a) => ({ ...a, beginn: value }));
-      completeStep("beginn");
-    } else if (question.id === "bestand") {
-      setAnswers((a) => ({ ...a, bestand: value }));
-      completeStep("bestand");
     }
     window.setTimeout(() => go(step + 1), reduce ? 0 : 260);
   };
@@ -116,8 +115,6 @@ export function RechtsschutzCheck() {
     if (!question) return false;
     if (question.id === "bereich") return answers.bereich === value;
     if (question.id === "situation") return answers.situation.includes(value);
-    if (question.id === "beginn") return answers.beginn === value;
-    if (question.id === "bestand") return answers.bestand === value;
     return false;
   };
 
@@ -212,7 +209,7 @@ export function RechtsschutzCheck() {
               answers={answers}
               startedAt={startedAt.current}
               onSuccess={(leadId) => {
-                track("lead_submitted", { bereich: answers.bereich, beginn: answers.beginn }, { dedupeKey: leadId, eventId: leadId });
+                track("lead_submitted", { bereich: answers.bereich }, { dedupeKey: leadId, eventId: leadId });
                 countEvent("lead");
                 try { sessionStorage.setItem("rs_last_submission", JSON.stringify({ type: "check", bereich: answers.bereich })); } catch {}
                 setStamped(true);
@@ -289,25 +286,28 @@ function ContactStep({ answers, startedAt, onSuccess, headingRef }: {
 }) {
   const [serverError, setServerError] = useState<string | null>(null);
   const honeypot = useRef<HTMLInputElement>(null);
-  const { register, handleSubmit, watch, setValue, formState: { errors, isSubmitting } } = useForm<ContactFields>({
-    resolver: zodResolver(contactFieldsSchema),
-    defaultValues: { firstName: "", lastName: "", email: "", phone: "", contactMethod: "telefon", reachable: "", consentMarketing: false },
+  const { register, handleSubmit, watch, setValue, formState: { errors, isSubmitting } } = useForm<CheckContactForm>({
+    resolver: zodResolver(checkContactFormSchema),
+    defaultValues: { name: "", phone: "", email: "", reachable: "", consentMarketing: false },
     mode: "onTouched",
   });
-  const method = watch("contactMethod");
   const reachable = watch("reachable");
-  const phoneValue = watch("phone");
 
-  const onSubmit = async (data: ContactFields) => {
+  const onSubmit = async (data: CheckContactForm) => {
     setServerError(null);
     const trackingConsent = currentTrackingConsent();
+    const { firstName, lastName } = splitName(data.name);
+    const contact = {
+      firstName, lastName, email: data.email, phone: data.phone, contactMethod: "telefon" as const,
+      reachable: data.reachable, consentContact: data.consentContact, consentMarketing: data.consentMarketing,
+    };
     try {
       const res = await fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           answers,
-          contact: data,
+          contact,
           attribution: getAttribution(trackingConsent.marketing),
           trackingConsent,
           spam: { website: honeypot.current?.value ?? "", startedAt },
@@ -326,61 +326,38 @@ function ContactStep({ answers, startedAt, onSuccess, headingRef }: {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate>
-      <h1 ref={headingRef} tabIndex={-1} className="text-[1.7rem] font-semibold leading-[1.08] min-[400px]:text-[2rem] tracking-[-0.04em] outline-none sm:text-[2.75rem]">Fast geschafft! Erhalte jetzt deine persönliche Beratung.</h1>
-      <p className="mt-2 text-ink-soft">Wohin darf ich dir meine Empfehlung schicken?</p>
+      <h1 ref={headingRef} tabIndex={-1} className="text-[1.7rem] font-semibold leading-[1.08] min-[400px]:text-[2rem] tracking-[-0.04em] outline-none sm:text-[2.75rem]">Fast geschafft! Wie erreiche ich dich?</h1>
+      <p className="mt-2 text-ink-soft">Ich rufe dich zurück und schaue mit dir, welcher Schutz passt – kostenlos.</p>
 
-      <div className="card mt-7 space-y-4 p-5 sm:p-6">
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div>
-            <label htmlFor="firstName" className="label">Vorname</label>
-            <input id="firstName" autoComplete="given-name" className="input" aria-invalid={!!errors.firstName} {...register("firstName")} />
-            {errors.firstName && <p className="field-error">{errors.firstName.message}</p>}
-          </div>
-          <div>
-            <label htmlFor="lastName" className="label">Nachname</label>
-            <input id="lastName" autoComplete="family-name" className="input" aria-invalid={!!errors.lastName} {...register("lastName")} />
-            {errors.lastName && <p className="field-error">{errors.lastName.message}</p>}
-          </div>
+      <div className="card mt-6 space-y-4 p-5 sm:p-6">
+        <div>
+          <label htmlFor="name" className="label">Dein Name</label>
+          <input id="name" autoComplete="name" autoCapitalize="words" enterKeyHint="next" className="input" aria-invalid={!!errors.name} {...register("name")} />
+          {errors.name && <p className="field-error">{errors.name.message}</p>}
         </div>
         <div>
-          <label htmlFor="email" className="label">E-Mail-Adresse</label>
-          <input id="email" type="email" inputMode="email" autoComplete="email" className="input" aria-invalid={!!errors.email} {...register("email")} />
+          <label htmlFor="phone" className="label">Telefonnummer</label>
+          <input id="phone" type="tel" inputMode="tel" autoComplete="tel" enterKeyHint="next" placeholder="z. B. 0170 1234567" className="input" aria-invalid={!!errors.phone} {...register("phone")} />
+          {errors.phone && <p className="field-error">{errors.phone.message}</p>}
+        </div>
+        <div>
+          <label htmlFor="email" className="label">E-Mail <span className="font-normal text-ink-muted">(freiwillig)</span></label>
+          <input id="email" type="email" inputMode="email" autoComplete="email" enterKeyHint="done" className="input" aria-invalid={!!errors.email} {...register("email")} />
           {errors.email && <p className="field-error">{errors.email.message}</p>}
         </div>
 
         <div>
-          <span className="label" id="method-label">Bevorzugter Kontaktweg</span>
-          <div className="grid grid-cols-3 gap-2" role="radiogroup" aria-labelledby="method-label">
-            {CONTACT_METHODS.map((m) => (
-              <button key={m.value} type="button" role="radio" aria-checked={method === m.value}
-                onClick={() => setValue("contactMethod", m.value, { shouldValidate: true })}
-                className={`rounded-full border py-3 text-[15px] font-medium transition ${method === m.value ? "border-navy bg-sun text-navy" : "border-line bg-white text-ink-soft hover:border-navy/40"}`}>
-                {m.label}
+          <span className="label" id="reach-label">Wann passt ein Anruf? <span className="font-normal text-ink-muted">(freiwillig)</span></span>
+          <div className="flex flex-wrap gap-2" role="radiogroup" aria-labelledby="reach-label">
+            {REACHABLE.map((r) => (
+              <button key={r.value} type="button" role="radio" aria-checked={reachable === r.value}
+                onClick={() => setValue("reachable", reachable === r.value ? "" : r.value)}
+                className={`rounded-full border px-3.5 py-2 text-[13px] font-medium transition ${reachable === r.value ? "border-navy bg-sun text-navy" : "border-line bg-white text-ink-soft hover:border-navy/40"}`}>
+                {r.label}
               </button>
             ))}
           </div>
         </div>
-
-        <div>
-          <label htmlFor="phone" className="label">Telefonnummer {method === "email" && <span className="font-normal text-ink-muted">(optional)</span>}</label>
-          <input id="phone" type="tel" inputMode="tel" autoComplete="tel" placeholder="z. B. 0170 1234567" className="input" aria-invalid={!!errors.phone} {...register("phone")} />
-          {errors.phone ? <p className="field-error">{errors.phone.message}</p> : method === "email" && <p className="mt-1.5 text-xs text-ink-muted">Am Telefon lassen sich Fragen meist am schnellsten klären.</p>}
-        </div>
-
-        {(method !== "email" || (phoneValue ?? "").trim().length > 5) && (
-          <div>
-            <span className="label" id="reach-label">Wann erreiche ich dich am besten? <span className="font-normal text-ink-muted">(optional)</span></span>
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4" role="radiogroup" aria-labelledby="reach-label">
-              {REACHABLE.map((r) => (
-                <button key={r.value} type="button" role="radio" aria-checked={reachable === r.value}
-                  onClick={() => setValue("reachable", reachable === r.value ? "" : r.value)}
-                  className={`rounded-full border py-2.5 text-sm font-medium transition ${reachable === r.value ? "border-navy bg-sun text-navy" : "border-line bg-white text-ink-soft hover:border-navy/40"}`}>
-                  {r.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Honeypot gegen Bots – für Menschen unsichtbar */}
         <div aria-hidden className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
@@ -388,17 +365,17 @@ function ContactStep({ answers, startedAt, onSuccess, headingRef }: {
           <input id="website" ref={honeypot} name="website" tabIndex={-1} autoComplete="off" defaultValue="" />
         </div>
 
-        <div className="space-y-3 border-t border-line pt-4">
+        <div className="space-y-2.5 border-t border-line pt-4">
           <label className="flex cursor-pointer items-start gap-3 text-sm leading-6 text-ink-soft">
-            <input type="checkbox" className="mt-1 h-5 w-5 shrink-0 rounded border-line accent-teal" {...register("consentContact")} />
+            <input type="checkbox" className="mt-0.5 h-5 w-5 shrink-0 rounded border-line accent-teal" {...register("consentContact")} />
             <span>
-              {CONSENT_TEXTS.contact.replace(" Die Datenschutzhinweise habe ich zur Kenntnis genommen.", "")}{" "}
-              Die <Link href="/datenschutz" target="_blank" className="font-medium text-teal-700 underline underline-offset-2">Datenschutzhinweise</Link> habe ich zur Kenntnis genommen. <span className="text-red-600">*</span>
+              {CONSENT_TEXTS.contact.replace(" Die Datenschutzhinweise habe ich gelesen.", "")}{" "}
+              Die <Link href="/datenschutz" target="_blank" className="font-medium text-teal-700 underline underline-offset-2">Datenschutzhinweise</Link> habe ich gelesen. <span className="text-red-600">*</span>
             </span>
           </label>
           {errors.consentContact && <p className="field-error !mt-0 pl-8">{errors.consentContact.message}</p>}
-          <label className="flex cursor-pointer items-start gap-3 text-sm leading-6 text-ink-soft">
-            <input type="checkbox" className="mt-1 h-5 w-5 shrink-0 rounded border-line accent-teal" {...register("consentMarketing")} />
+          <label className="flex cursor-pointer items-start gap-3 text-xs leading-5 text-ink-muted">
+            <input type="checkbox" className="mt-0.5 h-4 w-4 shrink-0 rounded border-line accent-teal" {...register("consentMarketing")} />
             <span>{CONSENT_TEXTS.marketing}</span>
           </label>
         </div>
@@ -410,8 +387,8 @@ function ContactStep({ answers, startedAt, onSuccess, headingRef }: {
         </div>
       )}
 
-      <button type="submit" disabled={isSubmitting} className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-navy py-4 text-base font-medium text-white transition hover:bg-navy-800 disabled:opacity-60">
-        {isSubmitting ? <><Loader2 className="h-5 w-5 animate-spin" aria-hidden /> Wird gesendet …</> : <>Kostenlose Beratung anfordern <ArrowRight className="h-4 w-4" aria-hidden /></>}
+      <button type="submit" disabled={isSubmitting} className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-navy py-4 text-base font-medium text-white transition hover:bg-navy-800 disabled:opacity-60">
+        {isSubmitting ? <><Loader2 className="h-5 w-5 animate-spin" aria-hidden /> Wird gesendet …</> : <>Kostenlosen Rückruf anfordern <ArrowRight className="h-4 w-4" aria-hidden /></>}
       </button>
       <p className="mt-3 text-center text-xs text-ink-muted">Unverbindlich – es entsteht kein Vertrag und keine Kosten.</p>
       <p className="mx-auto mt-4 max-w-md rounded-2xl bg-white px-4 py-3 text-center text-xs leading-5 text-ink-soft">

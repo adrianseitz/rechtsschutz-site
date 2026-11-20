@@ -127,7 +127,7 @@ export function ContactForm() {
 
       <label className="flex cursor-pointer items-start gap-3 border-t border-line pt-5 text-sm leading-6 text-ink-soft">
         <input type="checkbox" className="mt-1 h-5 w-5 shrink-0 accent-teal" {...register("consentContact")} />
-        <span>Ich bin damit einverstanden, dass Adrian Seitz mich zur Bearbeitung meiner Anfrage kontaktiert. Die <Link href="/datenschutz" target="_blank" className="font-medium text-teal-700 underline underline-offset-2">Datenschutzhinweise</Link> habe ich zur Kenntnis genommen. <span className="text-red-600">*</span></span>
+        <span>Adrian Seitz darf mich zu meiner Anfrage kontaktieren. Die <Link href="/datenschutz" target="_blank" className="font-medium text-teal-700 underline underline-offset-2">Datenschutzhinweise</Link> habe ich gelesen. <span className="text-red-600">*</span></span>
       </label>
       {errors.consentContact && <p className="field-error !mt-1 pl-8">{errors.consentContact.message}</p>}
 
