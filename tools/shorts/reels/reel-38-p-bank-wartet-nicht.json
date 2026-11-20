@@ -1,0 +1,46 @@
+{
+ "id": "reel-38-p-bank-wartet-nicht",
+ "title": "Die Bank wartet nicht",
+ "topic": "vermieter",
+ "format": "reel-2026-play",
+ "caption": "Dein Mieter zahlt nicht – deine Bank will trotzdem ihre Rate. Und bis ein Räumungsurteil da ist, können Monate vergehen. Der Mietausfallschutz ersetzt je nach Tarif bis zu 12 Monatsmieten, Anwalt und Gericht laufen über den Vermieterrechtsschutz. Vorher abschließen, meist 3 Monate Wartezeit. Kostenloser Check über den Link in der Bio.\n\n#vermieter #mietrecht #immobilien #vermieterrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "voice": "Dein Mieter zahlt nicht. Deine *Bank* will trotzdem ihr Geld.",
+   "say": "Dein Mieter zahlt nicht. Deine Bank will trotzdem ihr Geld."
+  },
+  {
+   "key": "rate",
+   "mood": "ernst",
+   "voice": "Die Kreditrate läuft weiter, Monat für Monat. Egal, ob die Miete *kommt.*",
+   "say": "Die Kreditrate läuft weiter, Monat für Monat. Egal, ob die Miete kommt."
+  },
+  {
+   "key": "dauer",
+   "mood": "dramatisch",
+   "voice": "Und bis ein Räumungsurteil da ist, können *Monate* vergehen.",
+   "say": "Und bis ein Räumungsurteil da ist, können Monate vergehen."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Genau dafür gibt es den *Mietausfallschutz.* Je nach Tarif werden bis zu zwölf Monatsmieten ersetzt. Anwalt und Gericht laufen über den Vermieterrechtsschutz.",
+   "say": "Genau dafür gibt es den Mietausfallschutz. Je nach Tarif werden bis zu zwölf Monatsmieten ersetzt. Anwalt und Gericht laufen über den Vermieterrechtsschutz."
+  },
+  {
+   "key": "achtung",
+   "mood": "eindringlich",
+   "voice": "Wichtig: Abschließen, *bevor* der Ärger losgeht. Meist gilt eine Wartezeit von drei Monaten.",
+   "say": "Wichtig: Abschließen, bevor der Ärger losgeht. Meist gilt eine Wartezeit von drei Monaten."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

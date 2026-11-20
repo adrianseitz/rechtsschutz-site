@@ -7,6 +7,9 @@ from storyboards import BOARDS
 try:
     from storyboards30 import BOARDS30; BOARDS.update(BOARDS30)
 except ImportError: pass
+try:
+    from storyboardsP import BOARDSP; BOARDS.update(BOARDSP)
+except ImportError: pass
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 S = os.path.abspath(os.path.join(HERE, '..', '..'))
@@ -93,6 +96,8 @@ def open_page(p, data):
     pg.evaluate("Promise.all([document.fonts.load('900 100px Archivo'), document.fonts.load('600 40px Archivo'), document.fonts.load('700 40px Hand'), document.fonts.load('30px Typed')])")
     pg.wait_for_function("document.fonts.status === 'loaded'")
     res = pg.evaluate('d => build(d)', data)
+    # 3D-Figuren: erst rendern, wenn alle Bilder dekodiert sind
+    pg.evaluate("Promise.all([...document.images].map(i => i.decode().catch(() => 0)))")
     return b, pg, res
 
 def stills(name, times):

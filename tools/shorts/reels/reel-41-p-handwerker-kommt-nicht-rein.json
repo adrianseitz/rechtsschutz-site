@@ -1,0 +1,46 @@
+{
+ "id": "reel-41-p-handwerker-kommt-nicht-rein",
+ "title": "Der Mieter macht nicht auf",
+ "topic": "vermieter",
+ "format": "reel-2026-play",
+ "caption": "Heizung kaputt, Handwerker vor der Tür – und der Mieter macht nicht auf. Notwendige Reparaturen muss der Mieter in der Regel dulden (§ 555a BGB). Notfalls klärt das ein Gericht. Der Vermieterrechtsschutz übernimmt je nach Tarif Anwalt und Gericht. Vorher abschließen, meist 3 Monate Wartezeit. Kostenloser Check über den Link in der Bio.\n\n#vermieter #mietrecht #immobilien #vermieterrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "voice": "Die Heizung ist kaputt. Der Handwerker steht vor der Tür. Und dein Mieter macht *nicht auf.*",
+   "say": "Die Heizung ist kaputt. Der Handwerker steht vor der Tür. Und dein Mieter macht nicht auf."
+  },
+  {
+   "key": "problem",
+   "mood": "ernst",
+   "voice": "Ohne Zutritt keine Reparatur. Und der Schaden wird *größer.*",
+   "say": "Ohne Zutritt keine Reparatur. Und der Schaden wird größer."
+  },
+  {
+   "key": "recht",
+   "mood": "eindringlich",
+   "voice": "Notwendige Reparaturen muss der Mieter in der Regel *dulden.* Notfalls klärt das ein Gericht.",
+   "say": "Notwendige Reparaturen muss der Mieter in der Regel dulden. Notfalls klärt das ein Gericht."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Der Vermieterrechtsschutz übernimmt je nach Tarif Anwalt und Gericht, wenn du dein Recht *durchsetzen* musst.",
+   "say": "Der Vermieterrechtsschutz übernimmt je nach Tarif Anwalt und Gericht, wenn du dein Recht durchsetzen musst."
+  },
+  {
+   "key": "achtung",
+   "mood": "eindringlich",
+   "voice": "Wichtig: Abschließen, *bevor* der Ärger losgeht. Meist gilt eine Wartezeit von drei Monaten.",
+   "say": "Wichtig: Abschließen, bevor der Ärger losgeht. Meist gilt eine Wartezeit von drei Monaten."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

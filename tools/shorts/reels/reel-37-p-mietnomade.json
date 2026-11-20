@@ -1,0 +1,52 @@
+{
+ "id": "reel-37-p-mietnomade",
+ "title": "Der perfekte Mieter?",
+ "topic": "vermieter",
+ "format": "reel-2026-play",
+ "caption": "Der perfekte Mieter … bis er nicht mehr zahlt und trotzdem bleibt. Anwalt, Gericht, Räumung: Der Vermieterrechtsschutz übernimmt je nach Tarif die Kosten, mit Mietausfallschutz gibt es bis zu 12 Monatsmieten ersetzt. Wichtig: vorher abschließen, meist 3 Monate Wartezeit. Kostenloser Check über den Link in der Bio.\n\n#vermieter #mietrecht #immobilien #vermieterrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "voice": "Der perfekte Mieter? Freundlich, gepflegt und pünktlich zur *Besichtigung.*",
+   "say": "Der perfekte Mieter? Freundlich, gepflegt und pünktlich zur Besichtigung."
+  },
+  {
+   "key": "miete",
+   "mood": "dramatisch",
+   "voice": "Dann kommt die erste Miete. Und die zweite. Oder eben *nicht.*",
+   "say": "Dann kommt die erste Miete. Und die zweite. Oder eben nicht."
+  },
+  {
+   "key": "ausrede",
+   "mood": "ernst",
+   "voice": "Ausreden gibt es viele. Nur ausziehen will er *nicht.*",
+   "say": "Ausreden gibt es viele. Nur ausziehen will er nicht."
+  },
+  {
+   "key": "kosten",
+   "mood": "eindringlich",
+   "voice": "Jetzt brauchst du Anwalt, Gericht und am Ende den *Gerichtsvollzieher.* Das kann schnell *teuer* werden.",
+   "say": "Jetzt brauchst du Anwalt, Gericht und am Ende den Gerichtsvollzieher. Das kann schnell teuer werden."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Der Vermieterrechtsschutz übernimmt je nach Tarif Anwalt, Gericht und Räumung. Mit Mietausfallschutz gibt es sogar bis zu zwölf Monatsmieten *ersetzt.*",
+   "say": "Der Vermieterrechtsschutz übernimmt je nach Tarif Anwalt, Gericht und Räumung. Mit Mietausfallschutz gibt es sogar bis zu zwölf Monatsmieten ersetzt."
+  },
+  {
+   "key": "achtung",
+   "mood": "eindringlich",
+   "voice": "Wichtig: Abschließen, *bevor* der Ärger losgeht. Meist gilt eine Wartezeit von drei Monaten.",
+   "say": "Wichtig: Abschließen, bevor der Ärger losgeht. Meist gilt eine Wartezeit von drei Monaten."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

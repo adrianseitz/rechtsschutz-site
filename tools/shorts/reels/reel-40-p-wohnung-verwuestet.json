@@ -1,0 +1,46 @@
+{
+ "id": "reel-40-p-wohnung-verwuestet",
+ "title": "Auszug – und dann das",
+ "topic": "vermieter",
+ "format": "reel-2026-play",
+ "caption": "Schlüssel zurück, Wohnung verwüstet – und die Kaution reicht nicht. Deinen Schadenersatz musst du dann oft einklagen. Der Vermieterrechtsschutz übernimmt je nach Tarif Anwalt und Gericht. Tipp: Übergabeprotokoll mit Fotos. Vorher abschließen, meist 3 Monate Wartezeit. Kostenloser Check über den Link in der Bio.\n\n#vermieter #mietrecht #immobilien #vermieterrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "dramatisch",
+   "voice": "Auszug. Schlüssel übergeben. Und dann *das.*",
+   "say": "Auszug. Schlüssel übergeben. Und dann das."
+  },
+  {
+   "key": "schaden",
+   "mood": "ernst",
+   "voice": "Löcher in der Wand, kaputter Boden, *Müll* überall.",
+   "say": "Löcher in der Wand, kaputter Boden, Müll überall."
+  },
+  {
+   "key": "kaution",
+   "mood": "eindringlich",
+   "voice": "Die Kaution reicht nicht. Und dein Ex-Mieter will nicht *zahlen.*",
+   "say": "Die Kaution reicht nicht. Und dein Ex-Mieter will nicht zahlen."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Mit dem Vermieterrechtsschutz setzt du deinen Schadenersatz durch. Anwalt und Gericht übernimmt je nach Tarif die *Versicherung.*",
+   "say": "Mit dem Vermieterrechtsschutz setzt du deinen Schadenersatz durch. Anwalt und Gericht übernimmt je nach Tarif die Versicherung."
+  },
+  {
+   "key": "tipp",
+   "mood": "freundlich",
+   "voice": "Tipp: Mach beim Auszug ein *Übergabeprotokoll* mit Fotos. Und schließ den Schutz ab, *bevor* es Ärger gibt.",
+   "say": "Tipp: Mach beim Auszug ein Übergabeprotokoll mit Fotos. Und schließ den Schutz ab, bevor es Ärger gibt."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

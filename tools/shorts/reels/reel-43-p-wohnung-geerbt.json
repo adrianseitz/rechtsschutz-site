@@ -1,0 +1,46 @@
+{
+ "id": "reel-43-p-wohnung-geerbt",
+ "title": "Wohnung geerbt – Mieter inklusive",
+ "topic": "vermieter",
+ "format": "reel-2026-play",
+ "caption": "Wohnung geerbt? Der Mietvertrag läuft weiter – mit allen Rechten und Pflichten. Und mit allem Ärger, der kommen kann. Der Vermieterrechtsschutz sichert dich je nach Tarif bei Streit mit dem Mieter ab. Am besten gleich nach der Übernahme abschließen, meist 3 Monate Wartezeit. Kostenloser Check über den Link in der Bio.\n\n#vermieter #mietrecht #immobilien #vermieterrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "voice": "Du hast eine Wohnung *geerbt*? Der Mieter gehört dazu.",
+   "say": "Du hast eine Wohnung geerbt? Der Mieter gehört dazu."
+  },
+  {
+   "key": "vertrag",
+   "mood": "ernst",
+   "voice": "Der Mietvertrag läuft einfach weiter. Mit allen Rechten und *Pflichten.*",
+   "say": "Der Mietvertrag läuft einfach weiter. Mit allen Rechten und Pflichten."
+  },
+  {
+   "key": "risiko",
+   "mood": "eindringlich",
+   "voice": "Und mit allem Ärger, der kommen kann: Nebenkosten, Mängel, *Mietrückstand.*",
+   "say": "Und mit allem Ärger, der kommen kann: Nebenkosten, Mängel, Mietrückstand."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Mit dem Vermieterrechtsschutz bist du je nach Tarif bei Streit mit dem Mieter *abgesichert.*",
+   "say": "Mit dem Vermieterrechtsschutz bist du je nach Tarif bei Streit mit dem Mieter abgesichert."
+  },
+  {
+   "key": "achtung",
+   "mood": "eindringlich",
+   "voice": "Am besten gleich nach der Übernahme *abschließen.* Meist gilt eine Wartezeit von drei Monaten.",
+   "say": "Am besten gleich nach der Übernahme abschließen. Meist gilt eine Wartezeit von drei Monaten."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

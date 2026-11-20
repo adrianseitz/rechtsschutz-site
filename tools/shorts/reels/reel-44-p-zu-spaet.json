@@ -1,0 +1,46 @@
+{
+ "id": "reel-44-p-zu-spaet",
+ "title": "Zwei Vermieter, gleicher Ärger",
+ "topic": "vermieter",
+ "format": "reel-2026-play",
+ "caption": "Zwei Vermieter, gleicher Ärger – nur einer ist abgesichert. Versichert sind nur Fälle, die nach Vertragsbeginn und Wartezeit entstehen. Wer erst abschließt, wenn der Streit da ist, ist zu spät dran. Der Vermieterrechtsschutz übernimmt je nach Tarif Anwalt und Gericht. Kostenloser Check über den Link in der Bio.\n\n#vermieter #mietrecht #immobilien #vermieterrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "voice": "Zwei Vermieter. Gleicher Ärger. Nur einer ist *abgesichert.*",
+   "say": "Zwei Vermieter. Gleicher Ärger. Nur einer ist abgesichert."
+  },
+  {
+   "key": "tom",
+   "mood": "warm",
+   "voice": "Tom hat letztes Jahr abgeschlossen. Sein Anwalt? Läuft über die *Versicherung.*",
+   "say": "Tom hat letztes Jahr abgeschlossen. Sein Anwalt? Läuft über die Versicherung."
+  },
+  {
+   "key": "max",
+   "mood": "dramatisch",
+   "voice": "Max will erst abschließen, als der Streit schon da ist. Zu *spät.*",
+   "say": "Max will erst abschließen, als der Streit schon da ist. Zu spät."
+  },
+  {
+   "key": "regel",
+   "mood": "eindringlich",
+   "voice": "Versichert sind nur Fälle, die *nach* Vertragsbeginn und Wartezeit entstehen. Meist sind das drei Monate.",
+   "say": "Versichert sind nur Fälle, die nach Vertragsbeginn und Wartezeit entstehen. Meist sind das drei Monate."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Also: Sei wie Tom. Der Vermieterrechtsschutz übernimmt je nach Tarif Anwalt und *Gericht.*",
+   "say": "Also: Sei wie Tom. Der Vermieterrechtsschutz übernimmt je nach Tarif Anwalt und Gericht."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

@@ -1,0 +1,52 @@
+{
+ "id": "reel-46-p-ein-tag-als-vermieter",
+ "title": "Ein Tag als Vermieter",
+ "topic": "vermieter",
+ "format": "reel-2026-play",
+ "caption": "Ein ganz normaler Tag als Vermieter: Mängelanzeige, fehlende Miete, Beschwerde wegen Lärm. Wenn daraus ein Rechtsstreit wird, übernimmt der Vermieterrechtsschutz je nach Tarif Anwalt und Gericht. Vorher abschließen, meist 3 Monate Wartezeit. Kostenloser Check über den Link in der Bio.\n\n#vermieter #mietrecht #immobilien #vermieterrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "voice": "Ein ganz normaler Tag als *Vermieter.*",
+   "say": "Ein ganz normaler Tag als Vermieter."
+  },
+  {
+   "key": "morgens",
+   "mood": "aufgeregt",
+   "voice": "Acht Uhr: Die Mieterin meldet einen Mangel und droht mit *Mietminderung.*",
+   "say": "Acht Uhr: Die Mieterin meldet einen Mangel und droht mit Mietminderung."
+  },
+  {
+   "key": "mittags",
+   "mood": "ernst",
+   "voice": "Zwölf Uhr: Die Miete von Wohnung drei ist wieder nicht *da.*",
+   "say": "Zwölf Uhr: Die Miete von Wohnung drei ist wieder nicht da."
+  },
+  {
+   "key": "abends",
+   "mood": "dramatisch",
+   "voice": "Zwanzig Uhr: Beschwerde wegen *Lärm.*",
+   "say": "Zwanzig Uhr: Beschwerde wegen Lärm."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Ärger gibt es genug. Wenn es vor Gericht geht, übernimmt der Vermieterrechtsschutz je nach Tarif Anwalt und *Gericht.*",
+   "say": "Ärger gibt es genug. Wenn es vor Gericht geht, übernimmt der Vermieterrechtsschutz je nach Tarif Anwalt und Gericht."
+  },
+  {
+   "key": "achtung",
+   "mood": "eindringlich",
+   "voice": "Wichtig: Abschließen, *bevor* der Ärger losgeht. Meist gilt eine Wartezeit von drei Monaten.",
+   "say": "Wichtig: Abschließen, bevor der Ärger losgeht. Meist gilt eine Wartezeit von drei Monaten."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

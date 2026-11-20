@@ -1,0 +1,46 @@
+{
+ "id": "reel-39-p-schimmel-streit",
+ "title": "Schimmel – und wer ist schuld?",
+ "topic": "vermieter",
+ "format": "reel-2026-play",
+ "caption": "Der Mieter meldet Schimmel und kürzt die Miete. Er sagt: das Haus. Du sagst: falsch gelüftet. Klären kann das oft nur ein Gutachter – und manchmal ein Gericht. Der Vermieterrechtsschutz übernimmt je nach Tarif Anwalt, Gericht und gerichtliche Gutachter. Vorher abschließen, meist 3 Monate Wartezeit. Kostenloser Check über den Link in der Bio.\n\n#vermieter #mietrecht #immobilien #vermieterrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "voice": "Deine Mieterin meldet Schimmel. Und kürzt ab sofort die *Miete.*",
+   "say": "Deine Mieterin meldet Schimmel. Und kürzt ab sofort die Miete."
+  },
+  {
+   "key": "streit",
+   "mood": "ernst",
+   "voice": "Sie sagt: Das Haus ist schuld. Du sagst: Es wird nicht richtig *gelüftet.*",
+   "say": "Sie sagt: Das Haus ist schuld. Du sagst: Es wird nicht richtig gelüftet."
+  },
+  {
+   "key": "gutachter",
+   "mood": "eindringlich",
+   "voice": "Klären kann das oft nur ein *Gutachter.* Und am Ende vielleicht ein Gericht.",
+   "say": "Klären kann das oft nur ein Gutachter. Und am Ende vielleicht ein Gericht."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Der Vermieterrechtsschutz übernimmt je nach Tarif Anwalt, Gericht und *gerichtliche* Gutachter.",
+   "say": "Der Vermieterrechtsschutz übernimmt je nach Tarif Anwalt, Gericht und gerichtliche Gutachter."
+  },
+  {
+   "key": "achtung",
+   "mood": "eindringlich",
+   "voice": "Wichtig: Abschließen, *bevor* der Ärger losgeht. Meist gilt eine Wartezeit von drei Monaten.",
+   "say": "Wichtig: Abschließen, bevor der Ärger losgeht. Meist gilt eine Wartezeit von drei Monaten."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

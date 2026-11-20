@@ -29,6 +29,20 @@ wichtige Wörter gelb markiert, Endkarte mit Adrians Foto. Keine Musik, nur Stim
 - Download: `https://github.com/k2-fsa/sherpa-onnx/releases/download/{tts-models|asr-models}/<name>.tar.bz2`
 - Python: `sherpa-onnx`, `praat-parselmouth`, `num2words`, `scipy`, `playwright`
 
+## Spielszenen mit Figuren (Reels 37–46)
+
+Zehn Vermieter-Reels als kleine Szenen mit 3D-Figuren: Vermieter, Mieter, Anwältin, Richter, Handwerker, Nachbarn.
+
+- Figuren und Requisiten: Microsoft Fluent Emoji 3D (MIT-Lizenz, `render/assets/fl/LICENSE.txt`), Brustbilder in einem
+  Bühnenfenster; Szenen-Baustein `play` in `render/play.js` (Kulisse unscharf, Auftritte, Gesichts-/Posenwechsel,
+  Sprechblasen, fliegende Requisiten, Stempel).
+- Feste Besetzung: Vermieter = blonder Mann im blauen Pulli (`v_*`), Vermieterin = blonde Frau lila (`vw_*`),
+  Mieter = dunkelhaariger Mann blau (`m_*`), Mieterin = Frau lila, dunkler Hautton (`mw_*`), Fachleute im Anzug.
+  Keine Dollar-Symbole (Geldsack, Bank) – stattdessen Euro-Schein und Münze.
+- Skripte: `scriptsP.py` → `../reels/reel-37 … reel-46`; Drehbuch: `render/storyboardsP.py`.
+- Vorschau ohne fertige Stimme: `fake_marks.py` (Platzhalter-Zeiten) + `SHEET_VOICE=… sheetsP.py <reel-ids>`.
+- `voiceloopP.sh` und `renderloopP.sh` erzeugen Stimmen und Videos nacheinander.
+
 ## Offen
 
 - Stimme mit Adrian am Laptop verbessern (Aussprache „ARAG“, Betonung); danach alle Reels neu rendern –

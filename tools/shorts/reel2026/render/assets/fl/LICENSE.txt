@@ -1,0 +1,4 @@
+3D-Icons: Microsoft Fluent UI Emoji (3D)
+Quelle: https://github.com/microsoft/fluentui-emoji
+Lizenz: MIT License – Copyright (c) Microsoft Corporation.
+Die Dateien wurden ins WebP-Format konvertiert, inhaltlich unverändert.

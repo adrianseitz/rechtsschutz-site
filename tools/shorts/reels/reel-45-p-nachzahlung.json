@@ -1,0 +1,46 @@
+{
+ "id": "reel-45-p-nachzahlung",
+ "title": "Nachzahlung? Zahl ich nicht!",
+ "topic": "vermieter",
+ "format": "reel-2026-play",
+ "caption": "Nebenkostenabrechnung raus, Nachzahlung 800 € – und der Mieter sagt: Zahl ich nicht. Jetzt wird jede Position geprüft, am Ende entscheidet vielleicht ein Gericht. Tipp: Belege aufheben, der Mieter darf sie einsehen. Der Vermieterrechtsschutz übernimmt je nach Tarif Anwalt und Gericht. Vorher abschließen, meist 3 Monate Wartezeit. Kostenloser Check über den Link in der Bio.\n\n#vermieter #mietrecht #immobilien #vermieterrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "voice": "Die Nebenkostenabrechnung ist raus. *Nachzahlung:* 800 Euro.",
+   "say": "Die Nebenkostenabrechnung ist raus. Nachzahlung: 800 Euro."
+  },
+  {
+   "key": "mieter",
+   "mood": "ernst",
+   "voice": "Deine Mieterin sagt: Zahl ich nicht. Die Abrechnung ist *falsch.*",
+   "say": "Deine Mieterin sagt: Zahl ich nicht. Die Abrechnung ist falsch."
+  },
+  {
+   "key": "streit",
+   "mood": "eindringlich",
+   "voice": "Jetzt wird jede Position geprüft. Und am Ende entscheidet vielleicht ein *Gericht.*",
+   "say": "Jetzt wird jede Position geprüft. Und am Ende entscheidet vielleicht ein Gericht."
+  },
+  {
+   "key": "tipp",
+   "mood": "freundlich",
+   "voice": "Tipp: Heb alle *Belege* auf. Deine Mieterin darf sie einsehen.",
+   "say": "Tipp: Heb alle Belege auf. Deine Mieterin darf sie einsehen."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Der Vermieterrechtsschutz übernimmt je nach Tarif Anwalt und Gericht. Wichtig: vorher abschließen, meist gilt eine Wartezeit von drei *Monaten.*",
+   "say": "Der Vermieterrechtsschutz übernimmt je nach Tarif Anwalt und Gericht. Wichtig: vorher abschließen, meist gilt eine Wartezeit von drei Monaten."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}

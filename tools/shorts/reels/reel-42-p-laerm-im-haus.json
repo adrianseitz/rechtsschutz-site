@@ -1,0 +1,46 @@
+{
+ "id": "reel-42-p-laerm-im-haus",
+ "title": "Party um drei Uhr nachts",
+ "topic": "vermieter",
+ "format": "reel-2026-play",
+ "caption": "Ein Mieter feiert jede Woche bis in die Nacht – und die anderen beschweren sich. Abmahnung, Kündigung, Räumungsklage: Das kann ein langer Weg werden. Der Vermieterrechtsschutz übernimmt je nach Tarif Anwalt und Gericht. Vorher abschließen, meist 3 Monate Wartezeit. Kostenloser Check über den Link in der Bio.\n\n#vermieter #mietrecht #immobilien #vermieterrechtsschutz #rechtsschutz",
+ "fine": "* je nach Tarif und Versicherungsbedingungen; Wartezeiten und Ausschlüsse beachten. Adrian Seitz, gebundener Versicherungsvertreter (§ 34d Abs. 7 GewO), Vertriebspartner der ARAG.",
+ "beats": [
+  {
+   "key": "hook",
+   "mood": "aufgeregt",
+   "voice": "Party um drei Uhr nachts. Jede *Woche.*",
+   "say": "Party um drei Uhr nachts. Jede Woche."
+  },
+  {
+   "key": "nachbarn",
+   "mood": "ernst",
+   "voice": "Die anderen Mieter beschweren sich. Und mindern vielleicht sogar die *Miete.*",
+   "say": "Die anderen Mieter beschweren sich. Und mindern vielleicht sogar die Miete."
+  },
+  {
+   "key": "weg",
+   "mood": "eindringlich",
+   "voice": "Abmahnung, Kündigung, Räumungsklage. Das kann ein *langer* Weg werden.",
+   "say": "Abmahnung, Kündigung, Räumungsklage. Das kann ein langer Weg werden."
+  },
+  {
+   "key": "loesung",
+   "mood": "warm",
+   "voice": "Der Vermieterrechtsschutz übernimmt je nach Tarif Anwalt und Gericht auf diesem *Weg.*",
+   "say": "Der Vermieterrechtsschutz übernimmt je nach Tarif Anwalt und Gericht auf diesem Weg."
+  },
+  {
+   "key": "achtung",
+   "mood": "eindringlich",
+   "voice": "Wichtig: Abschließen, *bevor* der Ärger losgeht. Meist gilt eine Wartezeit von drei Monaten.",
+   "say": "Wichtig: Abschließen, bevor der Ärger losgeht. Meist gilt eine Wartezeit von drei Monaten."
+  },
+  {
+   "key": "cta",
+   "mood": "freundlich",
+   "voice": "Adrian Seitz berät dich *kostenlos.* Der Link ist in der *Bio!*",
+   "say": "Adrian Seitz berät dich kostenlos. Der Link ist in der Bio!"
+  }
+ ]
+}
