@@ -7,7 +7,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertCircle, ArrowLeft, ArrowRight, Check, Loader2, Lock, Minus, Plus } from "lucide-react";
-import { AREAS, EINHEITEN_MAX, REACHABLE, SITUATION, type Question } from "@/lib/funnel";
+import { AREAS, EINHEITEN_MAX, REACHABLE, SITUATION, VERMIETER_ANLIEGEN, type Question } from "@/lib/funnel";
 import { CONSENT_TEXTS, checkContactFormSchema, splitName, type CheckContactForm } from "@/lib/schemas";
 import { getAttribution } from "@/lib/attribution";
 import { currentTrackingConsent } from "@/lib/consent";
@@ -18,7 +18,7 @@ import { Icon3D } from "../ui/Icon3D";
 import { StampOverlay } from "../ui/StampOverlay";
 import { fireBurst } from "../ui/ClickBurst";
 
-type Answers = { bereich?: string; situation: string[]; einheiten?: number };
+type Answers = { bereich?: string; situation: string[]; einheiten?: number; anliegen?: string };
 type StepId = "bereich" | "situation" | "einheiten" | "kontakt";
 // Kurz halten: Die Fragen nach Beginn und bestehendem Vertrag klärt Adrian im Rückruf.
 const BASE_STEPS: StepId[] = ["bereich", "situation", "kontakt"];
@@ -33,7 +33,8 @@ export function RechtsschutzCheck() {
   const reduce = useReducedMotion();
   // Vorauswahl aus Landingpage/Anzeige direkt beim ersten Rendern übernehmen:
   // ?bereich=arbeit&situation=angestellt  bzw.  ?bereich=mehrere&auswahl=privat,verkehr
-  // Vermieter: ?bereich=vermieter&einheiten=2 (direkt zum Formular) bzw. &ab=4 (Zahl noch anpassen).
+  // Vermieter: ?bereich=vermieter&anliegen=mietausfall (Thema von der Landingpage, dann Wohneinheiten),
+  // &einheiten=2 (direkt zum Formular) bzw. &ab=4 (Zahl noch anpassen).
   // Alte Links mit &situation=etw landen bei der Frage nach den Wohneinheiten.
   const [preset] = useState(() => {
     const b = params.get("bereich");
@@ -42,7 +43,9 @@ export function RechtsschutzCheck() {
       const num = (k: string) => { const n = Number.parseInt(params.get(k) ?? "", 10); return Number.isInteger(n) && n >= 1 && n <= EINHEITEN_MAX ? n : undefined; };
       const exact = num("einheiten");
       const from = num("ab");
-      return { answers: { bereich: b, situation: [], einheiten: exact ?? from } as Answers, step: exact ? 2 : 1, einheitenDone: Boolean(exact) };
+      const a = params.get("anliegen");
+      const anliegen = a && VERMIETER_ANLIEGEN.some((o) => o.value === a) ? a : undefined;
+      return { answers: { bereich: b, situation: [], einheiten: exact ?? from, anliegen } as Answers, step: exact ? 2 : 1, einheitenDone: Boolean(exact) };
     }
     const q = SITUATION[b];
     const s = params.get("situation");
@@ -108,7 +111,7 @@ export function RechtsschutzCheck() {
     if (!question) return;
     if (question.id === "bereich") {
       markStarted(value);
-      setAnswers((a) => ({ ...a, bereich: value, situation: a.bereich === value ? a.situation : [] }));
+      setAnswers((a) => ({ ...a, bereich: value, situation: a.bereich === value ? a.situation : [], anliegen: value === "vermieter" ? a.anliegen : undefined }));
       completeStep("bereich", value);
     } else if (question.id === "situation") {
       if (question.multi) {
@@ -207,6 +210,7 @@ export function RechtsschutzCheck() {
             <EinheitenStep
               headingRef={headingRef}
               initial={answers.einheiten}
+              topic={VERMIETER_ANLIEGEN.find((o) => o.value === answers.anliegen)?.label}
               onNext={(n) => {
                 setAnswers((a) => ({ ...a, einheiten: n }));
                 completeStep("einheiten");
@@ -244,7 +248,7 @@ export function RechtsschutzCheck() {
   );
 }
 
-function EinheitenStep({ initial, onNext, headingRef }: { initial?: number; onNext: (n: number) => void; headingRef: React.RefObject<HTMLHeadingElement | null> }) {
+function EinheitenStep({ initial, topic, onNext, headingRef }: { initial?: number; topic?: string; onNext: (n: number) => void; headingRef: React.RefObject<HTMLHeadingElement | null> }) {
   const [raw, setRaw] = useState(initial ? String(initial) : "1");
   const n = Number.parseInt(raw, 10);
   const valid = Number.isInteger(n) && n >= 1 && n <= EINHEITEN_MAX;
@@ -253,6 +257,11 @@ function EinheitenStep({ initial, onNext, headingRef }: { initial?: number; onNe
 
   return (
     <form onSubmit={(e) => { e.preventDefault(); if (valid) onNext(n); }} noValidate>
+      {topic && (
+        <p className="mb-4 inline-flex items-center gap-1.5 rounded-full bg-sun px-3 py-1 text-[13px] font-medium text-navy">
+          <Check className="h-3.5 w-3.5" strokeWidth={3} aria-hidden /> Dein Thema: {topic}
+        </p>
+      )}
       <h1 ref={headingRef} tabIndex={-1} className="text-[1.7rem] font-semibold leading-[1.08] min-[400px]:text-[2rem] tracking-[-0.04em] outline-none sm:text-[2.75rem]">Wie viele Wohneinheiten vermietest du?</h1>
       <p className="mt-2 text-ink-soft">Zähle alle vermieteten Wohnungen zusammen – egal ob Eigentumswohnung, Haus oder Mehrfamilienhaus (dort jede Wohnung einzeln).</p>
 

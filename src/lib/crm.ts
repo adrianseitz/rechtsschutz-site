@@ -46,6 +46,7 @@ export type CrmLead = {
   phone?: string;
   contactMethod?: string;
   situation?: string;
+  anliegen?: string;
   einheiten?: string;
   beginn?: string;
   bestand?: string;

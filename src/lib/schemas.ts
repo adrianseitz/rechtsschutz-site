@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { AREA_VALUES, BEGINN, BESTAND, EINHEITEN_MAX, SITUATION } from "./funnel";
+import { AREA_VALUES, BEGINN, BESTAND, EINHEITEN_MAX, SITUATION, VERMIETER_ANLIEGEN } from "./funnel";
 
 /** Version der Einwilligungstexte – bei Textänderungen hochzählen (Nachweisbarkeit). */
 export const CONSENT_VERSION = "2026-11-20";
@@ -93,6 +93,7 @@ export const leadSchema = z
       bereich: z.enum(AREA_VALUES),
       situation: z.array(trimmed(40)).max(6).default([]),
       einheiten: z.number().int().min(1).max(EINHEITEN_MAX).optional(),
+      anliegen: z.enum(VERMIETER_ANLIEGEN.map((o) => o.value) as [string, ...string[]]).optional(),
       // Werden im Check nicht mehr abgefragt; ältere offene Seiten schicken sie evtl. noch mit.
       beginn: z.enum(BEGINN.options.map((o) => o.value) as [string, ...string[]]).optional(),
       bestand: z.enum(BESTAND.options.map((o) => o.value) as [string, ...string[]]).optional(),

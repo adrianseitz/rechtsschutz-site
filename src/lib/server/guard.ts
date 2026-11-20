@@ -5,7 +5,8 @@ import { clientIp, jsonError, originAllowed, readJson } from "./request";
 import { rateLimit } from "./rateLimit";
 import { hashIdentifier } from "./crypto";
 
-const MIN_FILL_MS = 2500;
+// Kurz, weil man jetzt mit einem Tipp direkt im Formular landet und Name + Telefon per Autofill in Sekunden drin sind.
+const MIN_FILL_MS = 1200;
 
 type GuardOk = { ok: true; body: unknown; meta: { ipHash: string; userAgent: string } };
 type GuardFail = { ok: false; response: NextResponse };

@@ -27,7 +27,7 @@ npm run build && npm start      # Produktion
 Jede Landingpage startet den Check vorausgewählt. Über die URL lassen sich die ersten Schritte überspringen:
 
 - `/rechtsschutz-check?bereich=arbeit` startet bei Schritt 2.
-- `/rechtsschutz-check?bereich=vermieter&einheiten=2` springt direkt zum Formular; `&ab=4` öffnet die Frage nach den Wohneinheiten mit 4 vorausgewählt.
+- `/rechtsschutz-check?bereich=vermieter&anliegen=mietausfall` startet bei den Wohneinheiten und speichert das Thema (mietausfall, raeumung, minderung, nebenkosten). `&einheiten=2` springt direkt zum Formular, `&ab=4` öffnet die Zahl-Eingabe mit 4.
 
 Mögliche Werte für `bereich`: `arbeit`, `privat`, `vermieter`, `firma`, `mehrere`.
 

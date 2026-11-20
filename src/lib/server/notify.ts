@@ -11,7 +11,7 @@ import { confirmationHtml } from "./mailTemplate";
 const esc = (s: unknown) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
 const REQUEST_LABEL: Record<string, string> = { termin: "Beratungstermin", rueckruf: "Rückruf", frage: "Allgemeine Frage" };
 const METHOD_LABEL: Record<string, string> = { email: "E-Mail", telefon: "Telefon", egal: "Egal" };
-const ANSWER_LABEL: Record<string, string> = { situation: "Situation", einheiten: "Wohneinheiten", beginn: "Gewünschter Beginn", bestand: "Bestehender Rechtsschutz" };
+const ANSWER_LABEL: Record<string, string> = { anliegen: "Anliegen", situation: "Situation", einheiten: "Wohneinheiten", beginn: "Gewünschter Beginn", bestand: "Bestehender Rechtsschutz" };
 
 export const mailReady = async () => Boolean(await effectiveMail());
 

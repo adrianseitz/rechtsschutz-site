@@ -102,7 +102,7 @@ export function CrmBoard({ initial, storage, error, stats: traffic = {}, openLea
   const filtered = useMemo(() => {
     const n = q.trim().toLowerCase();
     if (!n) return leads;
-    return leads.filter((l) => [l.name, l.email, l.phone, l.productLabel, l.situation, l.message, l.channel, l.keyword, ...(l.notes ?? []).map((x) => x.text)].some((v) => v?.toLowerCase().includes(n)));
+    return leads.filter((l) => [l.name, l.email, l.phone, l.productLabel, l.situation, l.anliegen, l.message, l.channel, l.keyword, ...(l.notes ?? []).map((x) => x.text)].some((v) => v?.toLowerCase().includes(n)));
   }, [leads, q]);
 
   const stats = useMemo(() => {
@@ -276,7 +276,7 @@ export function CrmBoard({ initial, storage, error, stats: traffic = {}, openLea
                               {overdue(l) && <AlertCircle className="h-4 w-4 shrink-0 text-rose-500" aria-label="Seit über 24 Stunden unbearbeitet" />}
                               {retentionDue(l) && <Trash2 className="h-4 w-4 shrink-0 text-neutral-500" aria-label="Löschfrist erreicht" />}
                             </div>
-                            {(l.situation || l.requestType) && <p className="mt-2 line-clamp-2 text-xs leading-snug text-ink-muted">{l.situation ?? l.requestType}{l.einheiten ? ` · ${l.einheiten}` : ""}</p>}
+                            {(l.situation || l.anliegen || l.requestType || l.einheiten) && <p className="mt-2 line-clamp-2 text-xs leading-snug text-ink-muted">{[l.situation ?? l.anliegen ?? l.requestType, l.einheiten].filter(Boolean).join(" · ")}</p>}
                             {(urgency(l) || (l.followUp && statusOf(l.status).stage)) && (
                               <p className="mt-2 flex flex-wrap gap-1.5 text-[11px] font-semibold">
                                 {urgency(l) && <span className={`rounded-full px-2 py-0.5 ${urgency(l)!.cls}`}>{urgency(l)!.label}</span>}
@@ -520,6 +520,7 @@ function Drawer({ lead: l, onClose, onStatus, onMeta, onDelete }: { lead: CrmLea
             <Field k="Am besten erreichbar" v={l.reachable} />
           </Section>
           <Section title="Anfrage">
+            <Field k="Anliegen" v={l.anliegen} />
             <Field k="Situation" v={l.situation} />
             <Field k="Wohneinheiten" v={l.einheiten} />
             <Field k="Gewünschter Beginn" v={l.beginn} />

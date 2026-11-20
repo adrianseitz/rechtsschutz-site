@@ -66,6 +66,14 @@ export const SITUATION: Record<string, Question> = {
   },
 };
 
+/** Vermieter: Schnellstart auf der Landingpage – wovor möchte man sich schützen? Wird mit der Anfrage gespeichert. */
+export const VERMIETER_ANLIEGEN: Option[] = [
+  { value: "mietausfall", label: "Mieter zahlt nicht" },
+  { value: "raeumung", label: "Mieter zieht nicht aus" },
+  { value: "minderung", label: "Mieter mindert die Miete" },
+  { value: "nebenkosten", label: "Streit um Nebenkosten" },
+];
+
 /** Nur für Vermieter: Anzahl der vermieteten Wohneinheiten (freie Zahleneingabe). Ersetzt die Frage nach der Art der Immobilie. */
 export const EINHEITEN_MAX = 999;
 export const einheitenLabel = (n: number) => `${n} ${n === 1 ? "Wohneinheit" : "Wohneinheiten"}`;
@@ -113,6 +121,7 @@ export function labelFor(questionId: string, value: string, bereich?: string): s
     const q = SITUATION[bereich];
     return q?.options.find((o) => o.value === value)?.label ?? value;
   }
+  if (questionId === "anliegen") return VERMIETER_ANLIEGEN.find((o) => o.value === value)?.label ?? value;
   if (questionId === "beginn") return BEGINN.options.find((o) => o.value === value)?.label ?? value;
   if (questionId === "bestand") return BESTAND.options.find((o) => o.value === value)?.label ?? value;
   return value;

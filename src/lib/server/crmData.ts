@@ -18,6 +18,7 @@ function toLead(r: SubmissionRecord): Omit<CrmLead, "status" | "statusUpdatedAt"
     phone: r.contact.phone,
     contactMethod: r.contact.contactMethod,
     situation: r.answers.situation?.label,
+    anliegen: r.answers.anliegen?.label,
     einheiten: r.answers.einheiten?.label,
     beginn: r.answers.beginn?.label,
     bestand: r.answers.bestand?.label,

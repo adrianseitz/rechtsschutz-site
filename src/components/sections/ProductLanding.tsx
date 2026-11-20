@@ -1,6 +1,6 @@
 import { AlertCircle } from "lucide-react";
 import type { Product } from "@/lib/products";
-import { SITUATION } from "@/lib/funnel";
+import { SITUATION, VERMIETER_ANLIEGEN } from "@/lib/funnel";
 import { generalFaq } from "@/lib/faq";
 import { site } from "@/lib/site";
 import { Hero, type FloatCard } from "./Hero";
@@ -62,15 +62,12 @@ const PHOTO_CAPTION: Record<Product["key"], string> = {
 // Lange Wörter dürfen in den schmalen Handy-Buttons sauber trennen („Einzel-unternehmen“).
 const softHyphen = (t: string) => t.replace("Einzelunternehmen", "Einzel\u00ADunternehmen");
 
-/** Schnellstart im Hero. Vermieter: Zahl der Wohnungen – 1 bis 3 führt direkt zum Formular, ab 4 wird die genaue Zahl abgefragt. */
+/** Schnellstart im Hero. Vermieter: typische Probleme – das gewählte Thema landet mit der Anfrage im CRM. */
 function heroChips(key: Product["key"], checkHref: string) {
   if (key === "vermieter") {
     return {
-      label: "Wie viele Wohnungen vermietest du?",
-      chips: [
-        ...[1, 2, 3].map((n) => ({ label: n === 1 ? "1 Wohnung" : `${n} Wohnungen`, href: `${checkHref}&einheiten=${n}`, icon: HERO_ICON.vermieter })),
-        { label: "4 oder mehr", href: `${checkHref}&ab=4`, icon: HERO_ICON.vermieter },
-      ],
+      label: "Wovor willst du dich schützen?",
+      chips: VERMIETER_ANLIEGEN.map((o) => ({ label: o.label, href: `${checkHref}&anliegen=${o.value}`, icon: HERO_ICON.vermieter })),
     };
   }
   const situation = SITUATION[key];
