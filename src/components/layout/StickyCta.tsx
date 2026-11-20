@@ -10,16 +10,20 @@ import { site } from "@/lib/site";
 import { countEvent } from "@/lib/localEvents";
 
 const HIDDEN = ["/rechtsschutz-check", "/kontakt", "/vielen-dank", "/datenschutz", "/impressum", "/nutzungsbedingungen"];
+/** Hier ist die Leiste sofort da (Anzeigen-Zielseite), sonst erst nach etwas Scrollen. */
+const ALWAYS = ["/vermieterrechtsschutz"];
 
 export function StickyCta() {
   const pathname = usePathname();
-  const [visible, setVisible] = useState(false);
+  const always = ALWAYS.includes(pathname);
+  // Sofort-Seiten: schon im ersten HTML sichtbar, nicht erst nach dem Laden des JavaScripts.
+  const [visible, setVisible] = useState(always);
   const product = productList.find((p) => p.slug === pathname);
 
   useEffect(() => {
     // Ausblenden, solange das Rückruf-Formular zu sehen ist – sonst liegt die Leiste über den Eingabefeldern.
     let formInView = false;
-    const onScroll = () => setVisible(window.scrollY > 520 && !formInView);
+    const onScroll = () => setVisible((always || window.scrollY > 520) && !formInView);
     const form = document.getElementById("rueckruf");
     const io = form && "IntersectionObserver" in window
       ? new IntersectionObserver(([e]) => { formInView = e.isIntersecting; onScroll(); }, { threshold: 0.15 })
@@ -28,7 +32,7 @@ export function StickyCta() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => { window.removeEventListener("scroll", onScroll); io?.disconnect(); };
-  }, [pathname]);
+  }, [pathname, always]);
 
   if (HIDDEN.includes(pathname)) return null;
   const href = product ? `/rechtsschutz-check?bereich=${product.key}` : "/rechtsschutz-check";
@@ -37,18 +41,19 @@ export function StickyCta() {
   return (
     <AnimatePresence>
       {visible && (
-        <motion.div initial={{ y: 90 }} animate={{ y: 0 }} exit={{ y: 90 }} transition={{ type: "spring", stiffness: 380, damping: 34 }}
-          className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-white/95 px-4 pb-[max(env(safe-area-inset-bottom),12px)] pt-3 backdrop-blur md:hidden">
+        <motion.div initial={always ? false : { y: 90 }} animate={{ y: 0 }} exit={{ y: 90 }} transition={{ type: "spring", stiffness: 380, damping: 34 }}
+          // Sofort-Seiten: schmaler (ohne Zusatzzeile), damit die Auswahl im Hero darüber sichtbar bleibt.
+          className={`fixed inset-x-0 bottom-0 z-40 border-t border-line bg-white/95 px-4 backdrop-blur md:hidden ${always ? "pb-[max(env(safe-area-inset-bottom),10px)] pt-2.5" : "pb-[max(env(safe-area-inset-bottom),12px)] pt-3"}`}>
           <div className="flex items-stretch gap-2">
             <a href={`tel:${site.phone.replace(/[^\d+]/g, "").replace(/^0/, "+49")}`} onClick={() => countEvent("call")} aria-label={`Anrufen: ${site.phone}`}
-              className="grid w-[52px] shrink-0 place-items-center rounded-full border border-navy bg-white text-navy">
+              className={`grid shrink-0 place-items-center rounded-full border border-navy bg-white text-navy ${always ? "w-[46px]" : "w-[52px]"}`}>
               <Phone className="h-5 w-5" aria-hidden />
             </a>
-            <Link href={href} className="flex min-w-0 flex-1 items-center justify-center gap-2 rounded-full bg-sun py-3.5 text-[15px] font-semibold text-navy">
+            <Link href={href} className={`flex min-w-0 flex-1 items-center justify-center gap-2 rounded-full bg-sun text-[15px] font-semibold text-navy ${always ? "py-3" : "py-3.5"}`}>
               <span className="truncate">{label}</span> <ArrowRight className="h-4 w-4 shrink-0" aria-hidden />
             </Link>
           </div>
-          <p className="mt-1.5 text-center text-[11px] text-ink-muted">Kostenlos & unverbindlich · ca. 60 Sekunden</p>
+          {!always && <p className="mt-1.5 text-center text-[11px] text-ink-muted">Kostenlos & unverbindlich · ca. 60 Sekunden</p>}
         </motion.div>
       )}
     </AnimatePresence>
