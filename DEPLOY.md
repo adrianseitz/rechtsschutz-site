@@ -21,8 +21,8 @@ Vorhandene A-/AAAA-/CNAME-Einträge für `@` und `www` (z. B. von Vercel oder IO
 Die Umstellung dauert meist 5–30 Minuten.
 
 **Zweite Domain `im-rechtsschutz.de`:** dieselben zwei A-Einträge (`@` und `www` → IP des Servers) bei dieser Domain anlegen,
-alte A-/AAAA-/CNAME-Einträge löschen. Caddy holt dann selbst das Zertifikat; die Domain leitet auf `www.seitz-rechtsschutz.de` weiter
-(Einstellung `DOMAIN2` in `docker-compose.yml`).
+alte A-/AAAA-/CNAME-Einträge löschen. Caddy holt dann selbst das Zertifikat; unter `www.im-rechtsschutz.de` erscheint dieselbe Website
+(Einstellung `DOMAIN2` in `docker-compose.yml`; Hauptadresse für Google bleibt `seitz-rechtsschutz.de`).
 
 ## 3. Auf dem Server einrichten
 

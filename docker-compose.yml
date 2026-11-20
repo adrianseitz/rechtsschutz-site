@@ -44,7 +44,8 @@ services:
       - "443:443"
     environment:
       DOMAIN: ${DOMAIN}
-      DOMAIN2: ${DOMAIN2:-im-rechtsschutz.de}   # zweite Domain, leitet auf DOMAIN weiter (neue Variable = Caddy startet mit neuer Konfiguration neu)
+      DOMAIN2: ${DOMAIN2:-im-rechtsschutz.de}   # zweite Domain mit derselben Website
+      CADDYFILE_VERSION: "2"   # bei Änderungen am Caddyfile hochzählen – dann startet Caddy beim Update mit der neuen Konfiguration neu
     volumes:
       - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data

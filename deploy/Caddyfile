@@ -8,8 +8,13 @@ www.{$DOMAIN} {
 	reverse_proxy app:3000
 }
 
-# Zweite Domain (im-rechtsschutz.de): leitet vorerst auf die Hauptadresse weiter.
-# Vorübergehende Weiterleitung (302), damit ein späterer Umzug auf diese Domain ohne Browser-Altlasten geht.
-{$DOMAIN2:im-rechtsschutz.de}, www.{$DOMAIN2:im-rechtsschutz.de} {
-	redir https://www.{$DOMAIN}{uri} temporary
+# Zweite Domain (im-rechtsschutz.de): zeigt dieselbe Website unter eigener Adresse, ohne www leitet auf www weiter.
+# Google bekommt über die Canonical-Angaben weiterhin seitz-rechtsschutz.de als Hauptadresse (kein doppelter Inhalt).
+{$DOMAIN2:im-rechtsschutz.de} {
+	redir https://www.{$DOMAIN2:im-rechtsschutz.de}{uri} permanent
+}
+
+www.{$DOMAIN2:im-rechtsschutz.de} {
+	encode zstd gzip
+	reverse_proxy app:3000
 }
