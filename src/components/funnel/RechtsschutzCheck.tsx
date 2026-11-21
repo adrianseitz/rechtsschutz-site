@@ -20,7 +20,7 @@ import { fireBurst } from "../ui/ClickBurst";
 
 /**
  * Rechtsschutz-Check als EIN kurzes Formular – kein Weiterklicken.
- * Vermieter: Wohneinheiten (Zahl), Mietausfallschutz gewünscht (Ja/Nein), E-Mail, Telefonnummer.
+ * Vermieter: Wohneinheiten (Zahl), Mietausfallschutz gewünscht (Ja/Nein), Name, E-Mail, Telefonnummer.
  * Andere Bereiche: die eine passende Frage, Name, Telefonnummer.
  *
  * Vorauswahl aus Landingpage/Anzeige: ?bereich=arbeit&situation=angestellt · ?bereich=mehrere&auswahl=privat,verkehr
@@ -133,11 +133,11 @@ export function RechtsschutzCheck() {
     return Object.keys(e).length === 0;
   };
 
-  /** E-Mail (Vermieter) bzw. Name (andere Bereiche) sind Pflicht – je nach Formular. */
+  /** Name immer Pflicht, E-Mail zusätzlich beim Vermieter-Formular. */
   const checkContact = (data: Fields) => {
     let ok = true;
     if (vermieter && !emailOk(data.email.trim())) { setError("email", { message: data.email.trim() ? "Bitte gib eine gültige E-Mail-Adresse an." : "Bitte gib deine E-Mail-Adresse an." }); ok = false; }
-    if (!vermieter && data.name.trim().length < 2) { setError("name", { message: "Bitte gib deinen Namen an." }); ok = false; }
+    if (data.name.trim().length < 2) { setError("name", { message: "Bitte gib deinen Namen an." }); ok = false; }
     return ok;
   };
 
@@ -227,6 +227,11 @@ export function RechtsschutzCheck() {
               </div>
               {answerErrors.mietausfall && <p role="alert" className="field-error">{answerErrors.mietausfall}</p>}
             </fieldset>
+            <div>
+              <label htmlFor="ck-name" className="label">Name</label>
+              <input id="ck-name" autoComplete="name" autoCapitalize="words" enterKeyHint="next" className="input !py-3" aria-invalid={!!errors.name} {...register("name")} onFocus={markKontakt} />
+              {errors.name && <p className="field-error">{errors.name.message}</p>}
+            </div>
             <div>
               <label htmlFor="ck-email" className="label">E-Mail</label>
               <input id="ck-email" type="email" inputMode="email" autoComplete="email" enterKeyHint="next" className="input !py-3" aria-invalid={!!errors.email} {...register("email")} onFocus={markKontakt} />
