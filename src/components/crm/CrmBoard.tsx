@@ -276,7 +276,7 @@ export function CrmBoard({ initial, storage, error, stats: traffic = {}, openLea
                               {overdue(l) && <AlertCircle className="h-4 w-4 shrink-0 text-rose-500" aria-label="Seit über 24 Stunden unbearbeitet" />}
                               {retentionDue(l) && <Trash2 className="h-4 w-4 shrink-0 text-neutral-500" aria-label="Löschfrist erreicht" />}
                             </div>
-                            {(l.situation || l.anliegen || l.requestType || l.einheiten) && <p className="mt-2 line-clamp-2 text-xs leading-snug text-ink-muted">{[l.situation ?? l.anliegen ?? l.requestType, l.einheiten].filter(Boolean).join(" · ")}</p>}
+                            {(l.situation || l.anliegen || l.requestType || l.einheiten) && <p className="mt-2 line-clamp-2 text-xs leading-snug text-ink-muted">{[l.situation ?? l.anliegen ?? l.requestType, l.einheiten, l.mietausfall && `Mietausfallschutz: ${l.mietausfall}`].filter(Boolean).join(" · ")}</p>}
                             {(urgency(l) || (l.followUp && statusOf(l.status).stage)) && (
                               <p className="mt-2 flex flex-wrap gap-1.5 text-[11px] font-semibold">
                                 {urgency(l) && <span className={`rounded-full px-2 py-0.5 ${urgency(l)!.cls}`}>{urgency(l)!.label}</span>}
@@ -524,6 +524,7 @@ function Drawer({ lead: l, onClose, onStatus, onMeta, onDelete }: { lead: CrmLea
             <Field k="Anliegen" v={l.anliegen} />
             <Field k="Situation" v={l.situation} />
             <Field k="Wohneinheiten" v={l.einheiten} />
+            <Field k="Mietausfallschutz gewünscht" v={l.mietausfall} />
             <Field k="Gewünschter Beginn" v={l.beginn} />
             <Field k="Bestehender Rechtsschutz" v={l.bestand} />
             <Field k="Anliegen" v={l.requestType} />

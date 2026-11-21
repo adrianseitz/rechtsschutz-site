@@ -48,6 +48,8 @@ export type CrmLead = {
   situation?: string;
   anliegen?: string;
   einheiten?: string;
+  /** Vermieter: Mietausfallschutz gewünscht (Ja/Nein) */
+  mietausfall?: string;
   beginn?: string;
   bestand?: string;
   requestType?: string;

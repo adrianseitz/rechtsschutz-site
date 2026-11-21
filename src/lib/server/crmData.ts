@@ -20,6 +20,7 @@ function toLead(r: SubmissionRecord): Omit<CrmLead, "status" | "statusUpdatedAt"
     situation: r.answers.situation?.label,
     anliegen: r.answers.anliegen?.label,
     einheiten: r.answers.einheiten?.label,
+    mietausfall: r.answers.mietausfall?.label,
     beginn: r.answers.beginn?.label,
     bestand: r.answers.bestand?.label,
     requestType: r.request ? REQUEST_LABEL[r.request.requestType] ?? r.request.requestType : undefined,

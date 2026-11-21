@@ -72,6 +72,9 @@ export function buildLeadRecord(input: LeadInput, meta: SubmissionRecord["meta"]
       ...(answers.bereich === "vermieter" && answers.einheiten !== undefined
         ? { einheiten: { value: String(answers.einheiten), label: einheitenLabel(answers.einheiten) } }
         : {}),
+      ...(answers.bereich === "vermieter" && answers.mietausfall
+        ? { mietausfall: { value: answers.mietausfall, label: answers.mietausfall === "ja" ? "Ja" : "Nein" } }
+        : {}),
       ...(answers.bereich === "vermieter" && answers.anliegen
         ? { anliegen: { value: answers.anliegen, label: labelFor("anliegen", answers.anliegen) } }
         : {}),

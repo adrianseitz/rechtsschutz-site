@@ -5,9 +5,10 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AlertCircle, ArrowRight, Loader2, Lock, Minus, Plus } from "lucide-react";
+import { z } from "zod";
+import { AlertCircle, ArrowRight, Loader2, Lock } from "lucide-react";
 import { AREAS, EINHEITEN_MAX, SITUATION, VERMIETER_ANLIEGEN } from "@/lib/funnel";
-import { CONSENT_TEXTS, checkContactFormSchema, splitName } from "@/lib/schemas";
+import { CONSENT_TEXTS, phoneRegex, splitName } from "@/lib/schemas";
 import { products, type ProductKey } from "@/lib/products";
 import { getAttribution } from "@/lib/attribution";
 import { currentTrackingConsent } from "@/lib/consent";
@@ -18,18 +19,24 @@ import { StampOverlay } from "../ui/StampOverlay";
 import { fireBurst } from "../ui/ClickBurst";
 
 /**
- * Rechtsschutz-Check als EIN kurzes Formular – wie bei Vergleichsportalen und Maklern üblich:
- * eine Frage (Vermieter: Anzahl Wohnungen als Antipp-Buttons), Name, Telefon, Absenden.
- * Kein Weiterklicken, keine Pflicht-Checkbox (Hinweis direkt über dem Button).
+ * Rechtsschutz-Check als EIN kurzes Formular – kein Weiterklicken.
+ * Vermieter: Wohneinheiten (Zahl), Mietausfallschutz gewünscht (Ja/Nein), E-Mail, Telefonnummer.
+ * Andere Bereiche: die eine passende Frage, Name, Telefonnummer.
  *
  * Vorauswahl aus Landingpage/Anzeige: ?bereich=arbeit&situation=angestellt · ?bereich=mehrere&auswahl=privat,verkehr
  * · ?bereich=vermieter&anliegen=mietausfall (Thema wird still mitgeschickt) · &einheiten=2 bzw. &ab=4
  */
 type Preset = { bereich?: string; situation: string[]; einheiten?: number; anliegen?: string; answered: boolean };
 
-const quickSchema = checkContactFormSchema.pick({ name: true, phone: true });
-type QuickForm = { name: string; phone: string };
-const UNIT_BUTTONS = [1, 2, 3, 4] as const;
+const fieldsSchema = z.object({
+  name: z.string().trim().max(120),
+  email: z.string().trim().max(160),
+  phone: z.string().trim().max(30)
+    .min(1, "Bitte gib deine Telefonnummer an, damit ich dich zurückrufen kann.")
+    .regex(phoneRegex, "Bitte gib eine gültige Telefonnummer an."),
+});
+type Fields = z.infer<typeof fieldsSchema>;
+const emailOk = (v: string) => z.string().email().safeParse(v).success;
 
 function readPreset(params: URLSearchParams): Preset {
   const b = params.get("bereich");
@@ -54,20 +61,20 @@ export function RechtsschutzCheck() {
   const [preset] = useState(() => readPreset(new URLSearchParams(params.toString())));
   const [bereich, setBereich] = useState<string | undefined>(preset.bereich);
   const [situation, setSituation] = useState<string[]>(preset.situation);
-  const [einheiten, setEinheiten] = useState<number | undefined>(preset.einheiten);
-  const [many, setMany] = useState((preset.einheiten ?? 0) >= 5);
-  const [answerError, setAnswerError] = useState<string | null>(null);
+  const [einheiten, setEinheiten] = useState(preset.einheiten ? String(preset.einheiten) : "");
+  const [mietausfall, setMietausfall] = useState<"ja" | "nein" | undefined>();
+  const [answerErrors, setAnswerErrors] = useState<{ bereich?: string; einheiten?: string; mietausfall?: string; situation?: string }>({});
   const [serverError, setServerError] = useState<string | null>(null);
   const [stamped, setStamped] = useState(false);
   const startedAt = useRef<number>(Date.now());
   const honeypot = useRef<HTMLInputElement>(null);
-  const answersRef = useRef<HTMLDivElement>(null);
+  const topRef = useRef<HTMLDivElement>(null);
   const counted = useRef(new Set<string>());
   const runId = useRef("");
 
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<QuickForm>({
-    resolver: zodResolver(quickSchema),
-    defaultValues: { name: "", phone: "" },
+  const { register, handleSubmit, setError, getValues, formState: { errors, isSubmitting } } = useForm<Fields>({
+    resolver: zodResolver(fieldsSchema),
+    defaultValues: { name: "", email: "", phone: "" },
     mode: "onTouched",
   });
 
@@ -95,42 +102,56 @@ export function RechtsschutzCheck() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const question = bereich && bereich !== "vermieter" ? SITUATION[bereich] : undefined;
+  const vermieter = bereich === "vermieter";
+  const question = bereich && !vermieter ? SITUATION[bereich] : undefined;
   const title = bereich && bereich in products ? `${products[bereich as ProductKey].name} prüfen` : "Rechtsschutz-Check";
+  const units = Number.parseInt(einheiten, 10);
+  const unitsValid = Number.isInteger(units) && units >= 1 && units <= EINHEITEN_MAX;
 
-  const pickUnits = (v: number) => { markAnswered(); setAnswerError(null); setMany(false); setEinheiten(v); };
-  const pickMany = () => { markAnswered(); setAnswerError(null); setMany(true); setEinheiten((e) => (e && e >= 5 ? e : 5)); };
-  const stepMany = (d: number) => setEinheiten((e) => Math.min(EINHEITEN_MAX, Math.max(5, (e ?? 5) + d)));
   const chooseArea = (value: string) => {
     markStarted(value);
     if (value !== bereich) setSituation([]);
     setBereich(value);
-    setAnswerError(null);
+    setAnswerErrors({});
   };
   const chooseSituation = (value: string) => {
     if (!question) return;
     markAnswered();
-    setAnswerError(null);
+    setAnswerErrors((e) => ({ ...e, situation: undefined }));
     setSituation((s) => (question.multi ? (s.includes(value) ? s.filter((v) => v !== value) : [...s, value]) : [value]));
   };
 
-  const missing = (): string | null => {
-    if (!bereich) return "Bitte wähle aus, was du absichern möchtest.";
-    if (bereich === "vermieter") return einheiten ? null : "Bitte wähle, wie viele Wohnungen du vermietest.";
-    if (situation.length === 0) return "Bitte wähle eine Antwort aus.";
-    return null;
+  /** Fragen oben prüfen; gibt true zurück, wenn alles da ist. */
+  const checkAnswers = () => {
+    const e: typeof answerErrors = {};
+    if (!bereich) e.bereich = "Bitte wähle aus, was du absichern möchtest.";
+    else if (vermieter) {
+      if (!unitsValid) e.einheiten = einheiten ? `Bitte gib eine Zahl zwischen 1 und ${EINHEITEN_MAX} ein.` : "Bitte gib an, wie viele Wohneinheiten du vermietest.";
+      if (!mietausfall) e.mietausfall = "Bitte wähle Ja oder Nein.";
+    } else if (situation.length === 0) e.situation = "Bitte wähle eine Antwort aus.";
+    setAnswerErrors(e);
+    return Object.keys(e).length === 0;
   };
 
-  const onSubmit = async (data: QuickForm) => {
-    const miss = missing();
-    if (miss) { setAnswerError(miss); answersRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }); return; }
+  /** E-Mail (Vermieter) bzw. Name (andere Bereiche) sind Pflicht – je nach Formular. */
+  const checkContact = (data: Fields) => {
+    let ok = true;
+    if (vermieter && !emailOk(data.email.trim())) { setError("email", { message: data.email.trim() ? "Bitte gib eine gültige E-Mail-Adresse an." : "Bitte gib deine E-Mail-Adresse an." }); ok = false; }
+    if (!vermieter && data.name.trim().length < 2) { setError("name", { message: "Bitte gib deinen Namen an." }); ok = false; }
+    return ok;
+  };
+
+  const onSubmit = async (data: Fields) => {
+    const answersOk = checkAnswers();
+    const contactOk = checkContact(data);
+    if (!answersOk || !contactOk) { topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }); return; }
     markAnswered();
     markKontakt();
     setServerError(null);
     const trackingConsent = currentTrackingConsent();
     const { firstName, lastName } = splitName(data.name);
-    const answers = bereich === "vermieter"
-      ? { bereich, situation: [], einheiten, ...(preset.anliegen ? { anliegen: preset.anliegen } : {}) }
+    const answers = vermieter
+      ? { bereich, situation: [], einheiten: units, mietausfall, ...(preset.anliegen ? { anliegen: preset.anliegen } : {}) }
       : { bereich, situation };
     try {
       const res = await fetch("/api/leads", {
@@ -138,7 +159,7 @@ export function RechtsschutzCheck() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           answers,
-          contact: { firstName, lastName, email: "", phone: data.phone, contactMethod: "telefon", reachable: "", consentContact: true, consentMarketing: false },
+          contact: { firstName, lastName, email: data.email, phone: data.phone, contactMethod: "telefon", reachable: "", consentContact: true, consentMarketing: false },
           attribution: getAttribution(trackingConsent.marketing),
           trackingConsent,
           spam: { website: honeypot.current?.value ?? "", startedAt: startedAt.current },
@@ -160,80 +181,87 @@ export function RechtsschutzCheck() {
       setServerError("Keine Verbindung. Bitte prüfe deine Internetverbindung und versuche es erneut.");
     }
   };
-  const submit = handleSubmit(onSubmit, () => { const miss = missing(); if (miss) setAnswerError(miss); });
+  const submit = handleSubmit(onSubmit, () => { checkAnswers(); checkContact(getValues()); });
 
-  const option = (sel: boolean) =>
-    `rounded-2xl border text-[15px] font-semibold transition active:scale-[0.97] ${sel ? "border-navy bg-sun text-navy" : "border-line bg-white text-navy hover:border-navy/40"}`;
+  const choice = (sel: boolean) =>
+    `rounded-xl border text-[15px] font-semibold transition ${sel ? "border-navy bg-sun text-navy" : "border-line bg-white text-navy hover:border-navy/40"}`;
 
   return (
-    <div className="mx-auto w-full max-w-md">
-      <h1 className="text-[1.65rem] font-semibold leading-[1.1] tracking-[-0.04em] text-navy sm:text-[2.2rem]">{title}</h1>
-      <p className="mt-1 text-[15px] text-ink-soft">Kostenlos &amp; unverbindlich – ich rufe dich zurück.</p>
+    <div className="mx-auto w-full max-w-md" ref={topRef}>
+      <h1 className="scroll-mt-24 text-[1.65rem] font-semibold leading-[1.1] tracking-[-0.04em] text-navy sm:text-[2.2rem]">{title}</h1>
+      <p className="mt-1 text-[15px] text-ink-soft">Kostenlos &amp; unverbindlich.</p>
 
       <form onSubmit={submit} noValidate className="card mt-4 space-y-4 p-4 sm:p-6">
-        <div ref={answersRef} className="scroll-mt-24">
-          {!preset.bereich && (
-            <fieldset className={bereich ? "mb-4" : ""}>
-              <legend className="label">Was möchtest du absichern?</legend>
-              <div className="grid grid-cols-2 gap-2">
-                {AREAS.map((o, i) => (
-                  <button key={o.value} type="button" aria-pressed={bereich === o.value} onClick={() => chooseArea(o.value)}
-                    className={`flex min-h-[48px] items-center gap-2 px-2.5 py-2 text-left !text-[13.5px] leading-tight ${option(bereich === o.value)} ${i === AREAS.length - 1 ? "col-span-2" : ""}`}>
-                    <Icon3D name={o.icon ?? "shield"} size={22} priority />{o.label}
-                  </button>
-                ))}
-              </div>
-            </fieldset>
-          )}
+        {!preset.bereich && (
+          <fieldset>
+            <legend className="label">Was möchtest du absichern?</legend>
+            <div className="grid grid-cols-2 gap-2">
+              {AREAS.map((o, i) => (
+                <button key={o.value} type="button" aria-pressed={bereich === o.value} onClick={() => chooseArea(o.value)}
+                  className={`flex min-h-[48px] items-center gap-2 px-2.5 py-2 text-left !text-[13.5px] leading-tight ${choice(bereich === o.value)} ${i === AREAS.length - 1 ? "col-span-2" : ""}`}>
+                  <Icon3D name={o.icon ?? "shield"} size={22} priority />{o.label}
+                </button>
+              ))}
+            </div>
+            {answerErrors.bereich && <p role="alert" className="field-error">{answerErrors.bereich}</p>}
+          </fieldset>
+        )}
 
-          {bereich === "vermieter" && (
+        {vermieter && (
+          <>
+            <div>
+              <label htmlFor="ck-einheiten" className="label">Wie viele Wohneinheiten vermietest du?</label>
+              <input id="ck-einheiten" type="text" inputMode="numeric" pattern="[0-9]*" autoComplete="off" placeholder="z. B. 2" value={einheiten}
+                onChange={(e) => { markAnswered(); setAnswerErrors((x) => ({ ...x, einheiten: undefined })); setEinheiten(e.target.value.replace(/[^0-9]/g, "").slice(0, 3)); }}
+                aria-invalid={!!answerErrors.einheiten} className="input !py-3" />
+              {answerErrors.einheiten && <p role="alert" className="field-error">{answerErrors.einheiten}</p>}
+            </div>
             <fieldset>
-              <legend className="label">Wie viele Wohnungen vermietest du?</legend>
-              <div className="grid grid-cols-5 gap-2">
-                {UNIT_BUTTONS.map((v) => (
-                  <button key={v} type="button" aria-pressed={!many && einheiten === v} onClick={() => pickUnits(v)} className={`h-12 ${option(!many && einheiten === v)}`}>{v}</button>
+              <legend className="label">Mietausfallschutz gewünscht?</legend>
+              <div className="grid grid-cols-2 gap-2">
+                {(["ja", "nein"] as const).map((v) => (
+                  <button key={v} type="button" aria-pressed={mietausfall === v}
+                    onClick={() => { markStarted(); setAnswerErrors((x) => ({ ...x, mietausfall: undefined })); setMietausfall(v); }}
+                    className={`h-12 ${choice(mietausfall === v)}`}>{v === "ja" ? "Ja" : "Nein"}</button>
                 ))}
-                <button type="button" aria-pressed={many} onClick={pickMany} className={`h-12 ${option(many)}`}>5+</button>
               </div>
-              {many && (
-                <div className="mt-2 flex items-center justify-between rounded-2xl bg-paper px-3 py-2">
-                  <label htmlFor="ck-einheiten" className="text-[14px] text-navy">Wie viele genau?</label>
-                  <div className="flex items-center gap-1.5">
-                    <button type="button" onClick={() => stepMany(-1)} disabled={(einheiten ?? 5) <= 5} aria-label="Eine weniger" className="grid h-9 w-9 place-items-center rounded-full border border-line bg-white text-navy disabled:opacity-35"><Minus className="h-4 w-4" aria-hidden /></button>
-                    <input id="ck-einheiten" type="number" inputMode="numeric" min={5} max={EINHEITEN_MAX} value={einheiten ?? 5}
-                      onChange={(e) => { const v = Number.parseInt(e.target.value.replace(/[^0-9]/g, "").slice(0, 3), 10); setEinheiten(Number.isInteger(v) ? Math.min(EINHEITEN_MAX, v) : undefined); }}
-                      className="h-9 w-14 rounded-xl border border-line bg-white text-center text-base font-semibold tabular-nums text-navy [appearance:textfield] focus:border-navy focus:outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none" />
-                    <button type="button" onClick={() => stepMany(1)} aria-label="Eine mehr" className="grid h-9 w-9 place-items-center rounded-full border border-line bg-white text-navy"><Plus className="h-4 w-4" aria-hidden /></button>
-                  </div>
-                </div>
-              )}
+              {answerErrors.mietausfall && <p role="alert" className="field-error">{answerErrors.mietausfall}</p>}
             </fieldset>
-          )}
+            <div>
+              <label htmlFor="ck-email" className="label">E-Mail</label>
+              <input id="ck-email" type="email" inputMode="email" autoComplete="email" enterKeyHint="next" className="input !py-3" aria-invalid={!!errors.email} {...register("email")} onFocus={markKontakt} />
+              {errors.email && <p className="field-error">{errors.email.message}</p>}
+            </div>
+          </>
+        )}
 
-          {question && (
+        {question && (
+          <>
             <fieldset>
               <legend className="label">{question.title}</legend>
               <div className="grid grid-cols-2 gap-2">
                 {question.options.map((o) => (
                   <button key={o.value} type="button" aria-pressed={situation.includes(o.value)} onClick={() => chooseSituation(o.value)}
-                    className={`min-h-[48px] px-3 py-2 text-left !text-[14px] leading-tight ${option(situation.includes(o.value))}`}>{o.label}</button>
+                    className={`min-h-[48px] px-3 py-2 text-left !text-[14px] leading-tight ${choice(situation.includes(o.value))}`}>{o.label}</button>
                 ))}
               </div>
+              {answerErrors.situation && <p role="alert" className="field-error">{answerErrors.situation}</p>}
             </fieldset>
-          )}
-          {answerError && <p role="alert" className="field-error">{answerError}</p>}
-        </div>
+            <div>
+              <label htmlFor="ck-name" className="label">Name</label>
+              <input id="ck-name" autoComplete="name" autoCapitalize="words" enterKeyHint="next" className="input !py-3" aria-invalid={!!errors.name} {...register("name")} onFocus={markKontakt} />
+              {errors.name && <p className="field-error">{errors.name.message}</p>}
+            </div>
+          </>
+        )}
 
-        <div>
-          <label htmlFor="ck-name" className="label">Name</label>
-          <input id="ck-name" autoComplete="name" autoCapitalize="words" enterKeyHint="next" className="input !py-3" aria-invalid={!!errors.name} {...register("name")} onFocus={markKontakt} />
-          {errors.name && <p className="field-error">{errors.name.message}</p>}
-        </div>
-        <div>
-          <label htmlFor="ck-phone" className="label">Telefonnummer</label>
-          <input id="ck-phone" type="tel" inputMode="tel" autoComplete="tel" enterKeyHint="send" className="input !py-3" aria-invalid={!!errors.phone} {...register("phone")} onFocus={markKontakt} />
-          {errors.phone && <p className="field-error">{errors.phone.message}</p>}
-        </div>
+        {bereich && (
+          <div>
+            <label htmlFor="ck-phone" className="label">Telefonnummer</label>
+            <input id="ck-phone" type="tel" inputMode="tel" autoComplete="tel" enterKeyHint="send" className="input !py-3" aria-invalid={!!errors.phone} {...register("phone")} onFocus={markKontakt} />
+            {errors.phone && <p className="field-error">{errors.phone.message}</p>}
+          </div>
+        )}
 
         {/* Honeypot gegen Bots – für Menschen unsichtbar */}
         <div aria-hidden className="absolute -left-[9999px] h-0 w-0 overflow-hidden">

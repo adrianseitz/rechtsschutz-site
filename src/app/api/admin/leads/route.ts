@@ -54,6 +54,7 @@ function toCsv(rows: SubmissionRecord[], st: Awaited<ReturnType<typeof readStatu
     ["Situation", (r) => r.answers.situation?.label],
     ["Anliegen", (r) => r.answers.anliegen?.label],
     ["Wohneinheiten", (r) => r.answers.einheiten?.value],
+    ["Mietausfallschutz gewünscht", (r) => r.answers.mietausfall?.label],
     ["Beginn", (r) => r.answers.beginn?.label],
     ["Bestehender RS", (r) => r.answers.bestand?.label],
     ["Anliegen", (r) => r.request?.requestType],

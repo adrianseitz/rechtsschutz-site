@@ -8,20 +8,20 @@ export const CONSENT_TEXTS = {
   // Kurz gehalten – genau dieser Text steht in allen drei Formularen (Check, Rückruf, Kontakt).
   contact: "Adrian Seitz darf mich zu meiner Anfrage kontaktieren. Die Datenschutzhinweise habe ich gelesen.",
   // Rechtsschutz-Check: Hinweis direkt über dem Button – mit dem Klick auf „Kostenlosen Rückruf anfordern“ erteilt.
-  contactButton: "Mit Klick auf „Kostenlosen Rückruf anfordern“ darf Adrian Seitz mich zu meiner Anfrage anrufen. Es gelten die Datenschutzhinweise.",
+  contactButton: "Mit Klick auf „Kostenlosen Rückruf anfordern“ darf Adrian Seitz mich zu meiner Anfrage kontaktieren. Es gelten die Datenschutzhinweise.",
   marketing:
     "Optional: Ich möchte darüber hinaus gelegentlich per E-Mail oder Telefon Informationen zu weiteren passenden Versicherungslösungen erhalten. Diese Einwilligung kann ich jederzeit widerrufen.",
 } as const;
 
 const trimmed = (max: number) => z.string().trim().max(max);
 
-const phoneRegex = /^[+0-9][0-9 ()/-]{5,24}$/;
+export const phoneRegex = /^[+0-9][0-9 ()/-]{5,24}$/;
 
 /**
  * Was der Server für eine Check-Anfrage annimmt. Nachname und E-Mail sind freiwillig:
  * Der Check fragt nur noch Name + Telefon ab (ältere, noch offene Seiten schicken weiter alle Felder).
  */
-export const contactFieldsSchema = z
+const contactBase = z
   .object({
     firstName: trimmed(60).min(2, "Bitte gib deinen Namen an."),
     lastName: trimmed(80).optional().default(""),
@@ -31,8 +31,8 @@ export const contactFieldsSchema = z
     reachable: z.enum(["vormittags", "mittags", "nachmittags", "abends"]).optional().or(z.literal("")),
     consentContact: z.literal(true, { errorMap: () => ({ message: "Bitte bestätige kurz, dass ich dich kontaktieren darf." }) }),
     consentMarketing: z.boolean().default(false),
-  })
-  .superRefine((d, ctx) => {
+  });
+const contactRefine = (d: z.infer<typeof contactBase>, ctx: z.RefinementCtx) => {
     const phone = d.phone?.trim() ?? "";
     if (d.contactMethod === "email" && !d.email) {
       ctx.addIssue({ code: "custom", path: ["email"], message: "Bitte gib deine E-Mail-Adresse an." });
@@ -43,7 +43,10 @@ export const contactFieldsSchema = z
     if (phone.length > 0 && !phoneRegex.test(phone)) {
       ctx.addIssue({ code: "custom", path: ["phone"], message: "Bitte gib eine gültige Telefonnummer an." });
     }
-  });
+};
+export const contactFieldsSchema = contactBase.superRefine(contactRefine);
+/** Check: Name freiwillig – das Vermieter-Formular fragt nur Wohneinheiten, Mietausfallschutz, E-Mail und Telefon. */
+export const leadContactSchema = contactBase.extend({ firstName: trimmed(60).optional().default("") }).superRefine(contactRefine);
 
 export type ContactFields = z.infer<typeof contactFieldsSchema>;
 
@@ -96,11 +99,13 @@ export const leadSchema = z
       situation: z.array(trimmed(40)).max(6).default([]),
       einheiten: z.number().int().min(1).max(EINHEITEN_MAX).optional(),
       anliegen: z.enum(VERMIETER_ANLIEGEN.map((o) => o.value) as [string, ...string[]]).optional(),
+      /** Vermieter: Mietausfallschutz gewünscht? */
+      mietausfall: z.enum(["ja", "nein"]).optional(),
       // Werden im Check nicht mehr abgefragt; ältere offene Seiten schicken sie evtl. noch mit.
       beginn: z.enum(BEGINN.options.map((o) => o.value) as [string, ...string[]]).optional(),
       bestand: z.enum(BESTAND.options.map((o) => o.value) as [string, ...string[]]).optional(),
     }),
-    contact: contactFieldsSchema,
+    contact: leadContactSchema,
     attribution: attributionSchema,
     trackingConsent: z.object({ statistics: z.boolean(), marketing: z.boolean() }).default({ statistics: false, marketing: false }),
     spam: spamSchema,
