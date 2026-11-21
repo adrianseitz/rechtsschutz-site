@@ -17,7 +17,6 @@ import { CostCalculatorSection } from "../tools/CostCalculator";
 import { WaitingTimeline } from "../tools/WaitingTimeline";
 import { Icon } from "../ui/Icon";
 import { Ernstfall } from "./Ernstfall";
-import { VermieterSchnellCheck } from "../funnel/VermieterSchnellCheck";
 import { Marquee } from "../ui/Marquee";
 import { Reveal } from "../ui/Reveal";
 import { SectionHeading } from "../ui/SectionHeading";
@@ -78,12 +77,8 @@ function heroChips(key: Product["key"], checkHref: string) {
   };
 }
 
-/** Seiten mit Anfrage direkt im Hero: alle Buttons der Seite springen dorthin statt in den mehrstufigen Check. */
-const INLINE_FORM: Partial<Record<Product["key"], true>> = { vermieter: true };
-
 export function ProductLanding({ product }: { product: Product }) {
-  const inline = INLINE_FORM[product.key] === true;
-  const checkHref = inline ? "#anfrage" : `/rechtsschutz-check?bereich=${product.key}`;
+  const checkHref = `/rechtsschutz-check?bereich=${product.key}`;
   const start = heroChips(product.key, checkHref);
   // Beim Firmenrechtsschutz gibt es mit der Soforthilfe eine Ausnahme – dort steht eine eigene Antwort zu bestehenden Streitfällen.
   const general = product.key === "firma" ? /kostet|Wartezeit|kostenlos|schon eine/i : /kostet|Wartezeit|bestehende|kostenlos|schon eine/i;
@@ -103,7 +98,6 @@ export function ProductLanding({ product }: { product: Product }) {
         quick={product.quick && { ...product.quick, priceHref: "#preise" }}
         secondary={{ href: "#rueckruf", label: "Rückruf anfordern" }}
         cards={CARDS(product.key)}
-        form={inline ? <VermieterSchnellCheck price={product.quick?.price} /> : undefined}
       />
       <Marquee items={[...(MARQUEE_EXTRA[product.key] ?? []), ...product.cardTopics, "Persönliche Beratung", "Kostenlos & unverbindlich"]} />
 
