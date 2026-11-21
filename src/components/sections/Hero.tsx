@@ -117,10 +117,12 @@ function QuickFacts({ price, priceHref, points }: { price: string; priceHref: st
   );
 }
 
-export function Hero({ eyebrow, title, emphasis, subtitle, chipsLabel, chips, chipsNote = "Kostenlos & unverbindlich · dauert ca. 60 Sekunden", advisorNote, quick, secondary, cards, bullets = ["Kostenlos & unverbindlich", "Ca. 60 Sekunden", "Persönlicher Ansprechpartner"] }: {
+export function Hero({ eyebrow, title, emphasis, subtitle, chipsLabel, chips, chipsNote = "Kostenlos & unverbindlich · dauert ca. 60 Sekunden", advisorNote, quick, secondary, cards, bullets = ["Kostenlos & unverbindlich", "Ca. 60 Sekunden", "Persönlicher Ansprechpartner"], form }: {
   eyebrow?: string; title: string; emphasis?: string; subtitle: string;
   chipsLabel: string; chips: HeroChip[]; chipsNote?: string; advisorNote?: string; quick?: { price: string; priceHref: string; points: string[] };
   secondary?: { href: string; label: string }; cards: FloatCard[]; bullets?: string[];
+  /** Anfrage direkt im Hero (ohne Weiterklicken): Handy direkt unter der Überschrift, Desktop rechts */
+  form?: React.ReactNode;
 }) {
   const ref = useRef<HTMLElement>(null);
   const reduce = useReducedMotion();
@@ -128,6 +130,42 @@ export function Hero({ eyebrow, title, emphasis, subtitle, chipsLabel, chips, ch
   const rawY = useMotionValue(0);
   const mx = useSpring(rawX, { stiffness: 60, damping: 18 });
   const my = useSpring(rawY, { stiffness: 60, damping: 18 });
+
+  if (form) {
+    return (
+      <section className="relative -mt-[76px] overflow-hidden bg-white pb-14 pt-[96px] sm:pt-32 md:pb-20 lg:pt-36">
+        <div className="pointer-events-none absolute right-0 top-0 hidden h-full w-[44%] bg-paper lg:block" aria-hidden>
+          <div className="absolute inset-y-0 left-0 w-px bg-line" />
+        </div>
+        {/* Handy: Überschrift → Formular → Rest. Desktop: links Überschrift und Infos, rechts das Formular. */}
+        <div className="container relative grid gap-x-12 gap-y-5 [grid-template-areas:'head'_'form'_'rest'] lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-start lg:[grid-template-areas:'head_form'_'rest_form']">
+          <div className="min-w-0 [grid-area:head]">
+            {eyebrow && <span className="hero-fade eyebrow max-sm:hidden">{eyebrow.split(" · ")[0]}</span>}
+            <div className="sm:mt-6"><Headline title={title} emphasis={emphasis} /></div>
+          </div>
+          <div className="min-w-0 [grid-area:form] lg:sticky lg:top-24 lg:mx-auto lg:w-full lg:max-w-[470px]">{form}</div>
+          <div className="min-w-0 [grid-area:rest]">
+            {advisorNote && (
+              <a href="#ansprechpartner" className="hero-fade group flex w-fit items-center gap-3 lg:mt-2" aria-label="Mehr über Adrian Seitz" style={{ animationDelay: "0.25s" }}>
+                <AdvisorAvatar size={44} className="transition group-hover:border-navy" />
+                <p className="text-[13px] leading-[1.35] text-ink-muted"><span className="font-semibold text-navy underline decoration-navy/25 underline-offset-4 group-hover:decoration-navy">{advisorNote}</span><br />Kostenlos &amp; unverbindlich</p>
+              </a>
+            )}
+            {quick && <QuickFacts {...quick} />}
+            <p className="hero-fade mt-6 max-w-xl text-[17px] leading-7 text-ink-soft sm:text-lg sm:leading-8" style={{ animationDelay: "0.3s" }}>{subtitle}</p>
+            {secondary && (
+              <div className="hero-fade mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 text-[15px] text-ink-soft" style={{ animationDelay: "0.4s" }}>
+                <span>Lieber direkt sprechen?</span>
+                <CallLink className="inline-flex items-center gap-2 rounded-full border border-navy/20 bg-white px-4 py-2 font-semibold text-navy transition hover:border-navy">
+                  <Phone className="h-4 w-4" aria-hidden />{site.phone}
+                </CallLink>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
