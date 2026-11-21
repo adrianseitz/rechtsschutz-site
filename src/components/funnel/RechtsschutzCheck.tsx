@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { AlertCircle, ArrowRight, Loader2 } from "lucide-react";
+import { AlertCircle, ArrowRight, Check, Loader2, Minus, Plus } from "lucide-react";
 import { AREAS, EINHEITEN_MAX, SITUATION, VERMIETER_ANLIEGEN } from "@/lib/funnel";
 import { CONSENT_TEXTS, phoneRegex, splitName } from "@/lib/schemas";
 import { products, type ProductKey } from "@/lib/products";
@@ -22,8 +22,8 @@ import { fireBurst } from "../ui/ClickBurst";
 
 /**
  * Rechtsschutz-Check als EIN kurzes Formular – kein Weiterklicken.
- * Vermieter: Wohneinheiten (Zahl), Mietausfallschutz gewünscht (Ja/Nein), Name, E-Mail, Telefonnummer.
- * Andere Bereiche: die eine passende Frage, Name, Telefonnummer.
+ * Vermieter: Wohneinheiten (Zahl mit Plus/Minus), Mietausfallschutz Ja/Nein, Vor- und Nachname, Telefon, E-Mail (optional).
+ * Andere Bereiche: die eine passende Frage, Vor- und Nachname, Telefon, E-Mail (optional).
  *
  * Vorauswahl aus Landingpage/Anzeige: ?bereich=arbeit&situation=angestellt · ?bereich=mehrere&auswahl=privat,verkehr
  * · ?bereich=vermieter&anliegen=mietausfall (Thema wird still mitgeschickt) · &einheiten=2 bzw. &ab=4
@@ -110,6 +110,12 @@ export function RechtsschutzCheck() {
   const units = Number.parseInt(einheiten, 10);
   const unitsValid = Number.isInteger(units) && units >= 1 && units <= EINHEITEN_MAX;
 
+  /** Plus/Minus: leeres Feld startet bei 1 */
+  const stepUnits = (d: number) => {
+    markAnswered();
+    setAnswerErrors((x) => ({ ...x, einheiten: undefined }));
+    setEinheiten((v) => { const n = Number.parseInt(v, 10); return String(Number.isInteger(n) ? Math.min(EINHEITEN_MAX, Math.max(1, n + d)) : 1); });
+  };
   const chooseArea = (value: string) => {
     markStarted(value);
     if (value !== bereich) setSituation([]);
@@ -135,11 +141,11 @@ export function RechtsschutzCheck() {
     return Object.keys(e).length === 0;
   };
 
-  /** Name immer Pflicht, E-Mail zusätzlich beim Vermieter-Formular. */
+  /** Name und Telefon sind Pflicht; die E-Mail ist freiwillig (nur das Format wird geprüft, wenn eine da ist). */
   const checkContact = (data: Fields) => {
     let ok = true;
-    if (vermieter && !emailOk(data.email.trim())) { setError("email", { message: data.email.trim() ? "Bitte gib eine gültige E-Mail-Adresse an." : "Bitte gib deine E-Mail-Adresse an." }); ok = false; }
-    if (data.name.trim().length < 2) { setError("name", { message: "Bitte gib deinen Namen an." }); ok = false; }
+    if (data.email.trim() && !emailOk(data.email.trim())) { setError("email", { message: "Bitte prüfe die E-Mail-Adresse." }); ok = false; }
+    if (data.name.trim().length < 2) { setError("name", { message: "Bitte gib deinen Vor- und Nachnamen an." }); ok = false; }
     return ok;
   };
 
@@ -186,17 +192,19 @@ export function RechtsschutzCheck() {
   const submit = handleSubmit(onSubmit, () => { checkAnswers(); checkContact(getValues()); });
 
   const price = bereich && bereich in products ? products[bereich as ProductKey].quick?.price : undefined;
+  const heading = vermieter ? "Finde den passenden Rechtsschutz für deine Immobilie" : "Finde den passenden Rechtsschutz für dich";
+  const subline = vermieter
+    ? <>Individuelles Angebot für Vermieter – bereits ab <span className="whitespace-nowrap font-semibold text-navy">{price ?? "6,45"} €</span> monatlich.</>
+    : <>Individuelles Angebot für {productName}{price ? <> – bereits ab <span className="whitespace-nowrap font-semibold text-navy">{price} €</span> monatlich</> : null}.</>;
 
   return (
     <div className="mx-auto w-full max-w-[440px]" ref={topRef}>
       {/* Kopf: ein Mensch statt Callcenter – Adrians Foto direkt neben der Überschrift */}
-      <div className="flex items-center gap-3.5">
-        <AdvisorAvatar size={44} className="shadow-[0_8px_18px_-12px_rgba(11,11,10,0.6)]" />
+      <div className="flex items-start gap-3.5">
+        <AdvisorAvatar size={44} className="mt-1 shadow-[0_8px_18px_-12px_rgba(11,11,10,0.6)]" />
         <div className="min-w-0">
-          <h1 className="scroll-mt-24 text-[1.5rem] font-semibold leading-[1.05] tracking-[-0.045em] text-navy min-[400px]:text-[1.6rem] sm:text-[1.85rem]">Dein kostenloses Angebot</h1>
-          <p className="mt-1 text-[14px] leading-snug text-ink-soft">
-            für {productName}{price ? <> – ab <span className="whitespace-nowrap font-semibold text-navy">{price} €</span> im Monat</> : null}
-          </p>
+          <h1 className="scroll-mt-24 text-balance text-[1.4rem] font-semibold leading-[1.08] tracking-[-0.04em] text-navy min-[400px]:text-[1.5rem] sm:text-[1.8rem]">{heading}</h1>
+          <p className="mt-1.5 text-[14px] leading-snug text-ink-soft">{subline}</p>
         </div>
       </div>
 
@@ -221,19 +229,25 @@ export function RechtsschutzCheck() {
           <div className="space-y-4">
             <div>
               <label htmlFor="ck-einheiten" className="mb-2 block text-[14px] font-semibold text-navy">Wie viele Wohneinheiten vermietest du?</label>
-              <div className="flex items-stretch gap-3">
-                <input id="ck-einheiten" type="text" inputMode="numeric" pattern="[0-9]*" autoComplete="off" placeholder="0" value={einheiten}
-                  onChange={(e) => { markAnswered(); setAnswerErrors((x) => ({ ...x, einheiten: undefined })); setEinheiten(e.target.value.replace(/[^0-9]/g, "").slice(0, 3)); }}
-                  aria-invalid={!!answerErrors.einheiten}
-                  className="h-[60px] min-w-0 flex-1 rounded-2xl border border-line bg-paper/60 px-4 text-[2rem] font-semibold tabular-nums tracking-[-0.04em] text-navy transition placeholder:text-navy/20 focus:border-navy focus:bg-white focus:outline-none focus:ring-4 focus:ring-sun/40" />
+              <div className="flex items-stretch gap-2.5">
+                <div className={`flex h-[60px] min-w-0 flex-1 items-center rounded-2xl border bg-paper/60 transition focus-within:border-navy focus-within:bg-white focus-within:ring-4 focus-within:ring-sun/40 ${answerErrors.einheiten ? "border-red-400" : "border-line"}`}>
+                  <button type="button" onClick={() => stepUnits(-1)} disabled={!unitsValid || units <= 1} aria-label="Eine Wohneinheit weniger"
+                    className="grid h-full w-11 shrink-0 place-items-center rounded-l-2xl text-navy transition hover:bg-black/[0.03] disabled:opacity-30"><Minus className="h-4 w-4" aria-hidden /></button>
+                  <input id="ck-einheiten" type="text" inputMode="numeric" pattern="[0-9]*" autoComplete="off" placeholder="Anzahl eingeben" value={einheiten}
+                    onChange={(e) => { markAnswered(); setAnswerErrors((x) => ({ ...x, einheiten: undefined })); setEinheiten(e.target.value.replace(/[^0-9]/g, "").slice(0, 3)); }}
+                    aria-invalid={!!answerErrors.einheiten}
+                    className="h-full min-w-0 flex-1 bg-transparent text-center text-[1.75rem] font-semibold tabular-nums tracking-[-0.03em] text-navy placeholder:text-[14px] placeholder:font-normal placeholder:tracking-normal placeholder:text-ink-muted focus:outline-none" />
+                  <button type="button" onClick={() => stepUnits(1)} disabled={unitsValid && units >= EINHEITEN_MAX} aria-label="Eine Wohneinheit mehr"
+                    className="grid h-full w-11 shrink-0 place-items-center rounded-r-2xl text-navy transition hover:bg-black/[0.03] disabled:opacity-30"><Plus className="h-4 w-4" aria-hidden /></button>
+                </div>
                 <Klingelschild count={unitsValid ? units : 0} />
               </div>
               {answerErrors.einheiten && <p role="alert" className="field-error">{answerErrors.einheiten}</p>}
             </div>
 
             <fieldset>
-              <legend className="mb-2 text-[14px] font-semibold text-navy">Mietausfallschutz gewünscht?</legend>
-              <div className="grid grid-cols-2 rounded-full border border-line bg-paper/60 p-1" role="radiogroup" aria-label="Mietausfallschutz gewünscht?">
+              <legend className="mb-2 text-[14px] font-semibold leading-snug text-navy">Möchtest du abgesichert sein, wenn dein Mieter nicht zahlt?</legend>
+              <div className="grid grid-cols-2 rounded-full border border-line bg-paper/60 p-1" role="radiogroup" aria-label="Möchtest du abgesichert sein, wenn dein Mieter nicht zahlt?">
                 {(["ja", "nein"] as const).map((v) => (
                   <button key={v} type="button" role="radio" aria-checked={mietausfall === v}
                     onClick={() => { markStarted(); setAnswerErrors((x) => ({ ...x, mietausfall: undefined })); setMietausfall(v); }}
@@ -242,7 +256,7 @@ export function RechtsschutzCheck() {
                   </button>
                 ))}
               </div>
-              <p className="mt-1.5 text-[12px] leading-snug text-ink-muted">Ersetzt die Miete, wenn dein Mieter nicht zahlt – je nach Tarif bis zu 12 Monate.</p>
+              <p className="mt-1.5 text-[12px] leading-snug text-ink-muted">Mietausfallschutz: je nach Tarif bis zu 12 Monatsmieten.</p>
               {answerErrors.mietausfall && <p role="alert" className="field-error">{answerErrors.mietausfall}</p>}
             </fieldset>
           </div>
@@ -265,21 +279,16 @@ export function RechtsschutzCheck() {
         )}
 
         {bereich && (
-          // Kurze Felder (Name, Telefon) nebeneinander, E-Mail darunter in voller Breite
-          <div className="mt-4 grid grid-cols-2 gap-x-2.5 gap-y-3 border-t border-dashed border-line pt-4">
-            <Field id="ck-name" label="Name" error={errors.name?.message}>
+          <div className="mt-4 space-y-3 border-t border-dashed border-line pt-4">
+            <Field id="ck-name" label="Vor- und Nachname" error={errors.name?.message}>
               <input id="ck-name" autoComplete="name" autoCapitalize="words" enterKeyHint="next" className={INPUT} aria-invalid={!!errors.name} {...register("name")} onFocus={markKontakt} />
             </Field>
             <Field id="ck-phone" label="Telefonnummer" error={errors.phone?.message}>
-              <input id="ck-phone" type="tel" inputMode="tel" autoComplete="tel" enterKeyHint={vermieter ? "next" : "send"} className={INPUT} aria-invalid={!!errors.phone} {...register("phone")} onFocus={markKontakt} />
+              <input id="ck-phone" type="tel" inputMode="tel" autoComplete="tel" enterKeyHint="next" className={INPUT} aria-invalid={!!errors.phone} {...register("phone")} onFocus={markKontakt} />
             </Field>
-            {vermieter && (
-              <div className="col-span-2">
-                <Field id="ck-email" label="E-Mail" error={errors.email?.message}>
-                  <input id="ck-email" type="email" inputMode="email" autoComplete="email" enterKeyHint="send" className={INPUT} aria-invalid={!!errors.email} {...register("email")} onFocus={markKontakt} />
-                </Field>
-              </div>
-            )}
+            <Field id="ck-email" label="E-Mail-Adresse" hint="optional" error={errors.email?.message}>
+              <input id="ck-email" type="email" inputMode="email" autoComplete="email" enterKeyHint="send" className={INPUT} aria-invalid={!!errors.email} {...register("email")} onFocus={markKontakt} />
+            </Field>
           </div>
         )}
 
@@ -297,8 +306,13 @@ export function RechtsschutzCheck() {
 
         <button type="submit" disabled={isSubmitting}
           className="mt-4 inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-full bg-navy text-[16px] font-semibold text-white transition hover:bg-navy-800 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-sun disabled:opacity-60">
-          {isSubmitting ? <><Loader2 className="h-5 w-5 animate-spin" aria-hidden /> Wird gesendet …</> : <>Kostenloses Angebot anfordern <ArrowRight className="h-4 w-4" aria-hidden /></>}
+          {isSubmitting ? <><Loader2 className="h-5 w-5 animate-spin" aria-hidden /> Wird gesendet …</> : <>Jetzt Angebot berechnen <ArrowRight className="h-4 w-4" aria-hidden /></>}
         </button>
+        <ul className="mt-3 flex flex-col items-center gap-1 text-[13px] text-navy min-[420px]:flex-row min-[420px]:flex-wrap min-[420px]:justify-center min-[420px]:gap-x-4">
+          {["Unverbindliche Anfrage", "Kostenlose Angebotserstellung", "Persönliche Beratung durch Adrian Seitz"].map((t) => (
+            <li key={t} className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 shrink-0" strokeWidth={3} aria-hidden />{t}</li>
+          ))}
+        </ul>
         <p className="mt-3 text-center text-[11.5px] leading-[1.5] text-ink-muted">
           {/* Genau dieser Wortlaut wird mit der Anfrage gespeichert (CONSENT_TEXTS.contactButton). */}
           {CONSENT_TEXTS.contactButton.replace(" Es gelten die Datenschutzhinweise.", "")} Es gelten die{" "}
@@ -312,10 +326,10 @@ export function RechtsschutzCheck() {
 
 const INPUT = "block h-11 w-full rounded-xl border border-line bg-white px-4 text-base text-ink transition placeholder:text-ink-muted focus:border-navy focus:outline-none focus:ring-4 focus:ring-sun/40 aria-[invalid=true]:border-red-400";
 
-function Field({ id, label, error, children }: { id: string; label: string; error?: string; children: React.ReactNode }) {
+function Field({ id, label, hint, error, children }: { id: string; label: string; hint?: string; error?: string; children: React.ReactNode }) {
   return (
     <div>
-      <label htmlFor={id} className="mb-1 block text-[12.5px] font-medium text-ink-soft">{label}</label>
+      <label htmlFor={id} className="mb-1 block text-[12.5px] font-medium text-ink-soft">{label}{hint && <span className="font-normal text-ink-muted"> ({hint})</span>}</label>
       {children}
       {error && <p className="field-error">{error}</p>}
     </div>
