@@ -6,7 +6,8 @@ import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { AlertCircle, ArrowRight, Loader2, Lock } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AlertCircle, ArrowRight, Loader2 } from "lucide-react";
 import { AREAS, EINHEITEN_MAX, SITUATION, VERMIETER_ANLIEGEN } from "@/lib/funnel";
 import { CONSENT_TEXTS, phoneRegex, splitName } from "@/lib/schemas";
 import { products, type ProductKey } from "@/lib/products";
@@ -15,6 +16,7 @@ import { currentTrackingConsent } from "@/lib/consent";
 import { track } from "@/lib/tracking";
 import { countEvent } from "@/lib/localEvents";
 import { Icon3D } from "../ui/Icon3D";
+import { AdvisorAvatar } from "../ui/AdvisorAvatar";
 import { StampOverlay } from "../ui/StampOverlay";
 import { fireBurst } from "../ui/ClickBurst";
 
@@ -32,8 +34,8 @@ const fieldsSchema = z.object({
   name: z.string().trim().max(120),
   email: z.string().trim().max(160),
   phone: z.string().trim().max(30)
-    .min(1, "Bitte gib deine Telefonnummer an, damit ich dich zurückrufen kann.")
-    .regex(phoneRegex, "Bitte gib eine gültige Telefonnummer an."),
+    .min(1, "Bitte gib deine Telefonnummer an.")
+    .regex(phoneRegex, "Bitte prüfe die Telefonnummer."),
 });
 type Fields = z.infer<typeof fieldsSchema>;
 const emailOk = (v: string) => z.string().email().safeParse(v).success;
@@ -183,22 +185,30 @@ export function RechtsschutzCheck() {
   };
   const submit = handleSubmit(onSubmit, () => { checkAnswers(); checkContact(getValues()); });
 
-  const choice = (sel: boolean) =>
-    `rounded-xl border text-[15px] font-semibold transition ${sel ? "border-navy bg-sun text-navy" : "border-line bg-white text-navy hover:border-navy/40"}`;
+  const price = bereich && bereich in products ? products[bereich as ProductKey].quick?.price : undefined;
 
   return (
-    <div className="mx-auto w-full max-w-md" ref={topRef}>
-      <h1 className="scroll-mt-24 text-[1.65rem] font-semibold leading-[1.1] tracking-[-0.04em] text-navy sm:text-[2.2rem]">Dein kostenloses Angebot</h1>
-      <p className="mt-1 text-[15px] leading-snug text-ink-soft">für deinen {productName} – unverbindlich, du entscheidest in Ruhe.</p>
+    <div className="mx-auto w-full max-w-[440px]" ref={topRef}>
+      {/* Kopf: ein Mensch statt Callcenter – Adrians Foto direkt neben der Überschrift */}
+      <div className="flex items-center gap-3.5">
+        <AdvisorAvatar size={44} className="shadow-[0_8px_18px_-12px_rgba(11,11,10,0.6)]" />
+        <div className="min-w-0">
+          <h1 className="scroll-mt-24 text-[1.5rem] font-semibold leading-[1.05] tracking-[-0.045em] text-navy min-[400px]:text-[1.6rem] sm:text-[1.85rem]">Dein kostenloses Angebot</h1>
+          <p className="mt-1 text-[14px] leading-snug text-ink-soft">
+            für {productName}{price ? <> – ab <span className="whitespace-nowrap font-semibold text-navy">{price} €</span> im Monat</> : null}
+          </p>
+        </div>
+      </div>
 
-      <form onSubmit={submit} noValidate className="card mt-4 space-y-4 p-4 sm:p-6">
+      <form onSubmit={submit} noValidate
+        className="mt-4 rounded-[26px] border border-navy/10 bg-white p-4 shadow-[0_30px_60px_-40px_rgba(11,11,10,0.45)] sm:p-6">
         {!preset.bereich && (
-          <fieldset>
-            <legend className="label">Was möchtest du absichern?</legend>
+          <fieldset className="mb-5">
+            <legend className="mb-2 text-[14px] font-semibold text-navy">Was möchtest du absichern?</legend>
             <div className="grid grid-cols-2 gap-2">
               {AREAS.map((o, i) => (
                 <button key={o.value} type="button" aria-pressed={bereich === o.value} onClick={() => chooseArea(o.value)}
-                  className={`flex min-h-[48px] items-center gap-2 px-2.5 py-2 text-left !text-[13.5px] leading-tight ${choice(bereich === o.value)} ${i === AREAS.length - 1 ? "col-span-2" : ""}`}>
+                  className={`flex min-h-[48px] items-center gap-2 rounded-2xl border px-2.5 py-2 text-left text-[13.5px] font-medium leading-tight transition ${bereich === o.value ? "border-navy bg-sun text-navy" : "border-line bg-white text-navy hover:border-navy/40"} ${i === AREAS.length - 1 ? "col-span-2" : ""}`}>
                   <Icon3D name={o.icon ?? "shield"} size={22} priority />{o.label}
                 </button>
               ))}
@@ -208,63 +218,68 @@ export function RechtsschutzCheck() {
         )}
 
         {vermieter && (
-          <>
+          <div className="space-y-4">
             <div>
-              <label htmlFor="ck-einheiten" className="label">Wie viele Wohneinheiten vermietest du?</label>
-              <input id="ck-einheiten" type="text" inputMode="numeric" pattern="[0-9]*" autoComplete="off" placeholder="z. B. 2" value={einheiten}
-                onChange={(e) => { markAnswered(); setAnswerErrors((x) => ({ ...x, einheiten: undefined })); setEinheiten(e.target.value.replace(/[^0-9]/g, "").slice(0, 3)); }}
-                aria-invalid={!!answerErrors.einheiten} className="input !py-3" />
+              <label htmlFor="ck-einheiten" className="mb-2 block text-[14px] font-semibold text-navy">Wie viele Wohneinheiten vermietest du?</label>
+              <div className="flex items-stretch gap-3">
+                <input id="ck-einheiten" type="text" inputMode="numeric" pattern="[0-9]*" autoComplete="off" placeholder="0" value={einheiten}
+                  onChange={(e) => { markAnswered(); setAnswerErrors((x) => ({ ...x, einheiten: undefined })); setEinheiten(e.target.value.replace(/[^0-9]/g, "").slice(0, 3)); }}
+                  aria-invalid={!!answerErrors.einheiten}
+                  className="h-[60px] min-w-0 flex-1 rounded-2xl border border-line bg-paper/60 px-4 text-[2rem] font-semibold tabular-nums tracking-[-0.04em] text-navy transition placeholder:text-navy/20 focus:border-navy focus:bg-white focus:outline-none focus:ring-4 focus:ring-sun/40" />
+                <Klingelschild count={unitsValid ? units : 0} />
+              </div>
               {answerErrors.einheiten && <p role="alert" className="field-error">{answerErrors.einheiten}</p>}
             </div>
+
             <fieldset>
-              <legend className="label">Mietausfallschutz gewünscht?</legend>
-              <div className="grid grid-cols-2 gap-2">
+              <legend className="mb-2 text-[14px] font-semibold text-navy">Mietausfallschutz gewünscht?</legend>
+              <div className="grid grid-cols-2 rounded-full border border-line bg-paper/60 p-1" role="radiogroup" aria-label="Mietausfallschutz gewünscht?">
                 {(["ja", "nein"] as const).map((v) => (
-                  <button key={v} type="button" aria-pressed={mietausfall === v}
+                  <button key={v} type="button" role="radio" aria-checked={mietausfall === v}
                     onClick={() => { markStarted(); setAnswerErrors((x) => ({ ...x, mietausfall: undefined })); setMietausfall(v); }}
-                    className={`h-12 ${choice(mietausfall === v)}`}>{v === "ja" ? "Ja" : "Nein"}</button>
+                    className={`h-10 rounded-full text-[15px] font-semibold transition ${mietausfall === v ? "bg-navy text-white shadow-sm" : "text-ink-soft hover:text-navy"}`}>
+                    {v === "ja" ? "Ja" : "Nein"}
+                  </button>
                 ))}
               </div>
+              <p className="mt-1.5 text-[12px] leading-snug text-ink-muted">Ersetzt die Miete, wenn dein Mieter nicht zahlt – je nach Tarif bis zu 12 Monate, Wartezeit 3 Monate.</p>
               {answerErrors.mietausfall && <p role="alert" className="field-error">{answerErrors.mietausfall}</p>}
             </fieldset>
-            <div>
-              <label htmlFor="ck-name" className="label">Name</label>
-              <input id="ck-name" autoComplete="name" autoCapitalize="words" enterKeyHint="next" className="input !py-3" aria-invalid={!!errors.name} {...register("name")} onFocus={markKontakt} />
-              {errors.name && <p className="field-error">{errors.name.message}</p>}
-            </div>
-            <div>
-              <label htmlFor="ck-email" className="label">E-Mail</label>
-              <input id="ck-email" type="email" inputMode="email" autoComplete="email" enterKeyHint="next" className="input !py-3" aria-invalid={!!errors.email} {...register("email")} onFocus={markKontakt} />
-              {errors.email && <p className="field-error">{errors.email.message}</p>}
-            </div>
-          </>
+          </div>
         )}
 
         {question && (
-          <>
-            <fieldset>
-              <legend className="label">{question.title}</legend>
-              <div className="grid grid-cols-2 gap-2">
-                {question.options.map((o) => (
-                  <button key={o.value} type="button" aria-pressed={situation.includes(o.value)} onClick={() => chooseSituation(o.value)}
-                    className={`min-h-[48px] px-3 py-2 text-left !text-[14px] leading-tight ${choice(situation.includes(o.value))}`}>{o.label}</button>
-                ))}
-              </div>
-              {answerErrors.situation && <p role="alert" className="field-error">{answerErrors.situation}</p>}
-            </fieldset>
-            <div>
-              <label htmlFor="ck-name" className="label">Name</label>
-              <input id="ck-name" autoComplete="name" autoCapitalize="words" enterKeyHint="next" className="input !py-3" aria-invalid={!!errors.name} {...register("name")} onFocus={markKontakt} />
-              {errors.name && <p className="field-error">{errors.name.message}</p>}
+          <fieldset>
+            <legend className="mb-2 text-[14px] font-semibold text-navy">{question.title}</legend>
+            <div className="grid grid-cols-2 gap-2">
+              {question.options.map((o) => {
+                const sel = situation.includes(o.value);
+                return (
+                  <button key={o.value} type="button" aria-pressed={sel} onClick={() => chooseSituation(o.value)}
+                    className={`min-h-[48px] rounded-2xl border px-3 py-2 text-left text-[14px] font-medium leading-tight transition ${sel ? "border-navy bg-sun text-navy" : "border-line bg-white text-navy hover:border-navy/40"}`}>{o.label}</button>
+                );
+              })}
             </div>
-          </>
+            {answerErrors.situation && <p role="alert" className="field-error">{answerErrors.situation}</p>}
+          </fieldset>
         )}
 
         {bereich && (
-          <div>
-            <label htmlFor="ck-phone" className="label">Telefonnummer</label>
-            <input id="ck-phone" type="tel" inputMode="tel" autoComplete="tel" enterKeyHint="send" className="input !py-3" aria-invalid={!!errors.phone} {...register("phone")} onFocus={markKontakt} />
-            {errors.phone && <p className="field-error">{errors.phone.message}</p>}
+          // Kurze Felder (Name, Telefon) nebeneinander, E-Mail darunter in voller Breite
+          <div className="mt-4 grid grid-cols-2 gap-x-2.5 gap-y-3 border-t border-dashed border-line pt-4">
+            <Field id="ck-name" label="Name" error={errors.name?.message}>
+              <input id="ck-name" autoComplete="name" autoCapitalize="words" enterKeyHint="next" className={INPUT} aria-invalid={!!errors.name} {...register("name")} onFocus={markKontakt} />
+            </Field>
+            <Field id="ck-phone" label="Telefonnummer" error={errors.phone?.message}>
+              <input id="ck-phone" type="tel" inputMode="tel" autoComplete="tel" enterKeyHint={vermieter ? "next" : "send"} className={INPUT} aria-invalid={!!errors.phone} {...register("phone")} onFocus={markKontakt} />
+            </Field>
+            {vermieter && (
+              <div className="col-span-2">
+                <Field id="ck-email" label="E-Mail" error={errors.email?.message}>
+                  <input id="ck-email" type="email" inputMode="email" autoComplete="email" enterKeyHint="send" className={INPUT} aria-invalid={!!errors.email} {...register("email")} onFocus={markKontakt} />
+                </Field>
+              </div>
+            )}
           </div>
         )}
 
@@ -275,28 +290,63 @@ export function RechtsschutzCheck() {
         </div>
 
         {serverError && (
-          <div role="alert" className="flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+          <div role="alert" className="mt-4 flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">
             <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden /> {serverError}
           </div>
         )}
 
-        <div>
-          <button type="submit" disabled={isSubmitting}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-navy py-3.5 text-[16px] font-semibold text-white transition hover:bg-navy-800 disabled:opacity-60">
-            {isSubmitting ? <><Loader2 className="h-5 w-5 animate-spin" aria-hidden /> Wird gesendet …</> : <>Kostenloses Angebot anfordern <ArrowRight className="h-4 w-4" aria-hidden /></>}
-          </button>
-          <p className="mt-2.5 text-center text-[11.5px] leading-[1.45] text-ink-muted">
-            {/* Genau dieser Wortlaut wird mit der Anfrage gespeichert (CONSENT_TEXTS.contactButton). */}
-            {CONSENT_TEXTS.contactButton.replace(" Es gelten die Datenschutzhinweise.", "")} Es gelten die{" "}
-            <Link href="/datenschutz" target="_blank" className="underline underline-offset-2">Datenschutzhinweise</Link>.
-          </p>
-        </div>
+        <button type="submit" disabled={isSubmitting}
+          className="mt-4 inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-full bg-navy text-[16px] font-semibold text-white transition hover:bg-navy-800 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-sun disabled:opacity-60">
+          {isSubmitting ? <><Loader2 className="h-5 w-5 animate-spin" aria-hidden /> Wird gesendet …</> : <>Kostenloses Angebot anfordern <ArrowRight className="h-4 w-4" aria-hidden /></>}
+        </button>
+        <p className="mt-3 text-center text-[11.5px] leading-[1.5] text-ink-muted">
+          {/* Genau dieser Wortlaut wird mit der Anfrage gespeichert (CONSENT_TEXTS.contactButton). */}
+          {CONSENT_TEXTS.contactButton.replace(" Es gelten die Datenschutzhinweise.", "")} Es gelten die{" "}
+          <Link href="/datenschutz" target="_blank" className="underline underline-offset-2">Datenschutzhinweise</Link>.
+        </p>
       </form>
-
-      <p className="mt-4 flex items-center justify-center gap-2 text-center text-xs text-ink-muted">
-        <Lock className="h-3.5 w-3.5" aria-hidden /> Persönlich von Adrian Seitz, ARAG-Vertriebspartner – kein Callcenter
-      </p>
       <StampOverlay show={stamped} />
+    </div>
+  );
+}
+
+const INPUT = "block h-11 w-full rounded-xl border border-line bg-white px-4 text-base text-ink transition placeholder:text-ink-muted focus:border-navy focus:outline-none focus:ring-4 focus:ring-sun/40 aria-[invalid=true]:border-red-400";
+
+function Field({ id, label, error, children }: { id: string; label: string; error?: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <label htmlFor={id} className="mb-1 block text-[12.5px] font-medium text-ink-soft">{label}</label>
+      {children}
+      {error && <p className="field-error">{error}</p>}
+    </div>
+  );
+}
+
+/**
+ * Klingelschild neben der Zahl: pro Wohneinheit eine Klingel (bis 6 sichtbar, darüber „+n“).
+ * Reine Veranschaulichung – für Screenreader ausgeblendet, die Zahl steht im Eingabefeld.
+ */
+function Klingelschild({ count }: { count: number }) {
+  const reduce = useReducedMotion();
+  const shown = Math.min(count, 6);
+  const rest = count - shown;
+  return (
+    <div aria-hidden className="relative grid h-[60px] w-[104px] shrink-0 grid-cols-2 content-center gap-x-2 gap-y-[6px] rounded-2xl border border-navy/15 bg-gradient-to-b from-white to-[#ECEBE5] px-3 shadow-[inset_0_1px_0_#fff,0_10px_22px_-16px_rgba(11,11,10,0.7)]">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <span key={i} className="flex items-center gap-1.5">
+          <AnimatePresence initial={false}>
+            {i < shown ? (
+              <motion.span key="on" className="h-2.5 w-2.5 shrink-0 rounded-full bg-sun ring-[1.5px] ring-navy/70"
+                initial={reduce ? false : { scale: 0.2, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.2, opacity: 0 }}
+                transition={{ type: "spring", stiffness: 520, damping: 22 }} />
+            ) : (
+              <span className="h-2.5 w-2.5 shrink-0 rounded-full border border-dashed border-navy/20" />
+            )}
+          </AnimatePresence>
+          <span className={`h-[6px] flex-1 rounded-[3px] transition-colors ${i < shown ? "bg-navy/25" : "bg-navy/[0.06]"}`} />
+        </span>
+      ))}
+      {rest > 0 && <span className="absolute -right-2 -top-2 rounded-full bg-navy px-1.5 py-0.5 text-[10px] font-semibold leading-none text-sun">+{rest}</span>}
     </div>
   );
 }
