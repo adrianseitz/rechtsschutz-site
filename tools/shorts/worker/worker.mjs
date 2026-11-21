@@ -354,7 +354,12 @@ const direkt = (settings) => (settings.postVia || "direkt") === "direkt";
 const ttReady = (settings, keys) => Boolean(keys.tt && keys.ttSecret && settings.tiktokClientKey);
 /** Warum gerade nicht gepostet werden kann ("" = alles bereit) – für einen Eintrag, oder allgemein */
 function postBlocker(settings, keys, ep = null) {
-  if (ep && isK(ep)) return keys.ig && (settings.platforms || PLATFORMS).includes("instagram") ? "" : "Bilder-Posts brauchen Instagram (verbunden und ausgewählt)";
+  if (ep && isK(ep)) {
+    const want = settings.platforms || PLATFORMS;
+    if (keys.ig && want.includes("instagram")) return "";
+    if (settings.karussellTiktok === true && want.includes("tiktok") && ttReady(settings, keys)) return "";   // nur TikTok (Foto-Post) reicht auch
+    return "Bilder-Posts brauchen Instagram oder TikTok mit „Bilder-Posts auch auf TikTok“ (verbunden und ausgewählt)";
+  }
   if (direkt(settings)) {
     const want = settings.platforms || PLATFORMS;
     if ((want.includes("instagram") && keys.ig) || (want.includes("tiktok") && ttReady(settings, keys))) return "";
@@ -548,7 +553,7 @@ async function tick() {
   if (settings.enabled) {
     const slot = dueSlot(settings, state.lastSlot);
     if (slot) {
-      // Bilder-Posts überspringen, solange Instagram nicht verbunden ist (dann kommt das nächste Video dran)
+      // Bilder-Posts überspringen, solange weder Instagram noch TikTok-Foto-Posts bereit sind (dann kommt das nächste Video dran)
       const next = queue.find((ep) => state.episodes[ep.id]?.status === "bereit" && !(isK(ep) && postBlocker(settings, keys, ep)));
       const block = postBlocker(settings, keys);
       if (block) await log("fehler", `Termin verpasst: ${block}.`);

@@ -106,7 +106,7 @@ export function SocialView() {
       ? { done: settings.hasUploadpost && !!settings.uploadUser, text: "Upload-Post verbinden (postet auf TikTok, Instagram und YouTube)" }
       : { done: settings.hasInstagram || settings.hasTiktok, text: "Instagram und/oder TikTok verbinden (kostenlos, ohne Zusatzdienst)" },
     settings.onlyUploads
-      ? { done: (state.library ?? []).some((ep) => ep.style === "eigen"), text: "Erstes Video hochladen" }
+      ? { done: (state.library ?? []).some((ep) => ep.style === "eigen" || (isK(ep) && settings.karussell && kTargets(settings).length > 0)), text: "Erstes Video hochladen (oder Bilder-Posts einschalten)" }
       : { done: settings.voiceEngine === "elevenlabs" ? settings.hasElevenlabs && !!settings.voiceId : settings.hasHuggingface && !!settings.voiceSample, text: settings.voiceEngine === "elevenlabs" ? "ElevenLabs-Stimme wählen" : "Deine Stimme einrichten (kostenlos)" },
     { done: settings.platforms.length > 0 && settings.days.length > 0, text: "Zeitplan festlegen" },
     { done: settings.enabled, text: "Automatik einschalten" },
