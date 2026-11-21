@@ -203,7 +203,7 @@ export function RechtsschutzCheck() {
       <div className="flex items-start gap-3.5">
         <AdvisorAvatar size={44} className="mt-1 shadow-[0_8px_18px_-12px_rgba(11,11,10,0.6)]" />
         <div className="min-w-0">
-          <h1 className="scroll-mt-24 text-balance text-[1.4rem] font-semibold leading-[1.08] tracking-[-0.04em] text-navy min-[400px]:text-[1.5rem] sm:text-[1.8rem]">{heading}</h1>
+          <h1 className="scroll-mt-24 text-balance [hyphens:manual] text-[1.4rem] font-semibold leading-[1.08] tracking-[-0.04em] text-navy min-[400px]:text-[1.5rem] sm:text-[1.8rem]">{heading}</h1>
           <p className="mt-1.5 text-[14px] leading-snug text-ink-soft">{subline}</p>
         </div>
       </div>
