@@ -104,7 +104,7 @@ export function RechtsschutzCheck() {
 
   const vermieter = bereich === "vermieter";
   const question = bereich && !vermieter ? SITUATION[bereich] : undefined;
-  const title = bereich && bereich in products ? `${products[bereich as ProductKey].name} prüfen` : "Rechtsschutz-Check";
+  const productName = bereich && bereich in products ? products[bereich as ProductKey].name : "Rechtsschutz";
   const units = Number.parseInt(einheiten, 10);
   const unitsValid = Number.isInteger(units) && units >= 1 && units <= EINHEITEN_MAX;
 
@@ -188,8 +188,8 @@ export function RechtsschutzCheck() {
 
   return (
     <div className="mx-auto w-full max-w-md" ref={topRef}>
-      <h1 className="scroll-mt-24 text-[1.65rem] font-semibold leading-[1.1] tracking-[-0.04em] text-navy sm:text-[2.2rem]">{title}</h1>
-      <p className="mt-1 text-[15px] text-ink-soft">Kostenlos &amp; unverbindlich.</p>
+      <h1 className="scroll-mt-24 text-[1.65rem] font-semibold leading-[1.1] tracking-[-0.04em] text-navy sm:text-[2.2rem]">Dein kostenloses Angebot</h1>
+      <p className="mt-1 text-[15px] leading-snug text-ink-soft">für deinen {productName} – unverbindlich, du entscheidest in Ruhe.</p>
 
       <form onSubmit={submit} noValidate className="card mt-4 space-y-4 p-4 sm:p-6">
         {!preset.bereich && (
@@ -283,7 +283,7 @@ export function RechtsschutzCheck() {
         <div>
           <button type="submit" disabled={isSubmitting}
             className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-navy py-3.5 text-[16px] font-semibold text-white transition hover:bg-navy-800 disabled:opacity-60">
-            {isSubmitting ? <><Loader2 className="h-5 w-5 animate-spin" aria-hidden /> Wird gesendet …</> : <>Kostenlosen Rückruf anfordern <ArrowRight className="h-4 w-4" aria-hidden /></>}
+            {isSubmitting ? <><Loader2 className="h-5 w-5 animate-spin" aria-hidden /> Wird gesendet …</> : <>Kostenloses Angebot anfordern <ArrowRight className="h-4 w-4" aria-hidden /></>}
           </button>
           <p className="mt-2.5 text-center text-[11.5px] leading-[1.45] text-ink-muted">
             {/* Genau dieser Wortlaut wird mit der Anfrage gespeichert (CONSENT_TEXTS.contactButton). */}

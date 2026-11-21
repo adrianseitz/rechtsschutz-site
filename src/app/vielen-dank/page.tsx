@@ -12,6 +12,13 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
+/** Nach dem Rechtsschutz-Check (Angebot angefordert) */
+const nextCheck = [
+  { icon: Mail, title: "Ich prüfe deine Angaben", text: "Ich schaue mir persönlich an, was du angegeben hast, und rechne aus, was der Schutz für dich kostet." },
+  { icon: MessageCircle, title: "Ich melde mich bei dir", text: "Telefonisch oder per E-Mail – und kläre kurz offene Fragen, damit das Angebot wirklich passt." },
+  { icon: FileText, title: "Du bekommst dein Angebot", text: "Kostenlos und unverbindlich. Du entscheidest in Ruhe, ob du es annehmen möchtest." },
+];
+
 const next = [
   { icon: Mail, title: "Bestätigung & Prüfung", text: "Ich sehe mir deine Angaben persönlich an und bereite mich auf unser Gespräch vor." },
   { icon: MessageCircle, title: "Persönliche Kontaktaufnahme", text: "Ich melde mich auf dem von dir gewählten Weg, um offene Fragen zu klären." },
@@ -22,7 +29,7 @@ export default async function DankePage({ searchParams }: { searchParams: Promis
   const { typ } = await searchParams;
   const mail = await effectiveMail().catch(() => null);
   const confirmationSent = Boolean(mail && mail.confirm !== false);
-  const title = typ === "termin" ? "Vielen Dank! Deine Terminanfrage ist eingegangen." : typ === "rueckruf" ? "Vielen Dank! Deine Rückrufbitte ist eingegangen." : "Vielen Dank! Deine Anfrage ist eingegangen.";
+  const title = typ === "termin" ? "Vielen Dank! Deine Terminanfrage ist eingegangen." : typ === "rueckruf" ? "Vielen Dank! Deine Rückrufbitte ist eingegangen." : typ === "check" ? "Danke! Ich erstelle dein Angebot." : "Vielen Dank! Deine Anfrage ist eingegangen.";
   return (
     <section className="py-16 sm:py-24">
       <div className="container max-w-2xl text-center">
@@ -30,7 +37,7 @@ export default async function DankePage({ searchParams }: { searchParams: Promis
         <h1 className="mt-6 text-3xl font-extrabold leading-tight tracking-tightest sm:text-5xl">{title}</h1>
         <p className="mt-4 text-lg leading-8 text-ink-soft">Danke für dein Vertrauen. So geht es jetzt weiter:</p>
         <ol className="mt-10 space-y-3 text-left">
-          {next.map((n, i) => (
+          {(typ === "check" ? nextCheck : next).map((n, i) => (
             <li key={n.title} className="card flex items-start gap-4 p-5">
               <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-navy text-teal"><n.icon className="h-5 w-5" aria-hidden /></span>
               <div><p className="font-semibold text-navy">{i + 1}. {n.title}</p><p className="mt-1 text-[15px] leading-7 text-ink-soft">{n.text}</p></div>

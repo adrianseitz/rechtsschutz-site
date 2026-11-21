@@ -2,13 +2,13 @@ import { z } from "zod";
 import { AREA_VALUES, BEGINN, BESTAND, EINHEITEN_MAX, SITUATION, VERMIETER_ANLIEGEN } from "./funnel";
 
 /** Version der Einwilligungstexte – bei Textänderungen hochzählen (Nachweisbarkeit). */
-export const CONSENT_VERSION = "2026-11-21";
+export const CONSENT_VERSION = "2026-11-21-2";
 
 export const CONSENT_TEXTS = {
   // Kurz gehalten – genau dieser Text steht in allen drei Formularen (Check, Rückruf, Kontakt).
   contact: "Adrian Seitz darf mich zu meiner Anfrage kontaktieren. Die Datenschutzhinweise habe ich gelesen.",
-  // Rechtsschutz-Check: Hinweis direkt über dem Button – mit dem Klick auf „Kostenlosen Rückruf anfordern“ erteilt.
-  contactButton: "Mit Klick auf „Kostenlosen Rückruf anfordern“ darf Adrian Seitz mich zu meiner Anfrage kontaktieren. Es gelten die Datenschutzhinweise.",
+  // Rechtsschutz-Check: Hinweis direkt unter dem Button – mit dem Klick auf „Kostenloses Angebot anfordern“ erteilt.
+  contactButton: "Mit Klick auf „Kostenloses Angebot anfordern“ darf Adrian Seitz mich zu meiner Anfrage kontaktieren. Es gelten die Datenschutzhinweise.",
   marketing:
     "Optional: Ich möchte darüber hinaus gelegentlich per E-Mail oder Telefon Informationen zu weiteren passenden Versicherungslösungen erhalten. Diese Einwilligung kann ich jederzeit widerrufen.",
 } as const;
