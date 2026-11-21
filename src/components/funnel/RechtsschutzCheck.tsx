@@ -242,7 +242,7 @@ export function RechtsschutzCheck() {
                   </button>
                 ))}
               </div>
-              <p className="mt-1.5 text-[12px] leading-snug text-ink-muted">Ersetzt die Miete, wenn dein Mieter nicht zahlt – je nach Tarif bis zu 12 Monate, Wartezeit 3 Monate.</p>
+              <p className="mt-1.5 text-[12px] leading-snug text-ink-muted">Ersetzt die Miete, wenn dein Mieter nicht zahlt – je nach Tarif bis zu 12 Monate.</p>
               {answerErrors.mietausfall && <p role="alert" className="field-error">{answerErrors.mietausfall}</p>}
             </fieldset>
           </div>
