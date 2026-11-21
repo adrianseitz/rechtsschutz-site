@@ -88,7 +88,7 @@ export function buildLeadRecord(input: LeadInput, meta: SubmissionRecord["meta"]
     },
     attribution: { ...input.attribution, channel: deriveChannel(input.attribution) },
     consents: {
-      contact: { granted: true, text: CONSENT_TEXTS.contact, version: CONSENT_VERSION, at: now },
+      contact: { granted: true, text: CONSENT_TEXTS.contactButton, version: CONSENT_VERSION, at: now },
       marketing: { granted: contact.consentMarketing === true, text: CONSENT_TEXTS.marketing, version: CONSENT_VERSION, at: now },
       tracking: input.trackingConsent,
     },
