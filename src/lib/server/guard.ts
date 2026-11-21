@@ -8,7 +8,7 @@ import { hashIdentifier } from "./crypto";
 // Kurz, weil man jetzt mit einem Tipp direkt im Formular landet und Name + Telefon per Autofill in Sekunden drin sind.
 const MIN_FILL_MS = 1200;
 
-type GuardOk = { ok: true; body: unknown; meta: { ipHash: string; userAgent: string } };
+type GuardOk = { ok: true; body: unknown; meta: { ipHash: string; userAgent: string; site?: string } };
 type GuardFail = { ok: false; response: NextResponse };
 
 /** Gemeinsame Schutzschicht: Origin, Rate Limit, Größenlimit, JSON. */
@@ -27,7 +27,9 @@ export async function guard(req: Request, scope: string): Promise<GuardOk | Guar
   } catch (e) {
     return { ok: false, response: jsonError((e as Error).message === "too_large" ? 413 : 400, "Ungültige Anfrage.") };
   }
-  return { ok: true, body, meta: { ipHash, userAgent: (req.headers.get("user-agent") || "").slice(0, 160) } };
+  // Über welche Domain kam die Anfrage? (seitz-rechtsschutz.de oder im-rechtsschutz.de) – fürs CRM
+  const site = (req.headers.get("x-forwarded-host") || req.headers.get("host") || "").split(",")[0].trim().toLowerCase().replace(/:\d+$/, "").replace(/^www\./, "").slice(0, 80);
+  return { ok: true, body, meta: { ipHash, userAgent: (req.headers.get("user-agent") || "").slice(0, 160), ...(site ? { site } : {}) } };
 }
 
 /** Honeypot gefüllt oder unrealistisch schnell → still verwerfen (Bot erhält keine Rückmeldung). */

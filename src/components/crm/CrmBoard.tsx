@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from "motion/react";
 import {
   AlertCircle, BarChart3, Bell, Check, Clapperboard, Columns3, Download, List, LogOut, Settings, Mail, MessageSquare, Phone, PhoneMissed, RefreshCw, RotateCcw, Search, Trash2, X,
 } from "lucide-react";
-import { channelShort, followUpDue, LOST_REASONS, STATUSES, todayKey, type CrmLead, type LeadStatus, type StatusEntry } from "@/lib/crm";
+import { channelShort, followUpDue, otherSite, LOST_REASONS, STATUSES, todayKey, type CrmLead, type LeadStatus, type StatusEntry } from "@/lib/crm";
 import { site } from "@/lib/site";
 import type { StatsData } from "@/lib/stats";
 import { StatsView } from "./StatsView";
@@ -102,7 +102,7 @@ export function CrmBoard({ initial, storage, error, stats: traffic = {}, openLea
   const filtered = useMemo(() => {
     const n = q.trim().toLowerCase();
     if (!n) return leads;
-    return leads.filter((l) => [l.name, l.email, l.phone, l.productLabel, l.situation, l.anliegen, l.message, l.channel, l.keyword, ...(l.notes ?? []).map((x) => x.text)].some((v) => v?.toLowerCase().includes(n)));
+    return leads.filter((l) => [l.name, l.email, l.phone, l.productLabel, l.situation, l.anliegen, l.message, l.channel, l.keyword, l.site, ...(l.notes ?? []).map((x) => x.text)].some((v) => v?.toLowerCase().includes(n)));
   }, [leads, q]);
 
   const stats = useMemo(() => {
@@ -285,6 +285,7 @@ export function CrmBoard({ initial, storage, error, stats: traffic = {}, openLea
                             )}
                             <div className="mt-2.5 flex items-center gap-2 text-[11px] text-ink-muted">
                               <span className="truncate whitespace-nowrap rounded bg-paper px-1.5 py-0.5 font-medium text-ink-soft">{channelShort(l.channel)}</span>
+                              {otherSite(l.site) && <span className="truncate whitespace-nowrap rounded bg-sun/40 px-1.5 py-0.5 font-medium text-ink" title="Über diese Domain eingegangen">{otherSite(l.site)}</span>}
                               <span className="hidden whitespace-nowrap rounded bg-paper px-1.5 py-0.5 2xl:inline">{l.type === "lead" ? "Check" : "Kontakt"}</span>
                               <span className="ml-auto flex shrink-0 items-center gap-1.5 whitespace-nowrap">
                                 <Phone className={`h-3 w-3 ${l.phone ? "text-navy" : "opacity-30"}`} aria-hidden />
@@ -329,7 +330,7 @@ export function CrmBoard({ initial, storage, error, stats: traffic = {}, openLea
                         </td>
                         <td className="border-b border-line px-4 py-3 text-ink-soft">{l.productLabel}</td>
                         <td className="border-b border-line px-4 py-3"><span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${s.cls}`}>{s.label}</span></td>
-                        <td className="border-b border-line px-4 py-3 text-ink-soft">{channelShort(l.channel)}</td>
+                        <td className="border-b border-line px-4 py-3 text-ink-soft">{channelShort(l.channel)}{otherSite(l.site) && <span className="ml-1.5 rounded bg-sun/40 px-1.5 py-0.5 text-xs text-ink">{otherSite(l.site)}</span>}</td>
                         <td className="border-b border-line px-4 py-3 text-ink-soft">{l.phone ?? l.email}</td>
                         <td className="border-b border-line px-4 py-3 text-ink-muted" title={fmt(l.createdAt)}>vor {ago(l.createdAt)}</td>
                       </tr>
@@ -531,6 +532,7 @@ function Drawer({ lead: l, onClose, onStatus, onMeta, onDelete }: { lead: CrmLea
           </Section>
           <Section title="Herkunft">
             <Field k="Quelle" v={l.channel} />
+            <Field k="Website" v={l.site?.includes(".") ? `www.${l.site}` : undefined} />
             <Field k="Suchbegriff" v={l.keyword} />
             <Field k="Kampagne" v={l.campaign} />
             <Field k="Einstiegsseite" v={l.landingPage} />

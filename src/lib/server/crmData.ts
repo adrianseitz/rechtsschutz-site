@@ -28,6 +28,7 @@ function toLead(r: SubmissionRecord): Omit<CrmLead, "status" | "statusUpdatedAt"
     channel: r.attribution.channel,
     campaign: r.attribution.utm_campaign,
     landingPage: r.attribution.landingPage,
+    site: r.meta?.site,
     marketingConsent: r.consents.marketing?.granted === true,
     reachable: r.contact.reachable,
     keyword: r.attribution.utm_term,

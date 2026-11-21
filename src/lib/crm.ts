@@ -56,6 +56,8 @@ export type CrmLead = {
   channel: string;
   campaign?: string;
   landingPage?: string;
+  /** Domain, über die die Anfrage kam (z. B. im-rechtsschutz.de) */
+  site?: string;
   marketingConsent: boolean;
   /** Telefonisch am besten erreichbar (Angabe aus dem Check) */
   reachable?: string;
@@ -67,6 +69,9 @@ export type CrmLead = {
   statusUpdatedAt?: string;
   history: { status: LeadStatus; at: string }[];
 } & LeadMeta;
+
+/** Zweit-Domain anzeigen (die Hauptseite seitz-rechtsschutz.de braucht keinen Hinweis) */
+export const otherSite = (site?: string) => (site && site !== "seitz-rechtsschutz.de" && site.includes(".") ? site : undefined);
 
 /** Kurzname der Quelle für Karten und Auswertungen. */
 export const channelShort = (c: string) =>

@@ -17,7 +17,7 @@ export type SubmissionRecord = {
   request?: { requestType: string; preferredTime?: string; message?: string };
   attribution: Attribution & { channel: string };
   consents: { contact: ConsentRecord; marketing?: ConsentRecord; tracking: { statistics: boolean; marketing: boolean } };
-  meta: { ipHash: string; userAgent: string };
+  meta: { ipHash: string; userAgent: string; site?: string };
 };
 
 const PRODUCT_LABEL: Record<string, string> = {
